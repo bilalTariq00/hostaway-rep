@@ -11,6 +11,8 @@ import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
 import InputAdornment from '@mui/material/InputAdornment';
 
+import { useRouter } from 'src/routes/hooks';
+
 import { DashboardContent } from 'src/layouts/dashboard';
 
 import { Iconify } from 'src/components/iconify';
@@ -94,6 +96,7 @@ const mockBookings = [
 ];
 
 export function CalendarMultiView() {
+  const router = useRouter();
   const [activeTab, setActiveTab] = useState(0);
   const [selectedBooking, setSelectedBooking] = useState<any>(null);
   const [selectedDates, setSelectedDates] = useState<any>(null);
@@ -102,6 +105,8 @@ export function CalendarMultiView() {
 
   const handleTabChange = (event: React.SyntheticEvent, newValue: number) => {
     setActiveTab(newValue);
+    if (newValue === 1) router.push('/calendar/monthly');
+    if (newValue === 2) router.push('/calendar/yearly');
   };
 
   const handleBookingClick = (booking: any) => {

@@ -13,6 +13,8 @@ import MenuItem from '@mui/material/MenuItem';
 import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
 
+import { useRouter } from 'src/routes/hooks';
+
 import { DashboardContent } from 'src/layouts/dashboard';
 
 import { Iconify } from 'src/components/iconify';
@@ -59,7 +61,8 @@ const mockMonthlyBookings = [
 ];
 
 export function CalendarMonthlyView() {
-  const [activeTab, setActiveTab] = useState(0);
+  const router = useRouter();
+  const [activeTab, setActiveTab] = useState(1); // Monthly tab
   const [currentMonth, setCurrentMonth] = useState(new Date());
   const [propertyAnchor, setPropertyAnchor] = useState<null | HTMLElement>(null);
   const [upcomingWeeksToggle, setUpcomingWeeksToggle] = useState(false);
@@ -67,6 +70,8 @@ export function CalendarMonthlyView() {
 
   const handleTabChange = (event: React.SyntheticEvent, newValue: number) => {
     setActiveTab(newValue);
+    if (newValue === 0) router.push('/calendar/multi');
+    if (newValue === 2) router.push('/calendar/yearly');
   };
 
 

@@ -146,7 +146,7 @@ export function CalendarGrid({
             Property
           </Typography>
         </Box>
-        {calendarDays.slice(0, 10).map((day) => (
+        {calendarDays.map((day) => (
           <Box key={formatDate(day)} sx={{ flex: 1, p: 1, textAlign: 'center', minWidth: 80, bgcolor: 'white', border: 1, borderColor: 'grey.300', borderLeft: 0 }}>
             <Typography variant="body2" fontWeight={600}>
               {day.toLocaleDateString('en-US', { weekday: 'short' })}
@@ -171,7 +171,7 @@ export function CalendarGrid({
               </Box>
 
               {/* Calendar Days */}
-              {calendarDays.slice(0, 10).map((day) => {
+              {calendarDays.map((day) => {
                 const dateStr = formatDate(day);
                 const isBooked = day.getDate() === 4 && day.getMonth() === 9; // Simulate booked dates (Sat 4 Oct)
                 
