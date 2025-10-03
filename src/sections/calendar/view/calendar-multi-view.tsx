@@ -2,13 +2,10 @@ import { useState } from 'react';
 
 import Box from '@mui/material/Box';
 import Tab from '@mui/material/Tab';
-import Chip from '@mui/material/Chip';
 import Grid from '@mui/material/Grid';
-import Menu from '@mui/material/Menu';
 import Tabs from '@mui/material/Tabs';
 import Paper from '@mui/material/Paper';
 import Button from '@mui/material/Button';
-import MenuItem from '@mui/material/MenuItem';
 import TextField from '@mui/material/TextField';
 import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
@@ -24,41 +21,79 @@ import { BookingDetailsModal } from '../components/booking-details-modal';
 
 // Mock data for listings
 const mockListings = [
-  { id: 1, name: 'Cozy Downtown Apartment', price: 120, bookings: 15 },
-  { id: 2, name: 'Beach House Villa', price: 250, bookings: 8 },
-  { id: 3, name: 'Mountain Cabin Retreat', price: 180, bookings: 12 },
-  { id: 4, name: 'City Center Loft', price: 95, bookings: 20 },
+  { id: 305034, name: 'La Dimora Del Cavaliere', price: 75, bookings: 15 },
+  { id: 305035, name: 'Navigli', price: 135, bookings: 8 },
+  { id: 305225, name: 'Polacchi42', price: 120, bookings: 12 },
+  { id: 305421, name: 'Superattico - Via Del C...', price: 200, bookings: 20 },
+  { id: 306532, name: 'Montecatini Terme', price: 90, bookings: 10 },
+  { id: 308582, name: 'Monteverde - Quattrov...', price: 150, bookings: 18 },
+  { id: 310867, name: 'La Storta', price: 10000, bookings: 5 },
+  { id: 317154, name: '[5 Min From Trastevere...', price: 110, bookings: 14 },
+  { id: 332386, name: 'Via Poggio Tulliano', price: 85, bookings: 9 },
+  { id: 345603, name: 'Via Dei Marruccini | Sa...', price: 95, bookings: 16 },
 ];
 
 // Mock data for calendar bookings
 const mockBookings = [
   {
     id: 1,
-    listingId: 1,
-    date: '2024-01-15',
-    guests: 2,
-    price: 120,
+    listingId: 305034,
+    date: '2024-10-06',
+    guests: 6,
+    price: 75,
     status: 'confirmed',
     source: 'Airbnb',
-    checkIn: '2024-01-15',
-    checkOut: '2024-01-17',
+    guestName: 'Zhanna Badytsia',
+    checkIn: '2024-10-06',
+    checkOut: '2024-10-08',
     nights: 2,
-    commission: 12,
-    payout: 108,
+    commission: 7.5,
+    payout: 67.5,
   },
   {
     id: 2,
-    listingId: 2,
-    date: '2024-01-20',
-    guests: 4,
-    price: 250,
+    listingId: 305035,
+    date: '2024-10-06',
+    guests: 2,
+    price: 135,
+    status: 'confirmed',
+    source: 'Airbnb',
+    guestName: 'Mikhail Trofimov Elizaveta T...',
+    checkIn: '2024-10-06',
+    checkOut: '2024-10-10',
+    nights: 4,
+    commission: 13.5,
+    payout: 121.5,
+  },
+  {
+    id: 3,
+    listingId: 305421,
+    date: '2024-10-07',
+    guests: 3,
+    price: 200,
+    status: 'confirmed',
+    source: 'Airbnb',
+    guestName: 'Fang Lin',
+    checkIn: '2024-10-07',
+    checkOut: '2024-10-09',
+    nights: 2,
+    commission: 20,
+    payout: 180,
+  },
+  {
+    id: 4,
+    listingId: 305035,
+    date: '2024-10-12',
+    guests: 2,
+    price: 135,
     status: 'confirmed',
     source: 'Booking.com',
-    checkIn: '2024-01-20',
-    checkOut: '2024-01-25',
-    nights: 5,
-    commission: 25,
-    payout: 225,
+    guestName: 'Javier Merlo Vinas',
+    checkIn: '2024-10-12',
+    checkOut: '2024-10-14',
+    nights: 2,
+    commission: 13.5,
+    payout: 121.5,
   },
 ];
 
@@ -66,7 +101,6 @@ export function CalendarMultiView() {
   const [activeTab, setActiveTab] = useState(0);
   const [selectedBooking, setSelectedBooking] = useState<any>(null);
   const [selectedDates, setSelectedDates] = useState<any>(null);
-  const [searchAnchor, setSearchAnchor] = useState<null | HTMLElement>(null);
   const [currentMonth, setCurrentMonth] = useState(new Date());
   const [calendarView, setCalendarView] = useState<'grid' | 'list'>('grid');
 
@@ -86,14 +120,6 @@ export function CalendarMultiView() {
     } else {
       setSelectedDates({ date, listingId });
     }
-  };
-
-  const handleSearchClick = (event: React.MouseEvent<HTMLElement>) => {
-    setSearchAnchor(event.currentTarget);
-  };
-
-  const handleSearchClose = () => {
-    setSearchAnchor(null);
   };
 
   const navigateMonth = (direction: 'prev' | 'next') => {
@@ -155,47 +181,80 @@ export function CalendarMultiView() {
       {/* Filters and Search Bar */}
       <Paper sx={{ p: 2, mb: 3 }}>
         <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2 }}>
-          <Button variant="contained" size="small">
-            Available Listing
+          <Button 
+            variant="contained" 
+            size="small"
+            sx={{ 
+              bgcolor: 'primary.main',
+              color: 'white',
+              '&:hover': { bgcolor: 'primary.dark' }
+            }}
+          >
+            Available listings
           </Button>
           
-          <Chip label="All Properties" variant="outlined" />
-          <Chip label="Confirmed" variant="outlined" />
-          <Chip label="Pending" variant="outlined" />
-          <Chip label="Cancelled" variant="outlined" />
+          <Button variant="outlined" size="small">
+            Tags
+          </Button>
+          
+          <TextField
+            select
+            size="small"
+            defaultValue="Country"
+            sx={{ minWidth: 120 }}
+            SelectProps={{ native: true }}
+          >
+            <option>Country</option>
+            <option>Italy</option>
+            <option>Spain</option>
+            <option>France</option>
+          </TextField>
+          
+          <TextField
+            select
+            size="small"
+            defaultValue="City"
+            sx={{ minWidth: 120 }}
+            SelectProps={{ native: true }}
+          >
+            <option>City</option>
+            <option>Rome</option>
+            <option>Milan</option>
+            <option>Florence</option>
+          </TextField>
+          
+          <TextField
+            select
+            size="small"
+            defaultValue="All units"
+            sx={{ minWidth: 120 }}
+            SelectProps={{ native: true }}
+          >
+            <option>All units</option>
+            <option>Apartments</option>
+            <option>Houses</option>
+            <option>Villas</option>
+          </TextField>
+          
+          <Button variant="outlined" size="small">
+            Show (2)
+          </Button>
           
           <Box sx={{ flexGrow: 1 }} />
           
           <TextField
             size="small"
-            placeholder="Search..."
+            placeholder="Search by listing"
             InputProps={{
-              endAdornment: (
-                <InputAdornment position="end">
-                  <IconButton onClick={handleSearchClick} size="small">
-                    <Iconify icon={"eva:arrow-down-fill" as any} width={16} />
-                  </IconButton>
+              startAdornment: (
+                <InputAdornment position="start">
+                  <Iconify icon={"eva:search-fill" as any} width={16} />
                 </InputAdornment>
               ),
             }}
             sx={{ minWidth: 200 }}
           />
-          
-          <Typography variant="body2" color="text.secondary">
-            (24)
-          </Typography>
         </Box>
-
-        <Menu
-          anchorEl={searchAnchor}
-          open={Boolean(searchAnchor)}
-          onClose={handleSearchClose}
-        >
-          <MenuItem>All Listings</MenuItem>
-          <MenuItem>Available Only</MenuItem>
-          <MenuItem>Booked Only</MenuItem>
-          <MenuItem>Custom Filter</MenuItem>
-        </Menu>
       </Paper>
 
       {/* Calendar Controls */}
@@ -203,29 +262,26 @@ export function CalendarMultiView() {
         <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
           <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
             <Button variant="outlined" size="small">
-              Today
+              &lt; Today &gt;
             </Button>
-            
-            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-              <IconButton onClick={() => navigateYear('prev')} size="small">
-                <Iconify icon={"eva:arrow-left-fill" as any} width={16} />
-              </IconButton>
-              <Typography variant="h6" sx={{ minWidth: 120, textAlign: 'center' }}>
-                {currentMonth.toLocaleDateString('en-US', { month: 'long', year: 'numeric' })}
-              </Typography>
-              <IconButton onClick={() => navigateYear('next')} size="small">
-                <Iconify icon={"eva:arrow-right-fill" as any} width={16} />
-              </IconButton>
-            </Box>
             
             <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
               <IconButton onClick={() => navigateMonth('prev')} size="small">
                 <Iconify icon={"eva:arrow-left-fill" as any} width={16} />
               </IconButton>
-              <Typography variant="body1">
-                {currentMonth.toLocaleDateString('en-US', { weekday: 'short', day: 'numeric' })}
+              <Typography variant="h6" sx={{ minWidth: 100, textAlign: 'center' }}>
+                {currentMonth.toLocaleDateString('en-US', { month: 'short', year: '2-digit' })}
               </Typography>
               <IconButton onClick={() => navigateMonth('next')} size="small">
+                <Iconify icon={"eva:arrow-right-fill" as any} width={16} />
+              </IconButton>
+            </Box>
+            
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+              <IconButton onClick={() => navigateYear('prev')} size="small">
+                <Iconify icon={"eva:arrow-left-fill" as any} width={16} />
+              </IconButton>
+              <IconButton onClick={() => navigateYear('next')} size="small">
                 <Iconify icon={"eva:arrow-right-fill" as any} width={16} />
               </IconButton>
             </Box>
@@ -251,24 +307,13 @@ export function CalendarMultiView() {
       {/* Main Calendar Content */}
       <Grid container spacing={3}>
         {/* Left Side - Listings */}
-        <Grid size={{ xs: 12, md: 4 }}>
+        <Grid size={{ xs: 12, md: 3 }}>
           <Paper sx={{ p: 2, height: '100%' }}>
-            <Typography variant="h6" sx={{ mb: 2 }}>
-              Listings ({mockListings.length})
-            </Typography>
-            
-            <Box sx={{ mb: 2, display: 'flex', alignItems: 'center', gap: 1 }}>
-              <Typography variant="body2" color="text.secondary">
-                Show per page:
-              </Typography>
-              <Chip label="50" size="small" />
-            </Box>
-            
             {mockListings.map((listing) => (
               <Box
                 key={listing.id}
                 sx={{
-                  p: 2,
+                  p: 1.5,
                   mb: 1,
                   border: 1,
                   borderColor: 'divider',
@@ -279,11 +324,11 @@ export function CalendarMultiView() {
                   },
                 }}
               >
-                <Typography variant="subtitle2" sx={{ fontWeight: 600 }}>
+                <Typography variant="body2" sx={{ fontWeight: 500, mb: 0.5 }}>
                   {listing.name}
                 </Typography>
-                <Typography variant="body2" color="text.secondary">
-                  ${listing.price}/night • {listing.bookings} bookings
+                <Typography variant="caption" color="text.secondary">
+                  ({listing.id})
                 </Typography>
               </Box>
             ))}

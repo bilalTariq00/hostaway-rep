@@ -22,6 +22,7 @@ type CalendarGridProps = {
     price: number;
     status: string;
     source: string;
+    guestName?: string;
   }>;
   onBookingClick: (booking: any) => void;
   onDateClick: (date: string, listingId: number) => void;
@@ -57,7 +58,6 @@ export function CalendarGrid({
   };
 
   const calendarDays = generateCalendarDays();
-  const weekDays = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 
   const getBookingForDate = (date: string, listingId: number) => bookings.find(b => b.date === date && b.listingId === listingId);
 
@@ -143,10 +143,6 @@ export function CalendarGrid({
 
   return (
     <Paper sx={{ p: 2 }}>
-      <Typography variant="h6" sx={{ mb: 2 }}>
-        Calendar Grid View
-      </Typography>
-      
       {/* Calendar Header */}
       <Box sx={{ display: 'flex', mb: 1 }}>
         <Box sx={{ width: 200, p: 1 }}>
@@ -154,10 +150,13 @@ export function CalendarGrid({
             Property
           </Typography>
         </Box>
-        {weekDays.map((day) => (
-          <Box key={day} sx={{ flex: 1, p: 1, textAlign: 'center' }}>
+        {calendarDays.slice(0, 10).map((day) => (
+          <Box key={formatDate(day)} sx={{ flex: 1, p: 1, textAlign: 'center', minWidth: 80 }}>
             <Typography variant="body2" fontWeight={600}>
-              {day}
+              {day.toLocaleDateString('en-US', { weekday: 'short' })}
+            </Typography>
+            <Typography variant="caption" color="text.secondary">
+              {day.getDate()}
             </Typography>
           </Box>
         ))}
@@ -167,19 +166,16 @@ export function CalendarGrid({
       <Box sx={{ maxHeight: 600, overflow: 'auto' }}>
         {listings.map((listing) => (
           <Box key={listing.id} sx={{ mb: 1 }}>
-            <Box sx={{ display: 'flex', alignItems: 'center' }}>
+            <Box sx={{ display: 'flex', alignItems: 'stretch' }}>
               {/* Property Name */}
-              <Box sx={{ width: 200, p: 1, borderRight: 1, borderColor: 'divider' }}>
+              <Box sx={{ width: 200, p: 1, borderRight: 1, borderColor: 'divider', display: 'flex', alignItems: 'center' }}>
                 <Typography variant="body2" sx={{ fontWeight: 500 }}>
                   {listing.name}
-                </Typography>
-                <Typography variant="caption" color="text.secondary">
-                  ${listing.price}/night
                 </Typography>
               </Box>
 
               {/* Calendar Days */}
-              {calendarDays.slice(0, 7).map((day) => {
+              {calendarDays.slice(0, 10).map((day) => {
                 const dateStr = formatDate(day);
                 const booking = getBookingForDate(dateStr, listing.id);
                 const isToday = dateStr === formatDate(new Date());
@@ -189,11 +185,12 @@ export function CalendarGrid({
                     key={dateStr}
                     sx={{
                       flex: 1,
-                      p: 1,
-                      minHeight: 60,
+                      minWidth: 80,
+                      minHeight: 80,
                       borderRight: 1,
                       borderColor: 'divider',
                       cursor: 'pointer',
+                      position: 'relative',
                       bgcolor: booking 
                         ? getBookingColor(booking.status) 
                         : isToday 
@@ -209,30 +206,43 @@ export function CalendarGrid({
                     }}
                     onClick={() => onDateClick(dateStr, listing.id)}
                   >
-                    <Typography 
-                      variant="body2" 
-                      sx={{ 
-                        fontSize: '0.75rem',
-                        fontWeight: isToday ? 600 : 400,
-                      }}
-                    >
-                      {day.getDate()}
-                    </Typography>
-                    
-                    {booking && (
-                      <Box sx={{ mt: 0.5 }}>
-                        <Typography variant="caption" sx={{ fontSize: '0.7rem' }}>
-                          {booking.guests} guests
-                        </Typography>
-                        <Box sx={{ mt: 0.5, display: 'flex', alignItems: 'center', gap: 0.5 }}>
-                          <Iconify
-                            icon={(booking.source === 'Airbnb' ? 'logos:airbnb' : 'logos:booking-dot-com') as any}
-                            width={10}
-                          />
-                          <Typography variant="caption" sx={{ fontSize: '0.7rem' }}>
-                            ${booking.price}
+                    {booking ? (
+                      <Box sx={{ p: 1, height: '100%', display: 'flex', flexDirection: 'column' }}>
+                        <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5, mb: 0.5 }}>
+                          <Box
+                            sx={{
+                              width: 20,
+                              height: 20,
+                              borderRadius: '50%',
+                              bgcolor: 'rgba(255,255,255,0.2)',
+                              display: 'flex',
+                              alignItems: 'center',
+                              justifyContent: 'center',
+                              fontSize: '0.7rem',
+                              fontWeight: 600,
+                            }}
+                          >
+                            {booking.guestName?.charAt(0) || 'G'}
+                          </Box>
+                          <Typography variant="caption" sx={{ fontSize: '0.7rem', fontWeight: 500 }}>
+                            {booking.guestName || 'Guest'}
                           </Typography>
                         </Box>
+                        <Typography variant="caption" sx={{ fontSize: '0.7rem', mb: 0.5 }}>
+                          {booking.guests} guests
+                        </Typography>
+                        <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
+                          <Iconify
+                            icon={(booking.source === 'Airbnb' ? 'logos:airbnb' : 'logos:booking-dot-com') as any}
+                            width={12}
+                          />
+                        </Box>
+                      </Box>
+                    ) : (
+                      <Box sx={{ p: 1, height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                        <Typography variant="body2" sx={{ fontWeight: 500 }}>
+                          €{listing.price}
+                        </Typography>
                       </Box>
                     )}
                   </Box>

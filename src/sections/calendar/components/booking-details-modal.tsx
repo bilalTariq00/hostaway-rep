@@ -23,6 +23,7 @@ type BookingDetailsModalProps = {
     price: number;
     status: string;
     source: string;
+    guestName?: string;
     checkIn: string;
     checkOut: string;
     nights: number;
@@ -91,7 +92,7 @@ export function BookingDetailsModal({ booking, open, onClose }: BookingDetailsMo
               JD
             </Avatar>
             <Box>
-              <Typography variant="h6">John Doe</Typography>
+              <Typography variant="h6">{booking.guestName || 'John Doe'}</Typography>
               <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mt: 0.5 }}>
                 <Iconify icon={getSourceIcon(booking.source) as any} width={16} />
                 <Typography variant="body2" color="text.secondary">
