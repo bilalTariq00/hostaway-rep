@@ -28,6 +28,8 @@ export const ReservationsPage = lazy(() => import('src/sections/reservations/vie
 export const CustomFieldsPage = lazy(() => import('src/sections/reservations/view/custom-fields-view').then(module => ({ default: module.CustomFieldsView })));
 export const GuestbookPage = lazy(() => import('src/sections/reservations/view/guestbook-view').then(module => ({ default: module.GuestbookView })));
 export const CouponsPage = lazy(() => import('src/sections/reservations/view/coupons-view').then(module => ({ default: module.CouponsView })));
+export const ListingsPage = lazy(() => import('src/sections/listings/view/listings-view').then(module => ({ default: module.ListingsView })));
+export const ListingsCustomFieldsPage = lazy(() => import('src/sections/listings/view/listings-custom-fields-view').then(module => ({ default: module.ListingsCustomFieldsView })));
 export const Page404 = lazy(() => import('src/pages/page-not-found'));
 
 const renderFallback = () => (
@@ -76,6 +78,8 @@ export const routesSection: RouteObject[] = [
       { path: 'reservations/custom-fields', element: <CustomFieldsPage /> },
       { path: 'reservations/guestbook', element: <GuestbookPage /> },
       { path: 'reservations/coupons', element: <CouponsPage /> },
+      { path: 'listings', element: <ListingsPage /> },
+      { path: 'listings/custom-fields', element: <ListingsCustomFieldsPage /> },
     ],
   },
   {
