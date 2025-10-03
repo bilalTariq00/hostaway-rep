@@ -21,6 +21,9 @@ export const SettingsPage = lazy(() => import('src/pages/settings'));
 export const ReportsPage = lazy(() => import('src/pages/reports'));
 export const AnalyticsPage = lazy(() => import('src/pages/analytics'));
 export const MessagesPage = lazy(() => import('src/pages/messages'));
+export const CalendarMultiPage = lazy(() => import('src/sections/calendar/view/calendar-multi-view').then(module => ({ default: module.CalendarMultiView })));
+export const CalendarMonthlyPage = lazy(() => import('src/sections/calendar/view/calendar-monthly-view').then(module => ({ default: module.CalendarMonthlyView })));
+export const CalendarYearlyPage = lazy(() => import('src/sections/calendar/view/calendar-yearly-view').then(module => ({ default: module.CalendarYearlyView })));
 export const Page404 = lazy(() => import('src/pages/page-not-found'));
 
 const renderFallback = () => (
@@ -61,6 +64,10 @@ export const routesSection: RouteObject[] = [
       { path: 'reports', element: <ReportsPage /> },
       { path: 'blog', element: <BlogPage /> },
       { path: 'settings', element: <SettingsPage /> },
+      { path: 'calendar', element: <CalendarMultiPage /> },
+      { path: 'calendar/multi', element: <CalendarMultiPage /> },
+      { path: 'calendar/monthly', element: <CalendarMonthlyPage /> },
+      { path: 'calendar/yearly', element: <CalendarYearlyPage /> },
     ],
   },
   {
