@@ -28,29 +28,32 @@ const mockProperties = [
 const mockMonthlyBookings = [
   {
     id: 1,
-    date: '2024-01-15',
+    date: '2024-10-15',
     source: 'Airbnb',
     price: 120,
     minStay: 2,
     guests: 2,
+    guestName: 'John Smith',
     status: 'confirmed',
   },
   {
     id: 2,
-    date: '2024-01-20',
+    date: '2024-10-20',
     source: 'Booking.com',
     price: 250,
     minStay: 3,
     guests: 4,
+    guestName: 'Maria Garcia',
     status: 'confirmed',
   },
   {
     id: 3,
-    date: '2024-01-25',
+    date: '2024-10-25',
     source: 'Airbnb',
     price: 180,
     minStay: 1,
     guests: 2,
+    guestName: 'David Johnson',
     status: 'pending',
   },
 ];
@@ -66,9 +69,6 @@ export function CalendarMonthlyView() {
     setActiveTab(newValue);
   };
 
-  const handlePropertyClick = (event: React.MouseEvent<HTMLElement>) => {
-    setPropertyAnchor(event.currentTarget);
-  };
 
   const handlePropertyClose = () => {
     setPropertyAnchor(null);
@@ -144,19 +144,14 @@ export function CalendarMonthlyView() {
             Calendar
           </Typography>
           
-          {/* Property Dropdown */}
-          <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-            <Button
-              variant="outlined"
-              onClick={handlePropertyClick}
-              endIcon={<Iconify icon={"eva:arrow-down-fill" as any} width={16} />}
-            >
+          <Box sx={{ display: 'flex', gap: 1 }}>
+            <Button variant="outlined" sx={{ mr: 1 }}>
               Available Properties
             </Button>
-            <Button variant="contained" size="small">
+            <Button variant="contained" sx={{ mr: 1 }}>
               Listing
             </Button>
-            <Button variant="contained" size="small">
+            <Button variant="contained">
               Direct Booking
             </Button>
           </Box>
@@ -352,25 +347,57 @@ export function CalendarMonthlyView() {
                     {day.getDate()}
                   </Typography>
                   
-                  {booking && (
+                  {booking ? (
                     <Box sx={{ mt: 0.5 }}>
                       <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5, mb: 0.5 }}>
-                        <Iconify
-                          icon={getSourceIcon(booking.source) as any}
-                          width={12}
-                        />
-                        <Typography variant="caption" sx={{ fontSize: '0.7rem' }}>
-                          {booking.source}
+                        <Box
+                          sx={{
+                            width: 16,
+                            height: 16,
+                            borderRadius: '50%',
+                            bgcolor: 'rgba(255,255,255,0.2)',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            fontSize: '0.6rem',
+                            fontWeight: 600,
+                          }}
+                        >
+                          {booking.guestName?.charAt(0) || 'G'}
+                        </Box>
+                        <Typography variant="caption" sx={{ fontSize: '0.7rem', fontWeight: 500 }}>
+                          {booking.guestName || 'Guest'}
                         </Typography>
                       </Box>
-                      <Typography variant="caption" sx={{ fontSize: '0.7rem' }}>
-                        ${booking.price}
+                      <Typography variant="caption" sx={{ fontSize: '0.7rem', mb: 0.5 }}>
+                        {booking.guests} guests
                       </Typography>
-                      <Typography variant="caption" sx={{ fontSize: '0.7rem', display: 'block' }}>
-                        {booking.minStay} min stay
+                      <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
+                        <Iconify
+                          icon={getSourceIcon(booking.source) as any}
+                          width={10}
+                        />
+                        <Typography variant="caption" sx={{ fontSize: '0.7rem' }}>
+                          €{booking.price}
+                        </Typography>
+                      </Box>
+                    </Box>
+                  ) : isCurrentMonth(day) ? (
+                    <Box sx={{ mt: 0.5 }}>
+                      <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5, mb: 0.5 }}>
+                        <Iconify icon={"eva:checkmark-circle-fill" as any} width={12} sx={{ color: 'success.main' }} />
+                        <Typography variant="caption" sx={{ fontSize: '0.7rem', color: 'success.main' }}>
+                          Available
+                        </Typography>
+                      </Box>
+                      <Typography variant="caption" sx={{ fontSize: '0.7rem', color: 'text.secondary' }}>
+                        €{Math.floor(Math.random() * 200) + 100}
+                      </Typography>
+                      <Typography variant="caption" sx={{ fontSize: '0.7rem', color: 'text.secondary', display: 'block' }}>
+                        2 nights min
                       </Typography>
                     </Box>
-                  )}
+                  ) : null}
                 </Box>
               );
             })}

@@ -150,6 +150,17 @@ export function CalendarMultiView() {
           <Typography variant="h4" sx={{ fontWeight: 600 }}>
             Calendar
           </Typography>
+          <Box sx={{ display: 'flex', gap: 1 }}>
+            <Button variant="outlined" sx={{ mr: 1 }}>
+              Available Properties
+            </Button>
+            <Button variant="contained" sx={{ mr: 1 }}>
+              Listing
+            </Button>
+            <Button variant="contained">
+              Direct Booking
+            </Button>
+          </Box>
         </Box>
         
         <Tabs

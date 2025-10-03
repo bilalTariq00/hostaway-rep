@@ -47,9 +47,6 @@ export function CalendarYearlyView() {
     setActiveTab(newValue);
   };
 
-  const handlePropertyClick = (event: React.MouseEvent<HTMLElement>) => {
-    setPropertyAnchor(event.currentTarget);
-  };
 
   const handlePropertyClose = () => {
     setPropertyAnchor(null);
@@ -110,19 +107,14 @@ export function CalendarYearlyView() {
             Calendar
           </Typography>
           
-          {/* Property Dropdown */}
-          <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-            <Button
-              variant="outlined"
-              onClick={handlePropertyClick}
-              endIcon={<Iconify icon={"eva:arrow-down-fill" as any} width={16} />}
-            >
+          <Box sx={{ display: 'flex', gap: 1 }}>
+            <Button variant="outlined" sx={{ mr: 1 }}>
               Available Properties
             </Button>
-            <Button variant="contained" size="small">
+            <Button variant="contained" sx={{ mr: 1 }}>
               Listing
             </Button>
-            <Button variant="contained" size="small">
+            <Button variant="contained">
               Direct Booking
             </Button>
           </Box>
