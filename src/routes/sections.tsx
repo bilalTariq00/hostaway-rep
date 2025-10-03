@@ -24,6 +24,10 @@ export const MessagesPage = lazy(() => import('src/pages/messages'));
 export const CalendarMultiPage = lazy(() => import('src/sections/calendar/view/calendar-multi-view').then(module => ({ default: module.CalendarMultiView })));
 export const CalendarMonthlyPage = lazy(() => import('src/sections/calendar/view/calendar-monthly-view').then(module => ({ default: module.CalendarMonthlyView })));
 export const CalendarYearlyPage = lazy(() => import('src/sections/calendar/view/calendar-yearly-view').then(module => ({ default: module.CalendarYearlyView })));
+export const ReservationsPage = lazy(() => import('src/sections/reservations/view/reservations-view').then(module => ({ default: module.ReservationsView })));
+export const CustomFieldsPage = lazy(() => import('src/sections/reservations/view/custom-fields-view').then(module => ({ default: module.CustomFieldsView })));
+export const GuestbookPage = lazy(() => import('src/sections/reservations/view/guestbook-view').then(module => ({ default: module.GuestbookView })));
+export const CouponsPage = lazy(() => import('src/sections/reservations/view/coupons-view').then(module => ({ default: module.CouponsView })));
 export const Page404 = lazy(() => import('src/pages/page-not-found'));
 
 const renderFallback = () => (
@@ -68,6 +72,10 @@ export const routesSection: RouteObject[] = [
       { path: 'calendar/multi', element: <CalendarMultiPage /> },
       { path: 'calendar/monthly', element: <CalendarMonthlyPage /> },
       { path: 'calendar/yearly', element: <CalendarYearlyPage /> },
+      { path: 'reservations', element: <ReservationsPage /> },
+      { path: 'reservations/custom-fields', element: <CustomFieldsPage /> },
+      { path: 'reservations/guestbook', element: <GuestbookPage /> },
+      { path: 'reservations/coupons', element: <CouponsPage /> },
     ],
   },
   {
