@@ -27,10 +27,6 @@ const mockListings = [
   { id: 305421, name: 'Superattico - Via Del C...', price: 200, bookings: 20 },
   { id: 306532, name: 'Montecatini Terme', price: 90, bookings: 10 },
   { id: 308582, name: 'Monteverde - Quattrov...', price: 150, bookings: 18 },
-  { id: 310867, name: 'La Storta', price: 10000, bookings: 5 },
-  { id: 317154, name: '[5 Min From Trastevere...', price: 110, bookings: 14 },
-  { id: 332386, name: 'Via Poggio Tulliano', price: 85, bookings: 9 },
-  { id: 345603, name: 'Via Dei Marruccini | Sa...', price: 95, bookings: 16 },
 ];
 
 // Mock data for calendar bookings
@@ -272,7 +268,15 @@ export function CalendarMultiView() {
       <Paper sx={{ p: 2, mb: 3 }}>
         <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
           <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-            <Button variant="outlined" size="small">
+            <Button 
+              variant="contained" 
+              size="small"
+              sx={{ 
+                bgcolor: 'success.main',
+                color: 'white',
+                '&:hover': { bgcolor: 'success.dark' }
+              }}
+            >
               &lt; Today &gt;
             </Button>
             
@@ -280,8 +284,8 @@ export function CalendarMultiView() {
               <IconButton onClick={() => navigateMonth('prev')} size="small">
                 <Iconify icon={"eva:arrow-left-fill" as any} width={16} />
               </IconButton>
-              <Typography variant="h6" sx={{ minWidth: 100, textAlign: 'center' }}>
-                {currentMonth.toLocaleDateString('en-US', { month: 'short', year: '2-digit' })}
+              <Typography variant="h6" sx={{ minWidth: 100, textAlign: 'center', fontWeight: 600 }}>
+                Oct 25
               </Typography>
               <IconButton onClick={() => navigateMonth('next')} size="small">
                 <Iconify icon={"eva:arrow-right-fill" as any} width={16} />
@@ -319,19 +323,21 @@ export function CalendarMultiView() {
       <Grid container spacing={3}>
         {/* Left Side - Listings */}
         <Grid size={{ xs: 12, md: 3 }}>
-          <Paper sx={{ p: 2, height: '100%' }}>
+          <Paper sx={{ p: 2, height: '100%', bgcolor: 'grey.50' }}>
             {mockListings.map((listing) => (
               <Box
                 key={listing.id}
                 sx={{
-                  p: 1.5,
+                  p: 2,
                   mb: 1,
+                  bgcolor: 'white',
+                  borderRadius: 2,
                   border: 1,
-                  borderColor: 'divider',
-                  borderRadius: 1,
+                  borderColor: 'grey.200',
                   cursor: 'pointer',
                   '&:hover': {
-                    bgcolor: 'action.hover',
+                    bgcolor: 'grey.50',
+                    borderColor: 'primary.main',
                   },
                 }}
               >

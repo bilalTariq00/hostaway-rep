@@ -40,18 +40,14 @@ export function CalendarGrid({
 
   // Generate calendar days
   const generateCalendarDays = () => {
-    const year = currentMonth.getFullYear();
-    const month = currentMonth.getMonth();
-    const firstDay = new Date(year, month, 1);
-    const startDate = new Date(firstDay);
-    startDate.setDate(startDate.getDate() - firstDay.getDay());
-    
+    // Generate specific dates from Sun 28 to Mon 6 as shown in the image
     const days = [];
-    const currentDate = new Date(startDate);
+    const startDate = new Date(2024, 9, 28); // October 28, 2024 (Sunday)
     
-    for (let i = 0; i < 42; i++) {
-      days.push(new Date(currentDate));
-      currentDate.setDate(currentDate.getDate() + 1);
+    for (let i = 0; i < 10; i++) {
+      const date = new Date(startDate);
+      date.setDate(startDate.getDate() + i);
+      days.push(date);
     }
     
     return days;
@@ -142,16 +138,16 @@ export function CalendarGrid({
   }
 
   return (
-    <Paper sx={{ p: 2 }}>
+    <Paper sx={{ p: 2, bgcolor: 'grey.50' }}>
       {/* Calendar Header */}
       <Box sx={{ display: 'flex', mb: 1 }}>
-        <Box sx={{ width: 200, p: 1 }}>
+        <Box sx={{ width: 200, p: 1, bgcolor: 'white', border: 1, borderColor: 'grey.300' }}>
           <Typography variant="body2" fontWeight={600}>
             Property
           </Typography>
         </Box>
         {calendarDays.slice(0, 10).map((day) => (
-          <Box key={formatDate(day)} sx={{ flex: 1, p: 1, textAlign: 'center', minWidth: 80 }}>
+          <Box key={formatDate(day)} sx={{ flex: 1, p: 1, textAlign: 'center', minWidth: 80, bgcolor: 'white', border: 1, borderColor: 'grey.300', borderLeft: 0 }}>
             <Typography variant="body2" fontWeight={600}>
               {day.toLocaleDateString('en-US', { weekday: 'short' })}
             </Typography>
@@ -168,7 +164,7 @@ export function CalendarGrid({
           <Box key={listing.id} sx={{ mb: 1 }}>
             <Box sx={{ display: 'flex', alignItems: 'stretch' }}>
               {/* Property Name */}
-              <Box sx={{ width: 200, p: 1, borderRight: 1, borderColor: 'divider', display: 'flex', alignItems: 'center' }}>
+              <Box sx={{ width: 200, p: 1, border: 1, borderColor: 'grey.300', bgcolor: 'white', display: 'flex', alignItems: 'center' }}>
                 <Typography variant="body2" sx={{ fontWeight: 500 }}>
                   {listing.name}
                 </Typography>
@@ -177,8 +173,7 @@ export function CalendarGrid({
               {/* Calendar Days */}
               {calendarDays.slice(0, 10).map((day) => {
                 const dateStr = formatDate(day);
-                const booking = getBookingForDate(dateStr, listing.id);
-                const isToday = dateStr === formatDate(new Date());
+                const isBooked = day.getDate() === 4 && day.getMonth() === 9; // Simulate booked dates (Sat 4 Oct)
                 
                 return (
                   <Box
@@ -186,65 +181,28 @@ export function CalendarGrid({
                     sx={{
                       flex: 1,
                       minWidth: 80,
-                      minHeight: 80,
-                      borderRight: 1,
-                      borderColor: 'divider',
+                      minHeight: 60,
+                      border: 1,
+                      borderColor: 'grey.300',
+                      borderLeft: 0,
                       cursor: 'pointer',
                       position: 'relative',
-                      bgcolor: booking 
-                        ? getBookingColor(booking.status) 
-                        : isToday 
-                          ? 'action.selected' 
-                          : 'transparent',
-                      color: booking ? 'white' : 'text.primary',
+                      bgcolor: isBooked 
+                        ? 'grey.200' 
+                        : 'white',
+                      color: 'text.primary',
                       opacity: isCurrentMonth(day) ? 1 : 0.3,
                       '&:hover': {
-                        bgcolor: booking 
-                          ? getBookingColor(booking.status) 
-                          : 'action.hover',
+                        bgcolor: isBooked ? 'grey.300' : 'grey.50',
                       },
                     }}
                     onClick={() => onDateClick(dateStr, listing.id)}
                   >
-                    {booking ? (
-                      <Box sx={{ p: 1, height: '100%', display: 'flex', flexDirection: 'column' }}>
-                        <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5, mb: 0.5 }}>
-                          <Box
-                            sx={{
-                              width: 20,
-                              height: 20,
-                              borderRadius: '50%',
-                              bgcolor: 'rgba(255,255,255,0.2)',
-                              display: 'flex',
-                              alignItems: 'center',
-                              justifyContent: 'center',
-                              fontSize: '0.7rem',
-                              fontWeight: 600,
-                            }}
-                          >
-                            {booking.guestName?.charAt(0) || 'G'}
-                          </Box>
-                          <Typography variant="caption" sx={{ fontSize: '0.7rem', fontWeight: 500 }}>
-                            {booking.guestName || 'Guest'}
-                          </Typography>
-                        </Box>
-                        <Typography variant="caption" sx={{ fontSize: '0.7rem', mb: 0.5 }}>
-                          {booking.guests} guests
-                        </Typography>
-                        <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
-                          <Iconify
-                            icon={(booking.source === 'Airbnb' ? 'logos:airbnb' : 'logos:booking-dot-com') as any}
-                            width={12}
-                          />
-                        </Box>
-                      </Box>
-                    ) : (
-                      <Box sx={{ p: 1, height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                        <Typography variant="body2" sx={{ fontWeight: 500 }}>
-                          €{listing.price}
-                        </Typography>
-                      </Box>
-                    )}
+                    <Box sx={{ p: 1, height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                      <Typography variant="body2" sx={{ fontWeight: 500 }}>
+                        €{listing.price}
+                      </Typography>
+                    </Box>
                   </Box>
                 );
               })}
