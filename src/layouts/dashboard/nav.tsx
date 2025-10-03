@@ -12,8 +12,8 @@ import IconButton from '@mui/material/IconButton';
 import ListItemButton from '@mui/material/ListItemButton';
 import Drawer, { drawerClasses } from '@mui/material/Drawer';
 
-import { usePathname } from 'src/routes/hooks';
 import { RouterLink } from 'src/routes/components';
+import { useRouter, usePathname } from 'src/routes/hooks';
 
 import { useSidebar } from 'src/contexts/sidebar-context';
 
@@ -120,14 +120,33 @@ export function NavMobile({
 
 export function NavContent({ data, slots, workspaces, collapsed = false, sx }: NavContentProps) {
   const pathname = usePathname();
+  const router = useRouter();
   const [expandedItems, setExpandedItems] = useState<Set<string>>(new Set());
 
-  const toggleExpanded = (itemTitle: string) => {
+  // Auto-expand sections when current path matches a child
+  useEffect(() => {
+    const newExpanded = new Set<string>();
+    data.forEach((item) => {
+      if (item.children) {
+        const hasActiveChild = item.children.some((child) => child.path === pathname);
+        if (hasActiveChild) {
+          newExpanded.add(item.title);
+        }
+      }
+    });
+    setExpandedItems(newExpanded);
+  }, [pathname, data]);
+
+  const toggleExpanded = (itemTitle: string, item: NavItem) => {
     const newExpanded = new Set(expandedItems);
     if (newExpanded.has(itemTitle)) {
       newExpanded.delete(itemTitle);
     } else {
       newExpanded.add(itemTitle);
+      // If expanding and has children, navigate to the first child
+      if (item.children && item.children.length > 0) {
+        router.push(item.children[0].path);
+      }
     }
     setExpandedItems(newExpanded);
   };
@@ -144,7 +163,7 @@ export function NavContent({ data, slots, workspaces, collapsed = false, sx }: N
             disableGutters
             component={hasChildren ? 'div' : RouterLink}
             href={hasChildren ? undefined : item.path}
-            onClick={hasChildren ? () => toggleExpanded(item.title) : undefined}
+            onClick={hasChildren ? () => toggleExpanded(item.title, item) : undefined}
             sx={[
               (theme) => ({
                 pl: collapsed ? 1.5 : 2 + level * 1.5,
