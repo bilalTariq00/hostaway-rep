@@ -30,6 +30,10 @@ export const GuestbookPage = lazy(() => import('src/sections/reservations/view/g
 export const CouponsPage = lazy(() => import('src/sections/reservations/view/coupons-view').then(module => ({ default: module.CouponsView })));
 export const ListingsPage = lazy(() => import('src/sections/listings/view/listings-view').then(module => ({ default: module.ListingsView })));
 export const ListingsCustomFieldsPage = lazy(() => import('src/sections/listings/view/listings-custom-fields-view').then(module => ({ default: module.ListingsCustomFieldsView })));
+export const FinancialAnalyticsPage = lazy(() => import('src/sections/financial-reporting/view/analytics-view').then(module => ({ default: module.AnalyticsView })));
+export const RentalActivityPage = lazy(() => import('src/sections/financial-reporting/view/rental-activity-view').then(module => ({ default: module.RentalActivityView })));
+export const OccupancyReportPage = lazy(() => import('src/sections/financial-reporting/view/occupancy-report-view').then(module => ({ default: module.OccupancyReportView })));
+export const QuickBooksPage = lazy(() => import('src/sections/financial-reporting/view/quickbooks-view').then(module => ({ default: module.QuickBooksView })));
 export const Page404 = lazy(() => import('src/pages/page-not-found'));
 
 const renderFallback = () => (
@@ -80,6 +84,11 @@ export const routesSection: RouteObject[] = [
       { path: 'reservations/coupons', element: <CouponsPage /> },
       { path: 'listings', element: <ListingsPage /> },
       { path: 'listings/custom-fields', element: <ListingsCustomFieldsPage /> },
+      { path: 'financial-reportings', element: <FinancialAnalyticsPage /> },
+      { path: 'financial-reportings/analytics', element: <FinancialAnalyticsPage /> },
+      { path: 'financial-reportings/rental-activity', element: <RentalActivityPage /> },
+      { path: 'financial-reportings/occupancy-report', element: <OccupancyReportPage /> },
+      { path: 'financial-reportings/quickbooks', element: <QuickBooksPage /> },
     ],
   },
   {
