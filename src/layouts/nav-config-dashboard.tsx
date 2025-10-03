@@ -77,27 +77,27 @@ export const navData = [
   },
   {
     title: 'Reservation',
-    path: '/reservation',
+    path: '/reservations',
     icon: icon('ic-cart'),
     children: [
       {
         title: 'Reservations',
-        path: '/reservation',
+        path: '/reservations',
         icon: icon('ic-cart'),
       },
       {
         title: 'Custom Fields',
-        path: '/reservation/custom-fields',
+        path: '/reservations/custom-fields',
         icon: icon('ic-cart'),
       },
       {
         title: 'Guestbook',
-        path: '/reservation/guestbook',
+        path: '/reservations/guestbook',
         icon: icon('ic-cart'),
       },
       {
         title: 'Coupons',
-        path: '/reservation/coupons',
+        path: '/reservations/coupons',
         icon: icon('ic-cart'),
       },
     ],
