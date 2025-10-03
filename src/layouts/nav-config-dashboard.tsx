@@ -21,28 +21,28 @@ export const navData = [
     title: 'Overview',
     path: '/',
     icon: icon('ic-analytics'),
-    children: [
-      {
-        title: 'Multi',
-        path: '/overview/multi',
-        icon: icon('ic-chart'),
-      },
-      {
-        title: 'Monthly',
-        path: '/overview/monthly',
-        icon: icon('ic-chart'),
-      },
-      {
-        title: 'Yearly',
-        path: '/overview/yearly',
-        icon: icon('ic-chart'),
-      },
-    ],
   },
   {
     title: 'Calendar',
     path: '/calendar',
     icon: icon('ic-chart'),
+    children: [
+      {
+        title: 'Multi',
+        path: '/calendar/multi',
+        icon: icon('ic-chart'),
+      },
+      {
+        title: 'Monthly',
+        path: '/calendar/monthly',
+        icon: icon('ic-chart'),
+      },
+      {
+        title: 'Yearly',
+        path: '/calendar/yearly',
+        icon: icon('ic-chart'),
+      },
+    ],
   },
   {
     title: 'Inbox',
