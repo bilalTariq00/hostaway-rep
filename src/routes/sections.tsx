@@ -38,6 +38,8 @@ export const ExpensesPage = lazy(() => import('src/sections/expenses/view/expens
 export const ExtrasPage = lazy(() => import('src/sections/expenses/view/extras-view').then(module => ({ default: module.ExtrasView })));
 export const CategoriesPage = lazy(() => import('src/sections/expenses/view/categories-view').then(module => ({ default: module.CategoriesView })));
 export const AutomationsPage = lazy(() => import('src/sections/expenses/view/automations-view').then(module => ({ default: module.AutomationsView })));
+export const StatementsPage = lazy(() => import('src/sections/statements/view/statements-view').then(module => ({ default: module.StatementsView })));
+export const AutoStatementsPage = lazy(() => import('src/sections/statements/view/auto-statements-view').then(module => ({ default: module.AutoStatementsView })));
 export const Page404 = lazy(() => import('src/pages/page-not-found'));
 
 const renderFallback = () => (
@@ -98,6 +100,9 @@ export const routesSection: RouteObject[] = [
       { path: 'expenses-extras/extras', element: <ExtrasPage /> },
       { path: 'expenses-extras/categories', element: <CategoriesPage /> },
       { path: 'expenses-extras/automations', element: <AutomationsPage /> },
+      { path: 'statements', element: <StatementsPage /> },
+      { path: 'statements/statements', element: <StatementsPage /> },
+      { path: 'statements/auto-statements', element: <AutoStatementsPage /> },
     ],
   },
   {
