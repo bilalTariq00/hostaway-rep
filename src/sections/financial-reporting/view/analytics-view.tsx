@@ -21,6 +21,7 @@ import { useRouter } from 'src/routes/hooks';
 import { DashboardContent } from 'src/layouts/dashboard';
 
 import { Iconify } from 'src/components/iconify';
+import { Chart, useChart } from 'src/components/chart';
 
 // Mock data for analytics
 const mockAnalyticsData = {
@@ -36,6 +37,56 @@ const mockChannelData = [
   { channel: 'Booking.com', revenue: 3500, nights: 15, color: '#003580' },
   { channel: 'Expedia', revenue: 1500, nights: 5, color: '#FF6600' },
 ];
+
+// Chart data
+const revenueChartData = {
+  series: [
+    {
+      name: 'Revenue',
+      data: [12000, 13500, 11000, 15000, 12500, 14000, 13000],
+    },
+  ],
+  categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul'],
+};
+
+const channelRevenueData = {
+  series: [
+    { name: 'Airbnb', data: [7500, 8200, 6800, 9100, 7800] },
+    { name: 'Booking.com', data: [3500, 4200, 3800, 4100, 3900] },
+    { name: 'Expedia', data: [1500, 1800, 1200, 1900, 1600] },
+  ],
+  categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May'],
+};
+
+const nightsBookedData = {
+  series: [
+    { name: 'Airbnb', data: [25, 28, 22, 30, 26] },
+    { name: 'Booking.com', data: [15, 18, 16, 17, 19] },
+    { name: 'Expedia', data: [5, 6, 4, 7, 6] },
+  ],
+  categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May'],
+};
+
+const revenuePerReservationData = {
+  series: [
+    { name: 'Airbnb', data: [300, 320, 310, 330, 315] },
+    { name: 'Booking.com', data: [233, 250, 240, 260, 245] },
+    { name: 'Expedia', data: [300, 300, 300, 271, 267] },
+  ],
+  categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May'],
+};
+
+const checkinData = {
+  series: [
+    { name: 'Check-ins', data: [12, 15, 18, 14, 16, 20, 17] },
+  ],
+  categories: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+};
+
+const reservationsPerChannelData = {
+  series: [45, 25, 15, 10, 5],
+  labels: ['Airbnb', 'Booking.com', 'Expedia', 'Direct', 'Other'],
+};
 
 
 export function AnalyticsView() {
@@ -233,11 +284,16 @@ export function AnalyticsView() {
                   </IconButton>
                 </Box>
               </Box>
-              <Box sx={{ height: 300, display: 'flex', alignItems: 'center', justifyContent: 'center', bgcolor: 'grey.50' }}>
-                <Typography variant="body2" color="text.secondary">
-                  Chart Component (Price and Date based)
-                </Typography>
-              </Box>
+              <Chart
+                type={chartType === 'bar' ? 'bar' : 'line'}
+                series={revenueChartData.series}
+                options={useChart({
+                  xaxis: { categories: revenueChartData.categories },
+                  tooltip: { y: { formatter: (value: number) => `€${value.toLocaleString()}` } },
+                  yaxis: { labels: { formatter: (value: number) => `€${value.toLocaleString()}` } },
+                })}
+                sx={{ height: 300 }}
+              />
             </CardContent>
           </Card>
         </Grid>
@@ -279,11 +335,16 @@ export function AnalyticsView() {
               <Typography variant="h6" sx={{ fontWeight: 600, mb: 2 }}>
                 Rental Revenue per Channel
               </Typography>
-              <Box sx={{ height: 200, display: 'flex', alignItems: 'center', justifyContent: 'center', bgcolor: 'grey.50' }}>
-                <Typography variant="body2" color="text.secondary">
-                  Bar Chart
-                </Typography>
-              </Box>
+              <Chart
+                type="bar"
+                series={channelRevenueData.series}
+                options={useChart({
+                  xaxis: { categories: channelRevenueData.categories },
+                  tooltip: { y: { formatter: (value: number) => `€${value.toLocaleString()}` } },
+                  yaxis: { labels: { formatter: (value: number) => `€${value.toLocaleString()}` } },
+                })}
+                sx={{ height: 200 }}
+              />
             </CardContent>
           </Card>
         </Grid>
@@ -293,11 +354,16 @@ export function AnalyticsView() {
               <Typography variant="h6" sx={{ fontWeight: 600, mb: 2 }}>
                 Booked Nights per Channel
               </Typography>
-              <Box sx={{ height: 200, display: 'flex', alignItems: 'center', justifyContent: 'center', bgcolor: 'grey.50' }}>
-                <Typography variant="body2" color="text.secondary">
-                  Bar Chart
-                </Typography>
-              </Box>
+              <Chart
+                type="bar"
+                series={nightsBookedData.series}
+                options={useChart({
+                  xaxis: { categories: nightsBookedData.categories },
+                  tooltip: { y: { formatter: (value: number) => `${value} nights` } },
+                  yaxis: { labels: { formatter: (value: number) => `${value}` } },
+                })}
+                sx={{ height: 200 }}
+              />
             </CardContent>
           </Card>
         </Grid>
@@ -307,11 +373,16 @@ export function AnalyticsView() {
               <Typography variant="h6" sx={{ fontWeight: 600, mb: 2 }}>
                 Rental Revenue per Reservation per Channel
               </Typography>
-              <Box sx={{ height: 200, display: 'flex', alignItems: 'center', justifyContent: 'center', bgcolor: 'grey.50' }}>
-                <Typography variant="body2" color="text.secondary">
-                  Bar Chart
-                </Typography>
-              </Box>
+              <Chart
+                type="bar"
+                series={revenuePerReservationData.series}
+                options={useChart({
+                  xaxis: { categories: revenuePerReservationData.categories },
+                  tooltip: { y: { formatter: (value: number) => `€${value}` } },
+                  yaxis: { labels: { formatter: (value: number) => `€${value}` } },
+                })}
+                sx={{ height: 200 }}
+              />
             </CardContent>
           </Card>
         </Grid>
@@ -334,11 +405,16 @@ export function AnalyticsView() {
                   </Select>
                 </FormControl>
               </Box>
-              <Box sx={{ height: 300, display: 'flex', alignItems: 'center', justifyContent: 'center', bgcolor: 'grey.50' }}>
-                <Typography variant="body2" color="text.secondary">
-                  Bar/Line Chart Component
-                </Typography>
-              </Box>
+              <Chart
+                type={chartType === 'bar' ? 'bar' : 'line'}
+                series={checkinData.series}
+                options={useChart({
+                  xaxis: { categories: checkinData.categories },
+                  tooltip: { y: { formatter: (value: number) => `${value} check-ins` } },
+                  yaxis: { labels: { formatter: (value: number) => `${value}` } },
+                })}
+                sx={{ height: 300 }}
+              />
             </CardContent>
           </Card>
         </Grid>
@@ -348,11 +424,29 @@ export function AnalyticsView() {
               <Typography variant="h6" sx={{ fontWeight: 600, mb: 2 }}>
                 Reservations per Channel
               </Typography>
-              <Box sx={{ height: 300, display: 'flex', alignItems: 'center', justifyContent: 'center', bgcolor: 'grey.50' }}>
-                <Typography variant="body2" color="text.secondary">
-                  Circular Chart with Color Indicators
-                </Typography>
-              </Box>
+              <Chart
+                type="donut"
+                series={reservationsPerChannelData.series}
+                options={useChart({
+                  labels: reservationsPerChannelData.labels,
+                  tooltip: { y: { formatter: (value: number) => `${value} reservations` } },
+                  plotOptions: {
+                    pie: {
+                      donut: {
+                        labels: {
+                          show: true,
+                          total: {
+                            show: true,
+                            label: 'Total Reservations',
+                            formatter: () => '100',
+                          },
+                        },
+                      },
+                    },
+                  },
+                })}
+                sx={{ height: 300 }}
+              />
             </CardContent>
           </Card>
         </Grid>
