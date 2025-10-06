@@ -90,7 +90,7 @@ export function StatementsView() {
 
   const handleTabChange = (event: React.SyntheticEvent, newValue: number) => {
     setActiveTab(newValue);
-    if (newValue === 1) router.push('/owner-statements/auto-statements');
+    if (newValue === 1) router.push('/owner-statements/auto');
   };
 
   const handleActionMenuOpen = (event: React.MouseEvent<HTMLElement>) => {

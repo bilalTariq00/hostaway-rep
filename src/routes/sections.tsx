@@ -102,7 +102,7 @@ export const routesSection: RouteObject[] = [
       { path: 'expenses-extras/automations', element: <AutomationsPage /> },
       { path: 'owner-statements', element: <StatementsPage /> },
       { path: 'owner-statements/statements', element: <StatementsPage /> },
-      { path: 'owner-statements/auto-statements', element: <AutoStatementsPage /> },
+      { path: 'owner-statements/auto', element: <AutoStatementsPage /> },
     ],
   },
   {
