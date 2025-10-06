@@ -88,9 +88,9 @@ export function AutomationsView() {
 
   const handleTabChange = (event: React.SyntheticEvent, newValue: number) => {
     setActiveTab(newValue);
-    if (newValue === 0) router.push('/expenses/expenses');
-    if (newValue === 1) router.push('/expenses/extras');
-    if (newValue === 2) router.push('/expenses/categories');
+    if (newValue === 0) router.push('/expenses-extras/expenses');
+    if (newValue === 1) router.push('/expenses-extras/extras');
+    if (newValue === 2) router.push('/expenses-extras/categories');
   };
 
   const handleActionMenuOpen = (event: React.MouseEvent<HTMLElement>) => {

@@ -71,9 +71,9 @@ export function CategoriesView() {
 
   const handleTabChange = (event: React.SyntheticEvent, newValue: number) => {
     setActiveTab(newValue);
-    if (newValue === 0) router.push('/expenses/expenses');
-    if (newValue === 1) router.push('/expenses/extras');
-    if (newValue === 3) router.push('/expenses/automations');
+    if (newValue === 0) router.push('/expenses-extras/expenses');
+    if (newValue === 1) router.push('/expenses-extras/extras');
+    if (newValue === 3) router.push('/expenses-extras/automations');
   };
 
   const handleActionMenuOpen = (event: React.MouseEvent<HTMLElement>) => {

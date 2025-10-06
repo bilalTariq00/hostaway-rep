@@ -102,9 +102,9 @@ export function ExtrasView() {
 
   const handleTabChange = (event: React.SyntheticEvent, newValue: number) => {
     setActiveTab(newValue);
-    if (newValue === 0) router.push('/expenses/expenses');
-    if (newValue === 2) router.push('/expenses/categories');
-    if (newValue === 3) router.push('/expenses/automations');
+    if (newValue === 0) router.push('/expenses-extras/expenses');
+    if (newValue === 2) router.push('/expenses-extras/categories');
+    if (newValue === 3) router.push('/expenses-extras/automations');
   };
 
   const handleSelectAll = (event: React.ChangeEvent<HTMLInputElement>) => {
