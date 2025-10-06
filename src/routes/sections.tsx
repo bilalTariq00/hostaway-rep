@@ -100,9 +100,9 @@ export const routesSection: RouteObject[] = [
       { path: 'expenses-extras/extras', element: <ExtrasPage /> },
       { path: 'expenses-extras/categories', element: <CategoriesPage /> },
       { path: 'expenses-extras/automations', element: <AutomationsPage /> },
-      { path: 'statements', element: <StatementsPage /> },
-      { path: 'statements/statements', element: <StatementsPage /> },
-      { path: 'statements/auto-statements', element: <AutoStatementsPage /> },
+      { path: 'owner-statements', element: <StatementsPage /> },
+      { path: 'owner-statements/statements', element: <StatementsPage /> },
+      { path: 'owner-statements/auto-statements', element: <AutoStatementsPage /> },
     ],
   },
   {
