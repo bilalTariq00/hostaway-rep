@@ -34,6 +34,10 @@ export const FinancialAnalyticsPage = lazy(() => import('src/sections/financial-
 export const RentalActivityPage = lazy(() => import('src/sections/financial-reporting/view/rental-activity-view').then(module => ({ default: module.RentalActivityView })));
 export const OccupancyReportPage = lazy(() => import('src/sections/financial-reporting/view/occupancy-report-view').then(module => ({ default: module.OccupancyReportView })));
 export const QuickBooksPage = lazy(() => import('src/sections/financial-reporting/view/quickbooks-view').then(module => ({ default: module.QuickBooksView })));
+export const ExpensesPage = lazy(() => import('src/sections/expenses/view/expenses-view').then(module => ({ default: module.ExpensesView })));
+export const ExtrasPage = lazy(() => import('src/sections/expenses/view/extras-view').then(module => ({ default: module.ExtrasView })));
+export const CategoriesPage = lazy(() => import('src/sections/expenses/view/categories-view').then(module => ({ default: module.CategoriesView })));
+export const AutomationsPage = lazy(() => import('src/sections/expenses/view/automations-view').then(module => ({ default: module.AutomationsView })));
 export const Page404 = lazy(() => import('src/pages/page-not-found'));
 
 const renderFallback = () => (
@@ -89,6 +93,11 @@ export const routesSection: RouteObject[] = [
       { path: 'financial-reportings/rental-activity', element: <RentalActivityPage /> },
       { path: 'financial-reportings/occupancy-report', element: <OccupancyReportPage /> },
       { path: 'financial-reportings/quickbooks', element: <QuickBooksPage /> },
+      { path: 'expenses', element: <ExpensesPage /> },
+      { path: 'expenses/expenses', element: <ExpensesPage /> },
+      { path: 'expenses/extras', element: <ExtrasPage /> },
+      { path: 'expenses/categories', element: <CategoriesPage /> },
+      { path: 'expenses/automations', element: <AutomationsPage /> },
     ],
   },
   {
