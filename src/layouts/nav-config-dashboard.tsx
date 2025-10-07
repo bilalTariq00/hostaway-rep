@@ -206,7 +206,7 @@ export const navData = [
       },
       {
         title: 'Manage Auto-tasks',
-        path: '/tasks/auto-tasks',
+        path: '/tasks/manage-auto-tasks',
         icon: icon('ic-lock'),
       },
       {
@@ -215,8 +215,8 @@ export const navData = [
         icon: icon('ic-lock'),
       },
       {
-        title: 'Archived',
-        path: '/tasks/archived',
+        title: 'Archive',
+        path: '/tasks/archive',
         icon: icon('ic-lock'),
       },
       {

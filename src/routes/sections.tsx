@@ -40,6 +40,29 @@ export const CategoriesPage = lazy(() => import('src/sections/expenses/view/cate
 export const AutomationsPage = lazy(() => import('src/sections/expenses/view/automations-view').then(module => ({ default: module.AutomationsView })));
 export const StatementsPage = lazy(() => import('src/sections/statements/view/statements-view').then(module => ({ default: module.StatementsView })));
 export const AutoStatementsPage = lazy(() => import('src/sections/statements/view/auto-statements-view').then(module => ({ default: module.AutoStatementsView })));
+export const ManageTasksPage = lazy(() => import('src/sections/tasks/view/manage-tasks-view').then(module => ({ default: module.ManageTasksView })));
+export const ManageAutoTasksPage = lazy(() => import('src/sections/tasks/view/manage-auto-tasks-view').then(module => ({ default: module.ManageAutoTasksView })));
+export const ChecklistTemplatesPage = lazy(() => import('src/sections/tasks/view/checklist-templates-view').then(module => ({ default: module.ChecklistTemplatesView })));
+export const ArchivePage = lazy(() => import('src/sections/tasks/view/archive-view').then(module => ({ default: module.ArchiveView })));
+export const TasksCustomFieldsPage = lazy(() => import('src/sections/tasks/view/custom-fields-view').then(module => ({ default: module.CustomFieldsView })));
+export const ManageReviewsPage = lazy(() => import('src/sections/reviews/view/manage-reviews-view').then(module => ({ default: module.ManageReviewsView })));
+export const AutoReviewsPage = lazy(() => import('src/sections/reviews/view/auto-reviews-view').then(module => ({ default: module.AutoReviewsView })));
+export const ReviewTemplatesPage = lazy(() => import('src/sections/reviews/view/review-templates-view').then(module => ({ default: module.ReviewTemplatesView })));
+export const ChargesPage = lazy(() => import('src/sections/guest-payments/view/charges-view').then(module => ({ default: module.ChargesView })));
+export const AutoPaymentsPage = lazy(() => import('src/sections/guest-payments/view/auto-payments-view').then(module => ({ default: module.AutoPaymentsView })));
+export const DocumentTemplatesPage = lazy(() => import('src/sections/guest-payments/view/document-templates-view').then(module => ({ default: module.DocumentTemplatesView })));
+export const SmartLocksPage = lazy(() => import('src/sections/smart-locks/view/smart-locks-view').then(module => ({ default: module.SmartLocksView })));
+export const ListingMappingPage = lazy(() => import('src/sections/channel-manager/view/listing-mapping-view').then(module => ({ default: module.ListingMappingView })));
+export const ChannelsPage = lazy(() => import('src/sections/channel-manager/view/channels-view').then(module => ({ default: module.ChannelsView })));
+export const DesignPage = lazy(() => import('src/sections/booking-engine/view/design-view').then(module => ({ default: module.DesignView })));
+export const BookingListingsPage = lazy(() => import('src/sections/booking-engine/view/listings-view').then(module => ({ default: module.ListingsView })));
+export const BookingPagesPage = lazy(() => import('src/sections/booking-engine/view/pages-view').then(module => ({ default: module.PagesView })));
+export const BookingSettingsPage = lazy(() => import('src/sections/booking-engine/view/settings-view').then(module => ({ default: module.SettingsView })));
+export const TranslationsPage = lazy(() => import('src/sections/booking-engine/view/translations-view').then(module => ({ default: module.TranslationsView })));
+export const InboxPage = lazy(() => import('src/sections/inbox/view/inbox-view').then(module => ({ default: module.InboxView })));
+export const MessageTemplatesPage = lazy(() => import('src/sections/inbox/view/message-templates-view').then(module => ({ default: module.MessageTemplatesView })));
+export const InboxAutomationsPage = lazy(() => import('src/sections/inbox/view/automations-view').then(module => ({ default: module.AutomationsView })));
+export const ManageMessagesPage = lazy(() => import('src/sections/inbox/view/manage-messages-view').then(module => ({ default: module.ManageMessagesView })));
 export const Page404 = lazy(() => import('src/pages/page-not-found'));
 
 const renderFallback = () => (
@@ -103,6 +126,38 @@ export const routesSection: RouteObject[] = [
       { path: 'owner-statements', element: <StatementsPage /> },
       { path: 'owner-statements/statements', element: <StatementsPage /> },
       { path: 'owner-statements/auto', element: <AutoStatementsPage /> },
+      { path: 'tasks', element: <ManageTasksPage /> },
+      { path: 'tasks/manage-tasks', element: <ManageTasksPage /> },
+      { path: 'tasks/manage-auto-tasks', element: <ManageAutoTasksPage /> },
+      { path: 'tasks/checklist-templates', element: <ChecklistTemplatesPage /> },
+      { path: 'tasks/archive', element: <ArchivePage /> },
+      { path: 'tasks/custom-fields', element: <TasksCustomFieldsPage /> },
+      { path: 'reviews', element: <ManageReviewsPage /> },
+      { path: 'reviews/manage-reviews', element: <ManageReviewsPage /> },
+      { path: 'reviews/auto-reviews', element: <AutoReviewsPage /> },
+      { path: 'reviews/templates', element: <ReviewTemplatesPage /> },
+      { path: 'reviews/review-templates', element: <ReviewTemplatesPage /> },
+      { path: 'guest-payments', element: <ChargesPage /> },
+      { path: 'guest-payments/charges', element: <ChargesPage /> },
+      { path: 'guest-payments/auto-payments', element: <AutoPaymentsPage /> },
+      { path: 'guest-payments/document-templates', element: <DocumentTemplatesPage /> },
+      { path: 'smart-locks', element: <SmartLocksPage /> },
+      { path: 'channel-manager', element: <ListingMappingPage /> },
+      { path: 'channel-manager/listing-mapping', element: <ListingMappingPage /> },
+      { path: 'channel-manager/channels', element: <ChannelsPage /> },
+      { path: 'booking-engine', element: <DesignPage /> },
+      { path: 'booking-engine/design', element: <DesignPage /> },
+      { path: 'booking-engine/listing', element: <BookingListingsPage /> },
+      { path: 'booking-engine/listings', element: <BookingListingsPage /> },
+      { path: 'booking-engine/pages', element: <BookingPagesPage /> },
+      { path: 'booking-engine/settings', element: <BookingSettingsPage /> },
+      { path: 'booking-engine/translations', element: <TranslationsPage /> },
+      { path: 'inbox', element: <InboxPage /> },
+      { path: 'inbox/templates', element: <MessageTemplatesPage /> },
+      { path: 'inbox/message-templates', element: <MessageTemplatesPage /> },
+      { path: 'inbox/automations', element: <InboxAutomationsPage /> },
+      { path: 'inbox/manage', element: <ManageMessagesPage /> },
+      { path: 'inbox/manage-messages', element: <ManageMessagesPage /> },
     ],
   },
   {
