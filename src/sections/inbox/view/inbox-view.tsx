@@ -6,13 +6,11 @@ import {
   Send, 
   Star, 
   User, 
-  Wifi, 
   Clock, 
   Wand2, 
   Filter, 
   Search, 
   Archive, 
-  WifiOff, 
   Calendar, 
   Paperclip, 
   ArrowRight, 
@@ -75,7 +73,6 @@ export function InboxView() {
     conversations,
     messages,
     isLoading,
-    error,
     isConnected,
     sendMessage,
     markAsRead
@@ -174,110 +171,126 @@ export function InboxView() {
 
   const selectedConversation = conversations.find(conv => conv.id === selectedConversationId);
 
-  const getStatusIcon = (statusIcon: string) => {
-    switch (statusIcon) {
-      case 'hourglass':
-        return <Clock size={12} style={{ color: '#ff9800' }} />;
-      case 'unread':
-        return <Box sx={{ width: 8, height: 8, borderRadius: '50%', backgroundColor: '#2196f3' }} />;
-      case 'read':
-        return <Box sx={{ width: 8, height: 8, borderRadius: '50%', backgroundColor: '#9e9e9e', border: '1px solid #fff' }} />;
-      default:
-        return null;
-    }
-  };
-
   return (
     <DashboardContent maxWidth={false} sx={{ p: 0 }}>
       {/* Header */}
-      <Box sx={{ p: 3, borderBottom: '1px solid', borderColor: 'divider' }}>
-        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
-          <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-            <Typography variant="h4" sx={{ fontWeight: 700, fontSize: '2rem' }}>
-              Guest messaging
-            </Typography>
-            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-              {isConnected ? (
-                <Tooltip title="Connected">
-                  <Wifi size={20} color="#4caf50" />
-                </Tooltip>
-              ) : (
-                <Tooltip title="Disconnected">
-                  <WifiOff size={20} color="#f44336" />
-                </Tooltip>
-              )}
-              {error && (
-                <Typography variant="caption" color="error">
-                  {error}
-                </Typography>
-              )}
-            </Box>
-          </Box>
-          <Button
-            variant="contained"
-            onClick={() => setBulkUpdateOpen(true)}
-            sx={{ 
-              backgroundColor: '#e3f2fd', 
-              color: '#1976d2',
-              '&:hover': { backgroundColor: '#bbdefb' }
-            }}
-          >
-            Bulk update
-          </Button>
-        </Box>
+      <Box sx={{ p: 2, pb: 1 }}>
+        <Typography variant="h5" sx={{ fontWeight: 600, mb: 1, fontSize: '1.5rem' }}>
+          Guest Messaging
+        </Typography>
 
         {/* Tabs */}
-        <Tabs value={selectedTab} onChange={handleTabChange} sx={{ 
-          '& .MuiTab-root': { 
-            textTransform: 'none',
-            fontWeight: 500,
-            fontSize: '1rem'
-          },
-          '& .Mui-selected': {
-            color: '#1976d2 !important',
-            fontWeight: 600
-          },
-          '& .MuiTabs-indicator': {
-            backgroundColor: '#1976d2',
-            height: 3
-          }
-        }}>
-          <Tab label="Inbox" value="inbox" />
-          <Tab label="Message templates" value="message-templates" />
-          <Tab label="Automations" value="automations" />
-          <Tab label="Manage messages" value="manage-messages" />
+        <Tabs value={selectedTab} onChange={handleTabChange} sx={{ minHeight: 'auto' }}>
+          <Tab label="Inbox" value="" sx={{ minHeight: 'auto', py: 1 }} />
+          <Tab label="Message Templates" value="message-templates" sx={{ minHeight: 'auto', py: 1 }} />
+          <Tab label="Automations" value="automations" sx={{ minHeight: 'auto', py: 1 }} />
+          <Tab label="Manage Messages" value="manage-messages" sx={{ minHeight: 'auto', py: 1 }} />
         </Tabs>
       </Box>
 
-      <Box sx={{ display: 'flex', height: 'calc(100vh - 140px)' }}>
+      <Box sx={{ 
+        display: 'flex', 
+        height: 'calc(100vh - 120px)',
+        overflow: 'hidden',
+        backgroundColor: '#ffffff',
+        border: '1px solid #e9ecef',
+        borderRadius: 1
+      }}>
         {/* Left Sidebar - Conversations */}
-        <Box sx={{ width: 400, borderRight: '1px solid', borderColor: 'divider', display: 'flex', flexDirection: 'column' }}>
+        <Box sx={{ 
+          width: 380, 
+          borderRight: '1px solid', 
+          borderColor: '#e9ecef', 
+          display: 'flex', 
+          flexDirection: 'column',
+          backgroundColor: '#ffffff'
+        }}>
           {/* Controls */}
-          <Box sx={{ p: 2, borderBottom: '1px solid', borderColor: 'divider' }}>
-            <Box sx={{ display: 'flex', gap: 1, mb: 2 }}>
-              <IconButton sx={{ backgroundColor: '#1976d2', color: 'white', '&:hover': { backgroundColor: '#1565c0' } }}>
-                <Filter size={16} />
+          <Box sx={{ 
+            p: 1.5, 
+            borderBottom: '1px solid', 
+            borderColor: '#e9ecef',
+            backgroundColor: '#f8f9fa'
+          }}>
+            <Box sx={{ display: 'flex', gap: 0.5, mb: 1.5 }}>
+              <IconButton sx={{ 
+                backgroundColor: '#4caf50', 
+                color: 'white', 
+                width: 32,
+                height: 32,
+                '&:hover': { 
+                  backgroundColor: '#45a049'
+                }
+              }}>
+                <Filter size={14} />
               </IconButton>
-              <IconButton sx={{ backgroundColor: conversationFilter === 'all' ? '#1976d2' : '#f5f5f5', color: conversationFilter === 'all' ? 'white' : '#666' }}>
-                <MessageSquare size={16} />
+              <IconButton sx={{ 
+                backgroundColor: conversationFilter === 'all' ? '#4caf50' : '#ffffff', 
+                color: conversationFilter === 'all' ? 'white' : '#6c757d',
+                border: '1px solid #e9ecef',
+                width: 32,
+                height: 32,
+                '&:hover': { 
+                  backgroundColor: conversationFilter === 'all' ? '#45a049' : '#f8f9fa',
+                  borderColor: '#4caf50'
+                }
+              }}>
+                <MessageSquare size={14} />
               </IconButton>
-              <IconButton sx={{ backgroundColor: conversationFilter === 'archived' ? '#1976d2' : '#f5f5f5', color: conversationFilter === 'archived' ? 'white' : '#666' }}>
-                <Archive size={16} />
+              <IconButton sx={{ 
+                backgroundColor: conversationFilter === 'archived' ? '#4caf50' : '#ffffff', 
+                color: conversationFilter === 'archived' ? 'white' : '#6c757d',
+                border: '1px solid #e9ecef',
+                width: 32,
+                height: 32,
+                '&:hover': { 
+                  backgroundColor: conversationFilter === 'archived' ? '#45a049' : '#f8f9fa',
+                  borderColor: '#4caf50'
+                }
+              }}>
+                <Archive size={14} />
               </IconButton>
-              <IconButton sx={{ backgroundColor: conversationFilter === 'snoozed' ? '#1976d2' : '#f5f5f5', color: conversationFilter === 'snoozed' ? 'white' : '#666' }}>
-                <Clock size={16} />
+              <IconButton sx={{ 
+                backgroundColor: conversationFilter === 'snoozed' ? '#4caf50' : '#ffffff', 
+                color: conversationFilter === 'snoozed' ? 'white' : '#6c757d',
+                border: '1px solid #e9ecef',
+                width: 32,
+                height: 32,
+                '&:hover': { 
+                  backgroundColor: conversationFilter === 'snoozed' ? '#45a049' : '#f8f9fa',
+                  borderColor: '#4caf50'
+                }
+              }}>
+                <Clock size={14} />
               </IconButton>
             </Box>
             <TextField
-              placeholder="Search guests"
+              placeholder="Search guests..."
               size="small"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               fullWidth
+              sx={{
+                '& .MuiOutlinedInput-root': {
+                  backgroundColor: '#ffffff',
+                  borderRadius: 2,
+                  border: '1px solid #e9ecef',
+                  fontSize: '14px',
+                  height: '36px',
+                  '&:hover': {
+                    borderColor: '#4caf50'
+                  },
+                  '&.Mui-focused': {
+                    backgroundColor: 'white',
+                    borderColor: '#4caf50',
+                    boxShadow: '0 0 0 2px rgba(76, 175, 80, 0.1)'
+                  }
+                }
+              }}
               InputProps={{
                 startAdornment: (
                   <InputAdornment position="start">
-                    <Search size={16} />
+                    <Search size={16} color="#6c757d" />
                   </InputAdornment>
                 ),
               }}
@@ -298,14 +311,17 @@ export function InboxView() {
                   key={conversation.id}
                   onClick={() => handleConversationSelect(conversation.id)}
                   sx={{
-                    p: 2,
+                    p: 1.5,
                     borderBottom: '1px solid',
-                    borderColor: 'divider',
+                    borderColor: '#f5f5f5',
                     cursor: 'pointer',
-                    backgroundColor: selectedConversation?.id === conversation.id ? '#f3f4f6' : 'transparent',
+                    backgroundColor: selectedConversation?.id === conversation.id ? '#f0fdfd' : 'white',
+                    borderLeft: selectedConversation?.id === conversation.id ? '3px solid #4caf50' : '3px solid transparent',
                     '&:hover': {
-                      backgroundColor: '#f9fafb',
-                    }
+                      backgroundColor: selectedConversation?.id === conversation.id ? '#f0fdfd' : '#f8f9fa'
+                    },
+                    transition: 'all 0.15s ease',
+                    position: 'relative'
                   }}
                 >
                 <Box sx={{ display: 'flex', alignItems: 'flex-start', gap: 2 }}>
@@ -314,9 +330,9 @@ export function InboxView() {
                       sx={{ 
                         width: 40, 
                         height: 40, 
-                        backgroundColor: conversation.avatar.length === 1 ? '#374151' : 'transparent',
+                        backgroundColor: conversation.avatar.length === 1 ? '#4caf50' : 'transparent',
                         color: conversation.avatar.length === 1 ? 'white' : 'inherit',
-                        fontSize: '0.875rem',
+                        fontSize: '0.9rem',
                         fontWeight: 600
                       }}
                       src={conversation.avatar.length > 1 ? conversation.avatar : undefined}
@@ -348,34 +364,21 @@ export function InboxView() {
                   
                   <Box sx={{ flex: 1, minWidth: 0 }}>
                     <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 0.5 }}>
-                      <Typography variant="subtitle2" sx={{ fontWeight: 600, fontSize: '0.875rem' }}>
+                      <Typography variant="subtitle2" sx={{ 
+                        fontWeight: 600, 
+                        fontSize: '0.9rem',
+                        color: selectedConversation?.id === conversation.id ? '#4caf50' : '#1a1a1a'
+                      }}>
                         {conversation.name}
                       </Typography>
-                      <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                        {getStatusIcon(conversation.statusIcon)}
-                        <Typography variant="caption" color="text.secondary" sx={{ fontSize: '0.75rem' }}>
-                          {conversation.timestamp}
-                        </Typography>
-                      </Box>
+                      <Typography variant="caption" sx={{ 
+                        fontSize: '0.75rem',
+                        color: '#6c757d'
+                      }}>
+                        {conversation.timestamp}
+                      </Typography>
                     </Box>
                     
-                    <Typography variant="caption" color="text.secondary" sx={{ fontSize: '0.75rem', display: 'block', mb: 0.5 }}>
-                      {conversation.bookingDates}
-                    </Typography>
-                    
-                    <Typography 
-                      variant="body2" 
-                      color="text.secondary"
-                      sx={{ 
-                        fontSize: '0.8rem',
-                        overflow: 'hidden',
-                        textOverflow: 'ellipsis',
-                        whiteSpace: 'nowrap',
-                        fontWeight: conversation.unread ? 500 : 400
-                      }}
-                    >
-                      {conversation.propertyName}
-                    </Typography>
                     
                     <Typography 
                       variant="body2" 
@@ -385,7 +388,7 @@ export function InboxView() {
                         textOverflow: 'ellipsis',
                         whiteSpace: 'nowrap',
                         fontWeight: conversation.unread ? 500 : 400,
-                        color: conversation.unread ? '#1976d2' : 'text.secondary'
+                        color: conversation.unread ? '#1a1a1a' : '#6c757d'
                       }}
                     >
                       {conversation.lastMessage}
@@ -399,61 +402,203 @@ export function InboxView() {
         </Box>
 
         {/* Center - Chat Interface */}
-        <Box sx={{ flex: showHelpWidget ? 1 : 2, display: 'flex', flexDirection: 'column' }}>
+        <Box sx={{ 
+          flex: showHelpWidget ? 1 : 2, 
+          display: 'flex', 
+          flexDirection: 'column',
+          backgroundColor: '#ffffff',
+          borderRight: showHelpWidget ? '1px solid' : 'none',
+          borderColor: '#f0f0f0',
+          position: 'relative'
+        }}>
           {selectedConversation ? (
             <>
               {/* Chat Header */}
-              <Box sx={{ p: 2, borderBottom: '1px solid', borderColor: 'divider', backgroundColor: '#fafafa' }}>
-                <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                  <Typography variant="h6" sx={{ fontWeight: 600 }}>
-                    {selectedConversation.name}
-                  </Typography>
-                  <Box sx={{ display: 'flex', gap: 1 }}>
+              <Box sx={{ 
+                p: 1.5, 
+                borderBottom: '1px solid', 
+                borderColor: '#f0f0f0',
+                backgroundColor: '#fafbfc',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+                boxShadow: '0 2px 8px rgba(0,0,0,0.04)',
+                minHeight: showHelpWidget ? '60px' : '80px'
+              }}>
+                <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%' }}>
+                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+                    <Avatar 
+                      sx={{ 
+                        width: showHelpWidget ? 40 : 48, 
+                        height: showHelpWidget ? 40 : 48, 
+                        backgroundColor: selectedConversation.avatar.length === 1 ? '#4caf50' : 'transparent',
+                        color: selectedConversation.avatar.length === 1 ? 'white' : 'inherit',
+                        fontSize: showHelpWidget ? '1rem' : '1.2rem',
+                        fontWeight: 600,
+                        boxShadow: '0 4px 12px rgba(76, 175, 80, 0.3)'
+                      }}
+                      src={selectedConversation.avatar.length > 1 ? selectedConversation.avatar : undefined}
+                    >
+                      {selectedConversation.avatar.length === 1 ? selectedConversation.avatar : undefined}
+                    </Avatar>
+                    <Box>
+                      <Typography variant={showHelpWidget ? "h6" : "h5"} sx={{ 
+                        fontWeight: 600, 
+                        color: '#1a1a1a',
+                        mb: showHelpWidget ? 0 : 0.5,
+                        fontSize: showHelpWidget ? '1.1rem' : '1.25rem'
+                      }}>
+                        {selectedConversation.name}
+                      </Typography>
+                      {!showHelpWidget && (
+                        <Typography variant="body2" sx={{ 
+                          color: '#6c757d',
+                          fontWeight: 500,
+                          fontSize: '0.85rem'
+                        }}>
+                          {selectedConversation.bookingDates} • {selectedConversation.propertyName}
+                        </Typography>
+                      )}
+                    </Box>
+                  </Box>
+                  <Box sx={{ display: 'flex', gap: 0.5, flexWrap: 'nowrap' }}>
                     <Tooltip title="Mark as unread">
-                      <IconButton size="small" onClick={handleMarkAsUnread}>
-                        <Eye size={16} />
+                      <IconButton 
+                        size="small" 
+                        onClick={handleMarkAsUnread}
+                        sx={{
+                          backgroundColor: '#f8f9fa',
+                          color: '#6c757d',
+                          width: showHelpWidget ? 32 : 36,
+                          height: showHelpWidget ? 32 : 36,
+                          borderRadius: 1.5,
+                          '&:hover': { 
+                            backgroundColor: '#e9ecef',
+                            color: '#4caf50',
+                            transform: 'translateY(-1px)',
+                            boxShadow: '0 4px 12px rgba(76, 175, 80, 0.2)'
+                          },
+                          transition: 'all 0.2s ease'
+                        }}
+                      >
+                        <Eye size={showHelpWidget ? 14 : 16} />
                       </IconButton>
                     </Tooltip>
                     <Tooltip title="Add notes">
-                      <IconButton size="small" onClick={handleAddNotes}>
-                        <Edit size={16} />
+                      <IconButton 
+                        size="small" 
+                        onClick={handleAddNotes}
+                        sx={{
+                          backgroundColor: '#f8f9fa',
+                          color: '#6c757d',
+                          width: showHelpWidget ? 32 : 36,
+                          height: showHelpWidget ? 32 : 36,
+                          borderRadius: 1.5,
+                          '&:hover': { 
+                            backgroundColor: '#e9ecef',
+                            color: '#4caf50',
+                            transform: 'translateY(-1px)',
+                            boxShadow: '0 4px 12px rgba(76, 175, 80, 0.2)'
+                          },
+                          transition: 'all 0.2s ease'
+                        }}
+                      >
+                        <Edit size={showHelpWidget ? 14 : 16} />
                       </IconButton>
                     </Tooltip>
                     <Tooltip title={isStarred ? "Unstar guest" : "Star guest"}>
                       <IconButton 
                         size="small" 
                         onClick={handleStarGuest}
-                        sx={{ color: isStarred ? '#ff9800' : 'inherit' }}
+                        sx={{ 
+                          color: isStarred ? '#ff9800' : '#6c757d',
+                          backgroundColor: isStarred ? '#fff3e0' : '#f8f9fa',
+                          width: showHelpWidget ? 32 : 36,
+                          height: showHelpWidget ? 32 : 36,
+                          borderRadius: 1.5,
+                          '&:hover': { 
+                            backgroundColor: isStarred ? '#ffe0b2' : '#e9ecef',
+                            color: isStarred ? '#ff9800' : '#4caf50'
+                          }
+                        }}
                       >
-                        <Star size={16} fill={isStarred ? '#ff9800' : 'none'} />
+                        <Star size={showHelpWidget ? 12 : 14} fill={isStarred ? '#ff9800' : 'none'} />
                       </IconButton>
                     </Tooltip>
                     <Tooltip title="Assign conversation">
-                      <IconButton size="small" onClick={handleAssignConversation}>
-                        <User size={16} />
+                      <IconButton 
+                        size="small" 
+                        onClick={handleAssignConversation}
+                        sx={{
+                          backgroundColor: '#f8f9fa',
+                          color: '#6c757d',
+                          width: showHelpWidget ? 32 : 36,
+                          height: showHelpWidget ? 32 : 36,
+                          borderRadius: 1.5,
+                          '&:hover': { 
+                            backgroundColor: '#e9ecef',
+                            color: '#4caf50'
+                          }
+                        }}
+                      >
+                        <User size={showHelpWidget ? 12 : 14} />
                       </IconButton>
                     </Tooltip>
                     <Tooltip title={isArchived ? "Unarchive" : "Archive"}>
                       <IconButton 
                         size="small" 
                         onClick={handleArchive}
-                        sx={{ color: isArchived ? '#f44336' : 'inherit' }}
+                        sx={{ 
+                          color: isArchived ? '#f44336' : '#6c757d',
+                          backgroundColor: isArchived ? '#ffebee' : '#f8f9fa',
+                          width: showHelpWidget ? 32 : 36,
+                          height: showHelpWidget ? 32 : 36,
+                          borderRadius: 1.5,
+                          '&:hover': { 
+                            backgroundColor: isArchived ? '#ffcdd2' : '#e9ecef',
+                            color: isArchived ? '#f44336' : '#4caf50'
+                          }
+                        }}
                       >
-                        <Archive size={16} />
+                        <Archive size={showHelpWidget ? 12 : 14} />
                       </IconButton>
                     </Tooltip>
                     <Tooltip title={isSnoozed ? "Unsnooze" : "Snooze"}>
                       <IconButton 
                         size="small" 
                         onClick={handleSnooze}
-                        sx={{ color: isSnoozed ? '#ff9800' : 'inherit' }}
+                        sx={{ 
+                          color: isSnoozed ? '#ff9800' : '#6c757d',
+                          backgroundColor: isSnoozed ? '#fff3e0' : '#f8f9fa',
+                          width: showHelpWidget ? 32 : 36,
+                          height: showHelpWidget ? 32 : 36,
+                          borderRadius: 1.5,
+                          '&:hover': { 
+                            backgroundColor: isSnoozed ? '#ffe0b2' : '#e9ecef',
+                            color: isSnoozed ? '#ff9800' : '#4caf50'
+                          }
+                        }}
                       >
-                        <Clock size={16} />
+                        <Clock size={showHelpWidget ? 12 : 14} />
                       </IconButton>
                     </Tooltip>
                     <Tooltip title={showHelpWidget ? "Show details" : "Hide details"}>
-                      <IconButton size="small" onClick={handleHideDetails}>
-                        <ArrowRight size={16} />
+                      <IconButton 
+                        size="small" 
+                        onClick={handleHideDetails}
+                        sx={{
+                          backgroundColor: '#f8f9fa',
+                          color: '#6c757d',
+                          width: showHelpWidget ? 32 : 36,
+                          height: showHelpWidget ? 32 : 36,
+                          borderRadius: 1.5,
+                          '&:hover': { 
+                            backgroundColor: '#e9ecef',
+                            color: '#4caf50'
+                          }
+                        }}
+                      >
+                        <ArrowRight size={showHelpWidget ? 12 : 14} />
                       </IconButton>
                     </Tooltip>
                   </Box>
@@ -461,7 +606,14 @@ export function InboxView() {
               </Box>
 
               {/* Messages */}
-              <Box sx={{ flex: 1, p: 3, overflow: 'auto', backgroundColor: '#f8f9fa' }}>
+              <Box sx={{ 
+                flex: 1, 
+                p: 2, 
+                overflow: 'auto', 
+                backgroundColor: '#f8f9fa',
+                minHeight: 0,
+                maxHeight: 'calc(100vh - 280px)'
+              }}>
                 {isLoading ? (
                   <Box sx={{ textAlign: 'center', py: 4 }}>
                     <Typography variant="body2" color="text.secondary">
@@ -541,24 +693,76 @@ export function InboxView() {
               </Box>
 
               {/* Message Input */}
-              <Box sx={{ p: 2, borderTop: '1px solid', borderColor: 'divider', backgroundColor: 'white' }}>
-                <Box sx={{ display: 'flex', gap: 1, mb: 2 }}>
-                  <IconButton size="small">
+              <Box sx={{ 
+                p: 2, 
+                borderTop: '1px solid', 
+                borderColor: '#f0f0f0', 
+                backgroundColor: '#fafbfc',
+                minHeight: '80px'
+              }}>
+                <Box sx={{ display: 'flex', alignItems: 'flex-end', gap: 1, mb: 1 }}>
+                  <IconButton 
+                    size="small"
+                    sx={{
+                      backgroundColor: '#f8f9fa',
+                      color: '#6c757d',
+                      width: 36,
+                      height: 36,
+                      borderRadius: 1.5,
+                      mb: 0.5,
+                      '&:hover': { 
+                        backgroundColor: '#e9ecef',
+                        color: '#4caf50',
+                        transform: 'translateY(-1px)'
+                      },
+                      transition: 'all 0.2s ease'
+                    }}
+                  >
                     <Paperclip size={16} />
                   </IconButton>
-                  <IconButton size="small">
+                  <IconButton 
+                    size="small"
+                    sx={{
+                      backgroundColor: '#f8f9fa',
+                      color: '#6c757d',
+                      width: 36,
+                      height: 36,
+                      borderRadius: 1.5,
+                      mb: 0.5,
+                      '&:hover': { 
+                        backgroundColor: '#e9ecef',
+                        color: '#4caf50',
+                        transform: 'translateY(-1px)'
+                      },
+                      transition: 'all 0.2s ease'
+                    }}
+                  >
                     <Clock size={16} />
                   </IconButton>
-                  <IconButton size="small">
+                  <IconButton 
+                    size="small"
+                    sx={{
+                      backgroundColor: '#f8f9fa',
+                      color: '#6c757d',
+                      width: 36,
+                      height: 36,
+                      borderRadius: 1.5,
+                      mb: 0.5,
+                      '&:hover': { 
+                        backgroundColor: '#e9ecef',
+                        color: '#4caf50',
+                        transform: 'translateY(-1px)'
+                      },
+                      transition: 'all 0.2s ease'
+                    }}
+                  >
                     <Wand2 size={16} />
                   </IconButton>
-                </Box>
-                <Box sx={{ display: 'flex', gap: 1 }}>
                   <TextField
                     fullWidth
                     placeholder="Type a message"
                     multiline
-                    maxRows={3}
+                    maxRows={2}
                     size="small"
                     value={newMessage}
                     onChange={(e) => setNewMessage(e.target.value)}
@@ -566,7 +770,8 @@ export function InboxView() {
                     disabled={!isConnected}
                     sx={{
                       '& .MuiOutlinedInput-root': {
-                        borderRadius: 2
+                        borderRadius: 2,
+                        fontSize: '0.9rem'
                       }
                     }}
                   />
@@ -577,7 +782,11 @@ export function InboxView() {
                     sx={{ 
                       backgroundColor: '#ff6b35',
                       borderRadius: 2,
-                      px: 3,
+                      px: 2,
+                      py: 1,
+                      minWidth: 'auto',
+                      height: 36,
+                      mb: 0.5,
                       '&:hover': { backgroundColor: '#e55a2b' },
                       '&:disabled': { backgroundColor: '#ccc' }
                     }}
@@ -585,14 +794,24 @@ export function InboxView() {
                     <Send size={16} />
                   </Button>
                 </Box>
-                <Typography variant="caption" color="text.secondary" sx={{ mt: 1, display: 'block' }}>
-                  Send message as Manuel Sciarria
+                <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mt: 0.5 }}>
+                  <Typography variant="body2" sx={{ 
+                    color: '#4caf50',
+                    fontWeight: 500,
+                    fontSize: '0.85rem'
+                  }}>
+                    Send message as Manuel Sciarria
+                  </Typography>
                   {!isConnected && (
-                    <span style={{ color: '#f44336', marginLeft: 8 }}>
+                    <Typography variant="caption" sx={{ 
+                      color: '#f44336',
+                      fontSize: '0.75rem',
+                      fontWeight: 500
+                    }}>
                       (Disconnected)
-                    </span>
+                    </Typography>
                   )}
-                </Typography>
+                </Box>
               </Box>
             </>
           ) : (
@@ -613,66 +832,109 @@ export function InboxView() {
 
         {/* Right Sidebar - Reservation Details */}
         {selectedConversation && showHelpWidget && (
-          <Box sx={{ width: 350, borderLeft: '1px solid', borderColor: 'divider', backgroundColor: '#fafafa' }}>
-            <Box sx={{ p: 2, borderBottom: '1px solid', borderColor: 'divider' }}>
-              <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                <Typography variant="h6" sx={{ fontWeight: 600 }}>
+          <Box sx={{ 
+            width: 320, 
+            borderLeft: '1px solid', 
+            borderColor: '#e0e0e0', 
+            backgroundColor: '#ffffff',
+            boxShadow: '-2px 0 8px rgba(0,0,0,0.1)',
+            zIndex: 1
+          }}>
+            <Box sx={{ 
+              p: 2, 
+              borderBottom: '1px solid', 
+              borderColor: '#e0e0e0',
+              backgroundColor: '#f8f9fa'
+            }}>
+              <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 1 }}>
+                <Typography variant="h6" sx={{ fontWeight: 600, fontSize: '1.1rem' }}>
                   Reservation
                 </Typography>
-                <Chip label="MODIFIED" size="small" color="warning" />
+                <Chip label="MODIFIED" size="small" color="warning" sx={{ fontSize: '0.7rem', height: 20 }} />
               </Box>
-              <Box sx={{ display: 'flex', gap: 1, mt: 1 }}>
-                <IconButton size="small">
-                  <Box sx={{ width: 16, height: 16, backgroundColor: '#ff5a5f', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.6rem', color: 'white', fontWeight: 'bold' }}>A</Box>
+              <Box sx={{ display: 'flex', gap: 0.5, flexWrap: 'wrap' }}>
+                <IconButton size="small" sx={{ width: 28, height: 28 }}>
+                  <Box sx={{ width: 14, height: 14, backgroundColor: '#ff5a5f', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.5rem', color: 'white', fontWeight: 'bold' }}>A</Box>
                 </IconButton>
-                <IconButton size="small">
-                  <ExternalLink size={16} />
+                <IconButton size="small" sx={{ width: 28, height: 28 }}>
+                  <ExternalLink size={14} />
                 </IconButton>
-                <IconButton size="small">
-                  <Calendar size={16} />
+                <IconButton size="small" sx={{ width: 28, height: 28 }}>
+                  <Calendar size={14} />
                 </IconButton>
-                <IconButton size="small">
-                  <MoreVertical size={16} />
+                <IconButton size="small" sx={{ width: 28, height: 28 }}>
+                  <MoreVertical size={14} />
                 </IconButton>
-                <IconButton size="small">
-                  <ChevronDown size={16} />
+                <IconButton size="small" sx={{ width: 28, height: 28 }}>
+                  <ChevronDown size={14} />
                 </IconButton>
               </Box>
             </Box>
 
-            <Box sx={{ p: 2 }}>
-              <Typography variant="subtitle2" sx={{ fontWeight: 600, mb: 1, color: '#1976d2' }}>
+            <Box sx={{ p: 2, maxHeight: 'calc(100vh - 200px)', overflow: 'auto' }}>
+              <Typography variant="subtitle2" sx={{ 
+                fontWeight: 600, 
+                mb: 1, 
+                color: '#1976d2',
+                fontSize: '0.9rem',
+                lineHeight: 1.3
+              }}>
                 Luxury Stay in Rome - Steps from Metro A Cornelia (372243)
               </Typography>
-              <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
+              <Typography variant="body2" color="text.secondary" sx={{ 
+                mb: 2, 
+                fontSize: '0.8rem',
+                lineHeight: 1.4
+              }}>
                 Via Giuseppe de Camillis, 3
               </Typography>
               
               <Box sx={{ mb: 2 }}>
-                <Typography variant="body2" sx={{ mb: 0.5 }}>Email:</Typography>
-                <Typography variant="body2" color="text.secondary" sx={{ mb: 1 }}>Phone: 🇱🇻 +371 29 589 056</Typography>
+                <Typography variant="body2" sx={{ 
+                  mb: 0.5, 
+                  fontSize: '0.8rem',
+                  fontWeight: 500
+                }}>Email:</Typography>
+                <Typography variant="body2" color="text.secondary" sx={{ 
+                  mb: 1, 
+                  fontSize: '0.8rem'
+                }}>Phone: 🇱🇻 +371 29 589 056</Typography>
                 <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                  <Box sx={{ width: 8, height: 8, backgroundColor: '#ff5a5f', borderRadius: '50%' }} />
-                  <Typography variant="body2">Airbnb</Typography>
+                  <Box sx={{ width: 6, height: 6, backgroundColor: '#ff5a5f', borderRadius: '50%' }} />
+                  <Typography variant="body2" sx={{ fontSize: '0.8rem' }}>Airbnb</Typography>
                 </Box>
               </Box>
 
-              <Divider sx={{ my: 2 }} />
+              <Divider sx={{ my: 1.5 }} />
 
               <Box sx={{ mb: 2 }}>
-                <Typography variant="body2" sx={{ mb: 0.5 }}>Number of nights: 6</Typography>
-                <Typography variant="body2" sx={{ mb: 1 }}>Number of guests: 3</Typography>
+                <Typography variant="body2" sx={{ 
+                  mb: 0.5, 
+                  fontSize: '0.8rem',
+                  fontWeight: 500
+                }}>Number of nights: 6</Typography>
+                <Typography variant="body2" sx={{ 
+                  mb: 1, 
+                  fontSize: '0.8rem'
+                }}>Number of guests: 3</Typography>
               </Box>
 
-              <Divider sx={{ my: 2 }} />
+              <Divider sx={{ my: 1.5 }} />
 
               <Box sx={{ mb: 2 }}>
-                <Typography variant="body2" sx={{ mb: 0.5 }}>€639.05 of €639.05</Typography>
+                <Typography variant="body2" sx={{ 
+                  mb: 0.5, 
+                  fontSize: '0.8rem',
+                  fontWeight: 500
+                }}>€639.05 of €639.05</Typography>
                 <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1 }}>
-                  <Chip label="Paid" size="small" color="success" />
+                  <Chip label="Paid" size="small" color="success" sx={{ fontSize: '0.7rem', height: 18 }} />
                 </Box>
-                <Typography variant="body2" sx={{ mb: 0.5 }}>Total price: €639.05</Typography>
-                <Typography variant="body2">Payout sum: €451.39</Typography>
+                <Typography variant="body2" sx={{ 
+                  mb: 0.5, 
+                  fontSize: '0.8rem'
+                }}>Total price: €639.05</Typography>
+                <Typography variant="body2" sx={{ fontSize: '0.8rem' }}>Payout sum: €451.39</Typography>
               </Box>
 
               {/* Help Widget */}
@@ -680,21 +942,24 @@ export function InboxView() {
                 <Box sx={{ 
                   position: 'relative',
                   backgroundColor: '#f0f0f0',
-                  borderRadius: 2,
-                  p: 2,
+                  borderRadius: 1.5,
+                  p: 1.5,
                   mt: 2
                 }}>
-                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1 }}>
-                    <MessageSquare size={16} />
-                    <Typography variant="body2" sx={{ fontWeight: 500 }}>
+                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                    <MessageSquare size={14} />
+                    <Typography variant="body2" sx={{ 
+                      fontWeight: 500,
+                      fontSize: '0.8rem'
+                    }}>
                       Hi. Need any help?
                     </Typography>
                     <IconButton 
                       size="small" 
                       onClick={() => setShowHelpWidget(false)}
-                      sx={{ ml: 'auto', p: 0.5 }}
+                      sx={{ ml: 'auto', p: 0.5, width: 20, height: 20 }}
                     >
-                      <X size={12} />
+                      <X size={10} />
                     </IconButton>
                   </Box>
                 </Box>

@@ -63,6 +63,13 @@ export const InboxPage = lazy(() => import('src/sections/inbox/view/inbox-view')
 export const MessageTemplatesPage = lazy(() => import('src/sections/inbox/view/message-templates-view').then(module => ({ default: module.MessageTemplatesView })));
 export const InboxAutomationsPage = lazy(() => import('src/sections/inbox/view/automations-view').then(module => ({ default: module.AutomationsView })));
 export const ManageMessagesPage = lazy(() => import('src/sections/inbox/view/manage-messages-view').then(module => ({ default: module.ManageMessagesView })));
+export const TemplateCreatePage = lazy(() => import('src/sections/inbox/view/template-create-view').then(module => ({ default: module.TemplateCreateView })));
+export const TemplateEditPage = lazy(() => import('src/sections/inbox/view/template-edit-view').then(module => ({ default: module.TemplateEditView })));
+export const TemplateGroupCreatePage = lazy(() => import('src/sections/inbox/view/template-group-create-view').then(module => ({ default: module.TemplateGroupCreateView })));
+export const TemplateGroupEditPage = lazy(() => import('src/sections/inbox/view/template-group-edit-view').then(module => ({ default: module.TemplateGroupEditView })));
+export const AutomationCreatePage = lazy(() => import('src/sections/inbox/view/automation-create-view').then(module => ({ default: module.AutomationCreateView })));
+export const AutomationEditPage = lazy(() => import('src/sections/inbox/view/automation-edit-view').then(module => ({ default: module.AutomationEditView })));
+export const MessageEditPage = lazy(() => import('src/sections/inbox/view/message-edit-view').then(module => ({ default: module.MessageEditView })));
 export const Page404 = lazy(() => import('src/pages/page-not-found'));
 
 const renderFallback = () => (
@@ -158,6 +165,13 @@ export const routesSection: RouteObject[] = [
       { path: 'inbox/automations', element: <InboxAutomationsPage /> },
       { path: 'inbox/manage', element: <ManageMessagesPage /> },
       { path: 'inbox/manage-messages', element: <ManageMessagesPage /> },
+      { path: 'inbox/template-create', element: <TemplateCreatePage /> },
+      { path: 'inbox/template-edit/:id', element: <TemplateEditPage /> },
+      { path: 'inbox/template-group-create', element: <TemplateGroupCreatePage /> },
+      { path: 'inbox/template-group-edit/:id', element: <TemplateGroupEditPage /> },
+        { path: 'inbox/automation-create', element: <AutomationCreatePage /> },
+        { path: 'inbox/automation-edit/:id', element: <AutomationEditPage /> },
+        { path: 'inbox/message-edit/:id', element: <MessageEditPage /> },
     ],
   },
   {
