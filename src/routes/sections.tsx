@@ -32,6 +32,8 @@ export const CustomFieldsPage = lazy(() => import('src/sections/reservations/vie
 export const GuestbookPage = lazy(() => import('src/sections/reservations/view/guestbook-view').then(module => ({ default: module.GuestbookView })));
 export const CouponsPage = lazy(() => import('src/sections/reservations/view/coupons-view').then(module => ({ default: module.CouponsView })));
 export const ListingsPage = lazy(() => import('src/sections/listings/view/listings-view').then(module => ({ default: module.ListingsView })));
+export const ListingDetailPage = lazy(() => import('src/sections/listings/view/listing-detail-page'));
+export const ListingEditPage = lazy(() => import('src/sections/listings/view/listing-edit-page'));
 export const ListingsCustomFieldsPage = lazy(() => import('src/sections/listings/view/listings-custom-fields-view').then(module => ({ default: module.ListingsCustomFieldsView })));
 export const FinancialAnalyticsPage = lazy(() => import('src/sections/financial-reporting/view/analytics-view').then(module => ({ default: module.AnalyticsView })));
 export const RentalActivityPage = lazy(() => import('src/sections/financial-reporting/view/rental-activity-view').then(module => ({ default: module.RentalActivityView })));
@@ -126,6 +128,8 @@ export const routesSection: RouteObject[] = [
       { path: 'reservations/guestbook', element: <GuestbookPage /> },
       { path: 'reservations/coupons', element: <CouponsPage /> },
       { path: 'listings', element: <ListingsPage /> },
+      { path: 'listings/:id', element: <ListingDetailPage /> },
+      { path: 'listings/:id/edit', element: <ListingEditPage /> },
       { path: 'listings/custom-fields', element: <ListingsCustomFieldsPage /> },
       { path: 'financial-reportings', element: <FinancialAnalyticsPage /> },
       { path: 'financial-reportings/analytics', element: <FinancialAnalyticsPage /> },
