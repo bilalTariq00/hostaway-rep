@@ -5,14 +5,21 @@ import Chip from '@mui/material/Chip';
 import Paper from '@mui/material/Paper';
 import Table from '@mui/material/Table';
 import Button from '@mui/material/Button';
+import Dialog from '@mui/material/Dialog';
+import Select from '@mui/material/Select';
 import Checkbox from '@mui/material/Checkbox';
 import TableRow from '@mui/material/TableRow';
+import MenuItem from '@mui/material/MenuItem';
 import TableHead from '@mui/material/TableHead';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 import Pagination from '@mui/material/Pagination';
+import IconButton from '@mui/material/IconButton';
+import DialogTitle from '@mui/material/DialogTitle';
+import DialogContent from '@mui/material/DialogContent';
+import DialogActions from '@mui/material/DialogActions';
 import TableContainer from '@mui/material/TableContainer';
 import InputAdornment from '@mui/material/InputAdornment';
 import FormControlLabel from '@mui/material/FormControlLabel';
@@ -80,6 +87,21 @@ export function GuestbookView() {
   const [agreeToMarketing, setAgreeToMarketing] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage] = useState(20);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isEditMode, setIsEditMode] = useState(false);
+  const [editingId, setEditingId] = useState<number | null>(null);
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [guestToDelete, setGuestToDelete] = useState<number | null>(null);
+  const [guests, setGuests] = useState(mockGuests);
+  const [formData, setFormData] = useState({
+    firstName: '',
+    lastName: '',
+    email: '',
+    phone: '',
+    city: '',
+    country: '',
+    agreeToMarketing: false,
+  });
 
   const handleReset = () => {
     setSearchTerm('');
@@ -88,7 +110,127 @@ export function GuestbookView() {
     setAgreeToMarketing(false);
   };
 
-  const filteredGuests = mockGuests.filter(guest => {
+  const handleOpenModal = () => {
+    setIsEditMode(false);
+    setEditingId(null);
+    setFormData({
+      firstName: '',
+      lastName: '',
+      email: '',
+      phone: '',
+      city: '',
+      country: '',
+      agreeToMarketing: false,
+    });
+    setIsModalOpen(true);
+  };
+
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+    setIsEditMode(false);
+    setEditingId(null);
+    setFormData({
+      firstName: '',
+      lastName: '',
+      email: '',
+      phone: '',
+      city: '',
+      country: '',
+      agreeToMarketing: false,
+    });
+  };
+
+  const handleInputChange = (field: string) => (event: any) => {
+    setFormData({
+      ...formData,
+      [field]: event.target.value,
+    });
+  };
+
+  const handleCheckboxChange = (field: string) => (event: any) => {
+    setFormData({
+      ...formData,
+      [field]: event.target.checked,
+    });
+  };
+
+  const handleSave = () => {
+    if (isEditMode && editingId) {
+      // Update existing guest
+      setGuests(prev => prev.map(guest => 
+        guest.id === editingId 
+          ? { 
+              ...guest, 
+              firstName: formData.firstName,
+              lastName: formData.lastName,
+              email: formData.email,
+              phone: formData.phone,
+              city: formData.city,
+              country: formData.country,
+              agreeToMarketing: formData.agreeToMarketing,
+            }
+          : guest
+      ));
+    } else {
+      // Add new guest
+      const newGuest = {
+        id: Math.max(...guests.map(g => g.id), 0) + 1,
+        firstName: formData.firstName,
+        lastName: formData.lastName,
+        email: formData.email,
+        phone: formData.phone,
+        idNumber: 'ID' + Math.random().toString(36).substr(2, 9).toUpperCase(),
+        idPhoto: 'Pending',
+        selfie: 'Pending',
+        dateOfBirth: '1990-01-01',
+        city: formData.city,
+        country: formData.country,
+        reservations: 0,
+        relatedProperties: 'La Dimora Del Cavaliere',
+        agreeToMarketing: formData.agreeToMarketing,
+      };
+      setGuests(prev => [...prev, newGuest]);
+    }
+    handleCloseModal();
+  };
+
+  const handleEdit = (id: number) => {
+    const guest = guests.find(g => g.id === id);
+    if (guest) {
+      setIsEditMode(true);
+      setEditingId(id);
+      setFormData({
+        firstName: guest.firstName,
+        lastName: guest.lastName,
+        email: guest.email,
+        phone: guest.phone,
+        city: guest.city,
+        country: guest.country,
+        agreeToMarketing: guest.agreeToMarketing,
+      });
+      setIsModalOpen(true);
+    }
+  };
+
+  const handleDelete = (id: number) => {
+    setGuestToDelete(id);
+    setDeleteDialogOpen(true);
+  };
+
+  const handleConfirmDelete = () => {
+    if (guestToDelete) {
+      setGuests(prev => prev.filter(guest => guest.id !== guestToDelete));
+      setDeleteDialogOpen(false);
+      setGuestToDelete(null);
+    }
+  };
+
+  const handleCancelDelete = () => {
+    setDeleteDialogOpen(false);
+    setGuestToDelete(null);
+  };
+
+  const filteredGuests = guests.filter(guest => {
     const matchesSearch = guest.firstName.toLowerCase().includes(searchTerm.toLowerCase()) ||
                          guest.lastName.toLowerCase().includes(searchTerm.toLowerCase()) ||
                          guest.city.toLowerCase().includes(searchTerm.toLowerCase());
@@ -113,7 +255,7 @@ export function GuestbookView() {
             Guestbook
           </Typography>
           <Box sx={{ display: 'flex', gap: 1 }}>
-            <Button variant="contained">
+            <Button variant="contained" onClick={handleOpenModal}>
               Add
             </Button>
             <Button variant="outlined" endIcon={<Iconify icon={"eva:arrow-down-fill" as any} />}>
@@ -199,6 +341,7 @@ export function GuestbookView() {
                 <TableCell>Reservations</TableCell>
                 <TableCell>Related Properties</TableCell>
                 <TableCell>Agree to Marketing</TableCell>
+                <TableCell align="center">Actions</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
@@ -275,6 +418,36 @@ export function GuestbookView() {
                       color={guest.agreeToMarketing ? 'success' : 'default'}
                     />
                   </TableCell>
+                  <TableCell align="center">
+                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
+                      <IconButton 
+                        size="small"
+                        onClick={() => handleEdit(guest.id)}
+                        sx={{
+                          color: 'text.secondary',
+                          '&:hover': {
+                            color: 'primary.main',
+                            bgcolor: 'primary.50'
+                          }
+                        }}
+                      >
+                        <Iconify icon="solar:pen-bold" width={16} />
+                      </IconButton>
+                      <IconButton 
+                        size="small"
+                        onClick={() => handleDelete(guest.id)}
+                        sx={{
+                          color: 'text.secondary',
+                          '&:hover': {
+                            color: 'error.main',
+                            bgcolor: 'error.50'
+                          }
+                        }}
+                      >
+                        <Iconify icon="solar:trash-bin-trash-bold" width={16} />
+                      </IconButton>
+                    </Box>
+                  </TableCell>
                 </TableRow>
               ))}
             </TableBody>
@@ -296,6 +469,128 @@ export function GuestbookView() {
           />
         </Box>
       </Paper>
+
+      {/* Add/Edit Guest Modal */}
+      <Dialog
+        open={isModalOpen}
+        onClose={handleCloseModal}
+        maxWidth="sm"
+        fullWidth
+      >
+        <DialogTitle>
+          <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+            <Typography variant="h6" sx={{ fontWeight: 600 }}>
+              {isEditMode ? 'Edit Guest' : 'Add new guest'}
+            </Typography>
+            <IconButton onClick={handleCloseModal} size="small">
+              <Iconify icon="solar:trash-bin-trash-bold" width={20} />
+            </IconButton>
+          </Box>
+        </DialogTitle>
+        <DialogContent>
+          <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2, pt: 1 }}>
+            <TextField
+              fullWidth
+              label="First Name"
+              value={formData.firstName}
+              onChange={handleInputChange('firstName')}
+              size="small"
+            />
+            <TextField
+              fullWidth
+              label="Last Name"
+              value={formData.lastName}
+              onChange={handleInputChange('lastName')}
+              size="small"
+            />
+            <TextField
+              fullWidth
+              label="Email"
+              type="email"
+              value={formData.email}
+              onChange={handleInputChange('email')}
+              size="small"
+            />
+            <TextField
+              fullWidth
+              label="Phone"
+              value={formData.phone}
+              onChange={handleInputChange('phone')}
+              size="small"
+            />
+            <TextField
+              fullWidth
+              label="City"
+              value={formData.city}
+              onChange={handleInputChange('city')}
+              size="small"
+            />
+            <Select
+              fullWidth
+              value={formData.country}
+              onChange={handleInputChange('country')}
+              displayEmpty
+              size="small"
+            >
+              <MenuItem value="">Choose country</MenuItem>
+              <MenuItem value="United States">United States</MenuItem>
+              <MenuItem value="Spain">Spain</MenuItem>
+              <MenuItem value="United Kingdom">United Kingdom</MenuItem>
+              <MenuItem value="Italy">Italy</MenuItem>
+              <MenuItem value="France">France</MenuItem>
+              <MenuItem value="Germany">Germany</MenuItem>
+            </Select>
+            <FormControlLabel
+              control={
+                <Checkbox
+                  checked={formData.agreeToMarketing}
+                  onChange={handleCheckboxChange('agreeToMarketing')}
+                />
+              }
+              label="Agreed to marketing e-mails"
+            />
+          </Box>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleCloseModal} variant="outlined">
+            Cancel
+          </Button>
+          <Button 
+            onClick={handleSave} 
+            variant="contained"
+            disabled={!formData.firstName.trim() || !formData.lastName.trim() || !formData.email.trim()}
+          >
+            {isEditMode ? 'Update' : 'Add'}
+          </Button>
+        </DialogActions>
+      </Dialog>
+
+      {/* Delete Confirmation Dialog */}
+      <Dialog
+        open={deleteDialogOpen}
+        onClose={handleCancelDelete}
+        maxWidth="sm"
+        fullWidth
+      >
+        <DialogTitle>
+          <Typography variant="h6" sx={{ fontWeight: 600 }}>
+            Delete Guest
+          </Typography>
+        </DialogTitle>
+        <DialogContent>
+          <Typography variant="body1">
+            Are you sure you want to delete this guest? This action cannot be undone.
+          </Typography>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleCancelDelete} variant="outlined">
+            Cancel
+          </Button>
+          <Button onClick={handleConfirmDelete} variant="contained" color="error">
+            Delete
+          </Button>
+        </DialogActions>
+      </Dialog>
     </DashboardContent>
   );
 }
