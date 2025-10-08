@@ -1,0 +1,1128 @@
+import React, { useState } from 'react';
+
+import {
+  Box,
+  Card,
+  Grid,
+  Paper,
+  Button,
+  Avatar,
+  Divider,
+  TextField,
+  Typography,
+  FormControl,
+  InputLabel,
+  Select,
+  MenuItem,
+  Chip,
+  IconButton,
+  InputAdornment,
+  FormControlLabel,
+  Switch,
+  Accordion,
+  AccordionSummary,
+  AccordionDetails,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  Checkbox
+} from '@mui/material';
+
+import { useParams } from 'react-router-dom';
+
+import { useRouter } from 'src/routes/hooks';
+import { DashboardContent } from 'src/layouts/dashboard';
+import { useReservations } from 'src/contexts/reservations-context';
+
+import { Iconify } from 'src/components/iconify';
+
+export default function ReservationDetailView() {
+  const router = useRouter();
+  const { reservationId } = useParams<{ reservationId: string }>();
+  const { reservations } = useReservations();
+  
+  // Find the specific reservation
+  const reservation = reservations.find(r => r.id.toString() === reservationId);
+
+  const [formData, setFormData] = useState({
+    // Basic Information
+    guestFirstName: 'Paula',
+    guestLastName: 'Paula',
+    phone: '+1',
+    email: '',
+    guestCountry: '',
+    guestCity: '',
+    guestLanguage: '',
+    currency: 'EUR',
+    channel: 'Airbnb',
+    hostawayReservationId: '43591387',
+    channelReservationId: '363365-thread-2195871272-544115527-2025-08-17-125-4',
+    listing: 'Via di Acqua Bullicante 113 (363365)',
+    
+    // Reservation Details
+    checkInDate: '2025-08-17',
+    checkInTime: '3:00 PM',
+    checkOutDate: '2025-12-20',
+    checkOutTime: '10:00 AM',
+    numberOfNights: '125',
+    numberOfGuests: '4',
+    children: '0',
+    infants: '0',
+    pets: '',
+    rentalAgreement: 'Not required',
+    
+    // Notes
+    guestNote: '',
+    hostNote: '',
+    
+    // Policy and Status
+    cancellationPolicy: 'Moderate - Guests can cancel at least five days before check-in for a full refund.',
+    reservationDate: '2025-06-15',
+    reservationStored: false,
+    synced: true,
+    instantBooked: false,
+    channelActive: true,
+    status: 'Inquiry',
+    commissionBooking: 'threadsImport',
+    commissionValue: '0',
+    
+    // Fees and Discounts
+    extraFees: '0',
+    extraDiscounts: '',
+    couponName: '',
+    baseRate: '12,147.30',
+    totalPrice: '12,147.30',
+    lastUpdated: '2025-06-15 16:54:15',
+    originalTotalPrice: '12163.8',
+    
+    // Financial Fields
+    totalPriceFromChannel: '12,147.30',
+    airbnbPayoutSum: '10,557.52',
+    
+    // Custom Fields
+    missingGuests: 'https://guest.chekin.com/UoD84sT',
+    checkinReservationUrl: 'https://dashboard.chekin.com/bookings/e301c5e5a59b4b12a3bac420b772c118',
+    cityTax: 'city tax',
+    identityVerificationStatus: 'NOT_USED',
+    remoteAccessLink: 'https://guest.chekin.com/UoDvYE0',
+    upsellingLink: 'https://guest.chekin.com/UoD658v',
+    
+    // Door Code
+    doorCode: '',
+    doorCodeVendor: '',
+    doorCodeInstructions: '',
+    
+    // Payment
+    manuallyChecked: false
+  });
+
+  const [expandedSections, setExpandedSections] = useState({
+    basicInfo: true,
+    payment: false,
+    financialFields: false,
+    expensesExtras: false,
+    customFields: false,
+    doorCode: false,
+    attachment: false,
+    tasks: false,
+    alterationLogs: false,
+    messages: false,
+    reviews: false
+  });
+
+  const handleInputChange = (field: string) => (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement> | any) => {
+    const value = event.target.type === 'checkbox' ? event.target.checked : event.target.value;
+    setFormData(prev => ({
+      ...prev,
+      [field]: value
+    }));
+  };
+
+  const handleSectionToggle = (section: string) => {
+    setExpandedSections(prev => ({
+      ...prev,
+      [section]: !prev[section as keyof typeof prev]
+    }));
+  };
+
+  const handleSave = () => {
+    console.log('Saving reservation details:', formData);
+  };
+
+  const handleBack = () => {
+    router.back();
+  };
+
+  if (!reservation) {
+    return (
+      <DashboardContent maxWidth="xl">
+        <Typography variant="h5">Reservation not found</Typography>
+        <Button onClick={handleBack} sx={{ mt: 2 }}>
+          Go Back
+        </Button>
+      </DashboardContent>
+    );
+  }
+
+  return (
+    <DashboardContent maxWidth="xl">
+      {/* Header */}
+      <Box sx={{ mb: 3 }}>
+        <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 2 }}>
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+            <IconButton onClick={handleBack} sx={{ p: 1 }}>
+              <Iconify icon="solar:pen-bold" width={24} />
+            </IconButton>
+            <Box>
+              <Typography variant="h4" sx={{ fontWeight: 600 }}>
+                {formData.guestFirstName} / {formData.checkInDate} - {formData.checkOutDate} / {formData.numberOfGuests} guests
+              </Typography>
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mt: 1 }}>
+                <Chip label="Expired" color="error" size="small" />
+                <Chip label="Inquiry" color="warning" size="small" />
+              </Box>
+            </Box>
+          </Box>
+          <Box sx={{ display: 'flex', gap: 1 }}>
+            <Button variant="outlined" startIcon={<Iconify icon="solar:pen-bold" />}>
+              Guest profile
+            </Button>
+            <Button variant="outlined" startIcon={<Iconify icon="solar:pen-bold" />}>
+              Calendar
+            </Button>
+            <Button variant="outlined" startIcon={<Iconify icon="solar:pen-bold" />}>
+              Guest portal
+            </Button>
+            <Button variant="outlined" startIcon={<Iconify icon="solar:pen-bold" />}>
+              Messages
+            </Button>
+            <Button variant="contained" startIcon={<Iconify icon="solar:pen-bold" />}>
+              Edit
+            </Button>
+          </Box>
+        </Box>
+        
+        <Box sx={{ display: 'flex', alignItems: 'center', gap: 3, mb: 2 }}>
+          <Typography variant="body2" color="text.secondary">
+            <strong>Channel:</strong> {formData.channel}
+          </Typography>
+          <Typography variant="body2" color="text.secondary">
+            <strong>Listing:</strong> <Box component="span" sx={{ color: 'primary.main', cursor: 'pointer' }}>Via di Acqua Bullicante 113</Box>
+          </Typography>
+          <Typography variant="body2" color="text.secondary">
+            <strong>Reservation Date:</strong> June 15, 2025
+          </Typography>
+        </Box>
+      </Box>
+
+      {/* Main Content with Accordions */}
+      <Box sx={{ mb: 3 }}>
+        {/* Basic Info */}
+        <Accordion 
+          expanded={expandedSections.basicInfo} 
+          onChange={() => handleSectionToggle('basicInfo')}
+          sx={{ mb: 2 }}
+        >
+          <AccordionSummary expandIcon={<Iconify icon="solar:eye-bold" />}>
+            <Typography variant="h6" sx={{ fontWeight: 600 }}>
+              Basic info
+            </Typography>
+          </AccordionSummary>
+          <AccordionDetails>
+            <Grid container spacing={2}>
+              {/* Guest Information */}
+              <Grid item xs={12} sm={6}>
+                <TextField
+                  fullWidth
+                  label="Guest first name"
+                  value={formData.guestFirstName}
+                  onChange={handleInputChange('guestFirstName')}
+                  size="small"
+                />
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <TextField
+                  fullWidth
+                  label="Guest last name"
+                  value={formData.guestLastName}
+                  onChange={handleInputChange('guestLastName')}
+                  size="small"
+                />
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <TextField
+                  fullWidth
+                  label="Phone"
+                  value={formData.phone}
+                  onChange={handleInputChange('phone')}
+                  size="small"
+                  InputProps={{
+                    startAdornment: (
+                      <InputAdornment position="start">
+                        <Iconify icon="solar:pen-bold" width={20} />
+                      </InputAdornment>
+                    ),
+                  }}
+                />
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <TextField
+                  fullWidth
+                  label="Email"
+                  value={formData.email}
+                  onChange={handleInputChange('email')}
+                  size="small"
+                />
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <FormControl fullWidth size="small">
+                  <InputLabel>Select country</InputLabel>
+                  <Select
+                    value={formData.guestCountry}
+                    onChange={handleInputChange('guestCountry')}
+                    label="Select country"
+                  >
+                    <MenuItem value="US">United States</MenuItem>
+                    <MenuItem value="UK">United Kingdom</MenuItem>
+                    <MenuItem value="DE">Germany</MenuItem>
+                    <MenuItem value="FR">France</MenuItem>
+                    <MenuItem value="IT">Italy</MenuItem>
+                    <MenuItem value="ES">Spain</MenuItem>
+                  </Select>
+                </FormControl>
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <TextField
+                  fullWidth
+                  label="City"
+                  value={formData.guestCity}
+                  onChange={handleInputChange('guestCity')}
+                  size="small"
+                />
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <FormControl fullWidth size="small">
+                  <InputLabel>Select language</InputLabel>
+                  <Select
+                    value={formData.guestLanguage}
+                    onChange={handleInputChange('guestLanguage')}
+                    label="Select language"
+                  >
+                    <MenuItem value="en">English</MenuItem>
+                    <MenuItem value="es">Spanish</MenuItem>
+                    <MenuItem value="fr">French</MenuItem>
+                    <MenuItem value="de">German</MenuItem>
+                    <MenuItem value="it">Italian</MenuItem>
+                  </Select>
+                </FormControl>
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <TextField
+                  fullWidth
+                  label="Currency"
+                  value={formData.currency}
+                  onChange={handleInputChange('currency')}
+                  size="small"
+                  InputProps={{ readOnly: true }}
+                />
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <TextField
+                  fullWidth
+                  label="Channel"
+                  value={formData.channel}
+                  onChange={handleInputChange('channel')}
+                  size="small"
+                  InputProps={{ readOnly: true }}
+                />
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <TextField
+                  fullWidth
+                  label="Hostaway reservation ID"
+                  value={formData.hostawayReservationId}
+                  onChange={handleInputChange('hostawayReservationId')}
+                  size="small"
+                  InputProps={{ readOnly: true }}
+                />
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <TextField
+                  fullWidth
+                  label="Channel reservation ID"
+                  value={formData.channelReservationId}
+                  onChange={handleInputChange('channelReservationId')}
+                  size="small"
+                  InputProps={{ readOnly: true }}
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <TextField
+                  fullWidth
+                  label="Listing"
+                  value={formData.listing}
+                  onChange={handleInputChange('listing')}
+                  size="small"
+                  InputProps={{ readOnly: true }}
+                />
+              </Grid>
+
+              {/* Reservation Details */}
+              <Grid item xs={12}>
+                <Typography variant="subtitle1" sx={{ fontWeight: 600, mb: 2, mt: 2 }}>
+                  Reservation Details
+                </Typography>
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <TextField
+                  fullWidth
+                  label="Check-in date (Listing time)"
+                  type="date"
+                  value={formData.checkInDate}
+                  onChange={handleInputChange('checkInDate')}
+                  size="small"
+                  InputLabelProps={{ shrink: true }}
+                />
+                <Typography variant="caption" color="text.secondary">
+                  Local date: {formData.checkInDate}
+                </Typography>
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <FormControl fullWidth size="small">
+                  <InputLabel>Check-in time (Listing time)</InputLabel>
+                  <Select
+                    value={formData.checkInTime}
+                    onChange={handleInputChange('checkInTime')}
+                    label="Check-in time (Listing time)"
+                  >
+                    <MenuItem value="3:00 PM">3:00 PM</MenuItem>
+                    <MenuItem value="4:00 PM">4:00 PM</MenuItem>
+                    <MenuItem value="5:00 PM">5:00 PM</MenuItem>
+                  </Select>
+                </FormControl>
+                <Typography variant="caption" color="text.secondary">
+                  Local time: 6:00 PM
+                </Typography>
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <TextField
+                  fullWidth
+                  label="Number of nights"
+                  value={formData.numberOfNights}
+                  onChange={handleInputChange('numberOfNights')}
+                  size="small"
+                  InputProps={{ readOnly: true }}
+                />
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <TextField
+                  fullWidth
+                  label="Check-out date (Listing time)"
+                  type="date"
+                  value={formData.checkOutDate}
+                  onChange={handleInputChange('checkOutDate')}
+                  size="small"
+                  InputLabelProps={{ shrink: true }}
+                />
+                <Typography variant="caption" color="text.secondary">
+                  Local date: {formData.checkOutDate} - {formData.numberOfNights} nights
+                </Typography>
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <FormControl fullWidth size="small">
+                  <InputLabel>Check-out time (Listing time)</InputLabel>
+                  <Select
+                    value={formData.checkOutTime}
+                    onChange={handleInputChange('checkOutTime')}
+                    label="Check-out time (Listing time)"
+                  >
+                    <MenuItem value="10:00 AM">10:00 AM</MenuItem>
+                    <MenuItem value="11:00 AM">11:00 AM</MenuItem>
+                    <MenuItem value="12:00 PM">12:00 PM</MenuItem>
+                  </Select>
+                </FormControl>
+                <Typography variant="caption" color="text.secondary">
+                  Local time: 1:00 PM
+                </Typography>
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <TextField
+                  fullWidth
+                  label="Number of guests"
+                  value={formData.numberOfGuests}
+                  onChange={handleInputChange('numberOfGuests')}
+                  size="small"
+                />
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <TextField
+                  fullWidth
+                  label="Children"
+                  value={formData.children}
+                  onChange={handleInputChange('children')}
+                  size="small"
+                />
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <TextField
+                  fullWidth
+                  label="Infants"
+                  value={formData.infants}
+                  onChange={handleInputChange('infants')}
+                  size="small"
+                />
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <TextField
+                  fullWidth
+                  label="Pets"
+                  value={formData.pets}
+                  onChange={handleInputChange('pets')}
+                  size="small"
+                />
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <FormControl fullWidth size="small">
+                  <InputLabel>Rental agreement</InputLabel>
+                  <Select
+                    value={formData.rentalAgreement}
+                    onChange={handleInputChange('rentalAgreement')}
+                    label="Rental agreement"
+                  >
+                    <MenuItem value="Not required">Not required</MenuItem>
+                    <MenuItem value="Required">Required</MenuItem>
+                  </Select>
+                </FormControl>
+              </Grid>
+
+              {/* Notes */}
+              <Grid item xs={12}>
+                <Typography variant="subtitle1" sx={{ fontWeight: 600, mb: 2, mt: 2 }}>
+                  Notes
+                </Typography>
+              </Grid>
+              <Grid item xs={12} md={6}>
+                <TextField
+                  fullWidth
+                  label="Guest note"
+                  multiline
+                  rows={3}
+                  value={formData.guestNote}
+                  onChange={handleInputChange('guestNote')}
+                  size="small"
+                />
+              </Grid>
+              <Grid item xs={12} md={6}>
+                <TextField
+                  fullWidth
+                  label="Host note"
+                  multiline
+                  rows={3}
+                  value={formData.hostNote}
+                  onChange={handleInputChange('hostNote')}
+                  size="small"
+                />
+              </Grid>
+
+              {/* Policy and Status */}
+              <Grid item xs={12}>
+                <Typography variant="subtitle1" sx={{ fontWeight: 600, mb: 2, mt: 2 }}>
+                  Policy and Status
+                </Typography>
+              </Grid>
+              <Grid item xs={12}>
+                <TextField
+                  fullWidth
+                  label="Cancellation policy"
+                  value={formData.cancellationPolicy}
+                  onChange={handleInputChange('cancellationPolicy')}
+                  size="small"
+                  InputProps={{ readOnly: true }}
+                />
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <TextField
+                  fullWidth
+                  label="Reservation date"
+                  type="date"
+                  value={formData.reservationDate}
+                  onChange={handleInputChange('reservationDate')}
+                  size="small"
+                  InputLabelProps={{ shrink: true }}
+                />
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <FormControlLabel
+                  control={
+                    <Switch
+                      checked={formData.reservationStored}
+                      onChange={handleInputChange('reservationStored')}
+                    />
+                  }
+                  label="Reservation Stored"
+                />
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <FormControlLabel
+                  control={
+                    <Switch
+                      checked={formData.synced}
+                      onChange={handleInputChange('synced')}
+                    />
+                  }
+                  label="Synced"
+                />
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <FormControlLabel
+                  control={
+                    <Switch
+                      checked={formData.instantBooked}
+                      onChange={handleInputChange('instantBooked')}
+                    />
+                  }
+                  label="Instant booked"
+                />
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <FormControlLabel
+                  control={
+                    <Switch
+                      checked={formData.channelActive}
+                      onChange={handleInputChange('channelActive')}
+                    />
+                  }
+                  label="Channel active"
+                />
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <FormControl fullWidth size="small">
+                  <InputLabel>Status</InputLabel>
+                  <Select
+                    value={formData.status}
+                    onChange={handleInputChange('status')}
+                    label="Status"
+                  >
+                    <MenuItem value="Inquiry">Inquiry</MenuItem>
+                    <MenuItem value="Confirmed">Confirmed</MenuItem>
+                    <MenuItem value="Cancelled">Cancelled</MenuItem>
+                  </Select>
+                </FormControl>
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <TextField
+                  fullWidth
+                  label="Commission booking"
+                  value={formData.commissionBooking}
+                  onChange={handleInputChange('commissionBooking')}
+                  size="small"
+                  InputProps={{ readOnly: true }}
+                />
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <TextField
+                  fullWidth
+                  label="Commission value"
+                  value={formData.commissionValue}
+                  onChange={handleInputChange('commissionValue')}
+                  size="small"
+                />
+              </Grid>
+
+              {/* Fees and Discounts */}
+              <Grid item xs={12}>
+                <Typography variant="subtitle1" sx={{ fontWeight: 600, mb: 2, mt: 2 }}>
+                  Fees and Discounts
+                </Typography>
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <FormControl fullWidth size="small">
+                  <InputLabel>Select fees</InputLabel>
+                  <Select
+                    value={formData.extraFees}
+                    onChange={handleInputChange('extraFees')}
+                    label="Select fees"
+                  >
+                    <MenuItem value="0">No fees</MenuItem>
+                    <MenuItem value="50">Cleaning fee</MenuItem>
+                    <MenuItem value="100">Pet fee</MenuItem>
+                  </Select>
+                </FormControl>
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <FormControl fullWidth size="small">
+                  <InputLabel>Select discounts</InputLabel>
+                  <Select
+                    value={formData.extraDiscounts}
+                    onChange={handleInputChange('extraDiscounts')}
+                    label="Select discounts"
+                  >
+                    <MenuItem value="">No discounts</MenuItem>
+                    <MenuItem value="10">10% off</MenuItem>
+                    <MenuItem value="20">20% off</MenuItem>
+                  </Select>
+                </FormControl>
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <TextField
+                  fullWidth
+                  label="Coupon name"
+                  value={formData.couponName}
+                  onChange={handleInputChange('couponName')}
+                  size="small"
+                />
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <Button variant="outlined" size="small">
+                  Apply
+                </Button>
+              </Grid>
+
+              {/* Price Breakdown */}
+              <Grid item xs={12}>
+                <Typography variant="subtitle1" sx={{ fontWeight: 600, mb: 2, mt: 2 }}>
+                  Price Breakdown
+                </Typography>
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <TextField
+                  fullWidth
+                  label="Base rate"
+                  value={formData.baseRate}
+                  onChange={handleInputChange('baseRate')}
+                  size="small"
+                  InputProps={{ readOnly: true }}
+                />
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <TextField
+                  fullWidth
+                  label="Total price"
+                  value={formData.totalPrice}
+                  onChange={handleInputChange('totalPrice')}
+                  size="small"
+                  InputProps={{ readOnly: true }}
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <Typography variant="body2" color="text.secondary">
+                  Last updated on: {formData.lastUpdated}
+                </Typography>
+                <Typography variant="body2" color="text.secondary">
+                  Original total price: {formData.originalTotalPrice}
+                </Typography>
+              </Grid>
+            </Grid>
+          </AccordionDetails>
+        </Accordion>
+
+        {/* Payment */}
+        <Accordion 
+          expanded={expandedSections.payment} 
+          onChange={() => handleSectionToggle('payment')}
+          sx={{ mb: 2 }}
+        >
+          <AccordionSummary expandIcon={<Iconify icon="solar:eye-bold" />}>
+            <Typography variant="h6" sx={{ fontWeight: 600 }}>
+              Payment
+            </Typography>
+          </AccordionSummary>
+          <AccordionDetails>
+            <Box sx={{ mb: 3 }}>
+              <Typography variant="subtitle1" sx={{ fontWeight: 600, mb: 2 }}>
+                Payment methods
+              </Typography>
+              <FormControlLabel
+                control={
+                  <Checkbox
+                    checked={formData.manuallyChecked}
+                    onChange={handleInputChange('manuallyChecked')}
+                  />
+                }
+                label="Manually checked"
+              />
+              <Box sx={{ mt: 2 }}>
+                <Button variant="contained" startIcon={<Iconify icon="solar:pen-bold" />}>
+                  + Add payment method
+                </Button>
+              </Box>
+            </Box>
+
+            <Box sx={{ mb: 3 }}>
+              <Typography variant="subtitle1" sx={{ fontWeight: 600, mb: 2 }}>
+                Financial fields and formulas
+              </Typography>
+              
+              <Typography variant="subtitle2" sx={{ fontWeight: 600, mb: 1 }}>
+                Financial fields
+              </Typography>
+              <TableContainer component={Paper} sx={{ mb: 3 }}>
+                <Table size="small">
+                  <TableHead>
+                    <TableRow>
+                      <TableCell>Concept</TableCell>
+                      <TableCell>Amount</TableCell>
+                    </TableRow>
+                  </TableHead>
+                  <TableBody>
+                    <TableRow>
+                      <TableCell>Base rate</TableCell>
+                      <TableCell>{formData.baseRate}</TableCell>
+                    </TableRow>
+                    <TableRow>
+                      <TableCell>Total price from channel</TableCell>
+                      <TableCell>{formData.totalPriceFromChannel}</TableCell>
+                    </TableRow>
+                    <TableRow>
+                      <TableCell>Airbnb payout sum</TableCell>
+                      <TableCell>{formData.airbnbPayoutSum}</TableCell>
+                    </TableRow>
+                    <TableRow>
+                      <TableCell>Last updated on</TableCell>
+                      <TableCell>{formData.lastUpdated}</TableCell>
+                    </TableRow>
+                  </TableBody>
+                </Table>
+              </TableContainer>
+
+              <Typography variant="subtitle2" sx={{ fontWeight: 600, mb: 1 }}>
+                Formulas
+              </Typography>
+              <TableContainer component={Paper}>
+                <Table size="small">
+                  <TableHead>
+                    <TableRow>
+                      <TableCell>Formula name</TableCell>
+                      <TableCell>Formula</TableCell>
+                      <TableCell>Result</TableCell>
+                    </TableRow>
+                  </TableHead>
+                  <TableBody>
+                    <TableRow>
+                      <TableCell>CedolareSeccaAirbnbClassico</TableCell>
+                      <TableCell>(baseRate + pricePerExtraPerson+ cleaningFee ) * 0.21</TableCell>
+                      <TableCell>2550.933</TableCell>
+                    </TableRow>
+                    <TableRow>
+                      <TableCell>CedolareSeccaDomusFeriae</TableCell>
+                      <TableCell>((RicavoLordo - CleaningFeePerAppartamento) - CommissioniOtaConIVAAirbnb - CommissioniBookingConIVA - CommissionePropertyManagerDomusFeriae) * 0.21</TableCell>
+                      <TableCell>1918.1859</TableCell>
+                    </TableRow>
+                    <TableRow>
+                      <TableCell>CleaningFeePerAppartamento</TableCell>
+                      <TableCell>65*1</TableCell>
+                      <TableCell>65</TableCell>
+                    </TableRow>
+                    <TableRow>
+                      <TableCell>CommissionePropertyManagerDomusFeriae</TableCell>
+                      <TableCell>(RicavoLordo-CleaningFeePerAppartamento) * PercentualePropertyManager</TableCell>
+                      <TableCell>2948.0812</TableCell>
+                    </TableRow>
+                    <TableRow>
+                      <TableCell>RicavoLordo</TableCell>
+                      <TableCell>PrezzoPrenotazione + CleaningFeeDaPortale + totalDiscounts +airbnbClosedResolutionsSum+RicavoLordoBooking</TableCell>
+                      <TableCell>12147.3</TableCell>
+                    </TableRow>
+                    <TableRow>
+                      <TableCell>GuadagnoProprietarioDomusFeriae</TableCell>
+                      <TableCell>((RicavoLordo- CleaningFeePerAppartamento) -CommissioniBookingConIVA-CommissioniOtaConIVAAirbnb- CommissionePropertyManagerDomusFeriae-CedolareSeccaDomusFeriae)</TableCell>
+                      <TableCell>7216.0329</TableCell>
+                    </TableRow>
+                    <TableRow>
+                      <TableCell>MarginalitaProprietario</TableCell>
+                      <TableCell>GuadagnoProprietarioDomusFeriae/RicavoLordo</TableCell>
+                      <TableCell>0.594</TableCell>
+                    </TableRow>
+                  </TableBody>
+                </Table>
+              </TableContainer>
+            </Box>
+          </AccordionDetails>
+        </Accordion>
+
+        {/* Expenses and extras */}
+        <Accordion 
+          expanded={expandedSections.expensesExtras} 
+          onChange={() => handleSectionToggle('expensesExtras')}
+          sx={{ mb: 2 }}
+        >
+          <AccordionSummary expandIcon={<Iconify icon="solar:eye-bold" />}>
+            <Typography variant="h6" sx={{ fontWeight: 600 }}>
+              Expenses and extras
+            </Typography>
+          </AccordionSummary>
+          <AccordionDetails>
+            <Box sx={{ textAlign: 'center', py: 4 }}>
+              <Typography variant="body2" color="text.secondary">
+                No expenses or extras found
+              </Typography>
+              <Box sx={{ mt: 2 }}>
+                <Button variant="outlined" sx={{ mr: 1 }}>
+                  + Add expense
+                </Button>
+                <Button variant="outlined">
+                  + Add extra
+                </Button>
+              </Box>
+            </Box>
+          </AccordionDetails>
+        </Accordion>
+
+        {/* Custom fields */}
+        <Accordion 
+          expanded={expandedSections.customFields} 
+          onChange={() => handleSectionToggle('customFields')}
+          sx={{ mb: 2 }}
+        >
+          <AccordionSummary expandIcon={<Iconify icon="solar:eye-bold" />}>
+            <Typography variant="h6" sx={{ fontWeight: 600 }}>
+              Custom fields
+            </Typography>
+          </AccordionSummary>
+          <AccordionDetails>
+            <Grid container spacing={2}>
+              <Grid item xs={12} sm={6}>
+                <TextField
+                  fullWidth
+                  label="MISSING_GUESTS"
+                  value={formData.missingGuests}
+                  onChange={handleInputChange('missingGuests')}
+                  size="small"
+                />
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <TextField
+                  fullWidth
+                  label="Check-in Reservation URL"
+                  value={formData.checkinReservationUrl}
+                  onChange={handleInputChange('checkinReservationUrl')}
+                  size="small"
+                />
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <TextField
+                  fullWidth
+                  label="city tax"
+                  value={formData.cityTax}
+                  onChange={handleInputChange('cityTax')}
+                  size="small"
+                />
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <TextField
+                  fullWidth
+                  label="Identity Verification Status"
+                  value={formData.identityVerificationStatus}
+                  onChange={handleInputChange('identityVerificationStatus')}
+                  size="small"
+                />
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <TextField
+                  fullWidth
+                  label="Remote Access Link"
+                  value={formData.remoteAccessLink}
+                  onChange={handleInputChange('remoteAccessLink')}
+                  size="small"
+                />
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <TextField
+                  fullWidth
+                  label="Upselling Link"
+                  value={formData.upsellingLink}
+                  onChange={handleInputChange('upsellingLink')}
+                  size="small"
+                />
+              </Grid>
+            </Grid>
+          </AccordionDetails>
+        </Accordion>
+
+        {/* Door code */}
+        <Accordion 
+          expanded={expandedSections.doorCode} 
+          onChange={() => handleSectionToggle('doorCode')}
+          sx={{ mb: 2 }}
+        >
+          <AccordionSummary expandIcon={<Iconify icon="solar:eye-bold" />}>
+            <Typography variant="h6" sx={{ fontWeight: 600 }}>
+              Door code
+            </Typography>
+          </AccordionSummary>
+          <AccordionDetails>
+            <Grid container spacing={2}>
+              <Grid item xs={12} sm={6}>
+                <TextField
+                  fullWidth
+                  label="Door code"
+                  value={formData.doorCode}
+                  onChange={handleInputChange('doorCode')}
+                  size="small"
+                />
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <TextField
+                  fullWidth
+                  label="Door code vendor"
+                  value={formData.doorCodeVendor}
+                  onChange={handleInputChange('doorCodeVendor')}
+                  size="small"
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <TextField
+                  fullWidth
+                  label="Door code instructions"
+                  multiline
+                  rows={3}
+                  value={formData.doorCodeInstructions}
+                  onChange={handleInputChange('doorCodeInstructions')}
+                  size="small"
+                />
+              </Grid>
+            </Grid>
+          </AccordionDetails>
+        </Accordion>
+
+        {/* Attachment */}
+        <Accordion 
+          expanded={expandedSections.attachment} 
+          onChange={() => handleSectionToggle('attachment')}
+          sx={{ mb: 2 }}
+        >
+          <AccordionSummary expandIcon={<Iconify icon="solar:eye-bold" />}>
+            <Typography variant="h6" sx={{ fontWeight: 600 }}>
+              Attachment
+            </Typography>
+          </AccordionSummary>
+          <AccordionDetails>
+            <Box sx={{ 
+              border: '2px dashed #ccc', 
+              borderRadius: 2, 
+              p: 4, 
+              textAlign: 'center',
+              cursor: 'pointer',
+              '&:hover': { borderColor: 'primary.main' }
+            }}>
+              <Iconify icon="solar:pen-bold" width={48} sx={{ color: 'text.secondary', mb: 2 }} />
+              <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
+                Drop files to upload or
+              </Typography>
+              <Button variant="outlined">
+                Browse
+              </Button>
+              <Typography variant="body2" color="text.secondary" sx={{ mt: 2 }}>
+                No attached files
+              </Typography>
+            </Box>
+          </AccordionDetails>
+        </Accordion>
+
+        {/* Tasks */}
+        <Accordion 
+          expanded={expandedSections.tasks} 
+          onChange={() => handleSectionToggle('tasks')}
+          sx={{ mb: 2 }}
+        >
+          <AccordionSummary expandIcon={<Iconify icon="solar:eye-bold" />}>
+            <Typography variant="h6" sx={{ fontWeight: 600 }}>
+              Tasks
+            </Typography>
+          </AccordionSummary>
+          <AccordionDetails>
+            <Box sx={{ textAlign: 'center', py: 4 }}>
+              <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
+                There are no tasks
+              </Typography>
+              <Button variant="contained" startIcon={<Iconify icon="solar:pen-bold" />}>
+                Add task
+              </Button>
+            </Box>
+          </AccordionDetails>
+        </Accordion>
+
+        {/* Alteration logs */}
+        <Accordion 
+          expanded={expandedSections.alterationLogs} 
+          onChange={() => handleSectionToggle('alterationLogs')}
+          sx={{ mb: 2 }}
+        >
+          <AccordionSummary expandIcon={<Iconify icon="solar:eye-bold" />}>
+            <Typography variant="h6" sx={{ fontWeight: 600 }}>
+              Alteration logs
+            </Typography>
+          </AccordionSummary>
+          <AccordionDetails>
+            <Typography variant="body2" color="text.secondary">
+              No alteration logs found.
+            </Typography>
+          </AccordionDetails>
+        </Accordion>
+
+        {/* Messages */}
+        <Accordion 
+          expanded={expandedSections.messages} 
+          onChange={() => handleSectionToggle('messages')}
+          sx={{ mb: 2 }}
+        >
+          <AccordionSummary expandIcon={<Iconify icon="solar:eye-bold" />}>
+            <Typography variant="h6" sx={{ fontWeight: 600 }}>
+              Messages
+            </Typography>
+          </AccordionSummary>
+          <AccordionDetails>
+            <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
+              Please click here to see your messages in the Inbox
+            </Typography>
+            <Button variant="outlined" startIcon={<Iconify icon="solar:pen-bold" />}>
+              Messages
+            </Button>
+          </AccordionDetails>
+        </Accordion>
+
+        {/* Reviews */}
+        <Accordion 
+          expanded={expandedSections.reviews} 
+          onChange={() => handleSectionToggle('reviews')}
+          sx={{ mb: 2 }}
+        >
+          <AccordionSummary expandIcon={<Iconify icon="solar:eye-bold" />}>
+            <Typography variant="h6" sx={{ fontWeight: 600 }}>
+              Reviews
+            </Typography>
+          </AccordionSummary>
+          <AccordionDetails>
+            <Box sx={{ textAlign: 'center', py: 4 }}>
+              <Typography variant="body2" color="text.secondary">
+                No results
+              </Typography>
+            </Box>
+          </AccordionDetails>
+        </Accordion>
+      </Box>
+
+      {/* Floating Action Button */}
+      <IconButton
+        sx={{
+          position: 'fixed',
+          bottom: 24,
+          right: 24,
+          bgcolor: 'orange.main',
+          color: 'white',
+          width: 56,
+          height: 56,
+          '&:hover': {
+            bgcolor: 'orange.dark',
+          },
+          boxShadow: 3,
+        }}
+      >
+        <Iconify icon="solar:pen-bold" width={24} />
+      </IconButton>
+    </DashboardContent>
+  );
+}

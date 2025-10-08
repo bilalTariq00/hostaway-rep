@@ -1,0 +1,1038 @@
+import React, { useState } from 'react';
+
+import {
+  Box,
+  Card,
+  Grid,
+  Paper,
+  Button,
+  Avatar,
+  Divider,
+  TextField,
+  Typography,
+  FormControl,
+  InputLabel,
+  Select,
+  MenuItem,
+  Chip,
+  IconButton,
+  InputAdornment,
+  FormControlLabel,
+  Switch,
+  Accordion,
+  AccordionSummary,
+  AccordionDetails
+} from '@mui/material';
+
+import { useParams } from 'react-router-dom';
+
+import { useRouter } from 'src/routes/hooks';
+import { DashboardContent } from 'src/layouts/dashboard';
+import { useReservations } from 'src/contexts/reservations-context';
+
+import { Iconify } from 'src/components/iconify';
+
+export default function UserDetailView() {
+  const router = useRouter();
+  const { guestName } = useParams<{ guestName: string }>();
+  const { reservations } = useReservations();
+  
+  // Find the user's reservations
+  const userReservations = reservations.filter(reservation => 
+    reservation.guestName === guestName
+  );
+
+  const [formData, setFormData] = useState({
+    // Basic Information
+    firstName: '',
+    lastName: '',
+    email: '',
+    phone: '',
+    country: '',
+    city: '',
+    language: '',
+    currency: 'EUR',
+    channel: '',
+    hostawayId: '',
+    channelId: '',
+    
+    // Personal Details
+    dateOfBirth: '',
+    nationality: '',
+    occupation: '',
+    company: '',
+    address: '',
+    postalCode: '',
+    idType: '',
+    idNumber: '',
+    
+    // Communication Preferences
+    preferredContact: 'email',
+    marketingOptIn: false,
+    newsletterOptIn: false,
+    smsOptIn: false,
+    
+    // Notes and Preferences
+    preferences: '',
+    specialRequests: '',
+    emergencyContact: '',
+    
+    // Additional Fields
+    gender: '',
+    maritalStatus: '',
+    children: '',
+    pets: '',
+    smoking: false,
+    dietaryRestrictions: '',
+    accessibilityNeeds: '',
+    loyaltyTier: '',
+    referralSource: '',
+    lastContactDate: '',
+    totalSpent: 0,
+    averageStay: 0,
+    repeatGuest: false,
+    vipStatus: false,
+    blacklisted: false,
+    notes: '',
+    internalNotes: '',
+    tags: '',
+    customField1: '',
+    customField2: '',
+    customField3: '',
+    customField4: '',
+    customField5: '',
+    socialMedia: {
+      facebook: '',
+      instagram: '',
+      twitter: '',
+      linkedin: ''
+    },
+    documents: [],
+    attachments: []
+  });
+
+  const [expandedSections, setExpandedSections] = useState({
+    basicInfo: true,
+    personalDetails: true,
+    communication: true,
+    preferences: true,
+    additionalInfo: true,
+    documents: true,
+    history: true
+  });
+
+  const handleInputChange = (field: string) => (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement> | any) => {
+    const value = event.target.type === 'checkbox' ? event.target.checked : event.target.value;
+    setFormData(prev => ({
+      ...prev,
+      [field]: value
+    }));
+  };
+
+  const handleSectionToggle = (section: string) => {
+    setExpandedSections(prev => ({
+      ...prev,
+      [section]: !prev[section as keyof typeof prev]
+    }));
+  };
+
+  const handleSave = () => {
+    console.log('Saving user details:', formData);
+  };
+
+  const handleBack = () => {
+    router.back();
+  };
+
+  const getStatusColor = (status: string) => {
+    switch (status) {
+      case 'Confirmed':
+        return 'success';
+      case 'Pending':
+        return 'warning';
+      case 'Cancelled':
+        return 'error';
+      default:
+        return 'default';
+    }
+  };
+
+  return (
+    <DashboardContent maxWidth="xl">
+      {/* Header */}
+      <Box sx={{ mb: 3 }}>
+        <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 2 }}>
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+            <IconButton onClick={handleBack} sx={{ p: 1 }}>
+              <Iconify icon="solar:pen-bold" width={24} />
+            </IconButton>
+            <Box>
+              <Typography variant="h4" sx={{ fontWeight: 600 }}>
+                Guest Profile
+              </Typography>
+              <Typography variant="body2" color="text.secondary">
+                {guestName || 'Guest Details'}
+              </Typography>
+            </Box>
+          </Box>
+          <Box sx={{ display: 'flex', gap: 1 }}>
+            <Button variant="outlined" onClick={handleBack}>
+              Cancel
+            </Button>
+            <Button variant="contained" onClick={handleSave}>
+              Save Changes
+            </Button>
+          </Box>
+        </Box>
+      </Box>
+
+      {/* Guest Photo and Basic Info */}
+      <Card sx={{ p: 3, mb: 3 }}>
+        <Grid container spacing={3} alignItems="center">
+          <Grid item xs={12} sm={3}>
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+              <Avatar
+                sx={{
+                  width: 80,
+                  height: 80,
+                  bgcolor: 'primary.main',
+                  fontSize: '2rem',
+                  fontWeight: 600
+                }}
+              >
+                {guestName?.charAt(0) || 'G'}
+              </Avatar>
+              <Box>
+                <Typography variant="h6" sx={{ fontWeight: 600 }}>
+                  {guestName || 'Guest Name'}
+                </Typography>
+                <Typography variant="body2" color="text.secondary">
+                  Guest Profile
+                </Typography>
+              </Box>
+            </Box>
+          </Grid>
+          <Grid item xs={12} sm={9}>
+            <Box sx={{ display: 'flex', gap: 2, flexWrap: 'wrap' }}>
+              <Chip
+                label={`${userReservations.length} Reservations`}
+                color="primary"
+                variant="outlined"
+              />
+              <Chip
+                label="Active Guest"
+                color="success"
+                variant="outlined"
+              />
+              <Chip
+                label="Verified"
+                color="info"
+                variant="outlined"
+              />
+              <Chip
+                label="VIP"
+                color="warning"
+                variant="outlined"
+              />
+            </Box>
+          </Grid>
+        </Grid>
+      </Card>
+
+      {/* Main Content with Accordions */}
+      <Box sx={{ mb: 3 }}>
+        {/* Basic Information */}
+        <Accordion 
+          expanded={expandedSections.basicInfo} 
+          onChange={() => handleSectionToggle('basicInfo')}
+          sx={{ mb: 2 }}
+        >
+          <AccordionSummary expandIcon={<Iconify icon="solar:eye-bold" />}>
+            <Typography variant="h6" sx={{ fontWeight: 600 }}>
+              Basic Information
+            </Typography>
+          </AccordionSummary>
+          <AccordionDetails>
+            <Grid container spacing={2}>
+              <Grid item xs={12} sm={6}>
+                <TextField
+                  fullWidth
+                  label="First Name"
+                  value={formData.firstName}
+                  onChange={handleInputChange('firstName')}
+                  size="small"
+                  placeholder="Enter first name"
+                />
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <TextField
+                  fullWidth
+                  label="Last Name"
+                  value={formData.lastName}
+                  onChange={handleInputChange('lastName')}
+                  size="small"
+                  placeholder="Enter last name"
+                />
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <TextField
+                  fullWidth
+                  label="Email"
+                  type="email"
+                  value={formData.email}
+                  onChange={handleInputChange('email')}
+                  size="small"
+                  placeholder="Enter email address"
+                  InputProps={{
+                    startAdornment: (
+                      <InputAdornment position="start">
+                        <Iconify icon="solar:eye-bold" width={20} />
+                      </InputAdornment>
+                    ),
+                  }}
+                />
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <TextField
+                  fullWidth
+                  label="Phone"
+                  value={formData.phone}
+                  onChange={handleInputChange('phone')}
+                  size="small"
+                  placeholder="Enter phone number"
+                  InputProps={{
+                    startAdornment: (
+                      <InputAdornment position="start">
+                        <Iconify icon="solar:pen-bold" width={20} />
+                      </InputAdornment>
+                    ),
+                  }}
+                />
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <FormControl fullWidth size="small">
+                  <InputLabel>Country</InputLabel>
+                  <Select
+                    value={formData.country}
+                    onChange={handleInputChange('country')}
+                    label="Country"
+                  >
+                    <MenuItem value="US">United States</MenuItem>
+                    <MenuItem value="UK">United Kingdom</MenuItem>
+                    <MenuItem value="DE">Germany</MenuItem>
+                    <MenuItem value="FR">France</MenuItem>
+                    <MenuItem value="IT">Italy</MenuItem>
+                    <MenuItem value="ES">Spain</MenuItem>
+                    <MenuItem value="CA">Canada</MenuItem>
+                    <MenuItem value="AU">Australia</MenuItem>
+                  </Select>
+                </FormControl>
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <TextField
+                  fullWidth
+                  label="City"
+                  value={formData.city}
+                  onChange={handleInputChange('city')}
+                  size="small"
+                  placeholder="Enter city"
+                />
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <FormControl fullWidth size="small">
+                  <InputLabel>Language</InputLabel>
+                  <Select
+                    value={formData.language}
+                    onChange={handleInputChange('language')}
+                    label="Language"
+                  >
+                    <MenuItem value="en">English</MenuItem>
+                    <MenuItem value="es">Spanish</MenuItem>
+                    <MenuItem value="fr">French</MenuItem>
+                    <MenuItem value="de">German</MenuItem>
+                    <MenuItem value="it">Italian</MenuItem>
+                    <MenuItem value="pt">Portuguese</MenuItem>
+                  </Select>
+                </FormControl>
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <FormControl fullWidth size="small">
+                  <InputLabel>Currency</InputLabel>
+                  <Select
+                    value={formData.currency}
+                    onChange={handleInputChange('currency')}
+                    label="Currency"
+                  >
+                    <MenuItem value="EUR">EUR</MenuItem>
+                    <MenuItem value="USD">USD</MenuItem>
+                    <MenuItem value="GBP">GBP</MenuItem>
+                    <MenuItem value="CAD">CAD</MenuItem>
+                    <MenuItem value="AUD">AUD</MenuItem>
+                  </Select>
+                </FormControl>
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <FormControl fullWidth size="small">
+                  <InputLabel>Channel</InputLabel>
+                  <Select
+                    value={formData.channel}
+                    onChange={handleInputChange('channel')}
+                    label="Channel"
+                  >
+                    <MenuItem value="airbnb">Airbnb</MenuItem>
+                    <MenuItem value="booking">Booking.com</MenuItem>
+                    <MenuItem value="vrbo">VRBO</MenuItem>
+                    <MenuItem value="direct">Direct</MenuItem>
+                    <MenuItem value="other">Other</MenuItem>
+                  </Select>
+                </FormControl>
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <TextField
+                  fullWidth
+                  label="Hostaway ID"
+                  value={formData.hostawayId}
+                  onChange={handleInputChange('hostawayId')}
+                  size="small"
+                  placeholder="Enter Hostaway ID"
+                />
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <TextField
+                  fullWidth
+                  label="Channel ID"
+                  value={formData.channelId}
+                  onChange={handleInputChange('channelId')}
+                  size="small"
+                  placeholder="Enter Channel ID"
+                />
+              </Grid>
+            </Grid>
+          </AccordionDetails>
+        </Accordion>
+
+        {/* Personal Details */}
+        <Accordion 
+          expanded={expandedSections.personalDetails} 
+          onChange={() => handleSectionToggle('personalDetails')}
+          sx={{ mb: 2 }}
+        >
+          <AccordionSummary expandIcon={<Iconify icon="solar:eye-bold" />}>
+            <Typography variant="h6" sx={{ fontWeight: 600 }}>
+              Personal Details
+            </Typography>
+          </AccordionSummary>
+          <AccordionDetails>
+            <Grid container spacing={2}>
+              <Grid item xs={12} sm={6}>
+                <TextField
+                  fullWidth
+                  label="Date of Birth"
+                  type="date"
+                  value={formData.dateOfBirth}
+                  onChange={handleInputChange('dateOfBirth')}
+                  size="small"
+                  InputLabelProps={{ shrink: true }}
+                />
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <TextField
+                  fullWidth
+                  label="Nationality"
+                  value={formData.nationality}
+                  onChange={handleInputChange('nationality')}
+                  size="small"
+                  placeholder="Enter nationality"
+                />
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <FormControl fullWidth size="small">
+                  <InputLabel>Gender</InputLabel>
+                  <Select
+                    value={formData.gender}
+                    onChange={handleInputChange('gender')}
+                    label="Gender"
+                  >
+                    <MenuItem value="male">Male</MenuItem>
+                    <MenuItem value="female">Female</MenuItem>
+                    <MenuItem value="other">Other</MenuItem>
+                    <MenuItem value="prefer-not-to-say">Prefer not to say</MenuItem>
+                  </Select>
+                </FormControl>
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <FormControl fullWidth size="small">
+                  <InputLabel>Marital Status</InputLabel>
+                  <Select
+                    value={formData.maritalStatus}
+                    onChange={handleInputChange('maritalStatus')}
+                    label="Marital Status"
+                  >
+                    <MenuItem value="single">Single</MenuItem>
+                    <MenuItem value="married">Married</MenuItem>
+                    <MenuItem value="divorced">Divorced</MenuItem>
+                    <MenuItem value="widowed">Widowed</MenuItem>
+                  </Select>
+                </FormControl>
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <TextField
+                  fullWidth
+                  label="Occupation"
+                  value={formData.occupation}
+                  onChange={handleInputChange('occupation')}
+                  size="small"
+                  placeholder="Enter occupation"
+                />
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <TextField
+                  fullWidth
+                  label="Company"
+                  value={formData.company}
+                  onChange={handleInputChange('company')}
+                  size="small"
+                  placeholder="Enter company name"
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <TextField
+                  fullWidth
+                  label="Address"
+                  multiline
+                  rows={2}
+                  value={formData.address}
+                  onChange={handleInputChange('address')}
+                  size="small"
+                  placeholder="Enter full address"
+                />
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <TextField
+                  fullWidth
+                  label="Postal Code"
+                  value={formData.postalCode}
+                  onChange={handleInputChange('postalCode')}
+                  size="small"
+                  placeholder="Enter postal code"
+                />
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <FormControl fullWidth size="small">
+                  <InputLabel>ID Type</InputLabel>
+                  <Select
+                    value={formData.idType}
+                    onChange={handleInputChange('idType')}
+                    label="ID Type"
+                  >
+                    <MenuItem value="passport">Passport</MenuItem>
+                    <MenuItem value="drivers-license">Driver&apos;s License</MenuItem>
+                    <MenuItem value="national-id">National ID</MenuItem>
+                    <MenuItem value="other">Other</MenuItem>
+                  </Select>
+                </FormControl>
+              </Grid>
+              <Grid item xs={12}>
+                <TextField
+                  fullWidth
+                  label="ID Number"
+                  value={formData.idNumber}
+                  onChange={handleInputChange('idNumber')}
+                  size="small"
+                  placeholder="Enter ID number"
+                />
+              </Grid>
+            </Grid>
+          </AccordionDetails>
+        </Accordion>
+
+        {/* Communication Preferences */}
+        <Accordion 
+          expanded={expandedSections.communication} 
+          onChange={() => handleSectionToggle('communication')}
+          sx={{ mb: 2 }}
+        >
+          <AccordionSummary expandIcon={<Iconify icon="solar:eye-bold" />}>
+            <Typography variant="h6" sx={{ fontWeight: 600 }}>
+              Communication Preferences
+            </Typography>
+          </AccordionSummary>
+          <AccordionDetails>
+            <Grid container spacing={2}>
+              <Grid item xs={12} sm={6}>
+                <FormControl fullWidth size="small">
+                  <InputLabel>Preferred Contact Method</InputLabel>
+                  <Select
+                    value={formData.preferredContact}
+                    onChange={handleInputChange('preferredContact')}
+                    label="Preferred Contact Method"
+                  >
+                    <MenuItem value="email">Email</MenuItem>
+                    <MenuItem value="phone">Phone</MenuItem>
+                    <MenuItem value="sms">SMS</MenuItem>
+                    <MenuItem value="whatsapp">WhatsApp</MenuItem>
+                  </Select>
+                </FormControl>
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <TextField
+                  fullWidth
+                  label="Emergency Contact"
+                  value={formData.emergencyContact}
+                  onChange={handleInputChange('emergencyContact')}
+                  size="small"
+                  placeholder="Enter emergency contact information"
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
+                  <FormControlLabel
+                    control={
+                      <Switch
+                        checked={formData.marketingOptIn}
+                        onChange={handleInputChange('marketingOptIn')}
+                      />
+                    }
+                    label="Marketing Communications"
+                  />
+                  <FormControlLabel
+                    control={
+                      <Switch
+                        checked={formData.newsletterOptIn}
+                        onChange={handleInputChange('newsletterOptIn')}
+                      />
+                    }
+                    label="Newsletter Subscription"
+                  />
+                  <FormControlLabel
+                    control={
+                      <Switch
+                        checked={formData.smsOptIn}
+                        onChange={handleInputChange('smsOptIn')}
+                      />
+                    }
+                    label="SMS Notifications"
+                  />
+                </Box>
+              </Grid>
+            </Grid>
+          </AccordionDetails>
+        </Accordion>
+
+        {/* Preferences & Special Requirements */}
+        <Accordion 
+          expanded={expandedSections.preferences} 
+          onChange={() => handleSectionToggle('preferences')}
+          sx={{ mb: 2 }}
+        >
+          <AccordionSummary expandIcon={<Iconify icon="solar:eye-bold" />}>
+            <Typography variant="h6" sx={{ fontWeight: 600 }}>
+              Preferences & Special Requirements
+            </Typography>
+          </AccordionSummary>
+          <AccordionDetails>
+            <Grid container spacing={2}>
+              <Grid item xs={12} sm={6}>
+                <TextField
+                  fullWidth
+                  label="Children"
+                  value={formData.children}
+                  onChange={handleInputChange('children')}
+                  size="small"
+                  placeholder="Number of children"
+                />
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <TextField
+                  fullWidth
+                  label="Pets"
+                  value={formData.pets}
+                  onChange={handleInputChange('pets')}
+                  size="small"
+                  placeholder="Pet information"
+                />
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <FormControlLabel
+                  control={
+                    <Switch
+                      checked={formData.smoking}
+                      onChange={handleInputChange('smoking')}
+                    />
+                  }
+                  label="Smoking"
+                />
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <TextField
+                  fullWidth
+                  label="Dietary Restrictions"
+                  value={formData.dietaryRestrictions}
+                  onChange={handleInputChange('dietaryRestrictions')}
+                  size="small"
+                  placeholder="Any dietary restrictions"
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <TextField
+                  fullWidth
+                  label="Accessibility Needs"
+                  value={formData.accessibilityNeeds}
+                  onChange={handleInputChange('accessibilityNeeds')}
+                  size="small"
+                  placeholder="Any accessibility requirements"
+                />
+              </Grid>
+              <Grid item xs={12} md={6}>
+                <TextField
+                  fullWidth
+                  label="Guest Notes"
+                  multiline
+                  rows={4}
+                  value={formData.notes}
+                  onChange={handleInputChange('notes')}
+                  size="small"
+                  placeholder="Enter any special notes about this guest"
+                />
+              </Grid>
+              <Grid item xs={12} md={6}>
+                <TextField
+                  fullWidth
+                  label="Special Requests"
+                  multiline
+                  rows={4}
+                  value={formData.specialRequests}
+                  onChange={handleInputChange('specialRequests')}
+                  size="small"
+                  placeholder="Enter any special requests or preferences"
+                />
+              </Grid>
+            </Grid>
+          </AccordionDetails>
+        </Accordion>
+
+        {/* Additional Information */}
+        <Accordion 
+          expanded={expandedSections.additionalInfo} 
+          onChange={() => handleSectionToggle('additionalInfo')}
+          sx={{ mb: 2 }}
+        >
+          <AccordionSummary expandIcon={<Iconify icon="solar:eye-bold" />}>
+            <Typography variant="h6" sx={{ fontWeight: 600 }}>
+              Additional Information
+            </Typography>
+          </AccordionSummary>
+          <AccordionDetails>
+            <Grid container spacing={2}>
+              <Grid item xs={12} sm={6}>
+                <FormControl fullWidth size="small">
+                  <InputLabel>Loyalty Tier</InputLabel>
+                  <Select
+                    value={formData.loyaltyTier}
+                    onChange={handleInputChange('loyaltyTier')}
+                    label="Loyalty Tier"
+                  >
+                    <MenuItem value="bronze">Bronze</MenuItem>
+                    <MenuItem value="silver">Silver</MenuItem>
+                    <MenuItem value="gold">Gold</MenuItem>
+                    <MenuItem value="platinum">Platinum</MenuItem>
+                  </Select>
+                </FormControl>
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <TextField
+                  fullWidth
+                  label="Referral Source"
+                  value={formData.referralSource}
+                  onChange={handleInputChange('referralSource')}
+                  size="small"
+                  placeholder="How did they find us?"
+                />
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <TextField
+                  fullWidth
+                  label="Last Contact Date"
+                  type="date"
+                  value={formData.lastContactDate}
+                  onChange={handleInputChange('lastContactDate')}
+                  size="small"
+                  InputLabelProps={{ shrink: true }}
+                />
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <TextField
+                  fullWidth
+                  label="Total Spent"
+                  type="number"
+                  value={formData.totalSpent}
+                  onChange={handleInputChange('totalSpent')}
+                  size="small"
+                  placeholder="Total amount spent"
+                />
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <TextField
+                  fullWidth
+                  label="Average Stay"
+                  type="number"
+                  value={formData.averageStay}
+                  onChange={handleInputChange('averageStay')}
+                  size="small"
+                  placeholder="Average stay duration"
+                />
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <TextField
+                  fullWidth
+                  label="Tags"
+                  value={formData.tags}
+                  onChange={handleInputChange('tags')}
+                  size="small"
+                  placeholder="Comma-separated tags"
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
+                  <FormControlLabel
+                    control={
+                      <Switch
+                        checked={formData.repeatGuest}
+                        onChange={handleInputChange('repeatGuest')}
+                      />
+                    }
+                    label="Repeat Guest"
+                  />
+                  <FormControlLabel
+                    control={
+                      <Switch
+                        checked={formData.vipStatus}
+                        onChange={handleInputChange('vipStatus')}
+                      />
+                    }
+                    label="VIP Status"
+                  />
+                  <FormControlLabel
+                    control={
+                      <Switch
+                        checked={formData.blacklisted}
+                        onChange={handleInputChange('blacklisted')}
+                      />
+                    }
+                    label="Blacklisted"
+                  />
+                </Box>
+              </Grid>
+              <Grid item xs={12}>
+                <TextField
+                  fullWidth
+                  label="Internal Notes"
+                  multiline
+                  rows={3}
+                  value={formData.internalNotes}
+                  onChange={handleInputChange('internalNotes')}
+                  size="small"
+                  placeholder="Internal staff notes"
+                />
+              </Grid>
+            </Grid>
+          </AccordionDetails>
+        </Accordion>
+
+        {/* Custom Fields */}
+        <Accordion 
+          expanded={expandedSections.documents} 
+          onChange={() => handleSectionToggle('documents')}
+          sx={{ mb: 2 }}
+        >
+          <AccordionSummary expandIcon={<Iconify icon="solar:eye-bold" />}>
+            <Typography variant="h6" sx={{ fontWeight: 600 }}>
+              Custom Fields & Documents
+            </Typography>
+          </AccordionSummary>
+          <AccordionDetails>
+            <Grid container spacing={2}>
+              <Grid item xs={12} sm={6}>
+                <TextField
+                  fullWidth
+                  label="Custom Field 1"
+                  value={formData.customField1}
+                  onChange={handleInputChange('customField1')}
+                  size="small"
+                  placeholder="Custom field 1"
+                />
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <TextField
+                  fullWidth
+                  label="Custom Field 2"
+                  value={formData.customField2}
+                  onChange={handleInputChange('customField2')}
+                  size="small"
+                  placeholder="Custom field 2"
+                />
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <TextField
+                  fullWidth
+                  label="Custom Field 3"
+                  value={formData.customField3}
+                  onChange={handleInputChange('customField3')}
+                  size="small"
+                  placeholder="Custom field 3"
+                />
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <TextField
+                  fullWidth
+                  label="Custom Field 4"
+                  value={formData.customField4}
+                  onChange={handleInputChange('customField4')}
+                  size="small"
+                  placeholder="Custom field 4"
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <TextField
+                  fullWidth
+                  label="Custom Field 5"
+                  value={formData.customField5}
+                  onChange={handleInputChange('customField5')}
+                  size="small"
+                  placeholder="Custom field 5"
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <Typography variant="subtitle2" sx={{ mb: 1, fontWeight: 600 }}>
+                  Social Media
+                </Typography>
+                <Grid container spacing={2}>
+                  <Grid item xs={12} sm={6}>
+                    <TextField
+                      fullWidth
+                      label="Facebook"
+                      value={formData.socialMedia.facebook}
+                      onChange={(e) => setFormData(prev => ({
+                        ...prev,
+                        socialMedia: { ...prev.socialMedia, facebook: e.target.value }
+                      }))}
+                      size="small"
+                      placeholder="Facebook profile"
+                    />
+                  </Grid>
+                  <Grid item xs={12} sm={6}>
+                    <TextField
+                      fullWidth
+                      label="Instagram"
+                      value={formData.socialMedia.instagram}
+                      onChange={(e) => setFormData(prev => ({
+                        ...prev,
+                        socialMedia: { ...prev.socialMedia, instagram: e.target.value }
+                      }))}
+                      size="small"
+                      placeholder="Instagram profile"
+                    />
+                  </Grid>
+                  <Grid item xs={12} sm={6}>
+                    <TextField
+                      fullWidth
+                      label="Twitter"
+                      value={formData.socialMedia.twitter}
+                      onChange={(e) => setFormData(prev => ({
+                        ...prev,
+                        socialMedia: { ...prev.socialMedia, twitter: e.target.value }
+                      }))}
+                      size="small"
+                      placeholder="Twitter profile"
+                    />
+                  </Grid>
+                  <Grid item xs={12} sm={6}>
+                    <TextField
+                      fullWidth
+                      label="LinkedIn"
+                      value={formData.socialMedia.linkedin}
+                      onChange={(e) => setFormData(prev => ({
+                        ...prev,
+                        socialMedia: { ...prev.socialMedia, linkedin: e.target.value }
+                      }))}
+                      size="small"
+                      placeholder="LinkedIn profile"
+                    />
+                  </Grid>
+                </Grid>
+              </Grid>
+            </Grid>
+          </AccordionDetails>
+        </Accordion>
+
+        {/* Reservation History */}
+        <Accordion 
+          expanded={expandedSections.history} 
+          onChange={() => handleSectionToggle('history')}
+          sx={{ mb: 2 }}
+        >
+          <AccordionSummary expandIcon={<Iconify icon="solar:eye-bold" />}>
+            <Typography variant="h6" sx={{ fontWeight: 600 }}>
+              Reservation History
+            </Typography>
+          </AccordionSummary>
+          <AccordionDetails>
+            {userReservations.length > 0 ? (
+              <Box>
+                {userReservations.map((reservation) => (
+                  <Paper key={reservation.id} sx={{ p: 2, mb: 2, bgcolor: 'grey.50' }}>
+                    <Grid container spacing={2} alignItems="center">
+                      <Grid item xs={12} sm={3}>
+                        <Typography variant="body2" color="text.secondary">
+                          Check-in
+                        </Typography>
+                        <Typography variant="body1" sx={{ fontWeight: 500 }}>
+                          {new Date(reservation.checkInDate).toLocaleDateString()}
+                        </Typography>
+                      </Grid>
+                      <Grid item xs={12} sm={3}>
+                        <Typography variant="body2" color="text.secondary">
+                          Check-out
+                        </Typography>
+                        <Typography variant="body1" sx={{ fontWeight: 500 }}>
+                          {new Date(reservation.checkOutDate).toLocaleDateString()}
+                        </Typography>
+                      </Grid>
+                      <Grid item xs={12} sm={2}>
+                        <Typography variant="body2" color="text.secondary">
+                          Nights
+                        </Typography>
+                        <Typography variant="body1" sx={{ fontWeight: 500 }}>
+                          {reservation.nights}
+                        </Typography>
+                      </Grid>
+                      <Grid item xs={12} sm={2}>
+                        <Typography variant="body2" color="text.secondary">
+                          Total
+                        </Typography>
+                        <Typography variant="body1" sx={{ fontWeight: 500 }}>
+                          €{reservation.totalAmount}
+                        </Typography>
+                      </Grid>
+                      <Grid item xs={12} sm={2}>
+                        <Chip
+                          label={reservation.status}
+                          size="small"
+                          color={getStatusColor(reservation.status) as any}
+                        />
+                      </Grid>
+                    </Grid>
+                  </Paper>
+                ))}
+              </Box>
+            ) : (
+              <Typography variant="body2" color="text.secondary" sx={{ textAlign: 'center', py: 4 }}>
+                No reservations found for this guest.
+              </Typography>
+            )}
+          </AccordionDetails>
+        </Accordion>
+      </Box>
+    </DashboardContent>
+  );
+}

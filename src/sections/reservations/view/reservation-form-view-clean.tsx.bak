@@ -1,0 +1,699 @@
+import React, { useState } from 'react';
+import { useParams } from 'react-router-dom';
+
+import {
+  Box,
+  Card,
+  Chip,
+  Grid,
+  Paper,
+  Button,
+  Avatar,
+  Divider,
+  TextField,
+  Typography,
+  FormControl,
+  InputLabel,
+  Select,
+  MenuItem,
+  FormControlLabel,
+  Switch,
+  Accordion,
+  AccordionSummary,
+  AccordionDetails,
+  IconButton,
+  InputAdornment,
+  Snackbar,
+  Alert
+} from '@mui/material';
+
+import { useRouter } from 'src/routes/hooks';
+
+import { DashboardContent } from 'src/layouts/dashboard';
+import { useReservations } from 'src/contexts/reservations-context';
+
+import { Iconify } from 'src/components/iconify';
+
+export default function ReservationFormView() {
+  const router = useRouter();
+  const { reservationId } = useParams<{ reservationId?: string }>();
+  const { reservations, addReservation, updateReservation } = useReservations();
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
+
+  // Check if we're in edit mode
+  const isEditMode = !!reservationId;
+  const existingReservation = isEditMode ? reservations.find(r => r.id.toString() === reservationId) : null;
+
+  const [formData, setFormData] = useState({
+    // Guest Information
+    name: existingReservation?.guestName || '',
+    guestFirstName: existingReservation?.guestName?.split(' ')[0] || '',
+    guestLastName: existingReservation?.guestName?.split(' ').slice(1).join(' ') || '',
+    email: existingReservation?.email || '',
+    phone: existingReservation?.phone || '',
+    phoneCountry: '+1',
+    guestCountry: '',
+    guestCity: '',
+    guestLanguage: 'en',
+    currency: 'usd',
+    channel: existingReservation?.channel || 'Hostaway Direct',
+    hostawayReservationId: '',
+    channelReservationId: '',
+    listing: existingReservation?.property || '',
+    guestPhoto: null as File | null,
+
+    // Reservation Details
+    checkInDate: existingReservation?.checkInDate || '',
+    checkInTime: '15:00',
+    checkOutDate: existingReservation?.checkOutDate || '',
+    checkOutTime: '10:00',
+    numberOfNights: existingReservation?.nights || 0,
+    numberOfGuests: existingReservation?.guests || 1,
+    children: 0,
+    infants: 0,
+    pets: 0,
+    rentalAgreement: 'standard',
+
+    // Notes
+    guestNote: '',
+    hostNote: '',
+
+    // Policy and Status
+    cancellationPolicy: 'flexible',
+    reservationDate: '',
+    reservationStored: 'yes',
+    synced: 'yes',
+    instantBooked: 'no',
+    channelActive: 'yes',
+    status: existingReservation?.status || 'new',
+    commissionBooking: '',
+
+    // Fees and Discounts
+    extraFees: '',
+    extraDiscounts: '',
+    couponName: '',
+
+    // Additional Fields
+    manuallyChecked: false,
+    doorCode: '',
+    doorCodeVendor: '',
+    doorCodeInstructions: ''
+  });
+
+  const [expandedSections, setExpandedSections] = useState<Record<string, boolean>>({
+    basicInfo: true,
+    reservationDetails: true,
+    notes: false,
+    policy: false,
+    fees: false,
+    payment: false,
+    customFields: false,
+    doorCode: false,
+    attachment: false,
+    tasks: false
+  });
+
+  const handleInputChange = (field: string, value: any) => {
+    setFormData(prev => ({
+      ...prev,
+      [field]: value
+    }));
+  };
+
+  const handlePhotoUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (file) {
+      // Validate file type
+      if (!file.type.startsWith('image/')) {
+        alert('Please select an image file');
+        return;
+      }
+
+      // Validate file size (max 5MB)
+      if (file.size > 5 * 1024 * 1024) {
+        alert('File size must be less than 5MB');
+        return;
+      }
+
+      setFormData(prev => ({
+        ...prev,
+        guestPhoto: file
+      }));
+    }
+  };
+
+  const handleSectionToggle = (section: string) => {
+    setExpandedSections(prev => ({
+      ...prev,
+      [section]: !prev[section]
+    }));
+  };
+
+  const handleSave = () => {
+    // Validate required fields
+    if (!formData.checkInDate || !formData.checkOutDate) {
+      alert('Please select check-in and check-out dates');
+      return;
+    }
+
+    // Calculate number of nights
+    const checkIn = new Date(formData.checkInDate);
+    const checkOut = new Date(formData.checkOutDate);
+    const nights = Math.ceil((checkOut.getTime() - checkIn.getTime()) / (1000 * 60 * 60 * 24));
+
+    // Calculate total amount (assuming €75 per night)
+    const totalAmount = nights * 75;
+
+    // Create reservation object
+    const reservation = {
+      guestName: formData.name || `${formData.guestFirstName} ${formData.guestLastName}`.trim(),
+      checkInDate: formData.checkInDate,
+      checkOutDate: formData.checkOutDate,
+      status: formData.status,
+      property: formData.listing || 'La Dimora Del Cavaliere',
+      nights: nights,
+      guests: parseInt(formData.numberOfGuests.toString()) || 1,
+      totalAmount: totalAmount,
+      email: formData.email,
+      phone: formData.phone,
+      channel: formData.channel
+    };
+
+    if (isEditMode && existingReservation) {
+      // Update existing reservation
+      updateReservation(existingReservation.id, reservation);
+    } else {
+      // Add new reservation
+      addReservation(reservation);
+    }
+
+    setSnackbarOpen(true);
+    setTimeout(() => {
+      router.push('/reservations');
+    }, 1500);
+  };
+
+  const handleCancel = () => {
+    router.push('/reservations');
+  };
+
+  return (
+    <DashboardContent>
+      <Box sx={{ p: 3 }}>
+        {/* Header */}
+        <Box sx={{ 
+          p: 3, 
+          mb: 4, 
+          bgcolor: 'background.paper', 
+          borderRadius: 2, 
+          boxShadow: 1,
+          border: '1px solid',
+          borderColor: 'divider'
+        }}>
+          <Box sx={{ 
+            display: 'flex', 
+            alignItems: 'center', 
+            justifyContent: 'space-between'
+          }}>
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+              <Button
+                variant="text"
+                startIcon={<Iconify icon="solar:arrow-left-bold" width={20} />}
+                onClick={handleCancel}
+                sx={{ 
+                  color: 'text.secondary',
+                  px: 2,
+                  py: 1,
+                  '&:hover': {
+                    bgcolor: 'grey.100',
+                    color: 'text.primary'
+                  }
+                }}
+              >
+                ← Reservations
+              </Button>
+              <Divider orientation="vertical" flexItem />
+              <Box>
+                <Typography variant="h4" sx={{ fontWeight: 700, color: 'text.primary' }}>
+                  {isEditMode ? 'Edit Reservation' : 'Add New Reservation'}
+                </Typography>
+                <Typography variant="body2" color="text.secondary" sx={{ mt: 0.5 }}>
+                  {isEditMode ? 'Update reservation details and guest information' : 'Create a new reservation for your guest'}
+                </Typography>
+              </Box>
+            </Box>
+            <Box sx={{ display: 'flex', gap: 1.5 }}>
+              <Button
+                variant="outlined"
+                onClick={handleCancel}
+                startIcon={<Iconify icon="solar:check-circle-bold" width={18} />}
+                sx={{ 
+                  borderColor: 'grey.300',
+                  color: 'text.secondary',
+                  px: 3,
+                  py: 1,
+                  '&:hover': {
+                    borderColor: 'grey.400',
+                    bgcolor: 'grey.50'
+                  }
+                }}
+              >
+                Cancel
+              </Button>
+              <Button
+                variant="contained"
+                onClick={handleSave}
+                startIcon={<Iconify icon="solar:check-circle-bold" width={18} />}
+                sx={{ 
+                  bgcolor: 'primary.main',
+                  px: 3,
+                  py: 1,
+                  '&:hover': {
+                    bgcolor: 'primary.dark',
+                    boxShadow: 3
+                  }
+                }}
+              >
+                {isEditMode ? 'Update' : 'Save'}
+              </Button>
+            </Box>
+          </Box>
+        </Box>
+
+        {/* Basic Info Section */}
+        <Accordion 
+          expanded={expandedSections.basicInfo} 
+          onChange={() => handleSectionToggle('basicInfo')}
+          sx={{ 
+            mb: 3, 
+            borderRadius: 2,
+            boxShadow: 2,
+            border: '1px solid',
+            borderColor: 'divider',
+            '&:before': { display: 'none' },
+            '&.Mui-expanded': {
+              margin: '0 0 24px 0',
+            }
+          }}
+        >
+          <AccordionSummary
+            expandIcon={<Iconify icon="solar:eye-bold" width={20} />}
+            sx={{ 
+              bgcolor: 'grey.50',
+              color: 'text.primary',
+              borderRadius: '8px 8px 0 0',
+              px: 3,
+              py: 2,
+              '& .MuiAccordionSummary-content': {
+                margin: '8px 0',
+                '&.Mui-expanded': {
+                  margin: '8px 0',
+                },
+              },
+              '&:hover': {
+                bgcolor: 'grey.100',
+              }
+            }}
+          >
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+              <Box sx={{ 
+                p: 1.5, 
+                bgcolor: 'primary.main', 
+                borderRadius: 1.5,
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center'
+              }}>
+                <Iconify icon="solar:pen-bold" width={20} sx={{ color: 'white' }} />
+              </Box>
+              <Box>
+                <Typography variant="h6" sx={{ fontWeight: 600, color: 'text.primary' }}>
+                  Guest Information
+                </Typography>
+                <Typography variant="body2" color="text.secondary">
+                  Personal details and contact information
+                </Typography>
+              </Box>
+            </Box>
+          </AccordionSummary>
+          <AccordionDetails sx={{ p: 3 }}>
+            {/* Guest Photo */}
+            <Box sx={{ 
+              display: 'flex', 
+              alignItems: 'center', 
+              gap: 2, 
+              mb: 3,
+              p: 2,
+              bgcolor: 'grey.50',
+              borderRadius: 2,
+              width: 'fit-content',
+              cursor: 'pointer',
+              '&:hover': {
+                bgcolor: 'grey.100'
+              }
+            }}
+            onClick={() => document.getElementById('photo-upload')?.click()}
+            >
+              <Avatar sx={{ 
+                width: 48, 
+                height: 48, 
+                bgcolor: 'primary.main',
+                boxShadow: 2
+              }}>
+                {formData.guestPhoto ? (
+                  <img 
+                    src={URL.createObjectURL(formData.guestPhoto)} 
+                    alt="Guest" 
+                    style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '50%' }}
+                  />
+                ) : (
+                  <Iconify icon="solar:pen-bold" width={24} />
+                )}
+              </Avatar>
+              <Box sx={{ flex: 1 }}>
+                <Typography variant="body2" color="text.secondary" sx={{ fontWeight: 500 }}>
+                  Guest Photo
+                </Typography>
+                <Typography variant="caption" color="text.secondary">
+                  {formData.guestPhoto ? formData.guestPhoto.name : 'Click to upload'}
+                </Typography>
+              </Box>
+              {formData.guestPhoto && (
+                <IconButton
+                  size="small"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setFormData(prev => ({ ...prev, guestPhoto: null }));
+                  }}
+                  sx={{
+                    color: 'error.main',
+                    '&:hover': { bgcolor: 'error.light' }
+                  }}
+                >
+                  <Iconify icon="solar:check-circle-bold" width={20} />
+                </IconButton>
+              )}
+              <input
+                id="photo-upload"
+                type="file"
+                accept="image/*"
+                style={{ display: 'none' }}
+                onChange={handlePhotoUpload}
+              />
+            </Box>
+
+            {/* Form Fields */}
+            <Grid container spacing={3}>
+              <Grid item xs={12} sm={6} md={3}>
+                <TextField
+                  fullWidth
+                  size="small"
+                  label="Name *"
+                  placeholder="Enter guest full name"
+                  value={formData.name}
+                  onChange={(e) => handleInputChange('name', e.target.value)}
+                  sx={{ 
+                    '& .MuiOutlinedInput-root': {
+                      borderRadius: 2,
+                      '&:hover .MuiOutlinedInput-notchedOutline': {
+                        borderColor: 'primary.main',
+                      },
+                      '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
+                        borderColor: 'primary.main',
+                        borderWidth: 2,
+                      },
+                    },
+                    '& .MuiInputLabel-root.Mui-focused': {
+                      color: 'primary.main',
+                    },
+                  }}
+                  InputProps={{
+                    startAdornment: (
+                      <InputAdornment position="start">
+                        <Iconify icon="solar:pen-bold" width={18} sx={{ color: 'text.secondary' }} />
+                      </InputAdornment>
+                    ),
+                  }}
+                />
+              </Grid>
+              <Grid item xs={12} sm={6} md={3}>
+                <TextField
+                  fullWidth
+                  size="small"
+                  label="Email"
+                  placeholder="Enter email address"
+                  value={formData.email}
+                  onChange={(e) => handleInputChange('email', e.target.value)}
+                  type="email"
+                  sx={{ 
+                    '& .MuiOutlinedInput-root': {
+                      borderRadius: 2,
+                      '&:hover .MuiOutlinedInput-notchedOutline': {
+                        borderColor: 'primary.main',
+                      },
+                      '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
+                        borderColor: 'primary.main',
+                        borderWidth: 2,
+                      },
+                    },
+                    '& .MuiInputLabel-root.Mui-focused': {
+                      color: 'primary.main',
+                    },
+                  }}
+                  InputProps={{
+                    startAdornment: (
+                      <InputAdornment position="start">
+                        <Iconify icon="solar:pen-bold" width={18} sx={{ color: 'text.secondary' }} />
+                      </InputAdornment>
+                    ),
+                  }}
+                />
+              </Grid>
+              <Grid item xs={12} sm={6} md={3}>
+                <TextField
+                  fullWidth
+                  size="small"
+                  label="Phone"
+                  placeholder="Enter phone number"
+                  value={formData.phone}
+                  onChange={(e) => handleInputChange('phone', e.target.value)}
+                  sx={{ 
+                    '& .MuiOutlinedInput-root': {
+                      borderRadius: 2,
+                      '&:hover .MuiOutlinedInput-notchedOutline': {
+                        borderColor: 'primary.main',
+                      },
+                      '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
+                        borderColor: 'primary.main',
+                        borderWidth: 2,
+                      },
+                    },
+                    '& .MuiInputLabel-root.Mui-focused': {
+                      color: 'primary.main',
+                    },
+                  }}
+                  InputProps={{
+                    startAdornment: (
+                      <InputAdornment position="start">
+                        <Iconify icon="solar:pen-bold" width={18} sx={{ color: 'text.secondary' }} />
+                      </InputAdornment>
+                    ),
+                  }}
+                />
+              </Grid>
+              <Grid item xs={12} sm={6} md={3}>
+                <FormControl fullWidth size="small">
+                  <InputLabel>Channel</InputLabel>
+                  <Select
+                    value={formData.channel}
+                    onChange={(e) => handleInputChange('channel', e.target.value)}
+                    label="Channel"
+                    sx={{ borderRadius: 2 }}
+                  >
+                    <MenuItem value="Hostaway Direct">Hostaway Direct</MenuItem>
+                    <MenuItem value="Airbnb">Airbnb</MenuItem>
+                    <MenuItem value="Booking.com">Booking.com</MenuItem>
+                    <MenuItem value="VRBO">VRBO</MenuItem>
+                    <MenuItem value="Expedia">Expedia</MenuItem>
+                  </Select>
+                </FormControl>
+              </Grid>
+            </Grid>
+          </AccordionDetails>
+        </Accordion>
+
+        {/* Reservation Details Section */}
+        <Accordion 
+          expanded={expandedSections.reservationDetails} 
+          onChange={() => handleSectionToggle('reservationDetails')}
+          sx={{ 
+            mb: 3, 
+            borderRadius: 2,
+            boxShadow: 2,
+            border: '1px solid',
+            borderColor: 'divider',
+            '&:before': { display: 'none' },
+            '&.Mui-expanded': {
+              margin: '0 0 24px 0',
+            }
+          }}
+        >
+          <AccordionSummary
+            expandIcon={<Iconify icon="solar:eye-bold" width={20} />}
+            sx={{ 
+              bgcolor: 'grey.50',
+              color: 'text.primary',
+              borderRadius: '8px 8px 0 0',
+              px: 3,
+              py: 2,
+              '& .MuiAccordionSummary-content': {
+                margin: '8px 0',
+                '&.Mui-expanded': {
+                  margin: '8px 0',
+                },
+              },
+              '&:hover': {
+                bgcolor: 'grey.100',
+              }
+            }}
+          >
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+              <Box sx={{ 
+                p: 1.5, 
+                bgcolor: 'success.main', 
+                borderRadius: 1.5,
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center'
+              }}>
+                <Iconify icon="solar:pen-bold" width={20} sx={{ color: 'white' }} />
+              </Box>
+              <Box>
+                <Typography variant="h6" sx={{ fontWeight: 600, color: 'text.primary' }}>
+                  Reservation Details
+                </Typography>
+                <Typography variant="body2" color="text.secondary">
+                  Dates, guests, and booking information
+                </Typography>
+              </Box>
+            </Box>
+          </AccordionSummary>
+          <AccordionDetails sx={{ p: 3 }}>
+            <Grid container spacing={3}>
+              <Grid item xs={12} sm={6} md={3}>
+                <TextField
+                  fullWidth
+                  size="small"
+                  label="Check-in Date *"
+                  type="date"
+                  value={formData.checkInDate}
+                  onChange={(e) => handleInputChange('checkInDate', e.target.value)}
+                  InputLabelProps={{ shrink: true }}
+                  sx={{ 
+                    '& .MuiOutlinedInput-root': {
+                      borderRadius: 2,
+                      '&:hover .MuiOutlinedInput-notchedOutline': {
+                        borderColor: 'primary.main',
+                      },
+                      '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
+                        borderColor: 'primary.main',
+                        borderWidth: 2,
+                      },
+                    },
+                    '& .MuiInputLabel-root.Mui-focused': {
+                      color: 'primary.main',
+                    },
+                  }}
+                />
+              </Grid>
+              <Grid item xs={12} sm={6} md={3}>
+                <TextField
+                  fullWidth
+                  size="small"
+                  label="Check-out Date *"
+                  type="date"
+                  value={formData.checkOutDate}
+                  onChange={(e) => handleInputChange('checkOutDate', e.target.value)}
+                  InputLabelProps={{ shrink: true }}
+                  sx={{ 
+                    '& .MuiOutlinedInput-root': {
+                      borderRadius: 2,
+                      '&:hover .MuiOutlinedInput-notchedOutline': {
+                        borderColor: 'primary.main',
+                      },
+                      '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
+                        borderColor: 'primary.main',
+                        borderWidth: 2,
+                      },
+                    },
+                    '& .MuiInputLabel-root.Mui-focused': {
+                      color: 'primary.main',
+                    },
+                  }}
+                />
+              </Grid>
+              <Grid item xs={12} sm={6} md={3}>
+                <TextField
+                  fullWidth
+                  size="small"
+                  label="Number of Guests"
+                  type="number"
+                  value={formData.numberOfGuests}
+                  onChange={(e) => handleInputChange('numberOfGuests', e.target.value)}
+                  sx={{ 
+                    '& .MuiOutlinedInput-root': {
+                      borderRadius: 2,
+                      '&:hover .MuiOutlinedInput-notchedOutline': {
+                        borderColor: 'primary.main',
+                      },
+                      '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
+                        borderColor: 'primary.main',
+                        borderWidth: 2,
+                      },
+                    },
+                    '& .MuiInputLabel-root.Mui-focused': {
+                      color: 'primary.main',
+                    },
+                  }}
+                />
+              </Grid>
+              <Grid item xs={12} sm={6} md={3}>
+                <FormControl fullWidth size="small">
+                  <InputLabel>Status</InputLabel>
+                  <Select
+                    value={formData.status}
+                    onChange={(e) => handleInputChange('status', e.target.value)}
+                    label="Status"
+                    sx={{ borderRadius: 2 }}
+                  >
+                    <MenuItem value="new">New</MenuItem>
+                    <MenuItem value="confirmed">Confirmed</MenuItem>
+                    <MenuItem value="pending">Pending</MenuItem>
+                    <MenuItem value="cancelled">Cancelled</MenuItem>
+                    <MenuItem value="completed">Completed</MenuItem>
+                  </Select>
+                </FormControl>
+              </Grid>
+            </Grid>
+          </AccordionDetails>
+        </Accordion>
+
+        {/* Success Snackbar */}
+        <Snackbar
+          open={snackbarOpen}
+          autoHideDuration={2000}
+          onClose={() => setSnackbarOpen(false)}
+          anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+        >
+          <Alert
+            onClose={() => setSnackbarOpen(false)}
+            severity="success"
+            sx={{ width: '100%' }}
+          >
+            Reservation {isEditMode ? 'updated' : 'saved'} successfully!
+          </Alert>
+        </Snackbar>
+      </Box>
+    </DashboardContent>
+  );
+}

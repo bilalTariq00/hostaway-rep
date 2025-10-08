@@ -21,55 +21,13 @@ import InputAdornment from '@mui/material/InputAdornment';
 import { useRouter } from 'src/routes/hooks';
 
 import { DashboardContent } from 'src/layouts/dashboard';
+import { useReservations } from 'src/contexts/reservations-context';
 
 import { Iconify } from 'src/components/iconify';
 
-// Mock data for reservations
-const mockReservations = [
-  {
-    id: 1,
-    guestName: 'John Smith',
-    checkInDate: '2024-10-15',
-    status: 'Confirmed',
-    property: 'La Dimora Del Cavaliere',
-    nights: 3,
-    guests: 2,
-    totalAmount: 225,
-  },
-  {
-    id: 2,
-    guestName: 'Maria Garcia',
-    checkInDate: '2024-10-20',
-    status: 'Pending',
-    property: 'Navigli',
-    nights: 2,
-    guests: 4,
-    totalAmount: 270,
-  },
-  {
-    id: 3,
-    guestName: 'David Johnson',
-    checkInDate: '2024-10-25',
-    status: 'Confirmed',
-    property: 'Polacchi42',
-    nights: 5,
-    guests: 3,
-    totalAmount: 600,
-  },
-  {
-    id: 4,
-    guestName: 'Sarah Wilson',
-    checkInDate: '2024-11-01',
-    status: 'Cancelled',
-    property: 'Superattico - Via Del C...',
-    nights: 2,
-    guests: 2,
-    totalAmount: 400,
-  },
-];
-
 export function ReservationsView() {
   const router = useRouter();
+  const { reservations } = useReservations();
   const [activeFilters, setActiveFilters] = useState(['Status: Confirmed']);
   const [searchTerm, setSearchTerm] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
@@ -110,7 +68,7 @@ export function ReservationsView() {
     }
   };
 
-  const filteredReservations = mockReservations.filter(reservation =>
+  const filteredReservations = reservations.filter(reservation =>
     reservation.guestName.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
@@ -156,7 +114,10 @@ export function ReservationsView() {
             <Button variant="outlined">
               Import
             </Button>
-            <Button variant="contained">
+            <Button 
+              variant="contained"
+              onClick={() => router.push('/reservations/new')}
+            >
               Add Reservation
             </Button>
           </Box>
@@ -259,9 +220,32 @@ export function ReservationsView() {
             </TableHead>
             <TableBody>
               {currentReservations.map((reservation) => (
-                <TableRow key={reservation.id}>
+                <TableRow 
+                  key={reservation.id}
+                  sx={{ 
+                    cursor: 'pointer',
+                    '&:hover': {
+                      bgcolor: 'action.hover'
+                    }
+                  }}
+                  onClick={() => router.push(`/reservations/${reservation.id}`)}
+                >
                   <TableCell>
-                    <Typography variant="body2" sx={{ fontWeight: 500 }}>
+                    <Typography 
+                      variant="body2" 
+                      sx={{ 
+                        fontWeight: 500,
+                        color: 'primary.main',
+                        cursor: 'pointer',
+                        '&:hover': {
+                          textDecoration: 'underline'
+                        }
+                      }}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        router.push(`/user/${encodeURIComponent(reservation.guestName)}`);
+                      }}
+                    >
                       {reservation.guestName}
                     </Typography>
                   </TableCell>
@@ -299,13 +283,52 @@ export function ReservationsView() {
                   </TableCell>
                   <TableCell align="center">
                     <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
-                      <IconButton size="small">
-                        <Iconify icon={"eva:edit-fill" as any} width={16} />
+                      <IconButton 
+                        size="small"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          router.push(`/reservations/${reservation.id}/edit`);
+                        }}
+                        sx={{
+                          color: 'text.secondary',
+                          '&:hover': {
+                            color: 'primary.main',
+                            bgcolor: 'primary.50'
+                          }
+                        }}
+                      >
+                        <Iconify icon="solar:pen-bold" width={16} />
                       </IconButton>
-                      <IconButton size="small">
+                      <IconButton 
+                        size="small"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          router.push('/inbox');
+                        }}
+                        sx={{
+                          color: 'text.secondary',
+                          '&:hover': {
+                            color: 'primary.main',
+                            bgcolor: 'primary.50'
+                          }
+                        }}
+                      >
                         <Iconify icon={"eva:message-circle-fill" as any} width={16} />
                       </IconButton>
-                      <IconButton size="small">
+                      <IconButton 
+                        size="small"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          router.push('/calendar');
+                        }}
+                        sx={{
+                          color: 'text.secondary',
+                          '&:hover': {
+                            color: 'primary.main',
+                            bgcolor: 'primary.50'
+                          }
+                        }}
+                      >
                         <Iconify icon={"eva:calendar-fill" as any} width={16} />
                       </IconButton>
                       <IconButton size="small">

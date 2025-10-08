@@ -1,5 +1,5 @@
 import { useRef, useState, useEffect } from 'react';
-import { X, List, Lock, Filter, Search, Grid3X3, Calendar, StickyNote, ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight } from 'lucide-react';
+import { X, List, Lock, Filter, Search, Grid3X3, Calendar, StickyNote, ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight, Eye, EyeOff, MoreHorizontal, Star, MapPin, Users, Bed, Bath, Wifi, Car, Coffee, Home } from 'lucide-react';
 
 import Box from '@mui/material/Box';
 import Tab from '@mui/material/Tab';
@@ -18,6 +18,19 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogActions from '@mui/material/DialogActions';
 import InputAdornment from '@mui/material/InputAdornment';
 import FormControlLabel from '@mui/material/FormControlLabel';
+import Card from '@mui/material/Card';
+import CardContent from '@mui/material/CardContent';
+import CardMedia from '@mui/material/CardMedia';
+import Avatar from '@mui/material/Avatar';
+import Badge from '@mui/material/Badge';
+import Divider from '@mui/material/Divider';
+import ListItem from '@mui/material/ListItem';
+import ListItemText from '@mui/material/ListItemText';
+import ListItemIcon from '@mui/material/ListItemIcon';
+import ListItemButton from '@mui/material/ListItemButton';
+import Collapse from '@mui/material/Collapse';
+import Menu from '@mui/material/Menu';
+import MenuItem from '@mui/material/MenuItem';
 
 import { useRouter } from 'src/routes/hooks';
 
@@ -26,21 +39,224 @@ import { DashboardContent } from 'src/layouts/dashboard';
 import { ManageDatesModal } from '../components/manage-dates-modal';
 import { BookingDetailsModal } from '../components/booking-details-modal';
 
-// Mock data for listings
+// Simple mock data - just one property
 const mockListings = [
-  { id: 305034, name: 'La Dimora Del Cavaliere', price: 75, bookings: 15 },
-  { id: 305035, name: 'Navigli', price: 135, bookings: 8 },
-  { id: 305225, name: 'Polacchi42', price: 120, bookings: 12 },
-  { id: 305421, name: 'Superattico - Via Del C...', price: 200, bookings: 20 },
-  { id: 306532, name: 'Montecatini Terme', price: 90, bookings: 10 },
-  { id: 308582, name: 'Monteverde - Quattrov...', price: 150, bookings: 18 },
-  { id: 310867, name: 'La Storta', price: 110, bookings: 5 },
-  { id: 317154, name: '[5 Min From Trastevere] Chic Apt', price: 180, bookings: 22 },
-  { id: 332386, name: 'Via Poggio Tulliano', price: 160, bookings: 14 },
-  { id: 345603, name: 'Via Dei Marruccini | San Lorenzo', price: 140, bookings: 16 },
-  { id: 363365, name: 'Via di Acqua Bullicante 113', price: 130, bookings: 11 },
-  { id: 363366, name: 'Via Matera 23A', price: 125, bookings: 9 },
-  { id: 372243, name: 'Luxury Stay in Rome – Steps from Metro A Cornelia', price: 220, bookings: 25 },
+  { 
+    id: 305034, 
+    name: 'La Dimora Del Cavaliere', 
+    price: 75,
+    bookings: 8,
+    image: 'https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?w=400',
+    location: 'Milan, Italy',
+    rating: 4.9,
+    reviews: 89,
+    guests: 4,
+    bedrooms: 2,
+    bathrooms: 1,
+    amenities: ['WiFi', 'Kitchen', 'Balcony'],
+    description: 'Modern loft in the trendy Navigli district with canal views.',
+    status: 'active',
+    lastBooking: '2024-12-10',
+    revenue: 10800
+  },
+  { 
+    id: 305225, 
+    name: 'Polacchi42', 
+    price: 120, 
+    bookings: 12,
+    image: 'https://images.unsplash.com/photo-1571896349842-33c89424de2d?w=400',
+    location: 'Florence, Italy',
+    rating: 4.7,
+    reviews: 156,
+    guests: 5,
+    bedrooms: 2,
+    bathrooms: 2,
+    amenities: ['WiFi', 'Kitchen', 'Garden', 'Parking'],
+    description: 'Charming apartment near the Duomo with traditional Italian architecture.',
+    status: 'active',
+    lastBooking: '2024-12-12',
+    revenue: 14400
+  },
+  { 
+    id: 305421, 
+    name: 'Superattico - Via Del Corso', 
+    price: 200, 
+    bookings: 20,
+    image: 'https://images.unsplash.com/photo-1564501049412-61c2a3083791?w=400',
+    location: 'Rome, Italy',
+    rating: 4.9,
+    reviews: 203,
+    guests: 8,
+    bedrooms: 4,
+    bathrooms: 3,
+    amenities: ['WiFi', 'Kitchen', 'Pool', 'Gym', 'Parking'],
+    description: 'Luxury penthouse with panoramic views of Rome and modern amenities.',
+    status: 'active',
+    lastBooking: '2024-12-18',
+    revenue: 40000
+  },
+  { 
+    id: 306532, 
+    name: 'Montecatini Terme', 
+    price: 90, 
+    bookings: 10,
+    image: 'https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=400',
+    location: 'Tuscany, Italy',
+    rating: 4.6,
+    reviews: 78,
+    guests: 4,
+    bedrooms: 2,
+    bathrooms: 1,
+    amenities: ['WiFi', 'Kitchen', 'Garden', 'Spa'],
+    description: 'Peaceful retreat in the Tuscan countryside with thermal spa access.',
+    status: 'active',
+    lastBooking: '2024-12-08',
+    revenue: 9000
+  },
+  { 
+    id: 308582, 
+    name: 'Monteverde - Quattroventi', 
+    price: 150, 
+    bookings: 18,
+    image: 'https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=400',
+    location: 'Rome, Italy',
+    rating: 4.8,
+    reviews: 134,
+    guests: 6,
+    bedrooms: 3,
+    bathrooms: 2,
+    amenities: ['WiFi', 'Kitchen', 'Balcony', 'Parking'],
+    description: 'Spacious apartment in Monteverde with beautiful garden views.',
+    status: 'active',
+    lastBooking: '2024-12-14',
+    revenue: 27000
+  },
+  { 
+    id: 310867, 
+    name: 'La Storta', 
+    price: 110, 
+    bookings: 5,
+    image: 'https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?w=400',
+    location: 'Rome, Italy',
+    rating: 4.5,
+    reviews: 45,
+    guests: 3,
+    bedrooms: 1,
+    bathrooms: 1,
+    amenities: ['WiFi', 'Kitchen'],
+    description: 'Cozy studio apartment perfect for short stays in Rome.',
+    status: 'maintenance',
+    lastBooking: '2024-11-28',
+    revenue: 5500
+  },
+  { 
+    id: 317154, 
+    name: '[5 Min From Trastevere] Chic Apt', 
+    price: 180, 
+    bookings: 22,
+    image: 'https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?w=400',
+    location: 'Rome, Italy',
+    rating: 4.9,
+    reviews: 189,
+    guests: 4,
+    bedrooms: 2,
+    bathrooms: 1,
+    amenities: ['WiFi', 'Kitchen', 'Balcony', 'Coffee Machine'],
+    description: 'Stylish apartment just minutes from Trastevere with modern design.',
+    status: 'active',
+    lastBooking: '2024-12-16',
+    revenue: 39600
+  },
+  { 
+    id: 332386, 
+    name: 'Via Poggio Tulliano', 
+    price: 160, 
+    bookings: 14,
+    image: 'https://images.unsplash.com/photo-1571896349842-33c89424de2d?w=400',
+    location: 'Rome, Italy',
+    rating: 4.7,
+    reviews: 98,
+    guests: 5,
+    bedrooms: 2,
+    bathrooms: 2,
+    amenities: ['WiFi', 'Kitchen', 'Garden'],
+    description: 'Elegant apartment in a quiet neighborhood with garden access.',
+    status: 'active',
+    lastBooking: '2024-12-11',
+    revenue: 22400
+  },
+  { 
+    id: 345603, 
+    name: 'Via Dei Marruccini | San Lorenzo', 
+    price: 140, 
+    bookings: 16,
+    image: 'https://images.unsplash.com/photo-1564501049412-61c2a3083791?w=400',
+    location: 'Rome, Italy',
+    rating: 4.8,
+    reviews: 112,
+    guests: 4,
+    bedrooms: 2,
+    bathrooms: 1,
+    amenities: ['WiFi', 'Kitchen', 'Balcony'],
+    description: 'Modern apartment in San Lorenzo district with great transport links.',
+    status: 'active',
+    lastBooking: '2024-12-13',
+    revenue: 22400
+  },
+  { 
+    id: 363365, 
+    name: 'Via di Acqua Bullicante 113', 
+    price: 130, 
+    bookings: 11,
+    image: 'https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=400',
+    location: 'Rome, Italy',
+    rating: 4.6,
+    reviews: 67,
+    guests: 4,
+    bedrooms: 2,
+    bathrooms: 1,
+    amenities: ['WiFi', 'Kitchen', 'Parking'],
+    description: 'Comfortable apartment with parking space in residential area.',
+    status: 'active',
+    lastBooking: '2024-12-09',
+    revenue: 14300
+  },
+  { 
+    id: 363366, 
+    name: 'Via Matera 23A', 
+    price: 125, 
+    bookings: 9,
+    image: 'https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=400',
+    location: 'Rome, Italy',
+    rating: 4.5,
+    reviews: 54,
+    guests: 3,
+    bedrooms: 1,
+    bathrooms: 1,
+    amenities: ['WiFi', 'Kitchen'],
+    description: 'Compact apartment perfect for couples visiting Rome.',
+    status: 'active',
+    lastBooking: '2024-12-07',
+    revenue: 11250
+  },
+  { 
+    id: 372243, 
+    name: 'Luxury Stay in Rome – Steps from Metro A Cornelia', 
+    price: 220, 
+    bookings: 25,
+    image: 'https://images.unsplash.com/photo-1566073771259-6a8506099945?w=400',
+    location: 'Rome, Italy',
+    rating: 4.9,
+    reviews: 245,
+    guests: 6,
+    bedrooms: 3,
+    bathrooms: 2,
+    amenities: ['WiFi', 'Kitchen', 'Pool', 'Gym', 'Parking', 'Concierge'],
+    description: 'Premium apartment with metro access and luxury amenities.',
+    status: 'active',
+    lastBooking: '2024-12-17',
+    revenue: 55000
+  },
 ];
 
 // Mock data for calendar bookings with more realistic data
@@ -449,6 +665,91 @@ const mockBookings = [
     nights: 4,
     commission: 34,
     payout: 306,
+  },
+  // Current week bookings (December 2024)
+  {
+    id: 64,
+    listingId: 305034,
+    startDate: '2024-12-16',
+    endDate: '2024-12-20',
+    guests: 3,
+    price: 95,
+    status: 'confirmed',
+    source: 'Airbnb',
+    guestName: 'Jouko Orava',
+    nights: 4,
+    commission: 47.5,
+    payout: 427.5,
+  },
+  {
+    id: 65,
+    listingId: 305225,
+    startDate: '2024-12-18',
+    endDate: '2024-12-22',
+    guests: 2,
+    price: 120,
+    status: 'confirmed',
+    source: 'Booking.com',
+    guestName: 'Alex Parker',
+    nights: 4,
+    commission: 60,
+    payout: 540,
+  },
+  {
+    id: 66,
+    listingId: 305421,
+    startDate: '2024-12-15',
+    endDate: '2024-12-19',
+    guests: 4,
+    price: 200,
+    status: 'confirmed',
+    source: 'Airbnb',
+    guestName: 'Daniel Artame',
+    nights: 4,
+    commission: 100,
+    payout: 900,
+  },
+  {
+    id: 67,
+    listingId: 305421,
+    startDate: '2024-12-20',
+    endDate: '2024-12-24',
+    guests: 2,
+    price: 200,
+    status: 'confirmed',
+    source: 'Airbnb',
+    guestName: 'María Cárdenas',
+    nights: 4,
+    commission: 100,
+    payout: 900,
+  },
+  {
+    id: 68,
+    listingId: 305225,
+    startDate: '2024-12-25',
+    endDate: '2024-12-29',
+    guests: 3,
+    price: 120,
+    status: 'confirmed',
+    source: 'Airbnb',
+    guestName: 'Maria Do Carmo',
+    nights: 4,
+    commission: 60,
+    payout: 540,
+  },
+  {
+    id: 69,
+    listingId: 305034,
+    startDate: '2024-12-30',
+    endDate: '2025-01-03',
+    guests: 4,
+    price: 95,
+    status: 'confirmed',
+    source: 'Booking.com',
+    guestName: 'Delice Préve Ribeiro',
+    nights: 4,
+    commission: 47.5,
+    payout: 427.5,
   },
   {
     id: 40,
@@ -990,6 +1291,12 @@ export function CalendarMultiView() {
     startDate: '',
     endDate: ''
   });
+  const [selectedProperty, setSelectedProperty] = useState<any>(null);
+  const [showPropertyDetails, setShowPropertyDetails] = useState(false);
+  const [propertyMenuAnchor, setPropertyMenuAnchor] = useState<null | HTMLElement>(null);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [filteredListings, setFilteredListings] = useState(mockListings);
+  const propertySidebarRef = useRef<HTMLDivElement>(null);
 
   // Generate calendar days for multiple months (12 months total)
   const generateCalendarDays = () => {
@@ -1080,9 +1387,10 @@ export function CalendarMultiView() {
     
     // Center today's date in the view
     const scrollPosition = (daysDiff * cellWidth) - (containerWidth / 2) + (cellWidth / 2);
+    const finalScrollPosition = Math.max(0, scrollPosition);
     
     scrollContainer.scrollTo({
-      left: Math.max(0, scrollPosition),
+      left: finalScrollPosition,
       behavior: 'smooth'
     });
     
@@ -1157,6 +1465,8 @@ export function CalendarMultiView() {
     };
   }, []);
 
+  // No scroll synchronization needed - property sidebar and calendar scroll together naturally
+
   // Scroll to today's date on mount
   useEffect(() => {
     const scrollContainer = scrollContainerRef.current;
@@ -1177,8 +1487,9 @@ export function CalendarMultiView() {
     
     // Center today's date in the view
     const scrollPosition = (daysDiff * cellWidth) - (containerWidth / 2) + (cellWidth / 2);
+    const finalScrollPosition = Math.max(0, scrollPosition);
     
-    scrollContainer.scrollLeft = Math.max(0, scrollPosition);
+    scrollContainer.scrollLeft = finalScrollPosition;
   }, []);
 
   const getBookingForDate = (date: string, listingId: number) => 
@@ -1231,6 +1542,29 @@ export function CalendarMultiView() {
   };
 
   const isCurrentMonth = (date: Date) => date.getMonth() === currentDate.getMonth() && date.getFullYear() === currentDate.getFullYear();
+
+  // Search functionality
+  useEffect(() => {
+    const filtered = mockListings.filter(listing =>
+      listing.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      listing.location.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+    setFilteredListings(filtered);
+  }, [searchTerm]);
+
+  const handlePropertySelect = (property: any) => {
+    setSelectedProperty(property);
+    setShowPropertyDetails(true);
+  };
+
+  const handlePropertyMenuClick = (event: React.MouseEvent<HTMLElement>, property: any) => {
+    setPropertyMenuAnchor(event.currentTarget);
+    setSelectedProperty(property);
+  };
+
+  const handlePropertyMenuClose = () => {
+    setPropertyMenuAnchor(null);
+  };
 
   return (
     <DashboardContent maxWidth="xl">
@@ -1350,6 +1684,8 @@ export function CalendarMultiView() {
           <TextField
             size="small"
             placeholder="Search by listing"
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
             InputProps={{
               startAdornment: (
                 <InputAdornment position="start">
@@ -1453,81 +1789,166 @@ export function CalendarMultiView() {
 
       {/* Hostaway-style Calendar */}
       <Paper sx={{ overflow: 'hidden' }}>
-        <Box sx={{ display: 'flex', height: '600px' }}>
-          {/* Left Sidebar - Properties */}
+        <Box 
+          sx={{ 
+            display: 'flex', 
+            height: '600px',
+            overflowX: 'auto',
+            overflowY: 'auto',
+            '&::-webkit-scrollbar': {
+              width: 8,
+              height: 8,
+            },
+            '&::-webkit-scrollbar-track': {
+              backgroundColor: 'grey.100',
+            },
+            '&::-webkit-scrollbar-thumb': {
+              backgroundColor: 'grey.400',
+              borderRadius: 4,
+              '&:hover': {
+                backgroundColor: 'grey.600',
+              },
+            },
+          }} 
+          ref={scrollContainerRef}
+        >
+          {/* Left Sidebar - Properties - Sticky horizontally, scrolls vertically */}
           <Box sx={{ 
-            width: 200, 
+            width: 320, 
             borderRight: 1, 
             borderColor: 'divider',
-            bgcolor: 'grey.50',
-            overflowY: 'auto',
+            bgcolor: 'white',
             position: 'sticky',
             left: 0,
-            zIndex: 20
+            zIndex: 20,
+            display: 'flex',
+            flexDirection: 'column',
+            height: 'fit-content',
+            minHeight: '100%'
           }}>
-            <Box sx={{ p: 1, bgcolor: 'white', borderBottom: 1, borderColor: 'divider' }}>
-              <Typography variant="body2" fontWeight={600}>
+            {/* Property Header */}
+            <Box sx={{ p: 1.5, bgcolor: 'grey.50', borderBottom: 1, borderColor: 'divider', height: 50, display: 'flex', alignItems: 'center' }}>
+              <Typography variant="body2" fontWeight={600} color="text.secondary">
                 Property
               </Typography>
             </Box>
-            {mockListings.map((listing) => (
+
+            {/* Property List */}
+            <Box 
+              ref={propertySidebarRef} 
+              sx={{ 
+                flex: 1,
+                '&::-webkit-scrollbar': {
+                  width: 6,
+                },
+                '&::-webkit-scrollbar-track': {
+                  backgroundColor: 'grey.100',
+                },
+                '&::-webkit-scrollbar-thumb': {
+                  backgroundColor: 'grey.400',
+                  borderRadius: 3,
+                  '&:hover': {
+                    backgroundColor: 'grey.600',
+                  },
+                },
+              }}
+            >
+              {filteredListings.map((listing) => (
               <Box
                 key={listing.id}
                 sx={{
-                  p: 1,
+                    p: 2,
                   borderBottom: 1,
                   borderColor: 'divider',
                   cursor: 'pointer',
-                  minHeight: 41,
+                    height: 50,
                   display: 'flex',
-                  alignItems: 'center',
+                    flexDirection: 'column',
+                    justifyContent: 'center',
+                    bgcolor: selectedProperty?.id === listing.id ? 'primary.50' : 'white',
                   '&:hover': {
-                    bgcolor: 'grey.100',
-                  },
-                }}
-              >
-                <Typography variant="body2" sx={{ fontWeight: 500, flex: 1 }}>
+                      bgcolor: selectedProperty?.id === listing.id ? 'primary.100' : 'grey.50',
+                    },
+                    transition: 'background-color 0.2s ease',
+                  }}
+                  onClick={() => handlePropertySelect(listing)}
+                >
+                  <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', width: '100%' }}>
+                    <Typography 
+                      variant="body1" 
+                      sx={{ 
+                        fontWeight: 600, 
+                        lineHeight: 1.3,
+                        color: selectedProperty?.id === listing.id ? 'primary.main' : 'text.primary',
+                        fontSize: '0.95rem',
+                        overflow: 'hidden',
+                        textOverflow: 'ellipsis',
+                        whiteSpace: 'nowrap',
+                        letterSpacing: '0.01em',
+                        flex: 1,
+                        mr: 1
+                      }}
+                    >
                   {listing.name}
                 </Typography>
-                <Typography variant="caption" color="text.secondary" sx={{ ml: 1 }}>
+                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
+                      <Typography variant="caption" color="text.secondary" sx={{ fontSize: '0.8rem', fontWeight: 500 }}>
                   {listing.id}
                 </Typography>
+                      {listing.status === 'maintenance' && (
+                        <Box sx={{ 
+                          width: 16, 
+                          height: 16, 
+                          bgcolor: 'error.main', 
+                          borderRadius: '50%',
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          ml: 0.5
+                        }}>
+                          <X size={10} color="white" />
+                        </Box>
+                      )}
+                      {listing.status === 'blocked' && (
+                        <Lock size={12} color="#666" />
+                      )}
+                      {listing.status === 'active' && (
+                        <Box sx={{ 
+                          width: 8, 
+                          height: 8, 
+                          bgcolor: 'success.main', 
+                          borderRadius: '50%',
+                          ml: 0.5
+                        }} />
+                      )}
+                    </Box>
+                  </Box>
               </Box>
             ))}
+            </Box>
           </Box>
 
-          {/* Calendar Grid */}
-          <Box 
-            sx={{ 
+          {/* Calendar Grid Container - Scrolls with property sidebar */}
+          <Box sx={{ 
               flex: 1, 
-              overflowX: 'auto', 
-              overflowY: 'hidden',
               position: 'relative',
-              '&::-webkit-scrollbar': {
-                height: 8,
-              },
-              '&::-webkit-scrollbar-track': {
-                backgroundColor: 'grey.100',
-              },
-              '&::-webkit-scrollbar-thumb': {
-                backgroundColor: 'grey.400',
-                borderRadius: 4,
-                '&:hover': {
-                  backgroundColor: 'grey.600',
-                },
-              },
-            }} 
-            ref={scrollContainerRef}
-          >
-            {/* Calendar Header */}
+            minWidth: 'max-content'
+          }}>
+            <Box sx={{ 
+              minWidth: 'max-content',
+              minHeight: `${(filteredListings.length + 1) * 50}px`, // +1 for header row
+              bgcolor: 'white'
+            }}>
+              {/* Calendar Header - Part of the scrollable content */}
             <Box sx={{ 
               display: 'flex', 
               position: 'sticky', 
               top: 0, 
               zIndex: 10,
               bgcolor: 'white',
-              borderBottom: 'none',
-              minWidth: 'max-content'
+                borderBottom: 1,
+                borderColor: 'divider',
+                height: 50,
             }}>
               {calendarDays.map((day) => (
                 <Box
@@ -1535,18 +1956,24 @@ export function CalendarMultiView() {
                   sx={{
                     width: 84,
                     minWidth: 84,
+                      height: 50,
                     p: 1,
                     textAlign: 'center',
                     borderRight: 'none',
+                      borderColor: 'divider',
                     bgcolor: isToday(day) ? 'primary.50' : 'white',
+                      display: 'flex',
+                      flexDirection: 'column',
+                      justifyContent: 'center',
+                      alignItems: 'center',
                   }}
                 >
-                  <Typography variant="body2" fontWeight={600}>
+                    <Typography variant="body2" fontWeight={600} color="text.secondary">
                     {day.toLocaleDateString('en-US', { weekday: 'short' })}
                   </Typography>
                   <Typography 
-                    variant="caption" 
-                    color={isToday(day) ? 'primary.main' : 'text.secondary'}
+                      variant="body2" 
+                      color={isToday(day) ? 'primary.main' : 'text.primary'}
                     sx={{ fontWeight: isToday(day) ? 600 : 400 }}
                   >
                     {day.getDate()}
@@ -1555,17 +1982,9 @@ export function CalendarMultiView() {
               ))}
             </Box>
 
-            {/* Calendar Body */}
-            <Box sx={{ 
-              minHeight: 500, 
-              minWidth: 'max-content',
-              bgcolor: 'grey.50',
-              border: '1px solid',
-              borderColor: 'grey.200',
-              borderRadius: 1
-            }}>
-              {mockListings.map((listing) => (
-                  <Box key={listing.id} sx={{ display: 'flex', minHeight: 41, position: 'relative' }}>
+              {/* Calendar Body - Property Rows */}
+              {filteredListings.map((listing) => (
+                <Box key={listing.id} sx={{ display: 'flex', height: 50, position: 'relative' }}>
                     {/* Calendar Days */}
                     {calendarDays.map((day) => {
                       const dateStr = formatDate(day);
@@ -1577,8 +1996,9 @@ export function CalendarMultiView() {
                       const isTodayDate = isToday(day);
                       const isCurrentMonthDate = isCurrentMonth(day);
                       
-                      // Determine if this is the start of a booking for proper bar display
-                      const isStartOfBooking = isBookingStart;
+                    // Calculate booking span for proper bar display
+                    const bookingSpan = booking ? 
+                      Math.ceil((new Date(booking.endDate).getTime() - new Date(booking.startDate).getTime()) / (1000 * 60 * 60 * 24)) : 0;
 
                       return (
                         <Box
@@ -1586,9 +2006,10 @@ export function CalendarMultiView() {
                           sx={{
                             width: 84,
                             minWidth: 84,
-                            minHeight: 41,
-                            borderRight: 'none',
-                            borderBottom: 'none',
+                          height: 50,
+                          borderRight: isBooked ? 'none' : 1,
+                          borderBottom: 1,
+                          borderColor: 'divider',
                             position: 'relative',
                             cursor: 'pointer',
                             bgcolor: isPast ? 'grey.100' : isCurrentMonthDate ? 'white' : 'grey.50',
@@ -1599,7 +2020,7 @@ export function CalendarMultiView() {
                           }}
                           onClick={() => handleDateClick(dateStr, listing.id)}
                         >
-                          {isStartOfBooking ? (
+                        {isBookingStart ? (
                             <Tooltip
                               title={
                                 <Box>
@@ -1619,73 +2040,9 @@ export function CalendarMultiView() {
                               }
                               arrow
                               placement="top"
+                            enterDelay={500}
+                            leaveDelay={200}
                             >
-                              <Box
-                                sx={{
-                                  position: 'absolute',
-                                  top: 0,
-                                  left: 0,
-                                  right: 0,
-                                  bottom: 0,
-                                  bgcolor: getBookingColor(bookingStarting.status),
-                                  color: 'white',
-                                  display: 'flex',
-                                  alignItems: 'center',
-                                  justifyContent: 'flex-start',
-                                  p: 0.5,
-                                  borderRadius: 0,
-                                  cursor: 'pointer',
-                                  border: 'none',
-                                  '&:hover': {
-                                    bgcolor: bookingStarting.status === 'confirmed' ? '#45a049' : getBookingColor(bookingStarting.status),
-                                    transform: 'scale(1.02)',
-                                    zIndex: 10,
-                                    boxShadow: '0 4px 12px rgba(0,0,0,0.15)',
-                                  },
-                                }}
-                              >
-                                {/* Channel Logo at the start */}
-                                <Box sx={{ 
-                                  width: 20, 
-                                  height: 20, 
-                                  borderRadius: '50%', 
-                                  backgroundColor: 'rgba(255,255,255,0.2)',
-                                  display: 'flex',
-                                  alignItems: 'center',
-                                  justifyContent: 'center',
-                                  mr: 1,
-                                  flexShrink: 0
-                                }}>
-                                  <Typography variant="caption" sx={{ fontSize: '0.6rem', fontWeight: 600 }}>
-                                    {getSourceIcon(bookingStarting.source)}
-                                  </Typography>
-                                </Box>
-                                
-                                {/* Guest info */}
-                                <Box sx={{ flex: 1, minWidth: 0 }}>
-                                  <Typography variant="caption" sx={{ 
-                                    fontSize: '0.7rem', 
-                                    fontWeight: 600, 
-                                    lineHeight: 1,
-                                    display: 'block',
-                                    overflow: 'hidden',
-                                    textOverflow: 'ellipsis',
-                                    whiteSpace: 'nowrap'
-                                  }}>
-                                    {bookingStarting.guestName.split(' ')[0]}
-                                  </Typography>
-                                  <Typography variant="caption" sx={{ 
-                                    fontSize: '0.6rem',
-                                    display: 'block',
-                                    opacity: 0.9
-                                  }}>
-                                    {bookingStarting.guests}g • €{bookingStarting.price}
-                                  </Typography>
-                                </Box>
-                              </Box>
-                            </Tooltip>
-                          ) : isBooked ? (
-                            // Show continuation of booking bar (no content, just background)
                             <Box
                               sx={{
                                 position: 'absolute',
@@ -1693,11 +2050,144 @@ export function CalendarMultiView() {
                                 left: 0,
                                 right: 0,
                                 bottom: 0,
-                                bgcolor: getBookingColor(booking.status),
+                                background: 'linear-gradient(135deg, #1976d2 0%, #1565c0 100%)',
+                                color: 'white',
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'flex-start',
+                                p: 1.2,
+                                borderRadius: 0,
                                 cursor: 'pointer',
+                                width: '100%',
+                                height: '100%',
+                                minWidth: bookingSpan > 1 ? `${bookingSpan * 84}px` : '84px',
+                                zIndex: 5,
+                                boxShadow: '0 2px 8px rgba(25, 118, 210, 0.3)',
+                                border: '1px solid rgba(255,255,255,0.1)',
                                 '&:hover': {
-                                  bgcolor: booking.status === 'confirmed' ? '#45a049' : getBookingColor(booking.status),
+                                  background: 'linear-gradient(135deg, #1565c0 0%, #0d47a1 100%)',
+                                  transform: 'scale(1.02)',
+                                  zIndex: 10,
+                                  boxShadow: '0 4px 12px rgba(25, 118, 210, 0.4)',
                                 },
+                              }}
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                handleBookingClick(bookingStarting);
+                                }}
+                              >
+                              {/* Channel Logo */}
+                              <Box sx={{ 
+                                width: 26, 
+                                height: 26, 
+                                borderRadius: '50%', 
+                                backgroundColor: 'rgba(255,255,255,0.4)',
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                mr: 1.2,
+                                flexShrink: 0,
+                                border: '2px solid rgba(255,255,255,0.6)',
+                                boxShadow: '0 2px 6px rgba(0,0,0,0.3)',
+                                backdropFilter: 'blur(4px)'
+                              }}>
+                                <Typography sx={{ 
+                                  fontSize: '0.75rem', 
+                                  fontWeight: 800,
+                                  color: 'white',
+                                  textShadow: '0 2px 4px rgba(0,0,0,0.7)',
+                                  letterSpacing: '0.05em'
+                                }}>
+                                  {bookingStarting.source === 'Airbnb' ? 'A' : 
+                                   bookingStarting.source === 'Booking.com' ? 'B' : 'M'}
+                                </Typography>
+                              </Box>
+                                
+                              {/* Guest info */}
+                              <Box sx={{ 
+                                flex: 1, 
+                                minWidth: 0,
+                                overflow: 'visible',
+                                display: 'flex',
+                                flexDirection: 'column',
+                                justifyContent: 'center',
+                                alignItems: 'flex-start',
+                                px: 1
+                              }}>
+                                <Typography sx={{ 
+                                  fontSize: '0.85rem', 
+                                  fontWeight: 800, 
+                                  lineHeight: 1.1,
+                                  color: 'white',
+                                  textShadow: '0 2px 4px rgba(0,0,0,0.8)',
+                                  letterSpacing: '0.02em',
+                                  whiteSpace: 'nowrap',
+                                  overflow: 'hidden',
+                                  textOverflow: 'ellipsis',
+                                  maxWidth: '100%',
+                                  display: 'block'
+                                }}>
+                                  {bookingStarting.guestName}
+                                </Typography>
+                                <Typography sx={{ 
+                                  fontSize: '0.75rem',
+                                  color: 'white',
+                                  fontWeight: 700,
+                                  textShadow: '0 1px 3px rgba(0,0,0,0.8)',
+                                  letterSpacing: '0.01em',
+                                  whiteSpace: 'nowrap',
+                                  overflow: 'hidden',
+                                  textOverflow: 'ellipsis',
+                                  maxWidth: '100%',
+                                  display: 'block',
+                                  mt: 0.1
+                                }}>
+                                  {bookingStarting.guests} guests • €{bookingStarting.price}
+                                </Typography>
+                                <Typography sx={{ 
+                                  fontSize: '0.65rem',
+                                  color: 'rgba(255,255,255,0.9)',
+                                  fontWeight: 600,
+                                  textShadow: '0 1px 2px rgba(0,0,0,0.6)',
+                                  letterSpacing: '0.01em',
+                                  whiteSpace: 'nowrap',
+                                  overflow: 'hidden',
+                                  textOverflow: 'ellipsis',
+                                  maxWidth: '100%',
+                                  display: 'block',
+                                  mt: 0.1
+                                }}>
+                                  {bookingStarting.source} • {bookingStarting.nights} nights
+                                </Typography>
+                              </Box>
+                              </Box>
+                            </Tooltip>
+                          ) : isBooked ? (
+                            // Show continuation of booking bar (no content, just background)
+                          <Box
+                            sx={{
+                              position: 'absolute',
+                              top: 0,
+                              left: 0,
+                              right: 0,
+                              bottom: 0,
+                              background: 'linear-gradient(135deg, #1976d2 0%, #1565c0 100%)',
+                              cursor: 'pointer',
+                              borderRadius: 0,
+                              width: '100%',
+                              height: '100%',
+                              boxShadow: '0 2px 8px rgba(25, 118, 210, 0.3)',
+                              border: '1px solid rgba(255,255,255,0.1)',
+                              '&:hover': {
+                                background: 'linear-gradient(135deg, #1565c0 0%, #0d47a1 100%)',
+                                transform: 'scale(1.02)',
+                                zIndex: 10,
+                                boxShadow: '0 4px 12px rgba(25, 118, 210, 0.4)',
+                              },
+                            }}
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              handleBookingClick(booking);
                               }}
                             />
                           ) : (
@@ -1727,30 +2217,12 @@ export function CalendarMultiView() {
                             </Box>
                           )}
 
-                          {/* Notes indicator */}
-                          {isBooked && booking.status === 'blocked' && (
-                            <Box sx={{ 
-                              position: 'absolute', 
-                              top: 2, 
-                              right: 2,
-                              bgcolor: 'rgba(0,0,0,0.7)',
-                              borderRadius: '50%',
-                              width: 16,
-                              height: 16,
-                              display: 'flex',
-                              alignItems: 'center',
-                              justifyContent: 'center'
-                            }}>
-                              <StickyNote size={10} color="white" />
-                            </Box>
-                          )}
-
                           {/* Lock indicator for blocked dates */}
                           {isBooked && booking.status === 'blocked' && (
                             <Box sx={{ 
                               position: 'absolute', 
-                              top: 2, 
-                              left: 2,
+                            top: 4, 
+                            left: 4,
                               bgcolor: 'rgba(0,0,0,0.7)',
                               borderRadius: '50%',
                               width: 16,
@@ -1956,6 +2428,200 @@ export function CalendarMultiView() {
           </Button>
         </DialogActions>
       </Dialog>
+
+      {/* Property Details Panel */}
+      <Dialog
+        open={showPropertyDetails}
+        onClose={() => setShowPropertyDetails(false)}
+        maxWidth="md"
+        fullWidth
+      >
+        <DialogTitle sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+          Property Details
+          <IconButton onClick={() => setShowPropertyDetails(false)} size="small">
+            <X size={20} />
+          </IconButton>
+        </DialogTitle>
+        
+        <DialogContent>
+          {selectedProperty && (
+            <Box sx={{ mt: 2 }}>
+              {/* Property Image and Basic Info */}
+              <Box sx={{ mb: 3 }}>
+                <CardMedia
+                  component="img"
+                  height="200"
+                  image={selectedProperty.image}
+                  alt={selectedProperty.name}
+                  sx={{ borderRadius: 1, mb: 2 }}
+                />
+                <Typography variant="h5" gutterBottom>
+                  {selectedProperty.name}
+                </Typography>
+                <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
+                  <MapPin size={16} color="#666" />
+                  <Typography variant="body1" color="text.secondary" sx={{ ml: 1 }}>
+                    {selectedProperty.location}
+                  </Typography>
+                </Box>
+                <Typography variant="body1" color="text.secondary" sx={{ mb: 2 }}>
+                  {selectedProperty.description}
+                </Typography>
+              </Box>
+
+              {/* Property Stats */}
+              <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: 2, mb: 3 }}>
+                <Card sx={{ p: 2 }}>
+                  <Box sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
+                    <Star size={20} color="#ffc107" />
+                    <Typography variant="h6" sx={{ ml: 1 }}>
+                      {selectedProperty.rating}
+                    </Typography>
+                    <Typography variant="body2" color="text.secondary" sx={{ ml: 1 }}>
+                      ({selectedProperty.reviews} reviews)
+                    </Typography>
+                  </Box>
+                  <Typography variant="body2" color="text.secondary">
+                    Average Rating
+                  </Typography>
+                </Card>
+
+                <Card sx={{ p: 2 }}>
+                  <Typography variant="h6" color="primary">
+                    €{selectedProperty.price}
+                  </Typography>
+                  <Typography variant="body2" color="text.secondary">
+                    Per Night
+                  </Typography>
+                </Card>
+
+                <Card sx={{ p: 2 }}>
+                  <Typography variant="h6">
+                    {selectedProperty.bookings}
+                  </Typography>
+                  <Typography variant="body2" color="text.secondary">
+                    Total Bookings
+                  </Typography>
+                </Card>
+
+                <Card sx={{ p: 2 }}>
+                  <Typography variant="h6" color="success.main">
+                    €{selectedProperty.revenue.toLocaleString()}
+                  </Typography>
+                  <Typography variant="body2" color="text.secondary">
+                    Total Revenue
+                  </Typography>
+                </Card>
+              </Box>
+
+              {/* Property Details */}
+              <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: 3 }}>
+                <Box>
+                  <Typography variant="h6" gutterBottom>
+                    Property Details
+                  </Typography>
+                  <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
+                    <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                      <Users size={16} color="#666" />
+                      <Typography variant="body2" sx={{ ml: 1 }}>
+                        Max Guests: {selectedProperty.guests}
+                      </Typography>
+                    </Box>
+                    <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                      <Bed size={16} color="#666" />
+                      <Typography variant="body2" sx={{ ml: 1 }}>
+                        Bedrooms: {selectedProperty.bedrooms}
+                      </Typography>
+                    </Box>
+                    <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                      <Bath size={16} color="#666" />
+                      <Typography variant="body2" sx={{ ml: 1 }}>
+                        Bathrooms: {selectedProperty.bathrooms}
+                      </Typography>
+                    </Box>
+                    <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                      <Home size={16} color="#666" />
+                      <Typography variant="body2" sx={{ ml: 1 }}>
+                        Property ID: {selectedProperty.id}
+                      </Typography>
+                    </Box>
+                    <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                      <Calendar size={16} color="#666" />
+                      <Typography variant="body2" sx={{ ml: 1 }}>
+                        Last Booking: {selectedProperty.lastBooking}
+                      </Typography>
+                    </Box>
+                  </Box>
+                </Box>
+
+                <Box>
+                  <Typography variant="h6" gutterBottom>
+                    Amenities
+                  </Typography>
+                  <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
+                    {selectedProperty.amenities.map((amenity: string, index: number) => (
+                      <Chip
+                        key={index}
+                        label={amenity}
+                        size="small"
+                        variant="outlined"
+                        icon={
+                          amenity === 'WiFi' ? <Wifi size={14} /> :
+                          amenity === 'Parking' ? <Car size={14} /> :
+                          amenity === 'Kitchen' ? <Coffee size={14} /> :
+                          <Home size={14} />
+                        }
+                      />
+                    ))}
+                  </Box>
+                </Box>
+              </Box>
+            </Box>
+          )}
+        </DialogContent>
+        
+        <DialogActions sx={{ p: 3 }}>
+          <Button variant="outlined" onClick={() => setShowPropertyDetails(false)}>
+            Close
+          </Button>
+          <Button variant="contained" onClick={() => setShowPropertyDetails(false)}>
+            Edit Property
+          </Button>
+        </DialogActions>
+      </Dialog>
+
+      {/* Property Menu */}
+      <Menu
+        anchorEl={propertyMenuAnchor}
+        open={Boolean(propertyMenuAnchor)}
+        onClose={handlePropertyMenuClose}
+      >
+        <MenuItem onClick={handlePropertyMenuClose}>
+          <ListItemIcon>
+            <Eye size={16} />
+          </ListItemIcon>
+          <ListItemText>View Details</ListItemText>
+        </MenuItem>
+        <MenuItem onClick={handlePropertyMenuClose}>
+          <ListItemIcon>
+            <Calendar size={16} />
+          </ListItemIcon>
+          <ListItemText>Manage Calendar</ListItemText>
+        </MenuItem>
+        <MenuItem onClick={handlePropertyMenuClose}>
+          <ListItemIcon>
+            <Search size={16} />
+          </ListItemIcon>
+          <ListItemText>View Bookings</ListItemText>
+        </MenuItem>
+        <Divider />
+        <MenuItem onClick={handlePropertyMenuClose}>
+          <ListItemIcon>
+            <EyeOff size={16} />
+          </ListItemIcon>
+          <ListItemText>Hide Property</ListItemText>
+        </MenuItem>
+      </Menu>
     </DashboardContent>
   );
 }

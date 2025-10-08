@@ -367,7 +367,7 @@ export function InboxView() {
                       <Typography variant="subtitle2" sx={{ 
                         fontWeight: 600, 
                         fontSize: '0.9rem',
-                        color: selectedConversation?.id === conversation.id ? '#4caf50' : '#1a1a1a'
+                        color: selectedConversation?.id === conversation.id ? '#1976d2' : '#1a1a1a'
                       }}>
                         {conversation.name}
                       </Typography>

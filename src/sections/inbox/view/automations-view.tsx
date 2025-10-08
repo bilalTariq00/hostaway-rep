@@ -211,11 +211,11 @@ export function AutomationsView() {
             variant="outlined"
             startIcon={<Filter size={16} />}
             sx={{
-              borderColor: '#23c6c8',
-              color: '#23c6c8',
+              borderColor: '#4caf50',
+              color: '#4caf50',
               '&:hover': {
-                borderColor: '#1fb3b5',
-                backgroundColor: 'rgba(35, 198, 200, 0.04)'
+                borderColor: '#45a049',
+                backgroundColor: 'rgba(76, 175, 80, 0.04)'
               }
             }}
           >
@@ -261,8 +261,8 @@ export function AutomationsView() {
           startIcon={<Plus size={16} />}
           onClick={handleCreateNew}
           sx={{
-            bgcolor: '#23c6c8',
-            '&:hover': { bgcolor: '#1fb3b5' },
+            bgcolor: '#4caf50',
+            '&:hover': { bgcolor: '#45a049' },
             px: 3,
             py: 1.5,
             borderRadius: 2
@@ -283,9 +283,9 @@ export function AutomationsView() {
                   onChange={() => handleToggleActive(automation.id)}
                   sx={{
                     '& .MuiSwitch-switchBase.Mui-checked': {
-                      color: '#23c6c8',
+                      color: '#4caf50',
                       '& + .MuiSwitch-track': {
-                        backgroundColor: '#23c6c8',
+                        backgroundColor: '#4caf50',
                       },
                     },
                   }}
@@ -350,12 +350,12 @@ export function AutomationsView() {
                           sx={{ 
                             fontWeight: 500, 
                             fontSize: '0.875rem',
-                            color: '#23c6c8'
+                            color: '#4caf50'
                           }}
                         >
                           {automation.listing}
                         </Typography>
-                        <ExternalLink size={12} color="#23c6c8" />
+                        <ExternalLink size={12} color="#4caf50" />
                       </Box>
                     </Box>
                     
@@ -396,14 +396,14 @@ export function AutomationsView() {
                   startIcon={<Edit size={14} />}
                   onClick={() => handleEdit(automation.id)}
                   sx={{
-                    borderColor: '#23c6c8',
-                    color: '#23c6c8',
+                    borderColor: '#4caf50',
+                    color: '#4caf50',
                     fontSize: '0.75rem',
                     px: 2,
                     py: 0.5,
                     '&:hover': {
-                      borderColor: '#1fb3b5',
-                      backgroundColor: 'rgba(35, 198, 200, 0.04)'
+                      borderColor: '#45a049',
+                      backgroundColor: 'rgba(76, 175, 80, 0.04)'
                     }
                   }}
                 >
@@ -415,14 +415,14 @@ export function AutomationsView() {
                   startIcon={<Copy size={14} />}
                   onClick={() => handleCreateSimilar(automation.id)}
                   sx={{
-                    borderColor: '#23c6c8',
-                    color: '#23c6c8',
+                    borderColor: '#4caf50',
+                    color: '#4caf50',
                     fontSize: '0.75rem',
                     px: 2,
                     py: 0.5,
                     '&:hover': {
-                      borderColor: '#1fb3b5',
-                      backgroundColor: 'rgba(35, 198, 200, 0.04)'
+                      borderColor: '#45a049',
+                      backgroundColor: 'rgba(76, 175, 80, 0.04)'
                     }
                   }}
                 >
