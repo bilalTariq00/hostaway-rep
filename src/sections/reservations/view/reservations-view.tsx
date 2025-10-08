@@ -34,6 +34,8 @@ export function ReservationsView() {
   const [itemsPerPage, setItemsPerPage] = useState(10);
   const [filterAnchor, setFilterAnchor] = useState<null | HTMLElement>(null);
   const [downloadAnchor, setDownloadAnchor] = useState<null | HTMLElement>(null);
+  const [actionMenuAnchor, setActionMenuAnchor] = useState<null | HTMLElement>(null);
+  const [selectedReservation, setSelectedReservation] = useState<any>(null);
 
   const handleFilterClick = (event: React.MouseEvent<HTMLElement>) => {
     setFilterAnchor(event.currentTarget);
@@ -49,6 +51,41 @@ export function ReservationsView() {
 
   const handleDownloadClose = () => {
     setDownloadAnchor(null);
+  };
+
+  const handleActionMenuClick = (event: React.MouseEvent<HTMLElement>, reservation: any) => {
+    event.stopPropagation();
+    setActionMenuAnchor(event.currentTarget);
+    setSelectedReservation(reservation);
+  };
+
+  const handleActionMenuClose = () => {
+    setActionMenuAnchor(null);
+    setSelectedReservation(null);
+  };
+
+  const handleOpenGuestPortal = () => {
+    if (selectedReservation) {
+      // Generate guest portal URL (you can customize this logic)
+      const guestPortalUrl = `https://guest-portal.example.com/reservation/${selectedReservation.id}`;
+      window.open(guestPortalUrl, '_blank');
+    }
+    handleActionMenuClose();
+  };
+
+  const handleCopyGuestPortalUrl = async () => {
+    if (selectedReservation) {
+      // Generate guest portal URL (you can customize this logic)
+      const guestPortalUrl = `https://guest-portal.example.com/reservation/${selectedReservation.id}`;
+      try {
+        await navigator.clipboard.writeText(guestPortalUrl);
+        // You could add a toast notification here
+        console.log('Guest portal URL copied to clipboard');
+      } catch (err) {
+        console.error('Failed to copy URL:', err);
+      }
+    }
+    handleActionMenuClose();
   };
 
   const handleRemoveFilter = (filterToRemove: string) => {
@@ -331,7 +368,17 @@ export function ReservationsView() {
                       >
                         <Iconify icon={"eva:calendar-fill" as any} width={16} />
                       </IconButton>
-                      <IconButton size="small">
+                      <IconButton 
+                        size="small"
+                        onClick={(e) => handleActionMenuClick(e, reservation)}
+                        sx={{
+                          color: 'text.secondary',
+                          '&:hover': {
+                            color: 'primary.main',
+                            bgcolor: 'primary.50'
+                          }
+                        }}
+                      >
                         <Iconify icon={"eva:more-vertical-fill" as any} width={16} />
                       </IconButton>
                     </Box>
@@ -342,6 +389,34 @@ export function ReservationsView() {
           </Table>
         </TableContainer>
       </Paper>
+
+      {/* Action Menu Dropdown */}
+      <Menu
+        anchorEl={actionMenuAnchor}
+        open={Boolean(actionMenuAnchor)}
+        onClose={handleActionMenuClose}
+        anchorOrigin={{
+          vertical: 'bottom',
+          horizontal: 'right',
+        }}
+        transformOrigin={{
+          vertical: 'top',
+          horizontal: 'right',
+        }}
+      >
+        <MenuItem onClick={handleOpenGuestPortal}>
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+            <Iconify icon="solar:share-bold" width={16} />
+            Open Guest Portal
+          </Box>
+        </MenuItem>
+        <MenuItem onClick={handleCopyGuestPortalUrl}>
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+            <Iconify icon="solar:pen-bold" width={16} />
+            Copy Guest Portal URL
+          </Box>
+        </MenuItem>
+      </Menu>
 
       {/* Pagination */}
       <Paper sx={{ p: 2 }}>
