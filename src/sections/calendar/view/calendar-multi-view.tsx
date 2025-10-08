@@ -1,36 +1,30 @@
 import { useRef, useState, useEffect } from 'react';
-import { X, List, Lock, Filter, Search, Grid3X3, Calendar, StickyNote, ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight, Eye, EyeOff, MoreHorizontal, Star, MapPin, Users, Bed, Bath, Wifi, Car, Coffee, Home } from 'lucide-react';
+import { X, Eye, Bed, Car, List, Lock, Star, Bath, Wifi, Home, Users, Filter, Search, EyeOff, MapPin, Coffee, Grid3X3, Calendar, ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight } from 'lucide-react';
 
 import Box from '@mui/material/Box';
 import Tab from '@mui/material/Tab';
+import Card from '@mui/material/Card';
 import Chip from '@mui/material/Chip';
+import Menu from '@mui/material/Menu';
 import Tabs from '@mui/material/Tabs';
 import Paper from '@mui/material/Paper';
 import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
 import Switch from '@mui/material/Switch';
+import Divider from '@mui/material/Divider';
 import Tooltip from '@mui/material/Tooltip';
+import MenuItem from '@mui/material/MenuItem';
+import CardMedia from '@mui/material/CardMedia';
 import TextField from '@mui/material/TextField';
 import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
 import DialogTitle from '@mui/material/DialogTitle';
-import DialogContent from '@mui/material/DialogContent';
+import ListItemIcon from '@mui/material/ListItemIcon';
+import ListItemText from '@mui/material/ListItemText';
 import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
 import InputAdornment from '@mui/material/InputAdornment';
 import FormControlLabel from '@mui/material/FormControlLabel';
-import Card from '@mui/material/Card';
-import CardContent from '@mui/material/CardContent';
-import CardMedia from '@mui/material/CardMedia';
-import Avatar from '@mui/material/Avatar';
-import Badge from '@mui/material/Badge';
-import Divider from '@mui/material/Divider';
-import ListItem from '@mui/material/ListItem';
-import ListItemText from '@mui/material/ListItemText';
-import ListItemIcon from '@mui/material/ListItemIcon';
-import ListItemButton from '@mui/material/ListItemButton';
-import Collapse from '@mui/material/Collapse';
-import Menu from '@mui/material/Menu';
-import MenuItem from '@mui/material/MenuItem';
 
 import { useRouter } from 'src/routes/hooks';
 
@@ -1504,29 +1498,6 @@ export function CalendarMultiView() {
     );
 
 
-  const getBookingColor = (status: string) => {
-    switch (status) {
-      case 'confirmed':
-        return '#4caf50';
-      case 'blocked':
-        return '#f44336';
-      case 'pending':
-        return '#ff9800';
-      default:
-        return '#9e9e9e';
-    }
-  };
-
-  const getSourceIcon = (source: string) => {
-    switch (source) {
-      case 'Airbnb':
-        return '🏠';
-      case 'Booking.com':
-        return '🌐';
-      default:
-        return '📝';
-    }
-  };
 
   const formatDate = (date: Date) => date.toISOString().split('T')[0];
 
@@ -1557,10 +1528,6 @@ export function CalendarMultiView() {
     setShowPropertyDetails(true);
   };
 
-  const handlePropertyMenuClick = (event: React.MouseEvent<HTMLElement>, property: any) => {
-    setPropertyMenuAnchor(event.currentTarget);
-    setSelectedProperty(property);
-  };
 
   const handlePropertyMenuClose = () => {
     setPropertyMenuAnchor(null);
