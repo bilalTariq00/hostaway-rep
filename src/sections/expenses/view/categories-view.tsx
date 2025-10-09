@@ -1,62 +1,47 @@
 import { useState } from 'react';
+import {
+  Pencil,
+  Search,
+  X,
+} from 'lucide-react';
 
-import Box from '@mui/material/Box';
-import Tab from '@mui/material/Tab';
-import Menu from '@mui/material/Menu';
-import Tabs from '@mui/material/Tabs';
-import Paper from '@mui/material/Paper';
-import Table from '@mui/material/Table';
-import Button from '@mui/material/Button';
-import Drawer from '@mui/material/Drawer';
-import MenuItem from '@mui/material/MenuItem';
-import TableRow from '@mui/material/TableRow';
-import TableBody from '@mui/material/TableBody';
-import TableCell from '@mui/material/TableCell';
-import TableHead from '@mui/material/TableHead';
-import TextField from '@mui/material/TextField';
-import IconButton from '@mui/material/IconButton';
-import Pagination from '@mui/material/Pagination';
-import Typography from '@mui/material/Typography';
-import InputAdornment from '@mui/material/InputAdornment';
-import TableContainer from '@mui/material/TableContainer';
+import {
+  Box,
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  Drawer,
+  IconButton,
+  InputAdornment,
+  Paper,
+  Pagination,
+  Tab,
+  Tabs,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  TextField,
+  Typography,
+} from '@mui/material';
 
 import { useRouter } from 'src/routes/hooks';
 
 import { DashboardContent } from 'src/layouts/dashboard';
 
-import { Iconify } from 'src/components/iconify';
-
 // Mock data for categories
 const mockCategories = [
   {
     id: 1,
-    name: 'Maintenance',
-    description: 'Property maintenance and repairs',
+    name: 'Pulizia Aggiuntiva',
   },
   {
     id: 2,
-    name: 'Utilities',
-    description: 'Electricity, water, gas bills',
-  },
-  {
-    id: 3,
-    name: 'Marketing',
-    description: 'Advertising and promotional expenses',
-  },
-  {
-    id: 4,
-    name: 'Transportation',
-    description: 'Airport transfers and transportation',
-  },
-  {
-    id: 5,
-    name: 'Amenities',
-    description: 'Welcome baskets and guest amenities',
-  },
-  {
-    id: 6,
-    name: 'Services',
-    description: 'Concierge and additional services',
+    name: 'TV',
   },
 ];
 
@@ -67,7 +52,13 @@ export function CategoriesView() {
   const [itemsPerPage] = useState(25);
   const [searchTerm, setSearchTerm] = useState('');
   const [sidebarOpen, setSidebarOpen] = useState(false);
-  const [actionMenuAnchor, setActionMenuAnchor] = useState<null | HTMLElement>(null);
+  
+  // New state for category management
+  const [categories, setCategories] = useState(mockCategories);
+  const [editingCategory, setEditingCategory] = useState<any>(null);
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [categoryToDelete, setCategoryToDelete] = useState<any>(null);
+  const [categoryName, setCategoryName] = useState('');
 
   const handleTabChange = (event: React.SyntheticEvent, newValue: number) => {
     setActiveTab(newValue);
@@ -76,23 +67,65 @@ export function CategoriesView() {
     if (newValue === 3) router.push('/expenses-extras/automations');
   };
 
-  const handleActionMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
-    setActionMenuAnchor(event.currentTarget);
-  };
-
-  const handleActionMenuClose = () => {
-    setActionMenuAnchor(null);
-  };
-
+  // Category management handlers
   const handleAddCategory = () => {
+    setEditingCategory(null);
+    setCategoryName('');
     setSidebarOpen(true);
+  };
+
+  const handleEditCategory = (category: any) => {
+    setEditingCategory(category);
+    setCategoryName(category.name);
+    setSidebarOpen(true);
+  };
+
+  const handleSaveCategory = () => {
+    if (categoryName.trim()) {
+      if (editingCategory) {
+        // Update existing category
+        setCategories(prev => prev.map(cat => 
+          cat.id === editingCategory.id ? { ...cat, name: categoryName.trim() } : cat
+        ));
+      } else {
+        // Add new category
+        const newCategory = {
+          id: Math.max(...categories.map(cat => cat.id)) + 1,
+          name: categoryName.trim(),
+        };
+        setCategories(prev => [...prev, newCategory]);
+      }
+      setSidebarOpen(false);
+      setEditingCategory(null);
+      setCategoryName('');
+    }
   };
 
   const handleSidebarClose = () => {
     setSidebarOpen(false);
+    setEditingCategory(null);
+    setCategoryName('');
   };
 
-  const filteredCategories = mockCategories.filter(category =>
+  const handleDeleteClick = (category: any) => {
+    setCategoryToDelete(category);
+    setDeleteDialogOpen(true);
+  };
+
+  const handleDeleteConfirm = () => {
+    if (categoryToDelete) {
+      setCategories(prev => prev.filter(cat => cat.id !== categoryToDelete.id));
+    }
+    setDeleteDialogOpen(false);
+    setCategoryToDelete(null);
+  };
+
+  const handleDeleteCancel = () => {
+    setDeleteDialogOpen(false);
+    setCategoryToDelete(null);
+  };
+
+  const filteredCategories = categories.filter(category =>
     category.name.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
@@ -150,7 +183,7 @@ export function CategoriesView() {
           InputProps={{
             startAdornment: (
               <InputAdornment position="start">
-                <Iconify icon={"eva:search-fill" as any} sx={{ color: 'text.disabled' }} />
+                <Search size={16} color="#666" />
               </InputAdornment>
             ),
           }}
@@ -164,34 +197,42 @@ export function CategoriesView() {
           <Table>
             <TableHead>
               <TableRow>
-                <TableCell>Category Name</TableCell>
-                <TableCell>Description</TableCell>
-                <TableCell align="center">Actions</TableCell>
+                <TableCell>Category name</TableCell>
+                  <TableCell align="center" />
               </TableRow>
             </TableHead>
             <TableBody>
               {currentCategories.map((category) => (
                 <TableRow key={category.id}>
                   <TableCell>
-                    <Typography variant="body2" sx={{ fontWeight: 500 }}>
+                    <Typography 
+                      variant="body2" 
+                      sx={{ 
+                        fontWeight: 500, 
+                        color: 'primary.main', 
+                        cursor: 'pointer', 
+                        '&:hover': { textDecoration: 'underline' } 
+                      }}
+                      onClick={() => handleEditCategory(category)}
+                    >
                       {category.name}
                     </Typography>
                   </TableCell>
-                  <TableCell>
-                    <Typography variant="body2" color="text.secondary">
-                      {category.description}
-                    </Typography>
-                  </TableCell>
-                  <TableCell align="center">
+                  <TableCell align="right">
                     <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
-                      <IconButton size="small">
-                        <Iconify icon={"eva:edit-fill" as any} width={16} />
+                      <IconButton 
+                        size="small" 
+                        onClick={() => handleEditCategory(category)}
+                        sx={{ '&:hover': { bgcolor: 'primary.lighter' } }}
+                      >
+                        <Pencil size={16} />
                       </IconButton>
                       <IconButton 
                         size="small" 
-                        onClick={handleActionMenuOpen}
+                        onClick={() => handleDeleteClick(category)}
+                        sx={{ '&:hover': { bgcolor: 'error.lighter' } }}
                       >
-                        <Iconify icon={"eva:more-vertical-fill" as any} width={16} />
+                        <X size={16} color="#ef4444" />
                       </IconButton>
                     </Box>
                   </TableCell>
@@ -211,7 +252,7 @@ export function CategoriesView() {
           <Pagination
             count={totalPages}
             page={currentPage}
-            onChange={(_, page) => setCurrentPage(page)}
+            onChange={(event: React.ChangeEvent<unknown>, page: number) => setCurrentPage(page)}
             color="primary"
           />
         </Box>
@@ -231,26 +272,21 @@ export function CategoriesView() {
       >
         <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 3 }}>
           <Typography variant="h6" sx={{ fontWeight: 600 }}>
-            Add Category
+            {editingCategory ? 'Edit category' : 'Add new category'}
           </Typography>
           <IconButton onClick={handleSidebarClose}>
-            <Iconify icon={"eva:close-fill" as any} />
+            <X size={20} />
           </IconButton>
         </Box>
 
         <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
           <TextField
             fullWidth
-            label="Category Name"
+            label="Category name *"
             placeholder="Enter category name..."
-          />
-
-          <TextField
-            fullWidth
-            label="Description"
-            placeholder="Enter category description..."
-            multiline
-            rows={3}
+            value={categoryName}
+            onChange={(e) => setCategoryName(e.target.value)}
+            required
           />
 
           <Box sx={{ display: 'flex', gap: 2, mt: 4 }}>
@@ -264,29 +300,30 @@ export function CategoriesView() {
             <Button
               fullWidth
               variant="contained"
-              onClick={handleSidebarClose}
+              onClick={handleSaveCategory}
+              sx={{ bgcolor: 'primary.main', '&:hover': { bgcolor: 'primary.dark' } }}
             >
-              Add Category
+              {editingCategory ? 'Update' : 'Create'}
             </Button>
           </Box>
         </Box>
       </Drawer>
 
-      {/* Action Menu */}
-      <Menu
-        anchorEl={actionMenuAnchor}
-        open={Boolean(actionMenuAnchor)}
-        onClose={handleActionMenuClose}
-      >
-        <MenuItem onClick={handleActionMenuClose}>
-          <Iconify icon={"eva:edit-fill" as any} sx={{ mr: 1 }} />
-          Edit
-        </MenuItem>
-        <MenuItem onClick={handleActionMenuClose} sx={{ color: 'error.main' }}>
-          <Iconify icon={"eva:trash-2-fill" as any} sx={{ mr: 1 }} />
-          Delete
-        </MenuItem>
-      </Menu>
+      {/* Delete Confirmation Dialog */}
+      <Dialog open={deleteDialogOpen} onClose={handleDeleteCancel}>
+        <DialogTitle>Delete Category</DialogTitle>
+        <DialogContent>
+          <Typography>
+            Are you sure you want to delete &quot;{categoryToDelete?.name}&quot;? This action cannot be undone.
+          </Typography>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleDeleteCancel}>Cancel</Button>
+          <Button onClick={handleDeleteConfirm} color="error" variant="contained">
+            Delete
+          </Button>
+        </DialogActions>
+      </Dialog>
     </DashboardContent>
   );
 }

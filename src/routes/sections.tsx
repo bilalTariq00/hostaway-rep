@@ -26,6 +26,7 @@ export const CalendarMonthlyPage = lazy(() => import('src/sections/calendar/view
 export const CalendarYearlyPage = lazy(() => import('src/sections/calendar/view/calendar-yearly-view').then(module => ({ default: module.CalendarYearlyView })));
 export const ReservationsPage = lazy(() => import('src/sections/reservations/view/reservations-view').then(module => ({ default: module.ReservationsView })));
 export const ReservationFormPage = lazy(() => import('src/sections/reservations/view/reservation-form-view'));
+export const ReservationViewPage = lazy(() => import('src/sections/reservations/view/reservation-view'));
 // export const ReservationDetailPage = lazy(() => import('src/sections/reservations/view/reservation-detail-view'));
 export const UserDetailPage = lazy(() => import('src/sections/user/view/user-detail-view'));
 export const CustomFieldsPage = lazy(() => import('src/sections/reservations/view/custom-fields-view').then(module => ({ default: module.CustomFieldsView })));
@@ -44,8 +45,10 @@ export const ExtrasPage = lazy(() => import('src/sections/expenses/view/extras-v
 export const CategoriesPage = lazy(() => import('src/sections/expenses/view/categories-view').then(module => ({ default: module.CategoriesView })));
 export const AutomationsPage = lazy(() => import('src/sections/expenses/view/automations-view').then(module => ({ default: module.AutomationsView })));
 export const StatementsPage = lazy(() => import('src/sections/statements/view/statements-view').then(module => ({ default: module.StatementsView })));
+export const StatementEditPage = lazy(() => import('src/sections/statements/view/statement-edit-page'));
 export const AutoStatementsPage = lazy(() => import('src/sections/statements/view/auto-statements-view').then(module => ({ default: module.AutoStatementsView })));
 export const ManageTasksPage = lazy(() => import('src/sections/tasks/view/manage-tasks-view').then(module => ({ default: module.ManageTasksView })));
+export const TaskFormPage = lazy(() => import('src/sections/tasks/view/task-form-page'));
 export const ManageAutoTasksPage = lazy(() => import('src/sections/tasks/view/manage-auto-tasks-view').then(module => ({ default: module.ManageAutoTasksView })));
 export const ChecklistTemplatesPage = lazy(() => import('src/sections/tasks/view/checklist-templates-view').then(module => ({ default: module.ChecklistTemplatesView })));
 export const ArchivePage = lazy(() => import('src/sections/tasks/view/archive-view').then(module => ({ default: module.ArchiveView })));
@@ -122,7 +125,7 @@ export const routesSection: RouteObject[] = [
       { path: 'reservations', element: <ReservationsPage /> },
       { path: 'reservations/new', element: <ReservationFormPage /> },
       { path: 'reservations/:reservationId/edit', element: <ReservationFormPage /> },
-      // { path: 'reservations/:reservationId', element: <ReservationDetailPage /> },
+      { path: 'reservations/:reservationId', element: <ReservationViewPage /> },
       { path: 'user/:guestName', element: <UserDetailPage /> },
       { path: 'reservations/custom-fields', element: <CustomFieldsPage /> },
       { path: 'reservations/guestbook', element: <GuestbookPage /> },
@@ -143,8 +146,11 @@ export const routesSection: RouteObject[] = [
       { path: 'expenses-extras/automations', element: <AutomationsPage /> },
       { path: 'owner-statements', element: <StatementsPage /> },
       { path: 'owner-statements/statements', element: <StatementsPage /> },
+      { path: 'statements/:id/edit', element: <StatementEditPage /> },
       { path: 'owner-statements/auto', element: <AutoStatementsPage /> },
       { path: 'tasks', element: <ManageTasksPage /> },
+      { path: 'tasks/new', element: <TaskFormPage /> },
+      { path: 'tasks/:id/edit', element: <TaskFormPage /> },
       { path: 'tasks/manage-tasks', element: <ManageTasksPage /> },
       { path: 'tasks/manage-auto-tasks', element: <ManageAutoTasksPage /> },
       { path: 'tasks/checklist-templates', element: <ChecklistTemplatesPage /> },

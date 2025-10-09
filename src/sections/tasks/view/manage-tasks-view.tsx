@@ -1,40 +1,43 @@
 import { useState } from 'react';
+import {
+  MoreHorizontal,
+  MoreVertical,
+  Pencil,
+  Trash2,
+} from 'lucide-react';
 
-import Box from '@mui/material/Box';
-import Tab from '@mui/material/Tab';
-import Chip from '@mui/material/Chip';
-import Menu from '@mui/material/Menu';
-import Tabs from '@mui/material/Tabs';
-import Grid from '@mui/material/Grid';
-import Card from '@mui/material/Card';
-import Paper from '@mui/material/Paper';
-import Table from '@mui/material/Table';
-import Button from '@mui/material/Button';
-import Dialog from '@mui/material/Dialog';
-import Drawer from '@mui/material/Drawer';
-import Select from '@mui/material/Select';
-import MenuItem from '@mui/material/MenuItem';
-import TableRow from '@mui/material/TableRow';
-import TableBody from '@mui/material/TableBody';
-import TableCell from '@mui/material/TableCell';
-import TableHead from '@mui/material/TableHead';
-import TextField from '@mui/material/TextField';
-import IconButton from '@mui/material/IconButton';
-import Pagination from '@mui/material/Pagination';
-import Typography from '@mui/material/Typography';
-import InputLabel from '@mui/material/InputLabel';
-import DialogTitle from '@mui/material/DialogTitle';
-import FormControl from '@mui/material/FormControl';
-import CardContent from '@mui/material/CardContent';
-import DialogActions from '@mui/material/DialogActions';
-import DialogContent from '@mui/material/DialogContent';
-import TableContainer from '@mui/material/TableContainer';
+import {
+  Box,
+  Button,
+  Card,
+  CardContent,
+  Chip,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  FormControl,
+  IconButton,
+  InputLabel,
+  Menu,
+  MenuItem,
+  Paper,
+  Select,
+  Tab,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  Tabs,
+  TextField,
+  Typography,
+} from '@mui/material';
 
 import { useRouter } from 'src/routes/hooks';
 
 import { DashboardContent } from 'src/layouts/dashboard';
-
-import { Iconify } from 'src/components/iconify';
 
 // Mock data for tasks
 const mockTasks = [
@@ -84,13 +87,26 @@ export function ManageTasksView() {
   const [activeTab, setActiveTab] = useState(0);
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage] = useState(50);
-  const [sidebarOpen, setSidebarOpen] = useState(false);
   const [filterModalOpen, setFilterModalOpen] = useState(false);
   const [actionMenuAnchor, setActionMenuAnchor] = useState<null | HTMLElement>(null);
-  const [selectedListing, setSelectedListing] = useState('');
-  const [selectedChannel, setSelectedChannel] = useState('');
-  const [selectedAssignee, setSelectedAssignee] = useState('');
-  const [selectedSupervisor, setSelectedSupervisor] = useState('');
+  const [selectedTask, setSelectedTask] = useState<any>(null);
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [taskToDelete, setTaskToDelete] = useState<any>(null);
+  
+  // Filter states
+  const [filters, setFilters] = useState({
+    listing: '',
+    channel: '',
+    assignee: '',
+    supervisor: '',
+    status: [] as string[],
+    priority: [] as string[],
+    fromDate: '',
+    toDate: '',
+  });
+  
+  // Task management
+  const [tasks, setTasks] = useState(mockTasks);
   const [sortOrder, setSortOrder] = useState('dueDate');
 
   const handleTabChange = (event: React.SyntheticEvent, newValue: number) => {
@@ -100,20 +116,46 @@ export function ManageTasksView() {
     if (newValue === 3) router.push('/tasks/archive');
   };
 
-  const handleActionMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
+  const handleActionMenuOpen = (event: React.MouseEvent<HTMLElement>, task: any) => {
     setActionMenuAnchor(event.currentTarget);
+    setSelectedTask(task);
   };
 
   const handleActionMenuClose = () => {
     setActionMenuAnchor(null);
+    setSelectedTask(null);
   };
 
   const handleAddTask = () => {
-    setSidebarOpen(true);
+    router.push('/tasks/new');
   };
 
-  const handleSidebarClose = () => {
-    setSidebarOpen(false);
+  const handleEditTask = (task: any) => {
+    router.push(`/tasks/${task.id}/edit`);
+  };
+
+
+  const handleDeleteTask = () => {
+    setTaskToDelete(selectedTask);
+    setDeleteDialogOpen(true);
+    handleActionMenuClose();
+  };
+
+  const handleDeleteConfirm = () => {
+    if (taskToDelete) {
+      setTasks(prev => prev.filter(task => task.id !== taskToDelete.id));
+    }
+    setDeleteDialogOpen(false);
+    setTaskToDelete(null);
+  };
+
+  const handleDeleteCancel = () => {
+    setDeleteDialogOpen(false);
+    setTaskToDelete(null);
+  };
+
+  const handleFilterChange = (field: string, value: any) => {
+    setFilters(prev => ({ ...prev, [field]: value }));
   };
 
   const handleFilterModalOpen = () => {
@@ -124,10 +166,61 @@ export function ManageTasksView() {
     setFilterModalOpen(false);
   };
 
-  const totalPages = Math.ceil(mockTasks.length / itemsPerPage);
+  const handleApplyFilters = () => {
+    // Filters are applied in the filteredTasks calculation
+    handleFilterModalClose();
+  };
+
+  const handleResetFilters = () => {
+    setFilters({
+      listing: '',
+      channel: '',
+      assignee: '',
+      supervisor: '',
+      status: [],
+      priority: [],
+      fromDate: '',
+      toDate: '',
+    });
+  };
+
+  // Filter and sort tasks
+  const filteredTasks = tasks.filter(task => 
+    (!filters.listing || task.listing === filters.listing) &&
+    (!filters.channel || task.channel === filters.channel) &&
+    (!filters.assignee || task.assignee === filters.assignee) &&
+    (!filters.supervisor || task.supervisor === filters.supervisor) &&
+    (filters.status.length === 0 || filters.status.includes(task.status)) &&
+    (filters.priority.length === 0 || filters.priority.includes(task.priority)) &&
+    (!filters.fromDate || task.dueDate >= filters.fromDate) &&
+    (!filters.toDate || task.dueDate <= filters.toDate)
+  );
+
+  const sortedTasks = [...filteredTasks].sort((a, b) => {
+    switch (sortOrder) {
+      case 'dueDate': {
+        return new Date(a.dueDate).getTime() - new Date(b.dueDate).getTime();
+      }
+      case 'priority': {
+        const priorityOrder = { 'High': 3, 'Medium': 2, 'Low': 1 };
+        return priorityOrder[b.priority as keyof typeof priorityOrder] - priorityOrder[a.priority as keyof typeof priorityOrder];
+      }
+      case 'status': {
+        return a.status.localeCompare(b.status);
+      }
+      case 'createdAt': {
+        return new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime();
+      }
+      default: {
+        return 0;
+      }
+    }
+  });
+
+  const totalPages = Math.ceil(sortedTasks.length / itemsPerPage);
   const startIndex = (currentPage - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
-  const currentTasks = mockTasks.slice(startIndex, endIndex);
+  const currentTasks = sortedTasks.slice(startIndex, endIndex);
 
   return (
     <DashboardContent maxWidth="xl">
@@ -170,67 +263,67 @@ export function ManageTasksView() {
 
       {/* Filters */}
       <Paper sx={{ p: 2, mb: 3 }}>
-        <Grid container spacing={2} alignItems="center">
-          <Grid size={{ xs: 12, sm: 6, md: 2 }}>
+        <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 2, alignItems: 'center' }}>
+          <Box sx={{ minWidth: 200, flex: '1 1 200px' }}>
             <FormControl fullWidth size="small">
               <InputLabel>Listing</InputLabel>
               <Select
-                value={selectedListing}
+                value={filters.listing}
                 label="Listing"
-                onChange={(e) => setSelectedListing(e.target.value)}
+                onChange={(e) => handleFilterChange('listing', e.target.value)}
               >
                 <MenuItem value="">All Listings</MenuItem>
-                <MenuItem value="villa">Villa Del Sol</MenuItem>
-                <MenuItem value="navigli">Navigli Apartment</MenuItem>
-                <MenuItem value="polacchi">Polacchi42</MenuItem>
+                <MenuItem value="Villa Del Sol">Villa Del Sol</MenuItem>
+                <MenuItem value="Navigli Apartment">Navigli Apartment</MenuItem>
+                <MenuItem value="Polacchi42">Polacchi42</MenuItem>
               </Select>
             </FormControl>
-          </Grid>
-          <Grid size={{ xs: 12, sm: 6, md: 2 }}>
+          </Box>
+          <Box sx={{ minWidth: 200, flex: '1 1 200px' }}>
             <FormControl fullWidth size="small">
               <InputLabel>Channel</InputLabel>
               <Select
-                value={selectedChannel}
+                value={filters.channel}
                 label="Channel"
-                onChange={(e) => setSelectedChannel(e.target.value)}
+                onChange={(e) => handleFilterChange('channel', e.target.value)}
               >
                 <MenuItem value="">All Channels</MenuItem>
-                <MenuItem value="airbnb">Airbnb</MenuItem>
-                <MenuItem value="booking">Booking.com</MenuItem>
-                <MenuItem value="direct">Direct</MenuItem>
+                <MenuItem value="Airbnb">Airbnb</MenuItem>
+                <MenuItem value="Booking.com">Booking.com</MenuItem>
+                <MenuItem value="Direct">Direct</MenuItem>
               </Select>
             </FormControl>
-          </Grid>
-          <Grid size={{ xs: 12, sm: 6, md: 2 }}>
+          </Box>
+          <Box sx={{ minWidth: 200, flex: '1 1 200px' }}>
             <FormControl fullWidth size="small">
               <InputLabel>Assignee</InputLabel>
               <Select
-                value={selectedAssignee}
+                value={filters.assignee}
                 label="Assignee"
-                onChange={(e) => setSelectedAssignee(e.target.value)}
+                onChange={(e) => handleFilterChange('assignee', e.target.value)}
               >
                 <MenuItem value="">All Assignees</MenuItem>
-                <MenuItem value="john">John Doe</MenuItem>
-                <MenuItem value="mike">Mike Johnson</MenuItem>
-                <MenuItem value="tom">Tom Brown</MenuItem>
+                <MenuItem value="John Doe">John Doe</MenuItem>
+                <MenuItem value="Mike Johnson">Mike Johnson</MenuItem>
+                <MenuItem value="Tom Brown">Tom Brown</MenuItem>
               </Select>
             </FormControl>
-          </Grid>
-          <Grid size={{ xs: 12, sm: 6, md: 2 }}>
+          </Box>
+          <Box sx={{ minWidth: 200, flex: '1 1 200px' }}>
             <FormControl fullWidth size="small">
               <InputLabel>Supervisor</InputLabel>
               <Select
-                value={selectedSupervisor}
+                value={filters.supervisor}
                 label="Supervisor"
-                onChange={(e) => setSelectedSupervisor(e.target.value)}
+                onChange={(e) => handleFilterChange('supervisor', e.target.value)}
               >
                 <MenuItem value="">All Supervisors</MenuItem>
-                <MenuItem value="jane">Jane Smith</MenuItem>
-                <MenuItem value="sarah">Sarah Wilson</MenuItem>
+                <MenuItem value="Jane Smith">Jane Smith</MenuItem>
+                <MenuItem value="Sarah Wilson">Sarah Wilson</MenuItem>
               </Select>
             </FormControl>
-          </Grid>
-          <Grid size={{ xs: 12, sm: 6, md: 2 }}>
+          </Box>
+          <Box sx={{ minWidth: 200, flex: '1 1 200px' }}>
             <FormControl fullWidth size="small">
               <InputLabel>Sort Order</InputLabel>
               <Select
@@ -244,22 +337,22 @@ export function ManageTasksView() {
                 <MenuItem value="createdAt">Created Date</MenuItem>
               </Select>
             </FormControl>
-          </Grid>
-          <Grid size={{ xs: 12, sm: 6, md: 2 }}>
+          </Box>
+          <Box sx={{ minWidth: 200, flex: '1 1 200px' }}>
             <Button
               variant="outlined"
               onClick={handleFilterModalOpen}
-              startIcon={<Iconify icon={"eva:more-horizontal-fill" as any} />}
+              startIcon={<MoreHorizontal size={16} />}
               fullWidth
             >
               More Filter
             </Button>
-          </Grid>
-        </Grid>
+          </Box>
+        </Box>
       </Paper>
 
       {/* Tasks Table or Empty State */}
-      {mockTasks.length === 0 ? (
+      {sortedTasks.length === 0 ? (
         <Card sx={{ p: 4, textAlign: 'center', mb: 3 }}>
           <CardContent>
             <Typography variant="h6" sx={{ mb: 2, color: 'text.secondary' }}>
@@ -292,10 +385,14 @@ export function ManageTasksView() {
               </TableHead>
               <TableBody>
                 {currentTasks.map((task) => (
-                  <TableRow key={task.id}>
+                  <TableRow key={task.id} hover>
                     <TableCell>
                       <Box>
-                        <Typography variant="body2" sx={{ fontWeight: 500 }}>
+                        <Typography 
+                          variant="body2" 
+                          sx={{ fontWeight: 500, cursor: 'pointer', color: 'primary.main' }}
+                          onClick={() => handleEditTask(task)}
+                        >
                           {task.title}
                         </Typography>
                         <Typography variant="caption" color="text.secondary">
@@ -356,17 +453,19 @@ export function ManageTasksView() {
                     </TableCell>
                     <TableCell align="center">
                       <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
-                        <IconButton size="small">
-                          <Iconify icon={"eva:edit-fill" as any} width={16} />
-                        </IconButton>
-                        <IconButton size="small">
-                          <Iconify icon={"eva:copy-fill" as any} width={16} />
+                        <IconButton 
+                          size="small" 
+                          onClick={() => handleEditTask(task)}
+                          sx={{ '&:hover': { bgcolor: 'primary.lighter' } }}
+                        >
+                          <Pencil size={16} />
                         </IconButton>
                         <IconButton 
                           size="small" 
-                          onClick={handleActionMenuOpen}
+                          onClick={(e) => handleActionMenuOpen(e, task)}
+                          sx={{ '&:hover': { bgcolor: 'grey.100' } }}
                         >
-                          <Iconify icon={"eva:more-vertical-fill" as any} width={16} />
+                          <MoreVertical size={16} />
                         </IconButton>
                       </Box>
                     </TableCell>
@@ -384,177 +483,91 @@ export function ManageTasksView() {
           <Typography variant="body2" color="text.secondary">
             Show 50 per page
           </Typography>
-          <Pagination
-            count={totalPages}
-            page={currentPage}
-            onChange={(_, page) => setCurrentPage(page)}
-            color="primary"
-          />
-        </Box>
-      </Paper>
-
-      {/* Add Task Sidebar */}
-      <Drawer
-        anchor="right"
-        open={sidebarOpen}
-        onClose={handleSidebarClose}
-        sx={{
-          '& .MuiDrawer-paper': {
-            width: 500,
-            p: 3,
-          },
-        }}
-      >
-        <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 3 }}>
-          <Typography variant="h6" sx={{ fontWeight: 600 }}>
-            Add Task
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+            <Typography variant="body2" color="text.secondary">
+              {startIndex + 1}-{Math.min(endIndex, sortedTasks.length)} of {sortedTasks.length}
           </Typography>
-          <IconButton onClick={handleSidebarClose}>
-            <Iconify icon={"eva:close-fill" as any} />
-          </IconButton>
-        </Box>
-
-        <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
-          <TextField
-            fullWidth
-            label="Task Title"
-            placeholder="Enter task title..."
-          />
-
-          <TextField
-            fullWidth
-            label="Description"
-            placeholder="Enter task description..."
-            multiline
-            rows={3}
-          />
-
-          <FormControl fullWidth>
-            <InputLabel>Priority</InputLabel>
-            <Select label="Priority">
-              <MenuItem value="low">Low</MenuItem>
-              <MenuItem value="medium">Medium</MenuItem>
-              <MenuItem value="high">High</MenuItem>
-            </Select>
-          </FormControl>
-
-          <FormControl fullWidth>
-            <InputLabel>Assignee</InputLabel>
-            <Select label="Assignee">
-              <MenuItem value="john">John Doe</MenuItem>
-              <MenuItem value="mike">Mike Johnson</MenuItem>
-              <MenuItem value="tom">Tom Brown</MenuItem>
-            </Select>
-          </FormControl>
-
-          <FormControl fullWidth>
-            <InputLabel>Supervisor</InputLabel>
-            <Select label="Supervisor">
-              <MenuItem value="jane">Jane Smith</MenuItem>
-              <MenuItem value="sarah">Sarah Wilson</MenuItem>
-            </Select>
-          </FormControl>
-
-          <TextField
-            fullWidth
-            type="date"
-            label="Due Date"
-            InputLabelProps={{ shrink: true }}
-          />
-
-          <FormControl fullWidth>
-            <InputLabel>Channel</InputLabel>
-            <Select label="Channel">
-              <MenuItem value="airbnb">Airbnb</MenuItem>
-              <MenuItem value="booking">Booking.com</MenuItem>
-              <MenuItem value="direct">Direct</MenuItem>
-            </Select>
-          </FormControl>
-
-          <FormControl fullWidth>
-            <InputLabel>Listing</InputLabel>
-            <Select label="Listing">
-              <MenuItem value="villa">Villa Del Sol</MenuItem>
-              <MenuItem value="navigli">Navigli Apartment</MenuItem>
-              <MenuItem value="polacchi">Polacchi42</MenuItem>
-            </Select>
-          </FormControl>
-
-          <Box sx={{ display: 'flex', gap: 2, mt: 4 }}>
+            <Box sx={{ display: 'flex', gap: 0.5 }}>
             <Button
-              fullWidth
-              variant="outlined"
-              onClick={handleSidebarClose}
-            >
-              Cancel
+                size="small"
+                disabled={currentPage === 1}
+                onClick={() => setCurrentPage(currentPage - 1)}
+              >
+                Previous
             </Button>
             <Button
-              fullWidth
-              variant="contained"
-              onClick={handleSidebarClose}
-            >
-              Add Task
+                size="small"
+                disabled={currentPage === totalPages}
+                onClick={() => setCurrentPage(currentPage + 1)}
+              >
+                Next
             </Button>
+            </Box>
           </Box>
         </Box>
-      </Drawer>
+      </Paper>
 
       {/* More Filter Modal */}
       <Dialog open={filterModalOpen} onClose={handleFilterModalClose} maxWidth="md" fullWidth>
         <DialogTitle>More Filters</DialogTitle>
         <DialogContent>
-          <Grid container spacing={2} sx={{ mt: 1 }}>
-            <Grid size={{ xs: 12, sm: 6 }}>
+          <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 2, mt: 1 }}>
+            <Box sx={{ minWidth: 200, flex: '1 1 200px' }}>
               <FormControl fullWidth>
                 <InputLabel>Status</InputLabel>
                 <Select 
                   label="Status" 
                   multiple
-                  value={[]}
-                  onChange={() => {}}
+                  value={filters.status}
+                  onChange={(e) => handleFilterChange('status', e.target.value)}
                 >
-                  <MenuItem value="pending">Pending</MenuItem>
-                  <MenuItem value="in-progress">In Progress</MenuItem>
-                  <MenuItem value="completed">Completed</MenuItem>
+                  <MenuItem value="Pending">Pending</MenuItem>
+                  <MenuItem value="In Progress">In Progress</MenuItem>
+                  <MenuItem value="Completed">Completed</MenuItem>
                 </Select>
               </FormControl>
-            </Grid>
-            <Grid size={{ xs: 12, sm: 6 }}>
+            </Box>
+            <Box sx={{ minWidth: 200, flex: '1 1 200px' }}>
               <FormControl fullWidth>
                 <InputLabel>Priority</InputLabel>
                 <Select 
                   label="Priority" 
                   multiple
-                  value={[]}
-                  onChange={() => {}}
+                  value={filters.priority}
+                  onChange={(e) => handleFilterChange('priority', e.target.value)}
                 >
-                  <MenuItem value="low">Low</MenuItem>
-                  <MenuItem value="medium">Medium</MenuItem>
-                  <MenuItem value="high">High</MenuItem>
+                  <MenuItem value="Low">Low</MenuItem>
+                  <MenuItem value="Medium">Medium</MenuItem>
+                  <MenuItem value="High">High</MenuItem>
                 </Select>
               </FormControl>
-            </Grid>
-            <Grid size={{ xs: 12, sm: 6 }}>
+            </Box>
+            <Box sx={{ minWidth: 200, flex: '1 1 200px' }}>
               <TextField
                 fullWidth
                 type="date"
                 label="From Date"
+                value={filters.fromDate}
+                onChange={(e) => handleFilterChange('fromDate', e.target.value)}
                 InputLabelProps={{ shrink: true }}
               />
-            </Grid>
-            <Grid size={{ xs: 12, sm: 6 }}>
+            </Box>
+            <Box sx={{ minWidth: 200, flex: '1 1 200px' }}>
               <TextField
                 fullWidth
                 type="date"
                 label="To Date"
+                value={filters.toDate}
+                onChange={(e) => handleFilterChange('toDate', e.target.value)}
                 InputLabelProps={{ shrink: true }}
               />
-            </Grid>
-          </Grid>
+            </Box>
+          </Box>
         </DialogContent>
         <DialogActions>
+          <Button onClick={handleResetFilters}>Reset Filters</Button>
           <Button onClick={handleFilterModalClose}>Cancel</Button>
-          <Button variant="contained" onClick={handleFilterModalClose}>
+          <Button variant="contained" onClick={handleApplyFilters}>
             Apply Filters
           </Button>
         </DialogActions>
@@ -566,23 +579,31 @@ export function ManageTasksView() {
         open={Boolean(actionMenuAnchor)}
         onClose={handleActionMenuClose}
       >
-        <MenuItem onClick={handleActionMenuClose}>
-          <Iconify icon={"eva:edit-fill" as any} sx={{ mr: 1 }} />
+        <MenuItem onClick={() => handleEditTask(selectedTask)}>
+          <Pencil size={16} style={{ marginRight: 8 }} />
           Edit
         </MenuItem>
-        <MenuItem onClick={handleActionMenuClose}>
-          <Iconify icon={"eva:copy-fill" as any} sx={{ mr: 1 }} />
-          Duplicate
-        </MenuItem>
-        <MenuItem onClick={handleActionMenuClose}>
-          <Iconify icon={"eva:checkmark-circle-fill" as any} sx={{ mr: 1 }} />
-          Mark Complete
-        </MenuItem>
-        <MenuItem onClick={handleActionMenuClose} sx={{ color: 'error.main' }}>
-          <Iconify icon={"eva:trash-2-fill" as any} sx={{ mr: 1 }} />
+        <MenuItem onClick={handleDeleteTask} sx={{ color: 'error.main' }}>
+          <Trash2 size={16} style={{ marginRight: 8 }} />
           Delete
         </MenuItem>
       </Menu>
+
+      {/* Delete Confirmation Dialog */}
+      <Dialog open={deleteDialogOpen} onClose={handleDeleteCancel}>
+        <DialogTitle>Delete Task</DialogTitle>
+        <DialogContent>
+          <Typography>
+            Are you sure you want to delete &quot;{taskToDelete?.title}&quot;? This action cannot be undone.
+          </Typography>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleDeleteCancel}>Cancel</Button>
+          <Button onClick={handleDeleteConfirm} variant="contained" color="error">
+            Delete
+          </Button>
+        </DialogActions>
+      </Dialog>
     </DashboardContent>
   );
 }

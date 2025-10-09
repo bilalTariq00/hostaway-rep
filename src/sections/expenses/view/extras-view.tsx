@@ -1,90 +1,128 @@
 import { useState } from 'react';
+import {
+  Calendar,
+  Copy,
+  Download,
+  Filter,
+  Minus,
+  Paperclip,
+  Pencil,
+  Plus,
+  Search,
+  Settings,
+  Upload,
+  X,
+} from 'lucide-react';
 
-import Box from '@mui/material/Box';
-import Tab from '@mui/material/Tab';
-import Chip from '@mui/material/Chip';
-import Menu from '@mui/material/Menu';
-import Tabs from '@mui/material/Tabs';
-import Paper from '@mui/material/Paper';
-import Table from '@mui/material/Table';
-import Button from '@mui/material/Button';
-import Dialog from '@mui/material/Dialog';
-import Drawer from '@mui/material/Drawer';
-import Select from '@mui/material/Select';
-import Checkbox from '@mui/material/Checkbox';
-import MenuItem from '@mui/material/MenuItem';
-import TableRow from '@mui/material/TableRow';
-import TableBody from '@mui/material/TableBody';
-import TableCell from '@mui/material/TableCell';
-import TableHead from '@mui/material/TableHead';
-import TextField from '@mui/material/TextField';
-import IconButton from '@mui/material/IconButton';
-import InputLabel from '@mui/material/InputLabel';
-import Pagination from '@mui/material/Pagination';
-import Typography from '@mui/material/Typography';
-import DialogTitle from '@mui/material/DialogTitle';
-import FormControl from '@mui/material/FormControl';
-import DialogActions from '@mui/material/DialogActions';
-import DialogContent from '@mui/material/DialogContent';
-import InputAdornment from '@mui/material/InputAdornment';
-import TableContainer from '@mui/material/TableContainer';
+import {
+  Box,
+  Button,
+  Checkbox,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  Drawer,
+  FormControl,
+  FormControlLabel,
+  IconButton,
+  InputAdornment,
+  InputLabel,
+  Menu,
+  MenuItem,
+  Paper,
+  Popover,
+  Select,
+  Tab,
+  Tabs,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  TextField,
+  Typography,
+} from '@mui/material';
 
 import { useRouter } from 'src/routes/hooks';
 
 import { DashboardContent } from 'src/layouts/dashboard';
 
-import { Iconify } from 'src/components/iconify';
-
 // Mock data for extras
 const mockExtras = [
   {
     id: 1,
-    name: 'Airport Transfer',
-    date: '2024-01-15',
-    category: 'Transportation',
-    listing: 'La Dimora Del Cavaliere',
-    reservation: 'RES-001',
-    owner: 'John Doe',
-    ownerStatement: 'ST-001',
-    amount: 75.00,
+    name: 'Prenotazione Fuori Portale',
+    date: '2025-09-01',
+    category: '',
+    listing: 'Via di Acqua Bullicante 113',
+    reservation: '',
+    owner: '',
+    ownerStatement: 'Via Acqua Bulicante - DF Method September [Da Pagare]',
+    amount: 900.00,
     hasAttachment: true,
   },
   {
     id: 2,
-    name: 'Welcome Basket',
-    date: '2024-01-14',
-    category: 'Amenities',
-    listing: 'Navigli',
-    reservation: 'RES-002',
-    owner: 'Jane Smith',
-    ownerStatement: 'ST-002',
-    amount: 45.00,
-    hasAttachment: false,
+    name: 'Prenotazione Fuori Portale',
+    date: '2025-09-01',
+    category: '',
+    listing: 'Stylish Apt | Balcony + AC + Aqueduct View',
+    reservation: '',
+    owner: '',
+    ownerStatement: 'Circ. Casilina 151 - DF Method September [Da Pagare]',
+    amount: 1300.00,
+    hasAttachment: true,
   },
   {
     id: 3,
-    name: 'Late Check-out',
-    date: '2024-01-13',
-    category: 'Services',
-    listing: 'Polacchi42',
-    reservation: 'RES-003',
-    owner: 'Mike Johnson',
-    ownerStatement: 'ST-003',
-    amount: 30.00,
+    name: 'A2A Energia S.P.A',
+    date: '2025-08-30',
+    category: '',
+    listing: 'Navigli',
+    reservation: '',
+    owner: '',
+    ownerStatement: 'Navigli - DF Method August [Da Pubblicare]',
+    amount: 136.00,
     hasAttachment: true,
   },
   {
     id: 4,
-    name: 'Concierge Service',
-    date: '2024-01-12',
-    category: 'Services',
-    listing: 'Superattico - Via Del C...',
-    reservation: 'RES-004',
-    owner: 'Sarah Wilson',
-    ownerStatement: 'ST-004',
-    amount: 100.00,
-    hasAttachment: false,
+    name: 'Guadagno Maggio Totale [Booking]',
+    date: '2025-06-30',
+    category: '',
+    listing: 'Elegant 2BR Apt | Balcony, AC, Near Colosseum',
+    reservation: '',
+    owner: '',
+    ownerStatement: '',
+    amount: 2841.57,
+    hasAttachment: true,
   },
+  {
+    id: 5,
+    name: 'Check In di Persona [Domus Omaggio]',
+    date: '2025-05-31',
+    category: '',
+    listing: 'Elegant Roman Escape • Walk to the Colosseum',
+    reservation: '',
+    owner: '',
+    ownerStatement: 'DF - Elegant Roman Escape • Walk to the Colosseum May 2025',
+    amount: 120.00,
+    hasAttachment: true,
+  },
+];
+
+// All possible columns for the extras table
+const allColumns = [
+  { key: 'name', label: 'Name', sortable: true, mandatory: true },
+  { key: 'date', label: 'Date', sortable: true, mandatory: false },
+  { key: 'categories', label: 'Categories', sortable: false, mandatory: false },
+  { key: 'listing', label: 'Listing', sortable: true, mandatory: false },
+  { key: 'reservation', label: 'Reservation', sortable: false, mandatory: false },
+  { key: 'owner', label: 'Owner', sortable: false, mandatory: false },
+  { key: 'ownerStatement', label: 'Owner statements', sortable: false, mandatory: false },
+  { key: 'amount', label: 'Amount', sortable: true, mandatory: false },
 ];
 
 export function ExtrasView() {
@@ -92,13 +130,39 @@ export function ExtrasView() {
   const [activeTab, setActiveTab] = useState(1);
   const [selectedExtras, setSelectedExtras] = useState<number[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
-  const [itemsPerPage] = useState(25);
+  const [itemsPerPage] = useState(5);
   const [searchTerm, setSearchTerm] = useState('');
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [importModalOpen, setImportModalOpen] = useState(false);
   const [customViewModalOpen, setCustomViewModalOpen] = useState(false);
   const [downloadAnchor, setDownloadAnchor] = useState<null | HTMLElement>(null);
-  const [actionMenuAnchor, setActionMenuAnchor] = useState<null | HTMLElement>(null);
+  
+  // New state for dynamic table functionality
+  const [extras, setExtras] = useState(mockExtras);
+  const [editingExtra, setEditingExtra] = useState<any>(null);
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [extraToDelete, setExtraToDelete] = useState<any>(null);
+  const [columnSettingsAnchor, setColumnSettingsAnchor] = useState<null | HTMLElement>(null);
+  const [columnSearchTerm, setColumnSearchTerm] = useState('');
+  const [sortColumn, setSortColumn] = useState<string>('');
+  const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('asc');
+  const [visibleColumns, setVisibleColumns] = useState(allColumns.slice(0, 8).map(col => col.key));
+  
+  // Attachment dropdown state
+  const [attachmentAnchor, setAttachmentAnchor] = useState<null | HTMLElement>(null);
+  const [attachmentExtra, setAttachmentExtra] = useState<any>(null);
+  
+  // Form data for sidebar
+  const [formData, setFormData] = useState({
+    extraName: '',
+    description: '',
+    date: '2025-10-09',
+    amount: 0,
+    categories: '',
+    listing: '',
+    reservation: '',
+    owner: '',
+  });
 
   const handleTabChange = (event: React.SyntheticEvent, newValue: number) => {
     setActiveTab(newValue);
@@ -107,9 +171,189 @@ export function ExtrasView() {
     if (newValue === 3) router.push('/expenses-extras/automations');
   };
 
+  // Form handlers
+  const handleInputChange = (field: string, value: any) => {
+    setFormData(prev => ({ ...prev, [field]: value }));
+  };
+
+  const handleAmountChange = (delta: number) => {
+    setFormData(prev => ({ ...prev, amount: Math.max(0, prev.amount + delta) }));
+  };
+
+  const handleCreateExtra = () => {
+    const newExtra = {
+      id: Math.max(...extras.map(e => e.id)) + 1,
+      name: formData.extraName || 'New Extra',
+      date: formData.date,
+      category: formData.categories,
+      listing: formData.listing,
+      reservation: formData.reservation,
+      owner: formData.owner,
+      ownerStatement: formData.description,
+      amount: formData.amount,
+      hasAttachment: false,
+    };
+
+    if (editingExtra) {
+      if (editingExtra.isDuplicating) {
+        setExtras(prev => [...prev, newExtra]);
+      } else {
+        setExtras(prev => prev.map(extra => 
+          extra.id === editingExtra.id ? { ...newExtra, id: editingExtra.id } : extra
+        ));
+      }
+    } else {
+      setExtras(prev => [...prev, newExtra]);
+    }
+
+    setSidebarOpen(false);
+    setEditingExtra(null);
+    setFormData({
+      extraName: '',
+      description: '',
+      date: '2025-10-09',
+      amount: 0,
+      categories: '',
+      listing: '',
+      reservation: '',
+      owner: '',
+    });
+  };
+
+  const handleEditExtra = (extra: any) => {
+    setEditingExtra(extra);
+    setFormData({
+      extraName: extra.name,
+      description: extra.ownerStatement,
+      date: extra.date,
+      amount: extra.amount,
+      categories: extra.category,
+      listing: extra.listing,
+      reservation: extra.reservation,
+      owner: extra.owner,
+    });
+    setSidebarOpen(true);
+  };
+
+  const handleDuplicateExtra = (extra: any) => {
+    setEditingExtra({ ...extra, isDuplicating: true });
+    setFormData({
+      extraName: `${extra.name} (Copy)`,
+      description: extra.ownerStatement,
+      date: new Date().toISOString().split('T')[0],
+      amount: extra.amount,
+      categories: extra.category,
+      listing: extra.listing,
+      reservation: extra.reservation,
+      owner: extra.owner,
+    });
+    setSidebarOpen(true);
+  };
+
+  const handleSidebarClose = () => {
+    setSidebarOpen(false);
+    setEditingExtra(null);
+    setFormData({
+      extraName: '',
+      description: '',
+      date: '2025-10-09',
+      amount: 0,
+      categories: '',
+      listing: '',
+      reservation: '',
+      owner: '',
+    });
+  };
+
+  const handleDeleteClick = (extra: any) => {
+    setExtraToDelete(extra);
+    setDeleteDialogOpen(true);
+  };
+
+  const handleDeleteConfirm = () => {
+    if (extraToDelete) {
+      setExtras(prev => prev.filter(extra => extra.id !== extraToDelete.id));
+    }
+    setDeleteDialogOpen(false);
+    setExtraToDelete(null);
+  };
+
+  const handleDeleteCancel = () => {
+    setDeleteDialogOpen(false);
+    setExtraToDelete(null);
+  };
+
+  // Column settings handlers
+  const handleColumnSettingsClick = (event: React.MouseEvent<HTMLElement>) => {
+    setColumnSettingsAnchor(event.currentTarget);
+  };
+
+  const handleColumnSettingsClose = () => {
+    setColumnSettingsAnchor(null);
+  };
+
+  const handleColumnToggle = (columnKey: string) => {
+    const column = allColumns.find(col => col.key === columnKey);
+    if (column?.mandatory) return;
+
+    setVisibleColumns(prev => 
+      prev.includes(columnKey) 
+        ? prev.filter(key => key !== columnKey)
+        : [...prev, columnKey]
+    );
+  };
+
+  const handleSort = (columnKey: string) => {
+    if (sortColumn === columnKey) {
+      setSortDirection(prev => prev === 'asc' ? 'desc' : 'asc');
+    } else {
+      setSortColumn(columnKey);
+      setSortDirection('asc');
+    }
+  };
+
+  // Attachment handlers
+  const handleAttachmentClick = (event: React.MouseEvent<HTMLElement>, extra: any) => {
+    setAttachmentAnchor(event.currentTarget);
+    setAttachmentExtra(extra);
+  };
+
+  const handleAttachmentClose = () => {
+    setAttachmentAnchor(null);
+    setAttachmentExtra(null);
+  };
+
+  const handleAttachmentUpload = () => {
+    // Create a file input element
+    const input = document.createElement('input');
+    input.type = 'file';
+    input.multiple = true;
+    input.accept = '.pdf,.doc,.docx,.jpg,.jpeg,.png,.txt';
+    
+    input.onchange = (e) => {
+      const files = (e.target as HTMLInputElement).files;
+      if (files && files.length > 0) {
+        console.log(`Uploading ${files.length} file(s) for extra: ${attachmentExtra?.name}`);
+        // Here you would typically upload the files to your server
+        // For now, we'll just show a success message
+        alert(`Successfully uploaded ${files.length} file(s) for "${attachmentExtra?.name}"`);
+      }
+    };
+    
+    input.click();
+    handleAttachmentClose();
+  };
+
+  const handleAttachmentCopy = () => {
+    console.log(`Copying attachment for extra: ${attachmentExtra?.name}`);
+    // Here you would implement the copy attachment logic
+    alert(`Copying attachment for "${attachmentExtra?.name}"`);
+    handleAttachmentClose();
+  };
+
   const handleSelectAll = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.checked) {
-      setSelectedExtras(mockExtras.map(extra => extra.id));
+      setSelectedExtras(extras.map(extra => extra.id));
     } else {
       setSelectedExtras([]);
     }
@@ -131,20 +375,8 @@ export function ExtrasView() {
     setDownloadAnchor(null);
   };
 
-  const handleActionMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
-    setActionMenuAnchor(event.currentTarget);
-  };
-
-  const handleActionMenuClose = () => {
-    setActionMenuAnchor(null);
-  };
-
   const handleAddExtra = () => {
     setSidebarOpen(true);
-  };
-
-  const handleSidebarClose = () => {
-    setSidebarOpen(false);
   };
 
   const handleImportClick = () => {
@@ -163,15 +395,39 @@ export function ExtrasView() {
     setCustomViewModalOpen(false);
   };
 
-  const filteredExtras = mockExtras.filter(extra =>
+  // Data processing
+  const filteredExtras = extras.filter(extra =>
     extra.name.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
+  const sortedData = [...filteredExtras].sort((a, b) => {
+    if (!sortColumn) return 0;
+    
+    const aValue = a[sortColumn as keyof typeof a];
+    const bValue = b[sortColumn as keyof typeof b];
+    
+    if (typeof aValue === 'string' && typeof bValue === 'string') {
+      return sortDirection === 'asc' 
+        ? aValue.localeCompare(bValue)
+        : bValue.localeCompare(aValue);
+    }
+    
+    if (typeof aValue === 'number' && typeof bValue === 'number') {
+      return sortDirection === 'asc' ? aValue - bValue : bValue - aValue;
+    }
+    
+    return 0;
+  });
+
+  const filteredColumns = allColumns.filter(column =>
+    column.label.toLowerCase().includes(columnSearchTerm.toLowerCase())
   );
 
   const totalAmount = filteredExtras.reduce((sum, extra) => sum + extra.amount, 0);
   const totalPages = Math.ceil(filteredExtras.length / itemsPerPage);
   const startIndex = (currentPage - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
-  const currentExtras = filteredExtras.slice(startIndex, endIndex);
+  const currentExtras = sortedData.slice(startIndex, endIndex);
 
   return (
     <DashboardContent maxWidth="xl">
@@ -182,13 +438,13 @@ export function ExtrasView() {
             Expenses and Extras
           </Typography>
           <Box sx={{ display: 'flex', gap: 1 }}>
-            <Button variant="outlined" onClick={handleImportClick}>
+            <Button variant="outlined" onClick={handleImportClick} startIcon={<Upload size={16} />}>
               Import
             </Button>
             <Button
               variant="outlined"
               onClick={handleDownloadClick}
-              endIcon={<Iconify icon={"eva:arrow-down-fill" as any} />}
+              endIcon={<Download size={16} />}
             >
               Download Report
             </Button>
@@ -201,7 +457,7 @@ export function ExtrasView() {
               <MenuItem onClick={handleDownloadClose}>Export Excel</MenuItem>
               <MenuItem onClick={handleDownloadClose}>Export PDF</MenuItem>
             </Menu>
-            <Button variant="contained" onClick={handleAddExtra}>
+            <Button variant="contained" onClick={handleAddExtra} startIcon={<Plus size={16} />}>
               Add Extra
             </Button>
           </Box>
@@ -248,7 +504,7 @@ export function ExtrasView() {
       {/* Filters and Search */}
       <Paper sx={{ p: 2, mb: 3 }}>
         <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, flexWrap: 'wrap' }}>
-          <Button variant="outlined" startIcon={<Iconify icon={"eva:funnel-fill" as any} />}>
+          <Button variant="outlined" startIcon={<Filter size={16} />}>
             Filter
           </Button>
           <TextField
@@ -259,7 +515,7 @@ export function ExtrasView() {
             InputProps={{
               startAdornment: (
                 <InputAdornment position="start">
-                  <Iconify icon={"eva:search-fill" as any} sx={{ color: 'text.disabled' }} />
+                  <Search size={16} color="#666" />
                 </InputAdornment>
               ),
             }}
@@ -269,90 +525,180 @@ export function ExtrasView() {
       </Paper>
 
       {/* Extras Table */}
-      <Paper sx={{ mb: 3 }}>
-        <TableContainer>
-          <Table>
-            <TableHead>
+      <Paper sx={{ borderRadius: 2, overflow: 'hidden', mb: 3 }}>
+        <TableContainer sx={{ maxHeight: 600, overflowY: 'auto', overflowX: 'auto' }}>
+          <Table sx={{ minWidth: visibleColumns.length * 120 }}>
+            <TableHead sx={{ bgcolor: 'grey.50' }}>
               <TableRow>
-                <TableCell padding="checkbox">
+                <TableCell padding="checkbox" sx={{ fontWeight: 600 }}>
                   <Checkbox
-                    indeterminate={selectedExtras.length > 0 && selectedExtras.length < mockExtras.length}
-                    checked={selectedExtras.length === mockExtras.length}
+                    indeterminate={selectedExtras.length > 0 && selectedExtras.length < extras.length}
+                    checked={selectedExtras.length === extras.length}
                     onChange={handleSelectAll}
                   />
                 </TableCell>
-                <TableCell>Name</TableCell>
-                <TableCell>Date</TableCell>
-                <TableCell>Category</TableCell>
-                <TableCell>Listing</TableCell>
-                <TableCell>Reservation</TableCell>
-                <TableCell>Owner</TableCell>
-                <TableCell>Owner Statement</TableCell>
-                <TableCell align="right">Amount</TableCell>
-                <TableCell align="center">Actions</TableCell>
+                {allColumns.map((column) => (
+                  visibleColumns.includes(column.key) && (
+                    <TableCell 
+                      key={column.key} 
+                      sx={{ 
+                        fontWeight: 600, 
+                        minWidth: 120, 
+                        whiteSpace: 'nowrap',
+                        cursor: column.sortable ? 'pointer' : 'default',
+                        '&:hover': column.sortable ? { bgcolor: 'grey.100' } : {}
+                      }}
+                      onClick={() => column.sortable && handleSort(column.key)}
+                    >
+                      <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                        {column.label}
+                        {column.sortable && (
+                          <Box sx={{ display: 'flex', flexDirection: 'column', ml: 0.5 }}>
+                            <Box sx={{ fontSize: '10px', lineHeight: 1 }}>
+                              {sortColumn === column.key && sortDirection === 'asc' ? '▲' : '△'}
+                            </Box>
+                            <Box sx={{ fontSize: '10px', lineHeight: 1 }}>
+                              {sortColumn === column.key && sortDirection === 'desc' ? '▼' : '▽'}
+                            </Box>
+                          </Box>
+                        )}
+                      </Box>
+                    </TableCell>
+                  )
+                ))}
+                <TableCell 
+                  sx={{ 
+                    position: 'sticky', 
+                    right: 0, 
+                    bgcolor: 'background.paper', 
+                    borderLeft: '1px solid', 
+                    borderColor: 'divider',
+                    zIndex: 10,
+                    px: 0
+                  }}
+                >
+                  <IconButton 
+                    size="small" 
+                    onClick={handleColumnSettingsClick}
+                    sx={{ 
+                      color: 'text.secondary',
+                      '&:hover': { bgcolor: 'grey.100', color: 'text.primary' }
+                    }}
+                  >
+                    <Settings size={16} />
+                  </IconButton>
+                </TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
-              {currentExtras.map((extra) => (
-                <TableRow key={extra.id}>
+              {currentExtras.map((extra, index) => (
+                <TableRow key={extra.id} sx={{ '&:hover': { bgcolor: 'grey.50' } }}>
                   <TableCell padding="checkbox">
                     <Checkbox
                       checked={selectedExtras.includes(extra.id)}
                       onChange={() => handleSelectExtra(extra.id)}
                     />
                   </TableCell>
-                  <TableCell>
-                    <Typography variant="body2" sx={{ fontWeight: 500 }}>
+                  {allColumns.map((column) => (
+                    visibleColumns.includes(column.key) && (
+                      <TableCell key={column.key} sx={{ minWidth: 120, whiteSpace: 'nowrap' }}>
+                        {column.key === 'name' && (
+                          <Typography 
+                            variant="body2" 
+                            sx={{ 
+                              fontWeight: 500, 
+                              color: 'primary.main', 
+                              cursor: 'pointer', 
+                              '&:hover': { color: 'primary.dark' } 
+                            }}
+                            onClick={() => handleEditExtra(extra)}
+                          >
                       {extra.name}
                     </Typography>
-                  </TableCell>
-                  <TableCell>
-                    <Typography variant="body2">
+                        )}
+                        {column.key === 'date' && (
+                          <Typography variant="body2" sx={{ color: 'text.secondary' }}>
                       {extra.date}
                     </Typography>
-                  </TableCell>
-                  <TableCell>
-                    <Chip
-                      label={extra.category}
-                      size="small"
-                      color="secondary"
-                    />
-                  </TableCell>
-                  <TableCell>
-                    <Typography variant="body2">
+                        )}
+                        {column.key === 'categories' && (
+                          <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+                            —
+                          </Typography>
+                        )}
+                        {column.key === 'listing' && (
+                          <Typography 
+                            variant="body2" 
+                            sx={{ 
+                              color: 'primary.main', 
+                              cursor: 'pointer', 
+                              '&:hover': { textDecoration: 'underline' } 
+                            }}
+                            onClick={() => router.push('/listings/1')}
+                          >
                       {extra.listing}
                     </Typography>
-                  </TableCell>
-                  <TableCell>
-                    <Typography variant="body2" sx={{ fontFamily: 'monospace' }}>
-                      {extra.reservation}
+                        )}
+                        {column.key === 'reservation' && (
+                          <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+                            —
                     </Typography>
-                  </TableCell>
-                  <TableCell>
-                    <Typography variant="body2">
-                      {extra.owner}
+                        )}
+                        {column.key === 'owner' && (
+                          <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+                            —
                     </Typography>
-                  </TableCell>
-                  <TableCell>
-                    <Typography variant="body2" sx={{ fontFamily: 'monospace' }}>
+                        )}
+                        {column.key === 'ownerStatement' && (
+                          <Typography 
+                            variant="body2" 
+                            sx={{ 
+                              color: 'primary.main', 
+                              cursor: 'pointer', 
+                              '&:hover': { textDecoration: 'underline' } 
+                            }}
+                          >
                       {extra.ownerStatement}
                     </Typography>
-                  </TableCell>
-                  <TableCell align="right">
-                    <Typography variant="body2" sx={{ fontWeight: 600 }}>
+                        )}
+                        {column.key === 'amount' && (
+                          <Typography variant="body2" sx={{ fontWeight: 600, color: 'primary.main' }}>
                       €{extra.amount.toFixed(2)}
                     </Typography>
+                        )}
                   </TableCell>
-                  <TableCell align="center">
+                    )
+                  ))}
+                  <TableCell 
+                    sx={{ 
+                      position: 'sticky', 
+                      right: 0, 
+                      bgcolor: index % 2 === 0 ? 'white' : 'grey.50', 
+                      borderLeft: '1px solid', 
+                      borderColor: 'divider',
+                      zIndex: 10,
+                      px: 0
+                    }}
+                  >
                     <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
-                      <IconButton size="small">
-                        <Iconify icon={"eva:attach-2-fill" as any} width={16} />
-                      </IconButton>
                       <IconButton 
                         size="small" 
-                        onClick={handleActionMenuOpen}
+                        onClick={(e) => handleAttachmentClick(e, extra)}
+                        sx={{ 
+                          color: extra.hasAttachment ? 'primary.main' : 'text.secondary',
+                          '&:hover': { bgcolor: 'grey.100' }
+                        }}
                       >
-                        <Iconify icon={"eva:more-vertical-fill" as any} width={16} />
+                        <Paperclip size={16} />
+                      </IconButton>
+                      <IconButton size="small" onClick={() => handleDuplicateExtra(extra)}>
+                        <Copy size={16} />
+                      </IconButton>
+                      <IconButton size="small" onClick={() => handleEditExtra(extra)}>
+                        <Pencil size={16} />
+                      </IconButton>
+                      <IconButton size="small" onClick={() => handleDeleteClick(extra)}>
+                        <X size={16} color="#ef4444" />
                       </IconButton>
                     </Box>
                   </TableCell>
@@ -363,11 +709,11 @@ export function ExtrasView() {
         </TableContainer>
       </Paper>
 
-      {/* Total Amount - Sticky */}
-      <Paper sx={{ p: 2, mb: 2, position: 'sticky', bottom: 0, bgcolor: 'background.paper', zIndex: 1 }}>
+      {/* Total Amount */}
+      <Paper sx={{ p: 2, mb: 2 }}>
         <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
           <Typography variant="h6" sx={{ fontWeight: 600 }}>
-            Total Amount
+            TOTAL
           </Typography>
           <Typography variant="h6" sx={{ fontWeight: 600, color: 'primary.main' }}>
             €{totalAmount.toFixed(2)}
@@ -377,16 +723,57 @@ export function ExtrasView() {
 
       {/* Pagination */}
       <Paper sx={{ p: 2 }}>
-        <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+        <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 2 }}>
           <Typography variant="body2" color="text.secondary">
-            Show 25 per page
+            Show {itemsPerPage} per page
           </Typography>
-          <Pagination
-            count={totalPages}
-            page={currentPage}
-            onChange={(_, page) => setCurrentPage(page)}
-            color="primary"
-          />
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, flexWrap: 'wrap' }}>
+            <Button 
+              size="small" 
+              variant="outlined" 
+              disabled={currentPage === 1}
+              onClick={() => setCurrentPage(1)}
+            >
+              FIRST
+            </Button>
+            <Button 
+              size="small" 
+              variant="outlined" 
+              disabled={currentPage === 1}
+              onClick={() => setCurrentPage(prev => Math.max(1, prev - 1))}
+            >
+              &lt;
+            </Button>
+            {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
+              const pageNum = i + 1;
+              return (
+                <Button
+                  key={pageNum}
+                  size="small"
+                  variant={currentPage === pageNum ? "contained" : "outlined"}
+                  onClick={() => setCurrentPage(pageNum)}
+                >
+                  {pageNum}
+                </Button>
+              );
+            })}
+            <Button 
+              size="small" 
+              variant="outlined" 
+              disabled={currentPage === totalPages}
+              onClick={() => setCurrentPage(prev => Math.min(totalPages, prev + 1))}
+            >
+              &gt;
+            </Button>
+            <Button 
+              size="small" 
+              variant="outlined" 
+              disabled={currentPage === totalPages}
+              onClick={() => setCurrentPage(totalPages)}
+            >
+              LAST
+            </Button>
+          </Box>
         </Box>
       </Paper>
 
@@ -404,30 +791,82 @@ export function ExtrasView() {
       >
         <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 3 }}>
           <Typography variant="h6" sx={{ fontWeight: 600 }}>
-            Add Extra
+            {editingExtra?.isDuplicating ? 'Duplicate extra' : editingExtra ? 'Edit extra' : 'Add new extra'}
           </Typography>
           <IconButton onClick={handleSidebarClose}>
-            <Iconify icon={"eva:close-fill" as any} />
+            <X size={20} />
           </IconButton>
         </Box>
 
         <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
           <TextField
             fullWidth
-            label="Name"
+            label="Extra name *"
             placeholder="Enter extra name..."
+            value={formData.extraName}
+            onChange={(e) => handleInputChange('extraName', e.target.value)}
+            required
+          />
+
+          <TextField
+            fullWidth
+            multiline
+            rows={4}
+            label="Description"
+            placeholder="Enter description..."
+            value={formData.description}
+            onChange={(e) => handleInputChange('description', e.target.value)}
           />
 
           <TextField
             fullWidth
             type="date"
-            label="Date"
+            label="Date *"
+            value={formData.date}
+            onChange={(e) => handleInputChange('date', e.target.value)}
             InputLabelProps={{ shrink: true }}
+            InputProps={{
+              startAdornment: (
+                <InputAdornment position="start">
+                  <Calendar size={16} />
+                </InputAdornment>
+              ),
+            }}
+            required
           />
 
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+            <Typography variant="body2" sx={{ minWidth: 60 }}>Amount *</Typography>
+            <IconButton 
+              size="small" 
+              onClick={() => handleAmountChange(-1)}
+              sx={{ border: '1px solid', borderColor: 'divider' }}
+            >
+              <Minus size={16} />
+            </IconButton>
+            <TextField
+              size="small"
+              type="number"
+              value={formData.amount}
+              onChange={(e) => handleInputChange('amount', parseFloat(e.target.value) || 0)}
+              sx={{ flex: 1 }}
+            />
+            <IconButton 
+              size="small" 
+              onClick={() => handleAmountChange(1)}
+              sx={{ border: '1px solid', borderColor: 'divider' }}
+            >
+              <Plus size={16} />
+            </IconButton>
+          </Box>
+
           <FormControl fullWidth>
-            <InputLabel>Category</InputLabel>
-            <Select label="Category">
+            <InputLabel>Categories</InputLabel>
+            <Select 
+              label="Categories"
+              value={formData.categories}
+              onChange={(e) => handleInputChange('categories', e.target.value)}
+            >
               <MenuItem value="transportation">Transportation</MenuItem>
               <MenuItem value="amenities">Amenities</MenuItem>
               <MenuItem value="services">Services</MenuItem>
@@ -437,19 +876,40 @@ export function ExtrasView() {
 
           <FormControl fullWidth>
             <InputLabel>Listing</InputLabel>
-            <Select label="Listing">
-              <MenuItem value="listing1">La Dimora Del Cavaliere</MenuItem>
-              <MenuItem value="listing2">Navigli</MenuItem>
-              <MenuItem value="listing3">Polacchi42</MenuItem>
+            <Select 
+              label="Listing"
+              value={formData.listing}
+              onChange={(e) => handleInputChange('listing', e.target.value)}
+            >
+              <MenuItem value="listing1">Via di Acqua Bullicante 113</MenuItem>
+              <MenuItem value="listing2">Stylish Apt | Balcony + AC + Aqueduct View</MenuItem>
+              <MenuItem value="listing3">Navigli</MenuItem>
+              <MenuItem value="listing4">Elegant 2BR Apt | Balcony, AC, Near Colosseum</MenuItem>
+              <MenuItem value="listing5">Elegant Roman Escape • Walk to the Colosseum</MenuItem>
             </Select>
           </FormControl>
 
-          <TextField
-            fullWidth
-            label="Amount"
-            type="number"
-            placeholder="0.00"
-          />
+          <FormControl fullWidth>
+            <InputLabel>Reservation</InputLabel>
+            <Select 
+              label="Reservation"
+              value={formData.reservation}
+              onChange={(e) => handleInputChange('reservation', e.target.value)}
+            >
+              <MenuItem value="">—</MenuItem>
+            </Select>
+          </FormControl>
+
+          <FormControl fullWidth>
+            <InputLabel>Owner</InputLabel>
+            <Select 
+              label="Owner"
+              value={formData.owner}
+              onChange={(e) => handleInputChange('owner', e.target.value)}
+            >
+              <MenuItem value="">—</MenuItem>
+            </Select>
+          </FormControl>
 
           <Box sx={{ display: 'flex', gap: 2, mt: 4 }}>
             <Button
@@ -462,9 +922,10 @@ export function ExtrasView() {
             <Button
               fullWidth
               variant="contained"
-              onClick={handleSidebarClose}
+              onClick={handleCreateExtra}
+              sx={{ bgcolor: 'primary.main', '&:hover': { bgcolor: 'primary.dark' } }}
             >
-              Add Extra
+              {editingExtra?.isDuplicating ? 'Duplicate' : editingExtra ? 'Update' : 'Create'}
             </Button>
           </Box>
         </Box>
@@ -511,25 +972,109 @@ export function ExtrasView() {
         </DialogActions>
       </Dialog>
 
-      {/* Action Menu */}
-      <Menu
-        anchorEl={actionMenuAnchor}
-        open={Boolean(actionMenuAnchor)}
-        onClose={handleActionMenuClose}
+      {/* Column Settings Popover */}
+      <Popover
+        open={Boolean(columnSettingsAnchor)}
+        anchorEl={columnSettingsAnchor}
+        onClose={handleColumnSettingsClose}
+        anchorOrigin={{
+          vertical: 'bottom',
+          horizontal: 'right',
+        }}
+        transformOrigin={{
+          vertical: 'top',
+          horizontal: 'right',
+        }}
       >
-        <MenuItem onClick={handleActionMenuClose}>
-          <Iconify icon={"eva:edit-fill" as any} sx={{ mr: 1 }} />
-          Edit
+        <Box sx={{ p: 2, minWidth: 250 }}>
+          <Typography variant="subtitle2" sx={{ mb: 2, fontWeight: 600 }}>
+            Column Settings
+          </Typography>
+          <TextField
+            size="small"
+            placeholder="Find column"
+            value={columnSearchTerm}
+            onChange={(e) => setColumnSearchTerm(e.target.value)}
+            InputProps={{
+              startAdornment: (
+                <InputAdornment position="start">
+                  <Search size={16} />
+                </InputAdornment>
+              ),
+            }}
+            sx={{ mb: 2, width: '100%' }}
+          />
+          <Box sx={{ maxHeight: 300, overflowY: 'auto' }}>
+            {filteredColumns.map((column) => (
+              <FormControlLabel
+                key={column.key}
+                control={
+                  <Checkbox
+                    checked={visibleColumns.includes(column.key)}
+                    onChange={() => handleColumnToggle(column.key)}
+                    disabled={column.mandatory}
+                  />
+                }
+                label={
+                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                    {column.label}
+                    {column.mandatory && (
+                      <Typography variant="caption" color="text.secondary">
+                        (Required)
+                      </Typography>
+                    )}
+                  </Box>
+                }
+                sx={{ width: '100%', mb: 0.5 }}
+              />
+            ))}
+          </Box>
+        </Box>
+      </Popover>
+
+      {/* Attachment Dropdown Menu */}
+      <Menu
+        anchorEl={attachmentAnchor}
+        open={Boolean(attachmentAnchor)}
+        onClose={handleAttachmentClose}
+        anchorOrigin={{
+          vertical: 'bottom',
+          horizontal: 'left',
+        }}
+        transformOrigin={{
+          vertical: 'top',
+          horizontal: 'left',
+        }}
+      >
+        <MenuItem onClick={handleAttachmentUpload}>
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+            <Upload size={16} />
+            <Typography variant="body2">Upload File</Typography>
+          </Box>
         </MenuItem>
-        <MenuItem onClick={handleActionMenuClose}>
-          <Iconify icon={"eva:copy-fill" as any} sx={{ mr: 1 }} />
-          Copy
-        </MenuItem>
-        <MenuItem onClick={handleActionMenuClose} sx={{ color: 'error.main' }}>
-          <Iconify icon={"eva:trash-2-fill" as any} sx={{ mr: 1 }} />
-          Delete
+        <MenuItem onClick={handleAttachmentCopy}>
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+            <Copy size={16} />
+            <Typography variant="body2">Copy Attachment</Typography>
+          </Box>
         </MenuItem>
       </Menu>
+
+      {/* Delete Confirmation Dialog */}
+      <Dialog open={deleteDialogOpen} onClose={handleDeleteCancel}>
+        <DialogTitle>Delete Extra</DialogTitle>
+        <DialogContent>
+          <Typography>
+            Are you sure you want to delete &quot;{extraToDelete?.name}&quot;? This action cannot be undone.
+          </Typography>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleDeleteCancel}>Cancel</Button>
+          <Button onClick={handleDeleteConfirm} color="error" variant="contained">
+            Delete
+          </Button>
+        </DialogActions>
+      </Dialog>
     </DashboardContent>
   );
 }

@@ -1,32 +1,51 @@
 import { useState } from 'react';
+import {
+  Copy,
+  Filter,
+  Info,
+  Pencil,
+  Play,
+  Search,
+  X,
+} from 'lucide-react';
 
-import Box from '@mui/material/Box';
-import Tab from '@mui/material/Tab';
-import Chip from '@mui/material/Chip';
-import Menu from '@mui/material/Menu';
-import Tabs from '@mui/material/Tabs';
-import Paper from '@mui/material/Paper';
-import Table from '@mui/material/Table';
-import Button from '@mui/material/Button';
-import Drawer from '@mui/material/Drawer';
-import Switch from '@mui/material/Switch';
-import MenuItem from '@mui/material/MenuItem';
-import TableRow from '@mui/material/TableRow';
-import TableBody from '@mui/material/TableBody';
-import TableCell from '@mui/material/TableCell';
-import TableHead from '@mui/material/TableHead';
-import TextField from '@mui/material/TextField';
-import IconButton from '@mui/material/IconButton';
-import Pagination from '@mui/material/Pagination';
-import Typography from '@mui/material/Typography';
-import InputAdornment from '@mui/material/InputAdornment';
-import TableContainer from '@mui/material/TableContainer';
+import {
+  Box,
+  Button,
+  Chip,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  Drawer,
+  FormControl,
+  FormControlLabel,
+  IconButton,
+  InputAdornment,
+  InputLabel,
+  Menu,
+  MenuItem,
+  Paper,
+  Pagination,
+  Radio,
+  RadioGroup,
+  Select,
+  Switch,
+  Tab,
+  Tabs,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  TextField,
+  Typography,
+} from '@mui/material';
 
 import { useRouter } from 'src/routes/hooks';
 
 import { DashboardContent } from 'src/layouts/dashboard';
-
-import { Iconify } from 'src/components/iconify';
 
 // Mock data for automations
 const mockAutomations = [
@@ -48,33 +67,6 @@ const mockAutomations = [
     status: 'Active',
     lastRun: '2024-01-01 00:00',
   },
-  {
-    id: 3,
-    name: 'Late Check-out Fee',
-    description: 'Add late check-out fee for departures after 12 PM',
-    trigger: 'Check-out',
-    action: 'Add Extra',
-    status: 'Inactive',
-    lastRun: '2024-01-10 14:20',
-  },
-  {
-    id: 4,
-    name: 'Marketing Budget',
-    description: 'Allocate monthly marketing budget across properties',
-    trigger: 'Monthly',
-    action: 'Create Expense',
-    status: 'Active',
-    lastRun: '2024-01-01 00:00',
-  },
-  {
-    id: 5,
-    name: 'Maintenance Reminder',
-    description: 'Create maintenance expenses based on property usage',
-    trigger: 'Property Usage',
-    action: 'Create Expense',
-    status: 'Inactive',
-    lastRun: '2024-01-05 09:15',
-  },
 ];
 
 export function AutomationsView() {
@@ -85,12 +77,168 @@ export function AutomationsView() {
   const [searchTerm, setSearchTerm] = useState('');
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [actionMenuAnchor, setActionMenuAnchor] = useState<null | HTMLElement>(null);
+  
+  // New state for automation management
+  const [automations, setAutomations] = useState(mockAutomations);
+  const [editingAutomation, setEditingAutomation] = useState<any>(null);
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [automationToDelete, setAutomationToDelete] = useState<any>(null);
+  
+  // Form data for sidebar
+  const [formData, setFormData] = useState({
+    type: 'Expense',
+    name: '',
+    description: '',
+    categories: '',
+    amount: 0,
+    repeatEvery: 1,
+    repeatPeriod: 'month',
+    repeatOn: 31,
+    expenseAppliesTo: 'Listings',
+    listings: '',
+  });
 
   const handleTabChange = (event: React.SyntheticEvent, newValue: number) => {
     setActiveTab(newValue);
     if (newValue === 0) router.push('/expenses-extras/expenses');
     if (newValue === 1) router.push('/expenses-extras/extras');
     if (newValue === 2) router.push('/expenses-extras/categories');
+  };
+
+  // Form handlers
+  const handleInputChange = (field: string, value: any) => {
+    setFormData(prev => ({ ...prev, [field]: value }));
+  };
+
+  const handleAmountChange = (delta: number) => {
+    setFormData(prev => ({ ...prev, amount: Math.max(0, prev.amount + delta) }));
+  };
+
+  const handleCreateAutomation = () => {
+    if (formData.name.trim()) {
+      const newAutomation = {
+        id: Math.max(...automations.map(a => a.id)) + 1,
+        name: formData.name,
+        description: formData.description,
+        trigger: `${formData.repeatEvery} ${formData.repeatPeriod}`,
+        action: formData.type,
+        status: 'Active',
+        lastRun: new Date().toLocaleString(),
+      };
+
+      if (editingAutomation) {
+        if (editingAutomation.isDuplicating) {
+          setAutomations(prev => [...prev, newAutomation]);
+        } else {
+          setAutomations(prev => prev.map(automation => 
+            automation.id === editingAutomation.id ? { ...newAutomation, id: editingAutomation.id } : automation
+          ));
+        }
+      } else {
+        setAutomations(prev => [...prev, newAutomation]);
+      }
+
+      setSidebarOpen(false);
+      setEditingAutomation(null);
+      setFormData({
+        type: 'Expense',
+        name: '',
+        description: '',
+        categories: '',
+        amount: 0,
+        repeatEvery: 1,
+        repeatPeriod: 'month',
+        repeatOn: 31,
+        expenseAppliesTo: 'Listings',
+        listings: '',
+      });
+    }
+  };
+
+  const handleEditAutomation = (automation: any) => {
+    setEditingAutomation(automation);
+    setFormData({
+      type: automation.action,
+      name: automation.name,
+      description: automation.description,
+      categories: '',
+      amount: 0,
+      repeatEvery: 1,
+      repeatPeriod: 'month',
+      repeatOn: 31,
+      expenseAppliesTo: 'Listings',
+      listings: '',
+    });
+    setSidebarOpen(true);
+  };
+
+  const handleDuplicateAutomation = (automation: any) => {
+    setEditingAutomation({ ...automation, isDuplicating: true });
+    setFormData({
+      type: automation.action,
+      name: `${automation.name} (Copy)`,
+      description: automation.description,
+      categories: '',
+      amount: 0,
+      repeatEvery: 1,
+      repeatPeriod: 'month',
+      repeatOn: 31,
+      expenseAppliesTo: 'Listings',
+      listings: '',
+    });
+    setSidebarOpen(true);
+  };
+
+  const handleAddAutomation = () => {
+    setEditingAutomation(null);
+    setFormData({
+      type: 'Expense',
+      name: '',
+      description: '',
+      categories: '',
+      amount: 0,
+      repeatEvery: 1,
+      repeatPeriod: 'month',
+      repeatOn: 31,
+      expenseAppliesTo: 'Listings',
+      listings: '',
+    });
+    setSidebarOpen(true);
+  };
+
+  const handleSidebarClose = () => {
+    setSidebarOpen(false);
+    setEditingAutomation(null);
+    setFormData({
+      type: 'Expense',
+      name: '',
+      description: '',
+      categories: '',
+      amount: 0,
+      repeatEvery: 1,
+      repeatPeriod: 'month',
+      repeatOn: 31,
+      expenseAppliesTo: 'Listings',
+      listings: '',
+    });
+  };
+
+  const handleDeleteClick = (automation: any) => {
+    setAutomationToDelete(automation);
+    setDeleteDialogOpen(true);
+  };
+
+  const handleDeleteConfirm = () => {
+    if (automationToDelete) {
+      setAutomations(prev => prev.filter(automation => automation.id !== automationToDelete.id));
+    }
+    setDeleteDialogOpen(false);
+    setAutomationToDelete(null);
+  };
+
+  const handleDeleteCancel = () => {
+    setDeleteDialogOpen(false);
+    setAutomationToDelete(null);
   };
 
   const handleActionMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
@@ -101,20 +249,15 @@ export function AutomationsView() {
     setActionMenuAnchor(null);
   };
 
-  const handleAddAutomation = () => {
-    setSidebarOpen(true);
-  };
-
-  const handleSidebarClose = () => {
-    setSidebarOpen(false);
-  };
-
   const handleStatusToggle = (automationId: number) => {
-    // In a real app, this would update the automation status
-    console.log('Toggle automation status:', automationId);
+    setAutomations(prev => prev.map(automation => 
+      automation.id === automationId 
+        ? { ...automation, status: automation.status === 'Active' ? 'Inactive' : 'Active' }
+        : automation
+    ));
   };
 
-  const filteredAutomations = mockAutomations.filter(automation =>
+  const filteredAutomations = automations.filter(automation =>
     automation.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
     automation.description.toLowerCase().includes(searchTerm.toLowerCase())
   );
@@ -166,7 +309,7 @@ export function AutomationsView() {
       {/* Filters and Search */}
       <Paper sx={{ p: 2, mb: 3 }}>
         <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, flexWrap: 'wrap' }}>
-          <Button variant="outlined" startIcon={<Iconify icon={"eva:funnel-fill" as any} />}>
+          <Button variant="outlined" startIcon={<Filter size={16} />}>
             Filter
           </Button>
           <TextField
@@ -177,7 +320,7 @@ export function AutomationsView() {
             InputProps={{
               startAdornment: (
                 <InputAdornment position="start">
-                  <Iconify icon={"eva:search-fill" as any} sx={{ color: 'text.disabled' }} />
+                  <Search size={16} color="#666" />
                 </InputAdornment>
               ),
             }}
@@ -249,14 +392,33 @@ export function AutomationsView() {
                   </TableCell>
                   <TableCell align="center">
                     <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
-                      <IconButton size="small">
-                        <Iconify icon={"eva:play-circle-fill" as any} width={16} />
+                      <IconButton 
+                        size="small" 
+                        onClick={() => handleStatusToggle(automation.id)}
+                        sx={{ '&:hover': { bgcolor: 'success.lighter' } }}
+                      >
+                        <Play size={16} />
                       </IconButton>
                       <IconButton 
                         size="small" 
-                        onClick={handleActionMenuOpen}
+                        onClick={() => handleDuplicateAutomation(automation)}
+                        sx={{ '&:hover': { bgcolor: 'primary.lighter' } }}
                       >
-                        <Iconify icon={"eva:more-vertical-fill" as any} width={16} />
+                        <Copy size={16} />
+                      </IconButton>
+                      <IconButton 
+                        size="small" 
+                        onClick={() => handleEditAutomation(automation)}
+                        sx={{ '&:hover': { bgcolor: 'primary.lighter' } }}
+                      >
+                        <Pencil size={16} />
+                      </IconButton>
+                      <IconButton 
+                        size="small" 
+                        onClick={() => handleDeleteClick(automation)}
+                        sx={{ '&:hover': { bgcolor: 'error.lighter' } }}
+                      >
+                        <X size={16} color="#ef4444" />
                       </IconButton>
                     </Box>
                   </TableCell>
@@ -276,7 +438,7 @@ export function AutomationsView() {
           <Pagination
             count={totalPages}
             page={currentPage}
-            onChange={(_, page) => setCurrentPage(page)}
+            onChange={(event: React.ChangeEvent<unknown>, page: number) => setCurrentPage(page)}
             color="primary"
           />
         </Box>
@@ -296,18 +458,28 @@ export function AutomationsView() {
       >
         <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 3 }}>
           <Typography variant="h6" sx={{ fontWeight: 600 }}>
-            Add Automation
+            {editingAutomation?.isDuplicating ? 'Duplicate automation' : editingAutomation ? 'Edit automation' : 'Add new automation'}
           </Typography>
           <IconButton onClick={handleSidebarClose}>
-            <Iconify icon={"eva:close-fill" as any} />
+            <X size={20} />
           </IconButton>
         </Box>
 
         <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
           <TextField
             fullWidth
-            label="Automation Name"
+            label="Name *"
             placeholder="Enter automation name..."
+            value={formData.name}
+            onChange={(e) => handleInputChange('name', e.target.value)}
+            required
+            InputProps={{
+              endAdornment: (
+                <InputAdornment position="end">
+                  <Info size={16} color="#666" />
+                </InputAdornment>
+              ),
+            }}
           />
 
           <TextField
@@ -316,32 +488,114 @@ export function AutomationsView() {
             placeholder="Enter automation description..."
             multiline
             rows={3}
+            value={formData.description}
+            onChange={(e) => handleInputChange('description', e.target.value)}
+            InputProps={{
+              endAdornment: (
+                <InputAdornment position="end">
+                  <Info size={16} color="#666" />
+                </InputAdornment>
+              ),
+            }}
           />
 
-          <Box sx={{ display: 'flex', gap: 2 }}>
-            <TextField
-              fullWidth
-              label="Trigger"
-              placeholder="Select trigger..."
-              select
+          <FormControl fullWidth>
+            <InputLabel>Categories</InputLabel>
+            <Select 
+              label="Categories"
+              value={formData.categories}
+              onChange={(e) => handleInputChange('categories', e.target.value)}
             >
-              <MenuItem value="booking">Booking Created</MenuItem>
-              <MenuItem value="checkout">Check-out</MenuItem>
-              <MenuItem value="monthly">Monthly</MenuItem>
-              <MenuItem value="usage">Property Usage</MenuItem>
-            </TextField>
-            <TextField
-              fullWidth
-              label="Action"
-              placeholder="Select action..."
-              select
+              <MenuItem value="maintenance">Maintenance</MenuItem>
+              <MenuItem value="utilities">Utilities</MenuItem>
+              <MenuItem value="marketing">Marketing</MenuItem>
+              <MenuItem value="transportation">Transportation</MenuItem>
+            </Select>
+          </FormControl>
+
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+            <Typography variant="body2" sx={{ minWidth: 60 }}>Amount *</Typography>
+            <IconButton 
+              size="small" 
+              onClick={() => handleAmountChange(-1)}
+              sx={{ border: '1px solid', borderColor: 'divider' }}
             >
-              <MenuItem value="add-expense">Add Expense</MenuItem>
-              <MenuItem value="create-expense">Create Expense</MenuItem>
-              <MenuItem value="add-extra">Add Extra</MenuItem>
-              <MenuItem value="create-extra">Create Extra</MenuItem>
-            </TextField>
+              <Typography variant="body2">-</Typography>
+            </IconButton>
+            <TextField
+              size="small"
+              type="number"
+              value={formData.amount}
+              onChange={(e) => handleInputChange('amount', parseFloat(e.target.value) || 0)}
+              sx={{ flex: 1 }}
+            />
           </Box>
+
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+            <Typography variant="body2" sx={{ minWidth: 100 }}>Repeat every *</Typography>
+            <TextField
+              size="small"
+              type="number"
+              value={formData.repeatEvery}
+              onChange={(e) => handleInputChange('repeatEvery', parseInt(e.target.value) || 1)}
+              sx={{ width: 80 }}
+            />
+            <FormControl sx={{ minWidth: 120 }}>
+              <Select 
+                value={formData.repeatPeriod}
+                onChange={(e) => handleInputChange('repeatPeriod', e.target.value)}
+                size="small"
+              >
+                <MenuItem value="day">day</MenuItem>
+                <MenuItem value="week">week</MenuItem>
+                <MenuItem value="month">month</MenuItem>
+                <MenuItem value="year">year</MenuItem>
+              </Select>
+            </FormControl>
+          </Box>
+
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+            <Typography variant="body2" sx={{ minWidth: 100 }}>Repeat on *</Typography>
+            <TextField
+              size="small"
+              type="number"
+              value={formData.repeatOn}
+              onChange={(e) => handleInputChange('repeatOn', parseInt(e.target.value) || 1)}
+              sx={{ width: 80 }}
+            />
+            <Typography variant="body2" sx={{ ml: 1 }}>
+              st day of the month
+            </Typography>
+            <Info size={16} color="#666" />
+          </Box>
+
+          <Box>
+            <Typography variant="body2" sx={{ mb: 1, display: 'flex', alignItems: 'center', gap: 1 }}>
+              Expense applies to
+              <Info size={16} color="#666" />
+            </Typography>
+            <RadioGroup
+              value={formData.expenseAppliesTo}
+              onChange={(e) => handleInputChange('expenseAppliesTo', e.target.value)}
+            >
+              <FormControlLabel value="Listings" control={<Radio />} label="Listings" />
+              <FormControlLabel value="Owners" control={<Radio />} label="Owners" />
+            </RadioGroup>
+          </Box>
+
+          <FormControl fullWidth>
+            <InputLabel>Listing(s)</InputLabel>
+            <Select 
+              label="Listing(s)"
+              value={formData.listings}
+              onChange={(e) => handleInputChange('listings', e.target.value)}
+            >
+              <MenuItem value="all">All Listings</MenuItem>
+              <MenuItem value="listing1">Via di Acqua Bullicante 113</MenuItem>
+              <MenuItem value="listing2">Stylish Apt | Balcony + AC + Aqueduct View</MenuItem>
+              <MenuItem value="listing3">Navigli</MenuItem>
+            </Select>
+          </FormControl>
 
           <Box sx={{ display: 'flex', gap: 2, mt: 4 }}>
             <Button
@@ -354,37 +608,30 @@ export function AutomationsView() {
             <Button
               fullWidth
               variant="contained"
-              onClick={handleSidebarClose}
+              onClick={handleCreateAutomation}
+              sx={{ bgcolor: 'primary.main', '&:hover': { bgcolor: 'primary.dark' } }}
             >
-              Add Automation
+              {editingAutomation?.isDuplicating ? 'Duplicate' : editingAutomation ? 'Update' : 'Create'}
             </Button>
           </Box>
         </Box>
       </Drawer>
 
-      {/* Action Menu */}
-      <Menu
-        anchorEl={actionMenuAnchor}
-        open={Boolean(actionMenuAnchor)}
-        onClose={handleActionMenuClose}
-      >
-        <MenuItem onClick={handleActionMenuClose}>
-          <Iconify icon={"eva:edit-fill" as any} sx={{ mr: 1 }} />
-          Edit
-        </MenuItem>
-        <MenuItem onClick={handleActionMenuClose}>
-          <Iconify icon={"eva:copy-fill" as any} sx={{ mr: 1 }} />
-          Duplicate
-        </MenuItem>
-        <MenuItem onClick={handleActionMenuClose}>
-          <Iconify icon={"eva:play-circle-fill" as any} sx={{ mr: 1 }} />
-          Run Now
-        </MenuItem>
-        <MenuItem onClick={handleActionMenuClose} sx={{ color: 'error.main' }}>
-          <Iconify icon={"eva:trash-2-fill" as any} sx={{ mr: 1 }} />
-          Delete
-        </MenuItem>
-      </Menu>
+      {/* Delete Confirmation Dialog */}
+      <Dialog open={deleteDialogOpen} onClose={handleDeleteCancel}>
+        <DialogTitle>Delete Automation</DialogTitle>
+        <DialogContent>
+          <Typography>
+            Are you sure you want to delete &quot;{automationToDelete?.name}&quot;? This action cannot be undone.
+          </Typography>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleDeleteCancel}>Cancel</Button>
+          <Button onClick={handleDeleteConfirm} color="error" variant="contained">
+            Delete
+          </Button>
+        </DialogActions>
+      </Dialog>
     </DashboardContent>
   );
 }

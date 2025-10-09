@@ -1,4 +1,14 @@
 import { useState } from 'react';
+import { 
+  Minus,
+  Search,
+  Download,
+  Settings,
+  ChevronUp,
+  TrendingUp,
+  ChevronDown,
+  TrendingDown
+} from 'lucide-react';
 
 import Box from '@mui/material/Box';
 import Tab from '@mui/material/Tab';
@@ -9,8 +19,10 @@ import Paper from '@mui/material/Paper';
 import Table from '@mui/material/Table';
 import Button from '@mui/material/Button';
 import Select from '@mui/material/Select';
+import Popover from '@mui/material/Popover';
 import MenuItem from '@mui/material/MenuItem';
 import TableRow from '@mui/material/TableRow';
+import Checkbox from '@mui/material/Checkbox';
 import TableHead from '@mui/material/TableHead';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
@@ -21,12 +33,11 @@ import IconButton from '@mui/material/IconButton';
 import InputLabel from '@mui/material/InputLabel';
 import FormControl from '@mui/material/FormControl';
 import TableContainer from '@mui/material/TableContainer';
+import FormControlLabel from '@mui/material/FormControlLabel';
 
 import { useRouter } from 'src/routes/hooks';
 
 import { DashboardContent } from 'src/layouts/dashboard';
-
-import { Iconify } from 'src/components/iconify';
 
 // Mock data for occupancy report
 const mockOccupancyData = [
@@ -37,6 +48,8 @@ const mockOccupancyData = [
     nightsBooked: 25,
     ownerStayNights: 2,
     occupancyRate: 83.3,
+    occupancyTrend: 'up', // 'up', 'down', 'stable'
+    occupancyChange: 5.2,
     totalCheckin: 15,
   },
   {
@@ -46,6 +59,8 @@ const mockOccupancyData = [
     nightsBooked: 20,
     ownerStayNights: 1,
     occupancyRate: 71.4,
+    occupancyTrend: 'down',
+    occupancyChange: -3.1,
     totalCheckin: 12,
   },
   {
@@ -55,6 +70,8 @@ const mockOccupancyData = [
     nightsBooked: 18,
     ownerStayNights: 3,
     occupancyRate: 58.1,
+    occupancyTrend: 'stable',
+    occupancyChange: 0.0,
     totalCheckin: 8,
   },
   {
@@ -64,9 +81,65 @@ const mockOccupancyData = [
     nightsBooked: 24,
     ownerStayNights: 1,
     occupancyRate: 82.8,
+    occupancyTrend: 'up',
+    occupancyChange: 8.7,
     totalCheckin: 18,
   },
 ];
+
+// Helper function to render occupancy rate with trend
+const renderOccupancyRate = (rate: number, trend: string, change: number) => {
+  const getTrendIcon = () => {
+    switch (trend) {
+      case 'up':
+        return <TrendingUp size={14} color="#00A76F" />;
+      case 'down':
+        return <TrendingDown size={14} color="#FF5630" />;
+      case 'stable':
+        return <Minus size={14} color="#637381" />;
+      default:
+        return null;
+    }
+  };
+
+  const getTrendColor = () => {
+    switch (trend) {
+      case 'up':
+        return '#00A76F';
+      case 'down':
+        return '#FF5630';
+      case 'stable':
+        return '#637381';
+      default:
+        return '#637381';
+    }
+  };
+
+  return (
+    <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
+      <Chip
+        label={`${rate}%`}
+        size="small"
+        color={rate >= 80 ? 'success' : rate >= 60 ? 'warning' : 'error'}
+      />
+      {change !== 0 && (
+        <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.25 }}>
+          {getTrendIcon()}
+          <Typography 
+            variant="caption" 
+            sx={{ 
+              fontSize: '0.75rem',
+              color: getTrendColor(),
+              fontWeight: 500
+            }}
+          >
+            {Math.abs(change)}%
+          </Typography>
+        </Box>
+      )}
+    </Box>
+  );
+};
 
 export function OccupancyReportView() {
   const router = useRouter();
@@ -76,6 +149,30 @@ export function OccupancyReportView() {
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage] = useState(25);
   const [downloadAnchor, setDownloadAnchor] = useState<null | HTMLElement>(null);
+  const [columnSettingsAnchor, setColumnSettingsAnchor] = useState<null | HTMLElement>(null);
+  const [columnSearchTerm, setColumnSearchTerm] = useState('');
+  const [sortColumn, setSortColumn] = useState<string>('');
+  const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('asc');
+
+  // Define all available columns
+  const allColumns = [
+    { key: 'listingName', label: 'Listing Name', sortable: true, mandatory: true },
+    { key: 'nightsAvailable', label: 'Nights Available', sortable: true },
+    { key: 'nightsBooked', label: 'Nights Booked', sortable: true },
+    { key: 'ownerStayNights', label: 'Owner Stay Nights', sortable: true },
+    { key: 'occupancyRate', label: 'Occupancy Rate', sortable: true, mandatory: true },
+    { key: 'totalCheckin', label: 'Total Check-in', sortable: true },
+  ];
+
+  // Default visible columns
+  const [visibleColumns, setVisibleColumns] = useState([
+    'listingName',
+    'nightsAvailable',
+    'nightsBooked',
+    'ownerStayNights',
+    'occupancyRate',
+    'totalCheckin',
+  ]);
 
   const handleTabChange = (event: React.SyntheticEvent, newValue: number) => {
     setActiveTab(newValue);
@@ -93,14 +190,70 @@ export function OccupancyReportView() {
   };
 
   const handleListingClick = (listingId: number) => {
-    console.log('Open listing details for:', listingId);
-    // This would open a new page with listing details
+    router.push(`/listings/${listingId}/edit`);
+  };
+
+  const handleColumnSettingsClick = (event: React.MouseEvent<HTMLElement>) => {
+    setColumnSettingsAnchor(event.currentTarget);
+  };
+
+  const handleColumnSettingsClose = () => {
+    setColumnSettingsAnchor(null);
+  };
+
+  const handleColumnToggle = (columnKey: string) => {
+    const column = allColumns.find(col => col.key === columnKey);
+    
+    // Prevent removing mandatory columns
+    if (column?.mandatory) {
+      return;
+    }
+    
+    setVisibleColumns(prev => 
+      prev.includes(columnKey) 
+        ? prev.filter(col => col !== columnKey)
+        : [...prev, columnKey]
+    );
+  };
+
+  const handleSort = (columnKey: string) => {
+    if (sortColumn === columnKey) {
+      setSortDirection(sortDirection === 'asc' ? 'desc' : 'asc');
+    } else {
+      setSortColumn(columnKey);
+      setSortDirection('asc');
+    }
   };
 
   const totalPages = Math.ceil(mockOccupancyData.length / itemsPerPage);
   const startIndex = (currentPage - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
-  const currentData = mockOccupancyData.slice(startIndex, endIndex);
+
+  // Sort data
+  const sortedData = [...mockOccupancyData].sort((a, b) => {
+    if (!sortColumn) return 0;
+    
+    const aValue = a[sortColumn as keyof typeof a];
+    const bValue = b[sortColumn as keyof typeof b];
+    
+    if (typeof aValue === 'number' && typeof bValue === 'number') {
+      return sortDirection === 'asc' ? aValue - bValue : bValue - aValue;
+    }
+    
+    const aStr = String(aValue || '');
+    const bStr = String(bValue || '');
+    
+    return sortDirection === 'asc' 
+      ? aStr.localeCompare(bStr)
+      : bStr.localeCompare(aStr);
+  });
+
+  const currentData = sortedData.slice(startIndex, endIndex);
+
+  // Filter columns for settings popover
+  const filteredColumns = allColumns.filter(column =>
+    column.label.toLowerCase().includes(columnSearchTerm.toLowerCase())
+  );
 
   // Calculate totals
   const totals = mockOccupancyData.reduce(
@@ -109,13 +262,17 @@ export function OccupancyReportView() {
       nightsBooked: acc.nightsBooked + item.nightsBooked,
       ownerStayNights: acc.ownerStayNights + item.ownerStayNights,
       totalCheckin: acc.totalCheckin + item.totalCheckin,
+      occupancyChange: acc.occupancyChange + item.occupancyChange,
     }),
-    { nightsAvailable: 0, nightsBooked: 0, ownerStayNights: 0, totalCheckin: 0 }
+    { nightsAvailable: 0, nightsBooked: 0, ownerStayNights: 0, totalCheckin: 0, occupancyChange: 0 }
   );
 
   const overallOccupancyRate = totals.nightsAvailable > 0 
     ? ((totals.nightsBooked / totals.nightsAvailable) * 100).toFixed(1)
     : '0';
+
+  // Calculate overall trend
+  const overallTrend = totals.occupancyChange > 0 ? 'up' : totals.occupancyChange < 0 ? 'down' : 'stable';
 
   return (
     <DashboardContent maxWidth="xl">
@@ -160,7 +317,7 @@ export function OccupancyReportView() {
             <Button
               variant="outlined"
               onClick={handleDownloadClick}
-              endIcon={<Iconify icon={"eva:arrow-down-fill" as any} />}
+              endIcon={<Download size={16} />}
             >
               Download Report
             </Button>
@@ -261,106 +418,184 @@ export function OccupancyReportView() {
 
       {/* Occupancy Table */}
       <Paper sx={{ mb: 3 }}>
-        <TableContainer>
-          <Table>
+        <TableContainer sx={{ maxHeight: 600, overflowX: 'auto', overflowY: 'auto' }}>
+          <Table sx={{ minWidth: visibleColumns.length * 150 }}>
             <TableHead>
               <TableRow>
-                <TableCell>Listing Name</TableCell>
-                <TableCell align="center">Nights Available</TableCell>
-                <TableCell align="center">Nights Booked</TableCell>
-                <TableCell align="center">Owner Stay Nights</TableCell>
-                <TableCell align="center">Occupancy Rate</TableCell>
-                <TableCell align="center">Total Check-in</TableCell>
-                <TableCell align="center">Actions</TableCell>
+                {visibleColumns.map((columnKey) => {
+                  const column = allColumns.find(col => col.key === columnKey);
+                  if (!column) return null;
+                  
+                  return (
+                    <TableCell
+                      key={columnKey}
+                      align="center"
+                      sx={{ 
+                        fontWeight: 600,
+                        minWidth: 150,
+                        whiteSpace: 'nowrap',
+                        cursor: column.sortable ? 'pointer' : 'default',
+                        '&:hover': column.sortable ? { bgcolor: 'grey.50' } : {}
+                      }}
+                      onClick={() => column.sortable && handleSort(columnKey)}
+                    >
+                      <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 0.5 }}>
+                        <Typography variant="subtitle2" sx={{ fontWeight: 600 }}>
+                          {column.label}
+                        </Typography>
+                        {column.sortable && (
+                          <Box sx={{ display: 'flex', flexDirection: 'column', ml: 0.5 }}>
+                            <ChevronUp 
+                              size={12} 
+                              color={sortColumn === columnKey && sortDirection === 'asc' ? '#00A76F' : '#637381'} 
+                            />
+                            <ChevronDown 
+                              size={12} 
+                              color={sortColumn === columnKey && sortDirection === 'desc' ? '#00A76F' : '#637381'} 
+                            />
+                          </Box>
+                        )}
+                      </Box>
+                    </TableCell>
+                  );
+                })}
+                {/* Settings Column */}
+                <TableCell
+                  align="center"
+                  sx={{ 
+                    minWidth: 60,
+                    width: 60,
+                    position: 'sticky',
+                    right: 0,
+                    bgcolor: 'background.paper',
+                    borderLeft: '1px solid',
+                    borderColor: 'divider',
+                    zIndex: 1,
+                    px: 0
+                  }}
+                >
+                  <IconButton
+                    onClick={handleColumnSettingsClick}
+                    size="small"
+                    sx={{
+                      color: 'text.secondary',
+                      '&:hover': {
+                        bgcolor: 'grey.100',
+                        color: 'text.primary',
+                      },
+                    }}
+                  >
+                    <Settings size={16} />
+                  </IconButton>
+                </TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
               {currentData.map((item) => (
                 <TableRow key={item.id}>
-                  <TableCell>
-                    <Typography
-                      variant="body2"
-                      sx={{ 
-                        fontWeight: 500, 
-                        cursor: 'pointer',
-                        color: 'primary.main',
-                        '&:hover': { textDecoration: 'underline' }
-                      }}
-                      onClick={() => handleListingClick(item.id)}
-                    >
-                      {item.listingName}
-                    </Typography>
-                  </TableCell>
-                  <TableCell align="center">
-                    <Typography variant="body2" sx={{ fontWeight: 500 }}>
-                      {item.nightsAvailable}
-                    </Typography>
-                  </TableCell>
-                  <TableCell align="center">
-                    <Typography variant="body2" sx={{ fontWeight: 500 }}>
-                      {item.nightsBooked}
-                    </Typography>
-                  </TableCell>
-                  <TableCell align="center">
-                    <Typography variant="body2">
-                      {item.ownerStayNights}
-                    </Typography>
-                  </TableCell>
-                  <TableCell align="center">
-                    <Chip
-                      label={`${item.occupancyRate}%`}
-                      size="small"
-                      color={item.occupancyRate >= 80 ? 'success' : item.occupancyRate >= 60 ? 'warning' : 'error'}
-                    />
-                  </TableCell>
-                  <TableCell align="center">
-                    <Typography variant="body2" sx={{ fontWeight: 500 }}>
-                      {item.totalCheckin}
-                    </Typography>
-                  </TableCell>
-                  <TableCell align="center">
-                    <IconButton size="small">
-                      <Iconify icon={"eva:settings-fill" as any} width={16} />
-                    </IconButton>
+                  {visibleColumns.map((columnKey) => {
+                    const column = allColumns.find(col => col.key === columnKey);
+                    if (!column) return null;
+                    
+                    return (
+                      <TableCell
+                        key={columnKey}
+                        align="center"
+                        sx={{ 
+                          minWidth: 150,
+                          whiteSpace: 'nowrap'
+                        }}
+                      >
+                        {columnKey === 'listingName' ? (
+                          <Typography
+                            variant="body2"
+                            sx={{ 
+                              fontWeight: 500, 
+                              cursor: 'pointer',
+                              color: 'primary.main',
+                              '&:hover': { textDecoration: 'underline' }
+                            }}
+                            onClick={() => handleListingClick(item.id)}
+                          >
+                            {item.listingName}
+                          </Typography>
+                        ) : columnKey === 'occupancyRate' ? (
+                          renderOccupancyRate(item.occupancyRate, item.occupancyTrend, item.occupancyChange)
+                        ) : (
+                          <Typography 
+                            variant="body2" 
+                            sx={{ fontWeight: columnKey === 'ownerStayNights' ? 400 : 500 }}
+                          >
+                            {item[columnKey as keyof typeof item]}
+                          </Typography>
+                        )}
+                      </TableCell>
+                    );
+                  })}
+                  {/* Empty Settings Column */}
+                  <TableCell
+                    align="center"
+                    sx={{ 
+                      minWidth: 60,
+                      width: 60,
+                      position: 'sticky',
+                      right: 0,
+                      bgcolor: 'background.paper',
+                      borderLeft: '1px solid',
+                      borderColor: 'divider',
+                      zIndex: 1,
+                      px: 0
+                    }}
+                  >
+                    {/* Empty cell for settings column */}
                   </TableCell>
                 </TableRow>
               ))}
               {/* Totals Row */}
               <TableRow sx={{ bgcolor: 'grey.50', fontWeight: 600 }}>
-                <TableCell>
-                  <Typography variant="body2" sx={{ fontWeight: 600 }}>
-                    Total
-                  </Typography>
-                </TableCell>
-                <TableCell align="center">
-                  <Typography variant="body2" sx={{ fontWeight: 600 }}>
-                    {totals.nightsAvailable}
-                  </Typography>
-                </TableCell>
-                <TableCell align="center">
-                  <Typography variant="body2" sx={{ fontWeight: 600 }}>
-                    {totals.nightsBooked}
-                  </Typography>
-                </TableCell>
-                <TableCell align="center">
-                  <Typography variant="body2" sx={{ fontWeight: 600 }}>
-                    {totals.ownerStayNights}
-                  </Typography>
-                </TableCell>
-                <TableCell align="center">
-                  <Chip
-                    label={`${overallOccupancyRate}%`}
-                    size="small"
-                    color={parseFloat(overallOccupancyRate) >= 80 ? 'success' : parseFloat(overallOccupancyRate) >= 60 ? 'warning' : 'error'}
-                  />
-                </TableCell>
-                <TableCell align="center">
-                  <Typography variant="body2" sx={{ fontWeight: 600 }}>
-                    {totals.totalCheckin}
-                  </Typography>
-                </TableCell>
-                <TableCell align="center">
-                  {/* Empty cell for actions column */}
+                {visibleColumns.map((columnKey) => {
+                  const column = allColumns.find(col => col.key === columnKey);
+                  if (!column) return null;
+                  
+                  return (
+                    <TableCell
+                      key={columnKey}
+                      align="center"
+                      sx={{ 
+                        minWidth: 150,
+                        whiteSpace: 'nowrap'
+                      }}
+                    >
+                      {columnKey === 'listingName' ? (
+                        <Typography variant="body2" sx={{ fontWeight: 600 }}>
+                          Total
+                        </Typography>
+                      ) : columnKey === 'occupancyRate' ? (
+                        renderOccupancyRate(parseFloat(overallOccupancyRate), overallTrend, totals.occupancyChange)
+                      ) : (
+                        <Typography variant="body2" sx={{ fontWeight: 600 }}>
+                          {totals[columnKey as keyof typeof totals]}
+                        </Typography>
+                      )}
+                    </TableCell>
+                  );
+                })}
+                {/* Empty Settings Column */}
+                <TableCell
+                  align="center"
+                  sx={{ 
+                    minWidth: 60,
+                    width: 60,
+                    position: 'sticky',
+                    right: 0,
+                    bgcolor: 'grey.50',
+                    borderLeft: '1px solid',
+                    borderColor: 'divider',
+                    zIndex: 1,
+                    px: 0
+                  }}
+                >
+                  {/* Empty cell for settings column */}
                 </TableCell>
               </TableRow>
             </TableBody>
@@ -382,6 +617,85 @@ export function OccupancyReportView() {
           />
         </Box>
       </Paper>
+
+      {/* Column Settings Popover */}
+      <Popover
+        open={Boolean(columnSettingsAnchor)}
+        anchorEl={columnSettingsAnchor}
+        onClose={handleColumnSettingsClose}
+        anchorOrigin={{
+          vertical: 'bottom',
+          horizontal: 'right',
+        }}
+        transformOrigin={{
+          vertical: 'top',
+          horizontal: 'right',
+        }}
+        PaperProps={{
+          sx: {
+            width: 300,
+            maxHeight: 400,
+            p: 2,
+          },
+        }}
+      >
+        <Box>
+          <Typography variant="h6" sx={{ mb: 2, fontWeight: 600 }}>
+            Column Settings
+          </Typography>
+          
+          <TextField
+            size="small"
+            placeholder="Find column"
+            value={columnSearchTerm}
+            onChange={(e) => setColumnSearchTerm(e.target.value)}
+            InputProps={{
+              startAdornment: <Search size={16} color="#666" style={{ marginRight: 8 }} />,
+            }}
+            sx={{ mb: 2 }}
+          />
+          
+          {/* Column List */}
+          <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
+            {filteredColumns.map((column) => (
+              <FormControlLabel
+                key={column.key}
+                control={
+                  <Checkbox
+                    checked={visibleColumns.includes(column.key)}
+                    onChange={() => handleColumnToggle(column.key)}
+                    disabled={column.mandatory}
+                    size="small"
+                    sx={{
+                      color: 'primary.main',
+                      '&.Mui-checked': {
+                        color: 'primary.main',
+                      },
+                      '&.Mui-disabled': {
+                        color: 'grey.400',
+                      },
+                    }}
+                  />
+                }
+                label={
+                  <Typography 
+                    variant="body2" 
+                    sx={{ 
+                      fontSize: '0.875rem',
+                      color: column.mandatory ? 'grey.500' : 'text.primary',
+                      fontWeight: column.mandatory ? 500 : 400
+                    }}
+                  >
+                    {column.label}
+                    {column.mandatory && ' (Required)'}
+                  </Typography>
+                }
+                sx={{ margin: 0 }}
+              />
+            ))}
+          </Box>
+        </Box>
+      </Popover>
     </DashboardContent>
   );
 }

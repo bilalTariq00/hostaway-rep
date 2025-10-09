@@ -280,7 +280,7 @@ export function ReservationsView() {
                       }}
                       onClick={(e) => {
                         e.stopPropagation();
-                        router.push(`/user/${encodeURIComponent(reservation.guestName)}`);
+                        router.push(`/reservations/${reservation.id}`);
                       }}
                     >
                       {reservation.guestName}
