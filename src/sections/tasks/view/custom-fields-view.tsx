@@ -132,18 +132,16 @@ export function CustomFieldsView() {
     setSidebarOpen(true);
   };
 
-  const handleEditField = () => {
-    if (selectedField) {
-      setIsEditMode(true);
-      setFormData({
-        name: selectedField.name,
-        type: selectedField.type,
-        public: selectedField.public,
-        options: [...selectedField.options],
-      });
-      setSidebarOpen(true);
-    }
-    handleActionMenuClose();
+  const handleEditField = (field: any) => {
+    setIsEditMode(true);
+    setSelectedField(field);
+    setFormData({
+      name: field.name,
+      type: field.type,
+      public: field.public,
+      options: [...field.options],
+    });
+    setSidebarOpen(true);
   };
 
   const handleDeleteField = () => {
@@ -206,10 +204,9 @@ export function CustomFieldsView() {
   };
 
   const handleSaveField = () => {
-    const fieldsData = loadCustomFields();
-    
     if (isEditMode && selectedField) {
-      const updatedFields = fieldsData.map((field: any) =>
+      // Update existing field
+      const updatedFields = customFields.map((field: any) =>
         field.id === selectedField.id
           ? {
               ...field,
@@ -223,6 +220,7 @@ export function CustomFieldsView() {
       localStorage.setItem('customFields', JSON.stringify(updatedFields));
       setCustomFields(updatedFields);
     } else {
+      // Create new field
       const newField = {
         id: Date.now(),
         name: formData.name,
@@ -231,7 +229,7 @@ export function CustomFieldsView() {
         options: formData.options.filter(option => option.trim() !== ''),
         createdAt: new Date().toISOString().split('T')[0],
       };
-      const updatedFields = [...fieldsData, newField];
+      const updatedFields = [...customFields, newField];
       localStorage.setItem('customFields', JSON.stringify(updatedFields));
       setCustomFields(updatedFields);
     }
@@ -358,16 +356,16 @@ export function CustomFieldsView() {
                     <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
                       <IconButton 
                         size="small" 
-                        onClick={() => {
-                          setSelectedField(field);
-                          handleEditField();
-                        }}
+                        onClick={() => handleEditField(field)}
                       >
                         <Iconify icon={"eva:edit-fill" as any} width={16} />
                       </IconButton>
                       <IconButton 
                         size="small" 
-                        onClick={(e) => handleActionMenuOpen(e, field)}
+                        onClick={() => {
+                          setSelectedField(field);
+                          setDeleteDialogOpen(true);
+                        }}
                       >
                         <Iconify icon={"eva:trash-2-fill" as any} width={16} />
                       </IconButton>
