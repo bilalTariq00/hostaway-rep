@@ -401,7 +401,7 @@ export function ChargesView() {
               startIcon={<Iconify icon={"eva:plus-fill" as any} />}
               sx={{ bgcolor: 'primary.main', '&:hover': { bgcolor: 'primary.dark' } }}
             >
-              + Add transaction
+               Add transaction
             </Button>
           </Box>
         </Box>
@@ -495,16 +495,7 @@ export function ChargesView() {
           <Table>
             <TableHead>
               <TableRow>
-                {visibleColumns.guestName && (
-                  <TableCell>
-                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                      Guest name
-                      <IconButton size="small" onClick={handleSettingsMenuOpen}>
-                        <Iconify icon={"eva:settings-fill" as any} width={16} />
-                      </IconButton>
-                    </Box>
-                  </TableCell>
-                )}
+                {visibleColumns.guestName && <TableCell>Guest name</TableCell>}
                 {visibleColumns.listing && <TableCell>Listing</TableCell>}
                 {visibleColumns.reservationCheckIn && <TableCell>Reservation check-in</TableCell>}
                 {visibleColumns.reservationCheckOut && <TableCell>Reservation check-out</TableCell>}
@@ -516,6 +507,18 @@ export function ChargesView() {
                 {visibleColumns.chargeId && <TableCell>Charge ID</TableCell>}
                 {visibleColumns.amount && <TableCell align="right">Amount</TableCell>}
                 <TableCell>Actions</TableCell>
+                <TableCell sx={{ 
+                  position: 'sticky', 
+                  right: 0, 
+                  bgcolor: 'background.paper', 
+                  zIndex: 2,
+                  borderLeft: '1px solid',
+                  borderColor: 'divider'
+                }}>
+                  <IconButton size="small" onClick={handleSettingsMenuOpen}>
+                    <Iconify icon={"eva:settings-fill" as any} width={16} />
+                  </IconButton>
+                </TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
@@ -610,6 +613,16 @@ export function ChargesView() {
                     >
                       <Iconify icon={"eva:more-vertical-fill" as any} />
                     </IconButton>
+                  </TableCell>
+                  <TableCell sx={{ 
+                    position: 'sticky', 
+                    right: 0, 
+                    bgcolor: 'background.paper', 
+                    zIndex: 1,
+                    borderLeft: '1px solid',
+                    borderColor: 'divider'
+                  }}>
+                    {/* Empty cell for sticky settings column */}
                   </TableCell>
                 </TableRow>
               ))}
