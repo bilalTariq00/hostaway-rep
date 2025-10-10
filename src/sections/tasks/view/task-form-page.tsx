@@ -1,28 +1,27 @@
 import { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import {
-  ArrowLeft,
-  Calendar,
-  Clock,
+  X,
   Plus,
   Save,
   Star,
-  X,
+  Calendar,
+  ArrowLeft,
 } from 'lucide-react';
 
 import {
   Box,
   Button,
-  Checkbox,
-  FormControl,
-  FormControlLabel,
-  IconButton,
-  InputAdornment,
-  InputLabel,
-  MenuItem,
   Select,
+  Checkbox,
+  MenuItem,
   TextField,
+  IconButton,
+  InputLabel,
   Typography,
+  FormControl,
+  InputAdornment,
+  FormControlLabel,
 } from '@mui/material';
 
 import { DashboardContent } from 'src/layouts/dashboard';

@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 import Box from '@mui/material/Box';
 import Tab from '@mui/material/Tab';
@@ -8,16 +8,18 @@ import Grid from '@mui/material/Grid';
 import Card from '@mui/material/Card';
 import List from '@mui/material/List';
 import Button from '@mui/material/Button';
-import Drawer from '@mui/material/Drawer';
 import MenuItem from '@mui/material/MenuItem';
 import ListItem from '@mui/material/ListItem';
 import Checkbox from '@mui/material/Checkbox';
-import TextField from '@mui/material/TextField';
 import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
 import CardContent from '@mui/material/CardContent';
 import ListItemText from '@mui/material/ListItemText';
 import ListItemIcon from '@mui/material/ListItemIcon';
+import Dialog from '@mui/material/Dialog';
+import DialogTitle from '@mui/material/DialogTitle';
+import DialogContent from '@mui/material/DialogContent';
+import DialogActions from '@mui/material/DialogActions';
 
 import { useRouter } from 'src/routes/hooks';
 
@@ -104,8 +106,23 @@ const mockChecklistTemplates = [
 export function ChecklistTemplatesView() {
   const router = useRouter();
   const [activeTab, setActiveTab] = useState(2);
-  const [sidebarOpen, setSidebarOpen] = useState(false);
   const [actionMenuAnchor, setActionMenuAnchor] = useState<null | HTMLElement>(null);
+  const [selectedTemplate, setSelectedTemplate] = useState<any>(null);
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [checklistTemplates, setChecklistTemplates] = useState<any[]>([]);
+
+  // Load checklist templates from localStorage
+  const loadChecklistTemplates = () => {
+    const savedTemplates = localStorage.getItem('checklistTemplates');
+    if (savedTemplates) {
+      return JSON.parse(savedTemplates);
+    }
+    return mockChecklistTemplates;
+  };
+
+  useEffect(() => {
+    setChecklistTemplates(loadChecklistTemplates());
+  }, []);
 
   const handleTabChange = (event: React.SyntheticEvent, newValue: number) => {
     setActiveTab(newValue);
@@ -114,20 +131,53 @@ export function ChecklistTemplatesView() {
     if (newValue === 3) router.push('/tasks/archive');
   };
 
-  const handleActionMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
+  const handleActionMenuOpen = (event: React.MouseEvent<HTMLElement>, template: any) => {
     setActionMenuAnchor(event.currentTarget);
+    setSelectedTemplate(template);
   };
 
   const handleActionMenuClose = () => {
     setActionMenuAnchor(null);
+    setSelectedTemplate(null);
   };
 
   const handleAddTemplate = () => {
-    setSidebarOpen(true);
+    router.push('/tasks/checklist-templates/new');
   };
 
-  const handleSidebarClose = () => {
-    setSidebarOpen(false);
+  const handleEditTemplate = () => {
+    if (selectedTemplate) {
+      router.push(`/tasks/checklist-templates/${selectedTemplate.id}/edit`);
+    }
+    handleActionMenuClose();
+  };
+
+  const handleDuplicateTemplate = () => {
+    if (selectedTemplate) {
+      router.push(`/tasks/checklist-templates/${selectedTemplate.id}/duplicate`);
+    }
+    handleActionMenuClose();
+  };
+
+  const handleDeleteTemplate = () => {
+    setDeleteDialogOpen(true);
+    handleActionMenuClose();
+  };
+
+  const handleDeleteConfirm = () => {
+    if (selectedTemplate) {
+      const templatesData = loadChecklistTemplates();
+      const updatedTemplates = templatesData.filter((template: any) => template.id !== selectedTemplate.id);
+      localStorage.setItem('checklistTemplates', JSON.stringify(updatedTemplates));
+      setChecklistTemplates(updatedTemplates);
+    }
+    setDeleteDialogOpen(false);
+    setSelectedTemplate(null);
+  };
+
+  const handleDeleteCancel = () => {
+    setDeleteDialogOpen(false);
+    setSelectedTemplate(null);
   };
 
   return (
@@ -139,7 +189,7 @@ export function ChecklistTemplatesView() {
             Tasks
           </Typography>
           <Button variant="contained" onClick={handleAddTemplate}>
-            Add Tasks
+            Add checklist template
           </Button>
         </Box>
 
@@ -171,7 +221,7 @@ export function ChecklistTemplatesView() {
 
       {/* Checklist Templates Grid */}
       <Grid container spacing={3}>
-        {mockChecklistTemplates.map((template) => (
+        {checklistTemplates.map((template) => (
           <Grid key={template.id} size={{ xs: 12, sm: 6, md: 4 }}>
             <Card 
               sx={{ 
@@ -190,7 +240,7 @@ export function ChecklistTemplatesView() {
                   </Typography>
                   <IconButton 
                     size="small" 
-                    onClick={handleActionMenuOpen}
+                    onClick={(e) => handleActionMenuOpen(e, template)}
                   >
                     <Iconify icon={"eva:more-vertical-fill" as any} width={16} />
                   </IconButton>
@@ -238,13 +288,13 @@ export function ChecklistTemplatesView() {
                 </Box>
 
                 <Box sx={{ display: 'flex', justifyContent: 'flex-end', gap: 1, mt: 2 }}>
-                  <IconButton size="small">
+                  <IconButton size="small" onClick={() => router.push(`/tasks/checklist-templates/${template.id}/edit`)}>
                     <Iconify icon={"eva:edit-fill" as any} width={16} />
                   </IconButton>
-                  <IconButton size="small">
+                  <IconButton size="small" onClick={() => router.push(`/tasks/checklist-templates/${template.id}/duplicate`)}>
                     <Iconify icon={"eva:copy-fill" as any} width={16} />
                   </IconButton>
-                  <IconButton size="small" sx={{ color: 'error.main' }}>
+                  <IconButton size="small" sx={{ color: 'error.main' }} onClick={() => { setSelectedTemplate(template); setDeleteDialogOpen(true); }}>
                     <Iconify icon={"eva:trash-2-fill" as any} width={16} />
                   </IconButton>
                 </Box>
@@ -254,103 +304,41 @@ export function ChecklistTemplatesView() {
         ))}
       </Grid>
 
-      {/* Add Template Sidebar */}
-      <Drawer
-        anchor="right"
-        open={sidebarOpen}
-        onClose={handleSidebarClose}
-        sx={{
-          '& .MuiDrawer-paper': {
-            width: 500,
-            p: 3,
-          },
-        }}
-      >
-        <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 3 }}>
-          <Typography variant="h6" sx={{ fontWeight: 600 }}>
-            Add Checklist Template
-          </Typography>
-          <IconButton onClick={handleSidebarClose}>
-            <Iconify icon={"eva:close-fill" as any} />
-          </IconButton>
-        </Box>
-
-        <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
-          <TextField
-            fullWidth
-            label="Template Name"
-            placeholder="Enter template name..."
-          />
-
-          <Box>
-            <Typography variant="subtitle2" sx={{ mb: 1, fontWeight: 600 }}>
-              Tasks
-            </Typography>
-            <TextField
-              fullWidth
-              placeholder="Enter task..."
-              size="small"
-              sx={{ mb: 1 }}
-            />
-            <TextField
-              fullWidth
-              placeholder="Enter task..."
-              size="small"
-              sx={{ mb: 1 }}
-            />
-            <TextField
-              fullWidth
-              placeholder="Enter task..."
-              size="small"
-              sx={{ mb: 1 }}
-            />
-            <Button variant="outlined" size="small" startIcon={<Iconify icon={"eva:plus-fill" as any} />}>
-              Add Task
-            </Button>
-          </Box>
-
-          <Box sx={{ display: 'flex', gap: 2, mt: 4 }}>
-            <Button
-              fullWidth
-              variant="outlined"
-              onClick={handleSidebarClose}
-            >
-              Cancel
-            </Button>
-            <Button
-              fullWidth
-              variant="contained"
-              onClick={handleSidebarClose}
-            >
-              Add Template
-            </Button>
-          </Box>
-        </Box>
-      </Drawer>
-
       {/* Action Menu */}
       <Menu
         anchorEl={actionMenuAnchor}
         open={Boolean(actionMenuAnchor)}
         onClose={handleActionMenuClose}
       >
-        <MenuItem onClick={handleActionMenuClose}>
+        <MenuItem onClick={handleEditTemplate}>
           <Iconify icon={"eva:edit-fill" as any} sx={{ mr: 1 }} />
           Edit
         </MenuItem>
-        <MenuItem onClick={handleActionMenuClose}>
+        <MenuItem onClick={handleDuplicateTemplate}>
           <Iconify icon={"eva:copy-fill" as any} sx={{ mr: 1 }} />
           Duplicate
         </MenuItem>
-        <MenuItem onClick={handleActionMenuClose}>
-          <Iconify icon={"eva:download-fill" as any} sx={{ mr: 1 }} />
-          Export
-        </MenuItem>
-        <MenuItem onClick={handleActionMenuClose} sx={{ color: 'error.main' }}>
+        <MenuItem onClick={handleDeleteTemplate} sx={{ color: 'error.main' }}>
           <Iconify icon={"eva:trash-2-fill" as any} sx={{ mr: 1 }} />
           Delete
         </MenuItem>
       </Menu>
+
+      {/* Delete Confirmation Dialog */}
+      <Dialog open={deleteDialogOpen} onClose={handleDeleteCancel}>
+        <DialogTitle>Delete?</DialogTitle>
+        <DialogContent>
+          <Typography>
+            Are you sure you want to delete this checklist template? This action cannot be undone.
+          </Typography>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleDeleteCancel}>No</Button>
+          <Button onClick={handleDeleteConfirm} color="error" variant="contained">
+            Yes
+          </Button>
+        </DialogActions>
+      </Dialog>
     </DashboardContent>
   );
 }

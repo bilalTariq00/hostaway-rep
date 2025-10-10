@@ -5,10 +5,7 @@ import {
   Settings,
   Download,
   ChevronUp,
-  ChevronDown,
-  TrendingUp,
-  TrendingDown,
-  Minus
+  ChevronDown
 } from 'lucide-react';
 
 import Box from '@mui/material/Box';

@@ -1,14 +1,14 @@
 import { useState } from 'react';
 import {
-  BarChart3,
-  CheckCircle,
-  ChevronDown,
   Clock,
-  FileText,
-  Receipt,
   Scale,
   Shield,
+  Receipt,
+  FileText,
+  BarChart3,
   TrendingUp,
+  CheckCircle,
+  ChevronDown,
 } from 'lucide-react';
 
 import Box from '@mui/material/Box';

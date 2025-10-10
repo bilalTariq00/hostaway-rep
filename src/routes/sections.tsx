@@ -49,8 +49,10 @@ export const StatementEditPage = lazy(() => import('src/sections/statements/view
 export const AutoStatementsPage = lazy(() => import('src/sections/statements/view/auto-statements-view').then(module => ({ default: module.AutoStatementsView })));
 export const ManageTasksPage = lazy(() => import('src/sections/tasks/view/manage-tasks-view').then(module => ({ default: module.ManageTasksView })));
 export const TaskFormPage = lazy(() => import('src/sections/tasks/view/task-form-page'));
+export const AutoTaskFormPage = lazy(() => import('src/sections/tasks/view/auto-task-form-page').then(module => ({ default: module.AutoTaskFormPage })));
 export const ManageAutoTasksPage = lazy(() => import('src/sections/tasks/view/manage-auto-tasks-view').then(module => ({ default: module.ManageAutoTasksView })));
 export const ChecklistTemplatesPage = lazy(() => import('src/sections/tasks/view/checklist-templates-view').then(module => ({ default: module.ChecklistTemplatesView })));
+export const ChecklistTemplateFormPage = lazy(() => import('src/sections/tasks/view/checklist-template-form-page').then(module => ({ default: module.ChecklistTemplateFormPage })));
 export const ArchivePage = lazy(() => import('src/sections/tasks/view/archive-view').then(module => ({ default: module.ArchiveView })));
 export const TasksCustomFieldsPage = lazy(() => import('src/sections/tasks/view/custom-fields-view').then(module => ({ default: module.CustomFieldsView })));
 export const ManageReviewsPage = lazy(() => import('src/sections/reviews/view/manage-reviews-view').then(module => ({ default: module.ManageReviewsView })));
@@ -153,7 +155,13 @@ export const routesSection: RouteObject[] = [
       { path: 'tasks/:id/edit', element: <TaskFormPage /> },
       { path: 'tasks/manage-tasks', element: <ManageTasksPage /> },
       { path: 'tasks/manage-auto-tasks', element: <ManageAutoTasksPage /> },
+      { path: 'tasks/auto-tasks/new', element: <AutoTaskFormPage /> },
+      { path: 'tasks/auto-tasks/:id/edit', element: <AutoTaskFormPage /> },
+      { path: 'tasks/auto-tasks/:id/duplicate', element: <AutoTaskFormPage /> },
       { path: 'tasks/checklist-templates', element: <ChecklistTemplatesPage /> },
+      { path: 'tasks/checklist-templates/new', element: <ChecklistTemplateFormPage /> },
+      { path: 'tasks/checklist-templates/:id/edit', element: <ChecklistTemplateFormPage /> },
+      { path: 'tasks/checklist-templates/:id/duplicate', element: <ChecklistTemplateFormPage /> },
       { path: 'tasks/archive', element: <ArchivePage /> },
       { path: 'tasks/custom-fields', element: <TasksCustomFieldsPage /> },
       { path: 'reviews', element: <ManageReviewsPage /> },

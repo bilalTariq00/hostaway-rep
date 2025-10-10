@@ -1,31 +1,19 @@
 import React, { useState } from 'react';
 import { useParams } from 'react-router-dom';
 import {
-  ArrowLeft,
-  Calendar,
-  Clock,
+  X,
   Mail,
-  Phone,
-  MapPin,
   User,
   Edit,
   Save,
-  X,
-  Eye,
-  EyeOff,
   Plus,
+  MapPin,
   Trash2,
   Upload,
-  FileText,
-  CreditCard,
-  Calculator,
-  ShoppingCart,
-  Key,
-  Paperclip,
-  Clipboard,
-  RefreshCw,
-  Star,
+  Calendar,
+  ArrowLeft,
   ChevronDown,
+  ShoppingCart,
 } from 'lucide-react';
 
 import {

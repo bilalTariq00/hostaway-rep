@@ -1,48 +1,28 @@
 import React, { useState } from 'react';
 import { useParams } from 'react-router-dom';
 import {
-  ArrowLeft,
-  Calendar,
-  Mail,
-  MapPin,
-  User,
-  Phone,
-  ChevronDown,
-  Upload,
-  Plus,
   Edit,
-  Trash2,
-  ShoppingCart,
+  ArrowLeft,
+  ChevronDown,
 } from 'lucide-react';
 
 import {
   Box,
   Chip,
-  Alert,
   Table,
   Avatar,
   Button,
-  Select,
-  Switch,
   Divider,
-  Checkbox,
-  MenuItem,
-  Snackbar,
   TableRow,
   Accordion,
   TableBody,
   TableCell,
   TableHead,
   TextField,
-  IconButton,
-  InputLabel,
   Typography,
-  FormControl,
-  InputAdornment,
   TableContainer,
   AccordionDetails,
-  AccordionSummary,
-  FormControlLabel
+  AccordionSummary
 } from '@mui/material';
 
 import { useRouter } from 'src/routes/hooks';

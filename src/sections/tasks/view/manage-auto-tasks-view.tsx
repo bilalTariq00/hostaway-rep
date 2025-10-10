@@ -1,23 +1,22 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 import Box from '@mui/material/Box';
 import Tab from '@mui/material/Tab';
+import Card from '@mui/material/Card';
 import Chip from '@mui/material/Chip';
+import Grid from '@mui/material/Grid';
 import Menu from '@mui/material/Menu';
 import Tabs from '@mui/material/Tabs';
-import Grid from '@mui/material/Grid';
-import Card from '@mui/material/Card';
 import Button from '@mui/material/Button';
-import Drawer from '@mui/material/Drawer';
-import Select from '@mui/material/Select';
+import Dialog from '@mui/material/Dialog';
 import Switch from '@mui/material/Switch';
 import MenuItem from '@mui/material/MenuItem';
-import TextField from '@mui/material/TextField';
 import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
-import InputLabel from '@mui/material/InputLabel';
-import FormControl from '@mui/material/FormControl';
 import CardContent from '@mui/material/CardContent';
+import DialogTitle from '@mui/material/DialogTitle';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
 
 import { useRouter } from 'src/routes/hooks';
 
@@ -72,8 +71,26 @@ const mockAutoTasks = [
 export function ManageAutoTasksView() {
   const router = useRouter();
   const [activeTab, setActiveTab] = useState(1);
-  const [sidebarOpen, setSidebarOpen] = useState(false);
   const [actionMenuAnchor, setActionMenuAnchor] = useState<null | HTMLElement>(null);
+  const [selectedAutoTask, setSelectedAutoTask] = useState<any>(null);
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [autoTaskToDelete, setAutoTaskToDelete] = useState<any>(null);
+  
+  // Load auto-tasks from localStorage or use mock data
+  const loadAutoTasks = () => {
+    const savedAutoTasks = localStorage.getItem('autoTasks');
+    if (savedAutoTasks) {
+      return JSON.parse(savedAutoTasks);
+    }
+    return mockAutoTasks;
+  };
+  
+  const [autoTasks, setAutoTasks] = useState(loadAutoTasks());
+
+  // Refresh auto-tasks when component mounts (when returning from form)
+  useEffect(() => {
+    setAutoTasks(loadAutoTasks());
+  }, []);
 
   const handleTabChange = (event: React.SyntheticEvent, newValue: number) => {
     setActiveTab(newValue);
@@ -82,25 +99,57 @@ export function ManageAutoTasksView() {
     if (newValue === 3) router.push('/tasks/archive');
   };
 
-  const handleActionMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
+  const handleActionMenuOpen = (event: React.MouseEvent<HTMLElement>, autoTask: any) => {
     setActionMenuAnchor(event.currentTarget);
+    setSelectedAutoTask(autoTask);
   };
 
   const handleActionMenuClose = () => {
     setActionMenuAnchor(null);
+    setSelectedAutoTask(null);
   };
 
   const handleAddAutoTask = () => {
-    setSidebarOpen(true);
+    router.push('/tasks/auto-tasks/new');
   };
 
-  const handleSidebarClose = () => {
-    setSidebarOpen(false);
+  const handleEditAutoTask = (autoTask: any) => {
+    router.push(`/tasks/auto-tasks/${autoTask.id}/edit`);
+  };
+
+  const handleDuplicateAutoTask = (autoTask: any) => {
+    router.push(`/tasks/auto-tasks/${autoTask.id}/duplicate`);
+  };
+
+  const handleDeleteAutoTask = (autoTask: any) => {
+    setAutoTaskToDelete(autoTask);
+    setDeleteDialogOpen(true);
+    handleActionMenuClose();
+  };
+
+  const handleDeleteConfirm = () => {
+    if (autoTaskToDelete) {
+      const updatedAutoTasks = autoTasks.filter((task: any) => task.id !== autoTaskToDelete.id);
+      setAutoTasks(updatedAutoTasks);
+      localStorage.setItem('autoTasks', JSON.stringify(updatedAutoTasks));
+      setDeleteDialogOpen(false);
+      setAutoTaskToDelete(null);
+    }
+  };
+
+  const handleDeleteCancel = () => {
+    setDeleteDialogOpen(false);
+    setAutoTaskToDelete(null);
   };
 
   const handleStatusToggle = (autoTaskId: number) => {
-    // In a real app, this would update the auto-task status
-    console.log('Toggle auto-task status:', autoTaskId);
+    const updatedAutoTasks = autoTasks.map((task: any) => 
+      task.id === autoTaskId 
+        ? { ...task, status: task.status === 'Active' ? 'Inactive' : 'Active' }
+        : task
+    );
+    setAutoTasks(updatedAutoTasks);
+    localStorage.setItem('autoTasks', JSON.stringify(updatedAutoTasks));
   };
 
   return (
@@ -144,7 +193,7 @@ export function ManageAutoTasksView() {
 
       {/* Auto-tasks Cards */}
       <Grid container spacing={3}>
-        {mockAutoTasks.map((autoTask) => (
+        {autoTasks.map((autoTask: any) => (
           <Grid key={autoTask.id} size={{ xs: 12, sm: 6, md: 4 }}>
             <Card 
               sx={{ 
@@ -170,7 +219,7 @@ export function ManageAutoTasksView() {
                     />
                     <IconButton 
                       size="small" 
-                      onClick={handleActionMenuOpen}
+                      onClick={(e) => handleActionMenuOpen(e, autoTask)}
                     >
                       <Iconify icon={"eva:more-vertical-fill" as any} width={16} />
                     </IconButton>
@@ -222,13 +271,13 @@ export function ManageAutoTasksView() {
                 </Box>
 
                 <Box sx={{ display: 'flex', justifyContent: 'flex-end', gap: 1, mt: 2 }}>
-                  <IconButton size="small">
+                  <IconButton size="small" onClick={() => handleEditAutoTask(autoTask)}>
                     <Iconify icon={"eva:edit-fill" as any} width={16} />
                   </IconButton>
-                  <IconButton size="small">
+                  <IconButton size="small" onClick={() => handleDuplicateAutoTask(autoTask)}>
                     <Iconify icon={"eva:copy-fill" as any} width={16} />
                   </IconButton>
-                  <IconButton size="small" sx={{ color: 'error.main' }}>
+                  <IconButton size="small" sx={{ color: 'error.main' }} onClick={() => handleDeleteAutoTask(autoTask)}>
                     <Iconify icon={"eva:trash-2-fill" as any} width={16} />
                   </IconButton>
                 </Box>
@@ -238,94 +287,6 @@ export function ManageAutoTasksView() {
         ))}
       </Grid>
 
-      {/* Add Auto-task Sidebar */}
-      <Drawer
-        anchor="right"
-        open={sidebarOpen}
-        onClose={handleSidebarClose}
-        sx={{
-          '& .MuiDrawer-paper': {
-            width: 500,
-            p: 3,
-          },
-        }}
-      >
-        <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 3 }}>
-          <Typography variant="h6" sx={{ fontWeight: 600 }}>
-            Add Auto-task
-          </Typography>
-          <IconButton onClick={handleSidebarClose}>
-            <Iconify icon={"eva:close-fill" as any} />
-          </IconButton>
-        </Box>
-
-        <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
-          <TextField
-            fullWidth
-            label="Auto-task Name"
-            placeholder="Enter auto-task name..."
-          />
-
-          <TextField
-            fullWidth
-            label="Description"
-            placeholder="Enter auto-task description..."
-            multiline
-            rows={3}
-          />
-
-          <FormControl fullWidth>
-            <InputLabel>Starting Event</InputLabel>
-            <Select label="Starting Event">
-              <MenuItem value="checkin">Check-in</MenuItem>
-              <MenuItem value="checkout">Check-out</MenuItem>
-              <MenuItem value="booking">Booking Confirmed</MenuItem>
-              <MenuItem value="issue">Issue Reported</MenuItem>
-            </Select>
-          </FormControl>
-
-          <TextField
-            fullWidth
-            label="Due Before"
-            placeholder="e.g., 2 hours, 24 hours, 1 day"
-          />
-
-          <FormControl fullWidth>
-            <InputLabel>Linked Channel</InputLabel>
-            <Select label="Linked Channel">
-              <MenuItem value="airbnb">Airbnb</MenuItem>
-              <MenuItem value="booking">Booking.com</MenuItem>
-              <MenuItem value="direct">Direct</MenuItem>
-            </Select>
-          </FormControl>
-
-          <FormControl fullWidth>
-            <InputLabel>Linked Listing</InputLabel>
-            <Select label="Linked Listing">
-              <MenuItem value="villa">Villa Del Sol</MenuItem>
-              <MenuItem value="navigli">Navigli Apartment</MenuItem>
-              <MenuItem value="polacchi">Polacchi42</MenuItem>
-            </Select>
-          </FormControl>
-
-          <Box sx={{ display: 'flex', gap: 2, mt: 4 }}>
-            <Button
-              fullWidth
-              variant="outlined"
-              onClick={handleSidebarClose}
-            >
-              Cancel
-            </Button>
-            <Button
-              fullWidth
-              variant="contained"
-              onClick={handleSidebarClose}
-            >
-              Add Auto-task
-            </Button>
-          </Box>
-        </Box>
-      </Drawer>
 
       {/* Action Menu */}
       <Menu
@@ -333,11 +294,11 @@ export function ManageAutoTasksView() {
         open={Boolean(actionMenuAnchor)}
         onClose={handleActionMenuClose}
       >
-        <MenuItem onClick={handleActionMenuClose}>
+        <MenuItem onClick={() => handleEditAutoTask(selectedAutoTask)}>
           <Iconify icon={"eva:edit-fill" as any} sx={{ mr: 1 }} />
           Edit
         </MenuItem>
-        <MenuItem onClick={handleActionMenuClose}>
+        <MenuItem onClick={() => handleDuplicateAutoTask(selectedAutoTask)}>
           <Iconify icon={"eva:copy-fill" as any} sx={{ mr: 1 }} />
           Duplicate
         </MenuItem>
@@ -345,11 +306,27 @@ export function ManageAutoTasksView() {
           <Iconify icon={"eva:play-circle-fill" as any} sx={{ mr: 1 }} />
           Run Now
         </MenuItem>
-        <MenuItem onClick={handleActionMenuClose} sx={{ color: 'error.main' }}>
+        <MenuItem onClick={() => handleDeleteAutoTask(selectedAutoTask)} sx={{ color: 'error.main' }}>
           <Iconify icon={"eva:trash-2-fill" as any} sx={{ mr: 1 }} />
           Delete
         </MenuItem>
       </Menu>
+
+      {/* Delete Confirmation Dialog */}
+      <Dialog open={deleteDialogOpen} onClose={handleDeleteCancel}>
+        <DialogTitle>Delete Auto-task</DialogTitle>
+        <DialogContent>
+          <Typography>
+            Are you sure you want to delete &quot;{autoTaskToDelete?.name}&quot;? This action cannot be undone.
+          </Typography>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleDeleteCancel}>Cancel</Button>
+          <Button onClick={handleDeleteConfirm} variant="contained" color="error">
+            Delete
+          </Button>
+        </DialogActions>
+      </Dialog>
     </DashboardContent>
   );
 }
