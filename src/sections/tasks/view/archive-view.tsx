@@ -213,30 +213,58 @@ export function ArchiveView() {
   };
 
   const handleDeleteTask = () => {
+    console.log('Delete task clicked for:', selectedTask?.id, selectedTask?.title);
     setDeleteDialogOpen(true);
     handleActionMenuClose();
   };
 
   const handleDeleteConfirm = () => {
     if (selectedTask) {
+      console.log('Deleting task:', selectedTask.id, selectedTask.title);
+      
       // Remove from both storage locations
       const savedTasks = localStorage.getItem('tasks');
       const savedArchivedTasks = localStorage.getItem('archivedTasks');
       
+      let updatedTasks = [];
+      let updatedArchived = [];
+      
       if (savedTasks) {
-        const tasksData = JSON.parse(savedTasks);
-        const updatedTasks = tasksData.filter((task: any) => task.id !== selectedTask.id);
-        localStorage.setItem('tasks', JSON.stringify(updatedTasks));
+        try {
+          const tasksData = JSON.parse(savedTasks);
+          updatedTasks = tasksData.filter((task: any) => {
+            // Handle both string and number IDs
+            const taskId = typeof task.id === 'string' ? parseInt(task.id) : task.id;
+            const selectedId = typeof selectedTask.id === 'string' ? parseInt(selectedTask.id) : selectedTask.id;
+            return taskId !== selectedId;
+          });
+          localStorage.setItem('tasks', JSON.stringify(updatedTasks));
+          console.log('Updated tasks:', updatedTasks.length);
+        } catch (error) {
+          console.error('Error parsing tasks data:', error);
+        }
       }
       
       if (savedArchivedTasks) {
-        const archivedData = JSON.parse(savedArchivedTasks);
-        const updatedArchived = archivedData.filter((task: any) => task.id !== selectedTask.id);
-        localStorage.setItem('archivedTasks', JSON.stringify(updatedArchived));
+        try {
+          const archivedData = JSON.parse(savedArchivedTasks);
+          updatedArchived = archivedData.filter((task: any) => {
+            // Handle both string and number IDs
+            const taskId = typeof task.id === 'string' ? parseInt(task.id) : task.id;
+            const selectedId = typeof selectedTask.id === 'string' ? parseInt(selectedTask.id) : selectedTask.id;
+            return taskId !== selectedId;
+          });
+          localStorage.setItem('archivedTasks', JSON.stringify(updatedArchived));
+          console.log('Updated archived:', updatedArchived.length);
+        } catch (error) {
+          console.error('Error parsing archived data:', error);
+        }
       }
       
-      // Refresh the display
-      setArchivedTasks(loadTasks());
+      // Combine remaining tasks and update state directly
+      const remainingTasks = [...updatedTasks, ...updatedArchived];
+      console.log('Remaining tasks after delete:', remainingTasks.length);
+      setArchivedTasks(remainingTasks);
     }
     setDeleteDialogOpen(false);
     setSelectedTask(null);
@@ -406,7 +434,7 @@ export function ArchiveView() {
               {currentTasks.map((task) => (
                 <TableRow key={task.id}>
                   {visibleColumns.task && (
-                    <TableCell>
+                  <TableCell>
                       <Typography variant="body2" sx={{ fontWeight: 500 }}>
                         {task.title || 'Untitled Task'}
                       </Typography>
@@ -417,31 +445,31 @@ export function ArchiveView() {
                       <Typography variant="body2" color="text.secondary">
                         {task.description || '-'}
                       </Typography>
-                    </TableCell>
+                  </TableCell>
                   )}
                   {visibleColumns.status && (
-                    <TableCell>
-                      <Chip
+                  <TableCell>
+                    <Chip
                         label={task.status || 'Pending'}
-                        size="small"
-                        color="default"
-                      />
-                    </TableCell>
+                      size="small"
+                      color="default"
+                    />
+                  </TableCell>
                   )}
                   {visibleColumns.priority && (
-                    <TableCell>
-                      <Chip
+                  <TableCell>
+                    <Chip
                         label={task.priority || 'Medium'}
-                        size="small"
-                        color={
-                          task.priority === 'High'
-                            ? 'error'
-                            : task.priority === 'Medium'
-                              ? 'warning'
-                              : 'success'
-                        }
-                      />
-                    </TableCell>
+                      size="small"
+                      color={
+                        task.priority === 'High'
+                          ? 'error'
+                          : task.priority === 'Medium'
+                            ? 'warning'
+                            : 'success'
+                      }
+                    />
+                  </TableCell>
                   )}
                   {visibleColumns.assignee && (
                     <TableCell>
@@ -472,43 +500,43 @@ export function ArchiveView() {
                     </TableCell>
                   )}
                   {visibleColumns.endDate && (
-                    <TableCell>
-                      <Typography variant="body2">
+                  <TableCell>
+                    <Typography variant="body2">
                         {task.endDate || '-'}
-                      </Typography>
-                    </TableCell>
+                    </Typography>
+                  </TableCell>
                   )}
                   {visibleColumns.category && (
-                    <TableCell>
-                      <Typography variant="body2">
+                  <TableCell>
+                    <Typography variant="body2">
                         {task.category || '-'}
-                      </Typography>
-                    </TableCell>
+                    </Typography>
+                  </TableCell>
                   )}
                   {visibleColumns.listing && (
-                    <TableCell>
-                      <Typography variant="body2">
+                  <TableCell>
+                    <Typography variant="body2">
                         {task.listing || '-'}
-                      </Typography>
-                    </TableCell>
+                    </Typography>
+                  </TableCell>
                   )}
                   {visibleColumns.channel && (
-                    <TableCell>
+                  <TableCell>
                       <Typography variant="body2">
                         {task.channel || '-'}
-                      </Typography>
-                    </TableCell>
+                    </Typography>
+                  </TableCell>
                   )}
                   {visibleColumns.reservation && (
-                    <TableCell>
-                      <Typography variant="body2">
+                  <TableCell>
+                    <Typography variant="body2">
                         {task.reservation || '-'}
-                      </Typography>
-                    </TableCell>
+                    </Typography>
+                  </TableCell>
                   )}
                   {visibleColumns.cost && (
-                    <TableCell>
-                      <Typography variant="body2">
+                  <TableCell>
+                    <Typography variant="body2">
                         {task.cost ? `$${task.cost}` : '-'}
                       </Typography>
                     </TableCell>
@@ -517,8 +545,8 @@ export function ArchiveView() {
                     <TableCell>
                       <Typography variant="body2" color="text.secondary">
                         {task.archivedDate || '-'}
-                      </Typography>
-                    </TableCell>
+                    </Typography>
+                  </TableCell>
                   )}
                   <TableCell align="center">
                     <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
