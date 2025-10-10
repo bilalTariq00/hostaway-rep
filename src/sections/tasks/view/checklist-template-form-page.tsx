@@ -12,7 +12,7 @@ import DialogTitle from '@mui/material/DialogTitle';
 import DialogContent from '@mui/material/DialogContent';
 import DialogActions from '@mui/material/DialogActions';
 
-import { useParams } from 'react-router-dom';
+import { useParams, useLocation } from 'react-router-dom';
 
 import { useRouter } from 'src/routes/hooks';
 
@@ -69,8 +69,9 @@ const mockChecklistTemplates = [
 export function ChecklistTemplateFormPage() {
   const router = useRouter();
   const { id } = useParams();
-  const isEdit = router.pathname.includes('/edit');
-  const isDuplicate = router.pathname.includes('/duplicate');
+  const location = useLocation();
+  const isEdit = location.pathname.includes('/edit');
+  const isDuplicate = location.pathname.includes('/duplicate');
 
   const [formData, setFormData] = useState({
     name: '',
