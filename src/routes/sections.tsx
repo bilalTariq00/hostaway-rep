@@ -48,7 +48,7 @@ export const StatementsPage = lazy(() => import('src/sections/statements/view/st
 export const StatementEditPage = lazy(() => import('src/sections/statements/view/statement-edit-page'));
 export const AutoStatementsPage = lazy(() => import('src/sections/statements/view/auto-statements-view').then(module => ({ default: module.AutoStatementsView })));
 export const ManageTasksPage = lazy(() => import('src/sections/tasks/view/manage-tasks-view').then(module => ({ default: module.ManageTasksView })));
-export const TaskFormPage = lazy(() => import('src/sections/tasks/view/task-form-page'));
+export const TaskFormPage = lazy(() => import('src/sections/tasks/view/task-form-page').then(module => ({ default: module.TaskFormPage })));
 export const AutoTaskFormPage = lazy(() => import('src/sections/tasks/view/auto-task-form-page').then(module => ({ default: module.AutoTaskFormPage })));
 export const ManageAutoTasksPage = lazy(() => import('src/sections/tasks/view/manage-auto-tasks-view').then(module => ({ default: module.ManageAutoTasksView })));
 export const ChecklistTemplatesPage = lazy(() => import('src/sections/tasks/view/checklist-templates-view').then(module => ({ default: module.ChecklistTemplatesView })));
@@ -153,6 +153,8 @@ export const routesSection: RouteObject[] = [
       { path: 'tasks', element: <ManageTasksPage /> },
       { path: 'tasks/new', element: <TaskFormPage /> },
       { path: 'tasks/:id/edit', element: <TaskFormPage /> },
+      { path: 'tasks/:id/duplicate', element: <TaskFormPage /> },
+      { path: 'tasks/:id/view', element: <TaskFormPage /> },
       { path: 'tasks/manage-tasks', element: <ManageTasksPage /> },
       { path: 'tasks/manage-auto-tasks', element: <ManageAutoTasksPage /> },
       { path: 'tasks/auto-tasks/new', element: <AutoTaskFormPage /> },

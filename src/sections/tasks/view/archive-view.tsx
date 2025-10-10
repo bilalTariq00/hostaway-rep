@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 import Box from '@mui/material/Box';
 import Tab from '@mui/material/Tab';
@@ -21,6 +21,10 @@ import Typography from '@mui/material/Typography';
 import InputLabel from '@mui/material/InputLabel';
 import FormControl from '@mui/material/FormControl';
 import TableContainer from '@mui/material/TableContainer';
+import Dialog from '@mui/material/Dialog';
+import DialogTitle from '@mui/material/DialogTitle';
+import DialogContent from '@mui/material/DialogContent';
+import DialogActions from '@mui/material/DialogActions';
 
 import { useRouter } from 'src/routes/hooks';
 
@@ -77,9 +81,26 @@ export function ArchiveView() {
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage] = useState(50);
   const [actionMenuAnchor, setActionMenuAnchor] = useState<null | HTMLElement>(null);
+  const [selectedTask, setSelectedTask] = useState<any>(null);
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [duplicateDialogOpen, setDuplicateDialogOpen] = useState(false);
   const [selectedListing, setSelectedListing] = useState('');
   const [selectedChannel, setSelectedChannel] = useState('');
   const [selectedAssignee, setSelectedAssignee] = useState('');
+  const [archivedTasks, setArchivedTasks] = useState<any[]>([]);
+
+  // Load archived tasks from localStorage
+  const loadArchivedTasks = () => {
+    const savedTasks = localStorage.getItem('archivedTasks');
+    if (savedTasks) {
+      return JSON.parse(savedTasks);
+    }
+    return mockArchivedTasks;
+  };
+
+  useEffect(() => {
+    setArchivedTasks(loadArchivedTasks());
+  }, []);
 
   const handleTabChange = (event: React.SyntheticEvent, newValue: number) => {
     setActiveTab(newValue);
@@ -88,18 +109,87 @@ export function ArchiveView() {
     if (newValue === 2) router.push('/tasks/checklist-templates');
   };
 
-  const handleActionMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
+  const handleActionMenuOpen = (event: React.MouseEvent<HTMLElement>, task: any) => {
     setActionMenuAnchor(event.currentTarget);
+    setSelectedTask(task);
   };
 
   const handleActionMenuClose = () => {
     setActionMenuAnchor(null);
+    setSelectedTask(null);
   };
 
-  const totalPages = Math.ceil(mockArchivedTasks.length / itemsPerPage);
+  const handleAddTask = () => {
+    router.push('/tasks/new');
+  };
+
+  const handleViewTask = () => {
+    if (selectedTask) {
+      router.push(`/tasks/${selectedTask.id}/view`);
+    }
+    handleActionMenuClose();
+  };
+
+  const handleEditTask = () => {
+    if (selectedTask) {
+      router.push(`/tasks/${selectedTask.id}/edit`);
+    }
+    handleActionMenuClose();
+  };
+
+  const handleDuplicateTask = () => {
+    setDuplicateDialogOpen(true);
+    handleActionMenuClose();
+  };
+
+  const handleDuplicateConfirm = () => {
+    if (selectedTask) {
+      router.push(`/tasks/${selectedTask.id}/duplicate`);
+    }
+    setDuplicateDialogOpen(false);
+    setSelectedTask(null);
+  };
+
+  const handleDuplicateCancel = () => {
+    setDuplicateDialogOpen(false);
+    setSelectedTask(null);
+  };
+
+  const handleRestoreTask = () => {
+    if (selectedTask) {
+      const tasksData = loadArchivedTasks();
+      const updatedTasks = tasksData.filter((task: any) => task.id !== selectedTask.id);
+      localStorage.setItem('archivedTasks', JSON.stringify(updatedTasks));
+      setArchivedTasks(updatedTasks);
+    }
+    handleActionMenuClose();
+  };
+
+  const handleDeleteTask = () => {
+    setDeleteDialogOpen(true);
+    handleActionMenuClose();
+  };
+
+  const handleDeleteConfirm = () => {
+    if (selectedTask) {
+      const tasksData = loadArchivedTasks();
+      const updatedTasks = tasksData.filter((task: any) => task.id !== selectedTask.id);
+      localStorage.setItem('archivedTasks', JSON.stringify(updatedTasks));
+      setArchivedTasks(updatedTasks);
+    }
+    setDeleteDialogOpen(false);
+    setSelectedTask(null);
+  };
+
+  const handleDeleteCancel = () => {
+    setDeleteDialogOpen(false);
+    setSelectedTask(null);
+  };
+
+  const totalPages = Math.ceil(archivedTasks.length / itemsPerPage);
   const startIndex = (currentPage - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
-  const currentTasks = mockArchivedTasks.slice(startIndex, endIndex);
+  const currentTasks = archivedTasks.slice(startIndex, endIndex);
 
   return (
     <DashboardContent maxWidth="xl">
@@ -109,7 +199,7 @@ export function ArchiveView() {
           <Typography variant="h4" sx={{ fontWeight: 600 }}>
             Tasks
           </Typography>
-          <Button variant="contained" disabled>
+          <Button variant="contained" onClick={handleAddTask}>
             Add Tasks
           </Button>
         </Box>
@@ -283,15 +373,15 @@ export function ArchiveView() {
                   </TableCell>
                   <TableCell align="center">
                     <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
-                      <IconButton size="small">
+                      <IconButton size="small" onClick={() => router.push(`/tasks/${task.id}/view`)}>
                         <Iconify icon={"eva:eye-fill" as any} width={16} />
                       </IconButton>
-                      <IconButton size="small">
+                      <IconButton size="small" onClick={() => { setSelectedTask(task); setDuplicateDialogOpen(true); }}>
                         <Iconify icon={"eva:copy-fill" as any} width={16} />
                       </IconButton>
                       <IconButton 
                         size="small" 
-                        onClick={handleActionMenuOpen}
+                        onClick={(e) => handleActionMenuOpen(e, task)}
                       >
                         <Iconify icon={"eva:more-vertical-fill" as any} width={16} />
                       </IconButton>
@@ -325,23 +415,59 @@ export function ArchiveView() {
         open={Boolean(actionMenuAnchor)}
         onClose={handleActionMenuClose}
       >
-        <MenuItem onClick={handleActionMenuClose}>
+        <MenuItem onClick={handleViewTask}>
           <Iconify icon={"eva:eye-fill" as any} sx={{ mr: 1 }} />
           View Details
         </MenuItem>
-        <MenuItem onClick={handleActionMenuClose}>
+        <MenuItem onClick={handleEditTask}>
+          <Iconify icon={"eva:edit-fill" as any} sx={{ mr: 1 }} />
+          Edit
+        </MenuItem>
+        <MenuItem onClick={handleDuplicateTask}>
           <Iconify icon={"eva:copy-fill" as any} sx={{ mr: 1 }} />
           Duplicate
         </MenuItem>
-        <MenuItem onClick={handleActionMenuClose}>
+        <MenuItem onClick={handleRestoreTask}>
           <Iconify icon={"eva:refresh-fill" as any} sx={{ mr: 1 }} />
           Restore
         </MenuItem>
-        <MenuItem onClick={handleActionMenuClose} sx={{ color: 'error.main' }}>
+        <MenuItem onClick={handleDeleteTask} sx={{ color: 'error.main' }}>
           <Iconify icon={"eva:trash-2-fill" as any} sx={{ mr: 1 }} />
           Delete Permanently
         </MenuItem>
       </Menu>
+
+      {/* Duplicate Confirmation Dialog */}
+      <Dialog open={duplicateDialogOpen} onClose={handleDuplicateCancel}>
+        <DialogTitle>Duplicate?</DialogTitle>
+        <DialogContent>
+          <Typography>
+            Are you sure you want to duplicate this task? This will create a copy with "(Copy)" added to the title.
+          </Typography>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleDuplicateCancel}>No</Button>
+          <Button onClick={handleDuplicateConfirm} variant="contained">
+            Yes
+          </Button>
+        </DialogActions>
+      </Dialog>
+
+      {/* Delete Confirmation Dialog */}
+      <Dialog open={deleteDialogOpen} onClose={handleDeleteCancel}>
+        <DialogTitle>Delete?</DialogTitle>
+        <DialogContent>
+          <Typography>
+            Are you sure you want to permanently delete this task? This action cannot be undone.
+          </Typography>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleDeleteCancel}>No</Button>
+          <Button onClick={handleDeleteConfirm} color="error" variant="contained">
+            Yes
+          </Button>
+        </DialogActions>
+      </Dialog>
     </DashboardContent>
   );
 }
