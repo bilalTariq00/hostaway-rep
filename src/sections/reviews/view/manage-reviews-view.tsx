@@ -2,7 +2,6 @@ import { useState } from 'react';
 
 import Box from '@mui/material/Box';
 import Tab from '@mui/material/Tab';
-import Chip from '@mui/material/Chip';
 import Menu from '@mui/material/Menu';
 import Tabs from '@mui/material/Tabs';
 import Grid from '@mui/material/Grid';
@@ -10,8 +9,10 @@ import Paper from '@mui/material/Paper';
 import Table from '@mui/material/Table';
 import Button from '@mui/material/Button';
 import Select from '@mui/material/Select';
+import Popover from '@mui/material/Popover';
 import MenuItem from '@mui/material/MenuItem';
 import TableRow from '@mui/material/TableRow';
+import Checkbox from '@mui/material/Checkbox';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
 import TableHead from '@mui/material/TableHead';
@@ -21,6 +22,7 @@ import Typography from '@mui/material/Typography';
 import InputLabel from '@mui/material/InputLabel';
 import FormControl from '@mui/material/FormControl';
 import TableContainer from '@mui/material/TableContainer';
+import FormControlLabel from '@mui/material/FormControlLabel';
 
 import { useRouter } from 'src/routes/hooks';
 
@@ -28,97 +30,97 @@ import { DashboardContent } from 'src/layouts/dashboard';
 
 import { Iconify } from 'src/components/iconify';
 
-// Mock data for reviews
+// Mock data for reviews matching the image
 const mockReviews = [
   {
     id: 1,
-    guestName: 'John Smith',
-    reservationId: 'RES-001',
-    externalReservationId: 'EXT-001',
-    listingName: 'Villa Del Sol',
-    listingExternalName: 'Luxury Villa with Pool',
-    listingId: 'LST-001',
+    guestName: 'Enrique Guzmán De La Vega',
+    reservationId: '38968192',
+    externalReservationId: '305035-guest-526039194-confirmation-HMFT3XXWR5',
+    listingName: 'Navigli',
+    listingExternalName: '[Navigli] Beautiful Apartment in MILAN Near TRAM',
+    listingId: '305035',
     channel: 'Airbnb',
-    origin: 'Direct',
-    checkIn: '2024-02-15',
-    checkOut: '2024-02-20',
+    origin: 'Host',
+    checkIn: '2025-08-10 15:00:00',
+    checkOut: '2025-08-14 10:00:00',
     status: 'Published',
-    schedule: '2024-02-21',
-    triggerName: 'Post-Checkout Review',
-    overallRating: 5,
-    reviewText: 'Amazing stay! The villa was perfect and the host was very responsive.',
+    schedule: '2 day checklist',
+    triggerEvent: '2 days after check-out',
+    overallReview: 'Gentilissimi, speriamo di poterli ospitare di nuovo al più presto ❤️',
+    rating: 5,
   },
   {
     id: 2,
-    guestName: 'Sarah Johnson',
-    reservationId: 'RES-002',
-    externalReservationId: 'EXT-002',
-    listingName: 'Navigli Apartment',
-    listingExternalName: 'Modern Apartment in Milan',
-    listingId: 'LST-002',
-    channel: 'Booking.com',
-    origin: 'OTA',
-    checkIn: '2024-02-10',
-    checkOut: '2024-02-14',
-    status: 'Pending',
-    schedule: '2024-02-15',
-    triggerName: 'Auto Review Request',
-    overallRating: 4,
-    reviewText: 'Great location and clean apartment. Would stay again.',
+    guestName: 'Enrique Guzmán De La Vega',
+    reservationId: '38968192',
+    externalReservationId: '305035-guest-526039194-confirmation-HMFT3XXWR5',
+    listingName: 'Navigli',
+    listingExternalName: '[Navigli] Beautiful Apartment in MILAN Near TRAM',
+    listingId: '305035',
+    channel: 'Airbnb',
+    origin: 'Guest',
+    checkIn: '2025-08-10 15:00:00',
+    checkOut: '2025-08-14 10:00:00',
+    status: 'Published',
+    schedule: '',
+    triggerEvent: '',
+    overallReview: '',
+    rating: 0,
   },
   {
     id: 3,
-    guestName: 'Mike Wilson',
-    reservationId: 'RES-003',
-    externalReservationId: 'EXT-003',
-    listingName: 'Polacchi42',
-    listingExternalName: 'Cozy Studio in City Center',
-    listingId: 'LST-003',
-    channel: 'Direct',
-    origin: 'Website',
-    checkIn: '2024-02-05',
-    checkOut: '2024-02-09',
-    status: 'Draft',
-    schedule: '2024-02-10',
-    triggerName: 'Manual Review',
-    overallRating: 3,
-    reviewText: 'Good value for money, but could use some improvements.',
+    guestName: 'Luis Aguilera Pernas',
+    reservationId: '45716494',
+    externalReservationId: '305035-guest-534176264-confirmation-HMPQJ5CJH2',
+    listingName: 'Navigli',
+    listingExternalName: '[Navigli] Beautiful Apartment in MILAN Near TRAM',
+    listingId: '305035',
+    channel: 'Airbnb',
+    origin: 'Host',
+    checkIn: '2025-08-14 15:00:00',
+    checkOut: '2025-08-17 10:00:00',
+    status: 'Published',
+    schedule: '2 day checklist',
+    triggerEvent: '2 days after check-out',
+    overallReview: 'El apartamento esta muy bien ubicado con muchos bares cerca, y bien equipado. Tuvimos un problema con el aire acondicionicionado y Manu... More',
+    rating: 5,
   },
   {
     id: 4,
-    guestName: 'Emily Davis',
-    reservationId: 'RES-004',
-    externalReservationId: 'EXT-004',
-    listingName: 'Superattico - Via Del C...',
-    listingExternalName: 'Penthouse with City View',
-    listingId: 'LST-004',
+    guestName: 'Luis Aguilera Pernas',
+    reservationId: '45716494',
+    externalReservationId: '305035-guest-534176264-confirmation-HMPQJ5CJH2',
+    listingName: 'Navigli',
+    listingExternalName: '[Navigli] Beautiful Apartment in MILAN Near TRAM',
+    listingId: '305035',
     channel: 'Airbnb',
-    origin: 'Direct',
-    checkIn: '2024-01-28',
-    checkOut: '2024-02-02',
+    origin: 'Guest',
+    checkIn: '2025-08-14 15:00:00',
+    checkOut: '2025-08-17 10:00:00',
     status: 'Published',
-    schedule: '2024-02-03',
-    triggerName: 'Post-Checkout Review',
-    overallRating: 5,
-    reviewText: 'Absolutely stunning views and perfect location!',
+    schedule: '',
+    triggerEvent: '',
+    overallReview: 'Ottimi ospiti speriamo di poterli riaccogliere 😊',
+    rating: 5,
   },
   {
     id: 5,
-    guestName: 'David Brown',
-    reservationId: 'RES-005',
-    externalReservationId: 'EXT-005',
-    listingName: 'Villa Del Sol',
-    listingExternalName: 'Luxury Villa with Pool',
-    listingId: 'LST-001',
+    guestName: 'Agata Szydlo',
+    reservationId: '46339070',
+    externalReservationId: '6523373137',
+    listingName: 'Navigli',
+    listingExternalName: '[Navigli] Beautiful Apartment in MILAN Near TRAM',
+    listingId: '305035',
     channel: 'Booking.com',
-    origin: 'OTA',
-    checkIn: '2024-01-20',
-    checkOut: '2024-01-25',
-    status: 'Rejected',
-    schedule: '2024-01-26',
-    triggerName: 'Auto Review Request',
-    overallRating: 2,
-    reviewText: 'Had some issues with cleanliness and communication.',
+    origin: 'Guest',
+    checkIn: '2025-08-17 15:00:00',
+    checkOut: '2025-08-19 10:00:00',
+    status: 'Pending',
+    schedule: '',
+    triggerEvent: '',
+    overallReview: 'La casa perfecta para una estancia de vacaciones en Milán, cerca del transporte público, acogedora y muy bonita, muy cómoda para ... More',
+    rating: 5,
   },
 ];
 
@@ -135,6 +137,26 @@ export function ManageReviewsView() {
   const [listing, setListing] = useState('');
   const [tags, setTags] = useState('');
   const [origin, setOrigin] = useState('');
+  const [settingsAnchor, setSettingsAnchor] = useState<null | HTMLElement>(null);
+  
+  // Column visibility state
+  const [visibleColumns, setVisibleColumns] = useState({
+    guestName: true,
+    reservationId: true,
+    externalReservationId: true,
+    listingName: true,
+    listingExternalName: true,
+    listingId: true,
+    channel: true,
+    origin: true,
+    checkIn: true,
+    checkOut: true,
+    status: true,
+    schedule: true,
+    triggerEvent: true,
+    overallReview: true,
+    rating: true,
+  });
 
   const handleTabChange = (event: React.SyntheticEvent, newValue: number) => {
     setActiveTab(newValue);
@@ -158,6 +180,29 @@ export function ManageReviewsView() {
     setListing('');
     setTags('');
     setOrigin('');
+  };
+
+  const handleSettingsOpen = (event: React.MouseEvent<HTMLElement>) => {
+    setSettingsAnchor(event.currentTarget);
+  };
+
+  const handleSettingsClose = () => {
+    setSettingsAnchor(null);
+  };
+
+  const handleColumnToggle = (column: string) => {
+    setVisibleColumns(prev => ({
+      ...prev,
+      [column]: !prev[column as keyof typeof prev]
+    }));
+  };
+
+  const handleReservationClick = (reservationId: string) => {
+    router.push(`/reservations/${reservationId}`);
+  };
+
+  const handleListingClick = (listingId: string) => {
+    router.push(`/listings/${listingId}`);
   };
 
 
@@ -346,116 +391,206 @@ export function ManageReviewsView() {
 
       {/* Reviews Table */}
       <Paper sx={{ mb: 3 }}>
+        {/* Table Header with Settings */}
+        <Box sx={{ p: 2, borderBottom: 1, borderColor: 'divider', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+          <Typography variant="h6">Reviews Table</Typography>
+          <Button
+            variant="outlined"
+            size="small"
+            startIcon={<Iconify icon={"eva:settings-fill" as any} />}
+            onClick={handleSettingsOpen}
+          >
+            Column Settings
+          </Button>
+        </Box>
         <TableContainer sx={{ maxHeight: 600, overflowX: 'auto' }}>
           <Table stickyHeader>
             <TableHead>
               <TableRow>
-                <TableCell sx={{ position: 'sticky', left: 0, bgcolor: 'background.paper', zIndex: 1, minWidth: 150 }}>
-                  Guest Name
-                </TableCell>
-                <TableCell>Reservation ID</TableCell>
-                <TableCell>External Reservation ID</TableCell>
-                <TableCell>Listing Name</TableCell>
-                <TableCell>Listing External Name</TableCell>
-                <TableCell>Listing ID</TableCell>
-                <TableCell>Channel</TableCell>
-                <TableCell>Origin</TableCell>
-                <TableCell>Check In</TableCell>
-                <TableCell>Check Out</TableCell>
-                <TableCell>Status</TableCell>
-                <TableCell>Schedule</TableCell>
-                <TableCell>Trigger Name</TableCell>
-                <TableCell>Overall Rating</TableCell>
+                {visibleColumns.guestName && (
+                  <TableCell sx={{ position: 'sticky', left: 0, bgcolor: 'background.paper', zIndex: 1, minWidth: 150 }}>
+                    Guest Name
+                  </TableCell>
+                )}
+                {visibleColumns.reservationId && <TableCell>Reservation ID</TableCell>}
+                {visibleColumns.externalReservationId && <TableCell>External Reservation ID</TableCell>}
+                {visibleColumns.listingName && <TableCell>Listing Name</TableCell>}
+                {visibleColumns.listingExternalName && <TableCell>Listing External Name</TableCell>}
+                {visibleColumns.listingId && <TableCell>Listing ID</TableCell>}
+                {visibleColumns.channel && <TableCell>Channel</TableCell>}
+                {visibleColumns.origin && <TableCell>Origin</TableCell>}
+                {visibleColumns.checkIn && <TableCell>Check-in</TableCell>}
+                {visibleColumns.checkOut && <TableCell>Check-out</TableCell>}
+                {visibleColumns.status && <TableCell>Status</TableCell>}
+                {visibleColumns.schedule && <TableCell>Schedule</TableCell>}
+                {visibleColumns.triggerEvent && <TableCell>Trigger Event</TableCell>}
+                {visibleColumns.overallReview && <TableCell>Overall Review</TableCell>}
+                {visibleColumns.rating && <TableCell>Rating</TableCell>}
               </TableRow>
             </TableHead>
             <TableBody>
               {currentReviews.map((review) => (
                 <TableRow key={review.id} hover>
-                  <TableCell sx={{ position: 'sticky', left: 0, bgcolor: 'background.paper', zIndex: 1 }}>
-                    <Typography variant="body2" sx={{ fontWeight: 500 }}>
-                      {review.guestName}
-                    </Typography>
-                  </TableCell>
-                  <TableCell>
-                    <Typography variant="body2">
-                      {review.reservationId}
-                    </Typography>
-                  </TableCell>
-                  <TableCell>
-                    <Typography variant="body2">
-                      {review.externalReservationId}
-                    </Typography>
-                  </TableCell>
-                  <TableCell>
-                    <Typography variant="body2">
-                      {review.listingName}
-                    </Typography>
-                  </TableCell>
-                  <TableCell>
-                    <Typography variant="body2">
-                      {review.listingExternalName}
-                    </Typography>
-                  </TableCell>
-                  <TableCell>
-                    <Typography variant="body2">
-                      {review.listingId}
-                    </Typography>
-                  </TableCell>
-                  <TableCell>
-                    <Chip
-                      label={review.channel}
-                      size="small"
-                      color="primary"
-                    />
-                  </TableCell>
-                  <TableCell>
-                    <Typography variant="body2">
-                      {review.origin}
-                    </Typography>
-                  </TableCell>
-                  <TableCell>
-                    <Typography variant="body2">
-                      {review.checkIn}
-                    </Typography>
-                  </TableCell>
-                  <TableCell>
-                    <Typography variant="body2">
-                      {review.checkOut}
-                    </Typography>
-                  </TableCell>
-                  <TableCell>
-                    <Chip
-                      label={review.status}
-                      size="small"
-                      color={
-                        review.status === 'Published'
-                          ? 'success'
-                          : review.status === 'Pending'
-                            ? 'warning'
-                            : review.status === 'Draft'
-                              ? 'info'
-                              : 'error'
-                      }
-                    />
-                  </TableCell>
-                  <TableCell>
-                    <Typography variant="body2">
-                      {review.schedule}
-                    </Typography>
-                  </TableCell>
-                  <TableCell>
-                    <Typography variant="body2">
-                      {review.triggerName}
-                    </Typography>
-                  </TableCell>
-                  <TableCell>
-                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
-                      {renderStars(review.overallRating)}
-                      <Typography variant="body2" sx={{ ml: 1 }}>
-                        {review.overallRating}/5
+                  {visibleColumns.guestName && (
+                    <TableCell sx={{ position: 'sticky', left: 0, bgcolor: 'background.paper', zIndex: 1 }}>
+                      <Typography variant="body2" sx={{ fontWeight: 500, color: 'primary.main', cursor: 'pointer' }}>
+                        {review.guestName}
                       </Typography>
-                    </Box>
-                  </TableCell>
+                    </TableCell>
+                  )}
+                  {visibleColumns.reservationId && (
+                    <TableCell>
+                      <Typography 
+                        variant="body2" 
+                        sx={{ color: 'primary.main', cursor: 'pointer' }}
+                        onClick={() => handleReservationClick(review.reservationId)}
+                      >
+                        {review.reservationId}
+                      </Typography>
+                    </TableCell>
+                  )}
+                  {visibleColumns.externalReservationId && (
+                    <TableCell>
+                      <Typography variant="body2">
+                        {review.externalReservationId}
+                      </Typography>
+                    </TableCell>
+                  )}
+                  {visibleColumns.listingName && (
+                    <TableCell>
+                      <Typography 
+                        variant="body2" 
+                        sx={{ color: 'primary.main', cursor: 'pointer' }}
+                        onClick={() => handleListingClick(review.listingId)}
+                      >
+                        {review.listingName}
+                      </Typography>
+                    </TableCell>
+                  )}
+                  {visibleColumns.listingExternalName && (
+                    <TableCell>
+                      <Typography 
+                        variant="body2" 
+                        sx={{ color: 'primary.main', cursor: 'pointer' }}
+                        onClick={() => handleListingClick(review.listingId)}
+                      >
+                        {review.listingExternalName}
+                      </Typography>
+                    </TableCell>
+                  )}
+                  {visibleColumns.listingId && (
+                    <TableCell>
+                      <Typography variant="body2">
+                        {review.listingId}
+                      </Typography>
+                    </TableCell>
+                  )}
+                  {visibleColumns.channel && (
+                    <TableCell>
+                      <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                        <Box
+                          sx={{
+                            width: 8,
+                            height: 8,
+                            borderRadius: '50%',
+                            bgcolor: review.channel === 'Airbnb' ? 'error.main' : 'primary.main'
+                          }}
+                        />
+                        <Typography variant="body2">
+                          {review.channel}
+                        </Typography>
+                      </Box>
+                    </TableCell>
+                  )}
+                  {visibleColumns.origin && (
+                    <TableCell>
+                      <Typography variant="body2">
+                        {review.origin}
+                      </Typography>
+                    </TableCell>
+                  )}
+                  {visibleColumns.checkIn && (
+                    <TableCell>
+                      <Typography variant="body2">
+                        {review.checkIn}
+                      </Typography>
+                    </TableCell>
+                  )}
+                  {visibleColumns.checkOut && (
+                    <TableCell>
+                      <Typography variant="body2">
+                        {review.checkOut}
+                      </Typography>
+                    </TableCell>
+                  )}
+                  {visibleColumns.status && (
+                    <TableCell>
+                      <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                        {review.status === 'Published' ? (
+                          <Box
+                            sx={{
+                              width: 16,
+                              height: 16,
+                              borderRadius: 1,
+                              bgcolor: 'success.main',
+                              display: 'flex',
+                              alignItems: 'center',
+                              justifyContent: 'center',
+                              color: 'white',
+                              fontSize: '12px'
+                            }}
+                          >
+                            ✓
+                          </Box>
+                        ) : review.status === 'Pending' ? (
+                          <Box
+                            sx={{
+                              width: 16,
+                              height: 16,
+                              borderRadius: '50%',
+                              bgcolor: 'warning.main'
+                            }}
+                          />
+                        ) : null}
+                        <Typography variant="body2">
+                          {review.status}
+                        </Typography>
+                      </Box>
+                    </TableCell>
+                  )}
+                  {visibleColumns.schedule && (
+                    <TableCell>
+                      <Typography variant="body2">
+                        {review.schedule || '-'}
+                      </Typography>
+                    </TableCell>
+                  )}
+                  {visibleColumns.triggerEvent && (
+                    <TableCell>
+                      <Typography variant="body2">
+                        {review.triggerEvent || '-'}
+                      </Typography>
+                    </TableCell>
+                  )}
+                  {visibleColumns.overallReview && (
+                    <TableCell>
+                      <Typography variant="body2" sx={{ maxWidth: 300 }}>
+                        {review.overallReview}
+                        {review.overallReview.includes('More') && (
+                          <Typography component="span" sx={{ color: 'primary.main', ml: 1 }}>
+                            More
+                          </Typography>
+                        )}
+                      </Typography>
+                    </TableCell>
+                  )}
+                  {visibleColumns.rating && (
+                    <TableCell>
+                      <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
+                        {renderStars(review.rating)}
+                      </Box>
+                    </TableCell>
+                  )}
                 </TableRow>
               ))}
             </TableBody>
@@ -497,6 +632,117 @@ export function ManageReviewsView() {
           Export to CSV
         </MenuItem>
       </Menu>
+
+      {/* Column Settings Popover */}
+      <Popover
+        open={Boolean(settingsAnchor)}
+        anchorEl={settingsAnchor}
+        onClose={handleSettingsClose}
+        anchorOrigin={{
+          vertical: 'bottom',
+          horizontal: 'right',
+        }}
+        transformOrigin={{
+          vertical: 'top',
+          horizontal: 'right',
+        }}
+      >
+        <Box sx={{ p: 2, minWidth: 250 }}>
+          <Typography variant="h6" sx={{ mb: 2 }}>
+            Show/Hide Columns
+          </Typography>
+          <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
+            Select which columns to display in the table
+          </Typography>
+          <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1, maxHeight: 300, overflowY: 'auto' }}>
+            {Object.entries(visibleColumns).map(([key, value]) => {
+              const columnLabels: { [key: string]: string } = {
+                guestName: 'Guest Name',
+                reservationId: 'Reservation ID',
+                externalReservationId: 'External Reservation ID',
+                listingName: 'Listing Name',
+                listingExternalName: 'Listing External Name',
+                listingId: 'Listing ID',
+                channel: 'Channel',
+                origin: 'Origin',
+                checkIn: 'Check-in',
+                checkOut: 'Check-out',
+                status: 'Status',
+                schedule: 'Schedule',
+                triggerEvent: 'Trigger Event',
+                overallReview: 'Overall Review',
+                rating: 'Rating',
+              };
+              
+              return (
+                <FormControlLabel
+                  key={key}
+                  control={
+                    <Checkbox
+                      checked={value}
+                      onChange={() => handleColumnToggle(key)}
+                      size="small"
+                    />
+                  }
+                  label={columnLabels[key] || key}
+                  sx={{ '& .MuiFormControlLabel-label': { fontSize: '0.875rem' } }}
+                />
+              );
+            })}
+          </Box>
+          <Box sx={{ mt: 2, pt: 2, borderTop: 1, borderColor: 'divider' }}>
+            <Button
+              size="small"
+              onClick={() => {
+                setVisibleColumns({
+                  guestName: true,
+                  reservationId: true,
+                  externalReservationId: true,
+                  listingName: true,
+                  listingExternalName: true,
+                  listingId: true,
+                  channel: true,
+                  origin: true,
+                  checkIn: true,
+                  checkOut: true,
+                  status: true,
+                  schedule: true,
+                  triggerEvent: true,
+                  overallReview: true,
+                  rating: true,
+                });
+              }}
+            >
+              Show All
+            </Button>
+            <Button
+              size="small"
+              onClick={() => {
+                setVisibleColumns({
+                  guestName: true,
+                  reservationId: true,
+                  externalReservationId: false,
+                  listingName: true,
+                  listingExternalName: false,
+                  listingId: true,
+                  channel: true,
+                  origin: true,
+                  checkIn: true,
+                  checkOut: true,
+                  status: true,
+                  schedule: false,
+                  triggerEvent: false,
+                  overallReview: true,
+                  rating: true,
+                });
+              }}
+              sx={{ ml: 1 }}
+            >
+              Show Essential
+            </Button>
+          </Box>
+        </Box>
+      </Popover>
     </DashboardContent>
   );
 }
