@@ -1,14 +1,18 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 import Box from '@mui/material/Box';
 import Tab from '@mui/material/Tab';
 import Card from '@mui/material/Card';
-import Tabs from '@mui/material/Tabs';
 import Grid from '@mui/material/Grid';
+import Tabs from '@mui/material/Tabs';
 import Button from '@mui/material/Button';
+import Dialog from '@mui/material/Dialog';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 import CardContent from '@mui/material/CardContent';
+import DialogTitle from '@mui/material/DialogTitle';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
 import InputAdornment from '@mui/material/InputAdornment';
 
 import { useRouter } from 'src/routes/hooks';
@@ -120,6 +124,28 @@ export function ReviewTemplatesView() {
   const router = useRouter();
   const [activeTab, setActiveTab] = useState(2);
   const [searchTerm, setSearchTerm] = useState('');
+  const [reviewTemplates, setReviewTemplates] = useState(mockReviewTemplates);
+  const [selectedTemplate, setSelectedTemplate] = useState<any>(null);
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [duplicateDialogOpen, setDuplicateDialogOpen] = useState(false);
+
+  // Load templates from localStorage
+  const loadReviewTemplates = () => {
+    const savedTemplates = localStorage.getItem('reviewTemplates');
+    if (savedTemplates) {
+      setReviewTemplates(JSON.parse(savedTemplates));
+    }
+  };
+
+  // Save templates to localStorage
+  const saveReviewTemplates = (templates: any[]) => {
+    localStorage.setItem('reviewTemplates', JSON.stringify(templates));
+    setReviewTemplates(templates);
+  };
+
+  useEffect(() => {
+    loadReviewTemplates();
+  }, []);
 
   const handleTabChange = (event: React.SyntheticEvent, newValue: number) => {
     setActiveTab(newValue);
@@ -127,7 +153,65 @@ export function ReviewTemplatesView() {
     if (newValue === 1) router.push('/reviews/auto-reviews');
   };
 
-  const filteredTemplates = mockReviewTemplates.filter(template =>
+  const handleAddTemplate = () => {
+    router.push('/reviews/templates/new');
+  };
+
+  const handleViewTemplate = (template: any) => {
+    router.push(`/reviews/templates/${template.id}/view`);
+  };
+
+  const handleEditTemplate = (template: any) => {
+    router.push(`/reviews/templates/${template.id}/edit`);
+  };
+
+  const handleDuplicateTemplate = (template: any) => {
+    setSelectedTemplate(template);
+    setDuplicateDialogOpen(true);
+  };
+
+  const handleDeleteTemplate = (template: any) => {
+    setSelectedTemplate(template);
+    setDeleteDialogOpen(true);
+  };
+
+  const handleDuplicateConfirm = () => {
+    if (selectedTemplate) {
+      const newTemplate = {
+        ...selectedTemplate,
+        id: Date.now(),
+        name: `${selectedTemplate.name} (Copy)`,
+        status: 'Draft',
+        usageCount: 0,
+        createdAt: new Date().toISOString().split('T')[0],
+      };
+      const updatedTemplates = [...reviewTemplates, newTemplate];
+      saveReviewTemplates(updatedTemplates);
+    }
+    setDuplicateDialogOpen(false);
+    setSelectedTemplate(null);
+  };
+
+  const handleDeleteConfirm = () => {
+    if (selectedTemplate) {
+      const updatedTemplates = reviewTemplates.filter(t => t.id !== selectedTemplate.id);
+      saveReviewTemplates(updatedTemplates);
+    }
+    setDeleteDialogOpen(false);
+    setSelectedTemplate(null);
+  };
+
+  const handleDuplicateCancel = () => {
+    setDuplicateDialogOpen(false);
+    setSelectedTemplate(null);
+  };
+
+  const handleDeleteCancel = () => {
+    setDeleteDialogOpen(false);
+    setSelectedTemplate(null);
+  };
+
+  const filteredTemplates = reviewTemplates.filter(template =>
     template.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
     template.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
     template.category.toLowerCase().includes(searchTerm.toLowerCase())
@@ -192,17 +276,16 @@ export function ReviewTemplatesView() {
                 height: '100%',
                 display: 'flex',
                 flexDirection: 'column',
-                '&:hover': {
-                  boxShadow: 3,
-                },
+                backgroundColor: 'grey.50',
                 border: 1,
                 borderColor: 'grey.200',
+                borderRadius: 2,
               }}
             >
-              <CardContent sx={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
+              <CardContent sx={{ flex: 1, display: 'flex', flexDirection: 'column', p: 3 }}>
                 {/* Header with Name and Status */}
                 <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', mb: 2 }}>
-                  <Typography variant="h6" sx={{ fontWeight: 600, flex: 1 }}>
+                  <Typography variant="h6" sx={{ fontWeight: 600, flex: 1, color: 'text.primary' }}>
                     {template.name}
                   </Typography>
                   <Box
@@ -229,10 +312,10 @@ export function ReviewTemplatesView() {
 
                 {/* Category and Usage */}
                 <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
-                  <Typography variant="caption" color="text.secondary">
+                  <Typography variant="body2" sx={{ fontWeight: 500 }}>
                     Category: {template.category}
                   </Typography>
-                  <Typography variant="caption" color="text.secondary">
+                  <Typography variant="body2" sx={{ fontWeight: 500 }}>
                     Used {template.usageCount} times
                   </Typography>
                 </Box>
@@ -243,7 +326,7 @@ export function ReviewTemplatesView() {
                     Questions ({template.questions.length}):
                   </Typography>
                   <Box sx={{ maxHeight: 120, overflow: 'auto' }}>
-                    {template.questions.slice(0, 3).map((question, index) => (
+                    {template.questions.slice(0, 3).map((question: string, index: number) => (
                       <Typography key={index} variant="body2" sx={{ mb: 0.5, fontSize: '0.875rem' }}>
                         • {question}
                       </Typography>
@@ -257,25 +340,42 @@ export function ReviewTemplatesView() {
                 </Box>
 
                 {/* Created Date */}
-                <Typography variant="caption" color="text.secondary" sx={{ mb: 2 }}>
+                <Typography variant="body2" sx={{ fontWeight: 500, mb: 2 }}>
                   Created: {template.createdAt}
                 </Typography>
 
                 {/* Action Buttons */}
-                <Box sx={{ display: 'flex', justifyContent: 'flex-end', gap: 1 }}>
-                  <Button size="small" variant="outlined">
+                <Box sx={{ display: 'flex', justifyContent: 'flex-end', gap: 1, mt: 'auto' }}>
+                  <Button 
+                    size="small" 
+                    variant="outlined"
+                    onClick={() => handleViewTemplate(template)}
+                  >
                     <Iconify icon={"eva:eye-fill" as any} sx={{ mr: 0.5 }} />
                     View
                   </Button>
-                  <Button size="small" variant="outlined">
+                  <Button 
+                    size="small" 
+                    variant="outlined"
+                    onClick={() => handleEditTemplate(template)}
+                  >
                     <Iconify icon={"eva:edit-fill" as any} sx={{ mr: 0.5 }} />
                     Edit
                   </Button>
-                  <Button size="small" variant="outlined">
+                  <Button 
+                    size="small" 
+                    variant="outlined"
+                    onClick={() => handleDuplicateTemplate(template)}
+                  >
                     <Iconify icon={"eva:copy-fill" as any} sx={{ mr: 0.5 }} />
                     Copy
                   </Button>
-                  <Button size="small" variant="outlined" color="error">
+                  <Button 
+                    size="small" 
+                    variant="outlined" 
+                    color="error"
+                    onClick={() => handleDeleteTemplate(template)}
+                  >
                     <Iconify icon={"eva:trash-2-fill" as any} sx={{ mr: 0.5 }} />
                     Delete
                   </Button>
@@ -295,11 +395,45 @@ export function ReviewTemplatesView() {
           <Typography variant="body2" sx={{ mb: 3, color: 'text.secondary' }}>
             {searchTerm ? 'Try adjusting your search terms' : 'Create your first review template to get started'}
           </Typography>
-          <Button variant="contained">
+          <Button variant="contained" onClick={handleAddTemplate}>
             Create Review Template
           </Button>
         </Box>
       )}
+
+      {/* Duplicate Confirmation Dialog */}
+      <Dialog open={duplicateDialogOpen} onClose={handleDuplicateCancel}>
+        <DialogTitle>Duplicate Template</DialogTitle>
+        <DialogContent>
+          <Typography>
+            Are you sure you want to duplicate &quot;{selectedTemplate?.name}&quot;? 
+            This will create a copy with &quot;(Copy)&quot; added to the name.
+          </Typography>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleDuplicateCancel}>Cancel</Button>
+          <Button onClick={handleDuplicateConfirm} variant="contained">
+            Duplicate
+          </Button>
+        </DialogActions>
+      </Dialog>
+
+      {/* Delete Confirmation Dialog */}
+      <Dialog open={deleteDialogOpen} onClose={handleDeleteCancel}>
+        <DialogTitle>Delete Template</DialogTitle>
+        <DialogContent>
+          <Typography>
+            Are you sure you want to delete &quot;{selectedTemplate?.name}&quot;? 
+            This action cannot be undone.
+          </Typography>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleDeleteCancel}>Cancel</Button>
+          <Button onClick={handleDeleteConfirm} variant="contained" color="error">
+            Delete
+          </Button>
+        </DialogActions>
+      </Dialog>
     </DashboardContent>
   );
 }

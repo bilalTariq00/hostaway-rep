@@ -58,6 +58,7 @@ export const TasksCustomFieldsPage = lazy(() => import('src/sections/tasks/view/
 export const ManageReviewsPage = lazy(() => import('src/sections/reviews/view/manage-reviews-view').then(module => ({ default: module.ManageReviewsView })));
 export const AutoReviewsPage = lazy(() => import('src/sections/reviews/view/auto-reviews-view').then(module => ({ default: module.AutoReviewsView })));
 export const ReviewTemplatesPage = lazy(() => import('src/sections/reviews/view/review-templates-view').then(module => ({ default: module.ReviewTemplatesView })));
+export const ReviewTemplateFormPage = lazy(() => import('src/sections/reviews/view/review-template-form-page').then(module => ({ default: module.ReviewTemplateFormPage })));
 export const ChargesPage = lazy(() => import('src/sections/guest-payments/view/charges-view').then(module => ({ default: module.ChargesView })));
 export const AutoPaymentsPage = lazy(() => import('src/sections/guest-payments/view/auto-payments-view').then(module => ({ default: module.AutoPaymentsView })));
 export const DocumentTemplatesPage = lazy(() => import('src/sections/guest-payments/view/document-templates-view').then(module => ({ default: module.DocumentTemplatesView })));
@@ -170,6 +171,10 @@ export const routesSection: RouteObject[] = [
       { path: 'reviews/manage-reviews', element: <ManageReviewsPage /> },
       { path: 'reviews/auto-reviews', element: <AutoReviewsPage /> },
       { path: 'reviews/templates', element: <ReviewTemplatesPage /> },
+      { path: 'reviews/templates/new', element: <ReviewTemplateFormPage /> },
+      { path: 'reviews/templates/:id/edit', element: <ReviewTemplateFormPage /> },
+      { path: 'reviews/templates/:id/duplicate', element: <ReviewTemplateFormPage /> },
+      { path: 'reviews/templates/:id/view', element: <ReviewTemplateFormPage /> },
       { path: 'reviews/review-templates', element: <ReviewTemplatesPage /> },
       { path: 'guest-payments', element: <ChargesPage /> },
       { path: 'guest-payments/charges', element: <ChargesPage /> },
