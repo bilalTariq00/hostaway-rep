@@ -25,6 +25,9 @@ import Dialog from '@mui/material/Dialog';
 import DialogTitle from '@mui/material/DialogTitle';
 import DialogContent from '@mui/material/DialogContent';
 import DialogActions from '@mui/material/DialogActions';
+import Checkbox from '@mui/material/Checkbox';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import Popover from '@mui/material/Popover';
 
 import { useRouter } from 'src/routes/hooks';
 
@@ -88,6 +91,26 @@ export function ArchiveView() {
   const [selectedChannel, setSelectedChannel] = useState('');
   const [selectedAssignee, setSelectedAssignee] = useState('');
   const [archivedTasks, setArchivedTasks] = useState<any[]>([]);
+  const [settingsAnchor, setSettingsAnchor] = useState<null | HTMLElement>(null);
+  
+  // Column visibility state
+  const [visibleColumns, setVisibleColumns] = useState({
+    task: true,
+    description: true,
+    status: true,
+    priority: true,
+    assignee: true,
+    supervisor: true,
+    group: true,
+    startDate: true,
+    endDate: true,
+    category: true,
+    listing: true,
+    channel: true,
+    reservation: true,
+    cost: true,
+    archivedDate: true,
+  });
 
   // Load tasks from localStorage (both archived and regular tasks)
   const loadTasks = () => {
@@ -198,11 +221,26 @@ export function ArchiveView() {
     if (selectedTask) {
       const tasksData = loadTasks();
       const updatedTasks = tasksData.filter((task: any) => task.id !== selectedTask.id);
-      localStorage.setItem('archivedTasks', JSON.stringify(updatedTasks));
+      localStorage.setItem('tasks', JSON.stringify(updatedTasks));
       setArchivedTasks(updatedTasks);
     }
     setDeleteDialogOpen(false);
     setSelectedTask(null);
+  };
+
+  const handleSettingsOpen = (event: React.MouseEvent<HTMLElement>) => {
+    setSettingsAnchor(event.currentTarget);
+  };
+
+  const handleSettingsClose = () => {
+    setSettingsAnchor(null);
+  };
+
+  const handleColumnToggle = (column: string) => {
+    setVisibleColumns(prev => ({
+      ...prev,
+      [column]: !prev[column as keyof typeof prev]
+    }));
   };
 
   const handleDeleteCancel = () => {
@@ -223,9 +261,18 @@ export function ArchiveView() {
           <Typography variant="h4" sx={{ fontWeight: 600 }}>
             Tasks
           </Typography>
-          <Button variant="contained" onClick={handleAddTask}>
-            Add Tasks
-          </Button>
+          <Box sx={{ display: 'flex', gap: 2 }}>
+            <Button
+              variant="outlined"
+              startIcon={<Iconify icon="eva:settings-fill" />}
+              onClick={handleSettingsOpen}
+            >
+              Settings
+            </Button>
+            <Button variant="contained" onClick={handleAddTask}>
+              Add Tasks
+            </Button>
+          </Box>
         </Box>
 
         <Tabs
@@ -320,81 +367,142 @@ export function ArchiveView() {
           <Table>
             <TableHead>
               <TableRow>
-                <TableCell>Task</TableCell>
-                <TableCell>Status</TableCell>
-                <TableCell>Priority</TableCell>
-                <TableCell>Assignee</TableCell>
-                <TableCell>Supervisor</TableCell>
-                <TableCell>Due Date</TableCell>
-                <TableCell>Archived Date</TableCell>
-                <TableCell>Channel</TableCell>
-                <TableCell>Listing</TableCell>
+                {visibleColumns.task && <TableCell>Task</TableCell>}
+                {visibleColumns.description && <TableCell>Description</TableCell>}
+                {visibleColumns.status && <TableCell>Status</TableCell>}
+                {visibleColumns.priority && <TableCell>Priority</TableCell>}
+                {visibleColumns.assignee && <TableCell>Assignee</TableCell>}
+                {visibleColumns.supervisor && <TableCell>Supervisor</TableCell>}
+                {visibleColumns.group && <TableCell>Group</TableCell>}
+                {visibleColumns.startDate && <TableCell>Start Date</TableCell>}
+                {visibleColumns.endDate && <TableCell>End Date</TableCell>}
+                {visibleColumns.category && <TableCell>Category</TableCell>}
+                {visibleColumns.listing && <TableCell>Listing</TableCell>}
+                {visibleColumns.channel && <TableCell>Channel</TableCell>}
+                {visibleColumns.reservation && <TableCell>Reservation</TableCell>}
+                {visibleColumns.cost && <TableCell>Cost</TableCell>}
+                {visibleColumns.archivedDate && <TableCell>Archived Date</TableCell>}
                 <TableCell align="center">Actions</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
               {currentTasks.map((task) => (
                 <TableRow key={task.id}>
-                  <TableCell>
-                    <Box>
+                  {visibleColumns.task && (
+                    <TableCell>
                       <Typography variant="body2" sx={{ fontWeight: 500 }}>
-                        {task.title}
+                        {task.title || 'Untitled Task'}
                       </Typography>
-                      <Typography variant="caption" color="text.secondary">
-                        {task.description}
+                    </TableCell>
+                  )}
+                  {visibleColumns.description && (
+                    <TableCell>
+                      <Typography variant="body2" color="text.secondary">
+                        {task.description || '-'}
                       </Typography>
-                    </Box>
-                  </TableCell>
-                  <TableCell>
-                    <Chip
-                      label={task.status}
-                      size="small"
-                      color="default"
-                    />
-                  </TableCell>
-                  <TableCell>
-                    <Chip
-                      label={task.priority}
-                      size="small"
-                      color={
-                        task.priority === 'High'
-                          ? 'error'
-                          : task.priority === 'Medium'
-                            ? 'warning'
-                            : 'success'
-                      }
-                    />
-                  </TableCell>
-                  <TableCell>
-                    <Typography variant="body2">
-                      {task.assignee}
-                    </Typography>
-                  </TableCell>
-                  <TableCell>
-                    <Typography variant="body2">
-                      {task.supervisor}
-                    </Typography>
-                  </TableCell>
-                  <TableCell>
-                    <Typography variant="body2">
-                      {task.dueDate}
-                    </Typography>
-                  </TableCell>
-                  <TableCell>
-                    <Typography variant="body2" color="text.secondary">
-                      {task.archivedDate}
-                    </Typography>
-                  </TableCell>
-                  <TableCell>
-                    <Typography variant="body2">
-                      {task.channel}
-                    </Typography>
-                  </TableCell>
-                  <TableCell>
-                    <Typography variant="body2">
-                      {task.listing}
-                    </Typography>
-                  </TableCell>
+                    </TableCell>
+                  )}
+                  {visibleColumns.status && (
+                    <TableCell>
+                      <Chip
+                        label={task.status || 'Pending'}
+                        size="small"
+                        color="default"
+                      />
+                    </TableCell>
+                  )}
+                  {visibleColumns.priority && (
+                    <TableCell>
+                      <Chip
+                        label={task.priority || 'Medium'}
+                        size="small"
+                        color={
+                          task.priority === 'High'
+                            ? 'error'
+                            : task.priority === 'Medium'
+                              ? 'warning'
+                              : 'success'
+                        }
+                      />
+                    </TableCell>
+                  )}
+                  {visibleColumns.assignee && (
+                    <TableCell>
+                      <Typography variant="body2">
+                        {task.assignee || '-'}
+                      </Typography>
+                    </TableCell>
+                  )}
+                  {visibleColumns.supervisor && (
+                    <TableCell>
+                      <Typography variant="body2">
+                        {task.supervisor || '-'}
+                      </Typography>
+                    </TableCell>
+                  )}
+                  {visibleColumns.group && (
+                    <TableCell>
+                      <Typography variant="body2">
+                        {task.group || '-'}
+                      </Typography>
+                    </TableCell>
+                  )}
+                  {visibleColumns.startDate && (
+                    <TableCell>
+                      <Typography variant="body2">
+                        {task.startDate || '-'}
+                      </Typography>
+                    </TableCell>
+                  )}
+                  {visibleColumns.endDate && (
+                    <TableCell>
+                      <Typography variant="body2">
+                        {task.endDate || '-'}
+                      </Typography>
+                    </TableCell>
+                  )}
+                  {visibleColumns.category && (
+                    <TableCell>
+                      <Typography variant="body2">
+                        {task.category || '-'}
+                      </Typography>
+                    </TableCell>
+                  )}
+                  {visibleColumns.listing && (
+                    <TableCell>
+                      <Typography variant="body2">
+                        {task.listing || '-'}
+                      </Typography>
+                    </TableCell>
+                  )}
+                  {visibleColumns.channel && (
+                    <TableCell>
+                      <Typography variant="body2">
+                        {task.channel || '-'}
+                      </Typography>
+                    </TableCell>
+                  )}
+                  {visibleColumns.reservation && (
+                    <TableCell>
+                      <Typography variant="body2">
+                        {task.reservation || '-'}
+                      </Typography>
+                    </TableCell>
+                  )}
+                  {visibleColumns.cost && (
+                    <TableCell>
+                      <Typography variant="body2">
+                        {task.cost ? `$${task.cost}` : '-'}
+                      </Typography>
+                    </TableCell>
+                  )}
+                  {visibleColumns.archivedDate && (
+                    <TableCell>
+                      <Typography variant="body2" color="text.secondary">
+                        {task.archivedDate || '-'}
+                      </Typography>
+                    </TableCell>
+                  )}
                   <TableCell align="center">
                     <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
                       <IconButton size="small" onClick={() => router.push(`/tasks/${task.id}/view`)}>
@@ -492,6 +600,41 @@ export function ArchiveView() {
           </Button>
         </DialogActions>
       </Dialog>
+
+      {/* Column Settings Popover */}
+      <Popover
+        open={Boolean(settingsAnchor)}
+        anchorEl={settingsAnchor}
+        onClose={handleSettingsClose}
+        anchorOrigin={{
+          vertical: 'bottom',
+          horizontal: 'right',
+        }}
+        transformOrigin={{
+          vertical: 'top',
+          horizontal: 'right',
+        }}
+      >
+        <Box sx={{ p: 2, minWidth: 200 }}>
+          <Typography variant="h6" sx={{ mb: 2 }}>
+            Column Settings
+          </Typography>
+          <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
+            {Object.entries(visibleColumns).map(([key, value]) => (
+              <FormControlLabel
+                key={key}
+                control={
+                  <Checkbox
+                    checked={value}
+                    onChange={() => handleColumnToggle(key)}
+                  />
+                }
+                label={key.charAt(0).toUpperCase() + key.slice(1).replace(/([A-Z])/g, ' $1')}
+              />
+            ))}
+          </Box>
+        </Box>
+      </Popover>
     </DashboardContent>
   );
 }
