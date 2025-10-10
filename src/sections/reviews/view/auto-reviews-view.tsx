@@ -17,61 +17,42 @@ import { DashboardContent } from 'src/layouts/dashboard';
 
 import { Iconify } from 'src/components/iconify';
 
-// Mock data for auto reviews
+// Mock data for auto reviews matching the image
 const mockAutoReviews = [
   {
     id: 1,
-    name: 'Post-Checkout Review Request',
-    event: 'Check-out',
-    listing: 'Villa Del Sol',
-    creationDate: '2024-01-15',
-    description: 'Automatically sends review request after guest checkout',
-    status: 'Active',
+    name: 'recensioni',
+    event: '2 days after checkout',
+    listings: ['La Dimora Del Cavaliere', 'Navigli', 'Polacchi42'],
+    creationDate: '2024-09-14 11:21:18',
   },
   {
     id: 2,
-    name: 'Welcome Review Prompt',
-    event: 'Check-in',
-    listing: 'Navigli Apartment',
-    creationDate: '2024-01-20',
-    description: 'Sends review prompt during guest welcome process',
-    status: 'Active',
+    name: 'welcome feedback',
+    event: '1 day after check-in',
+    listings: ['Navigli', 'Polacchi42'],
+    creationDate: '2024-09-15 09:30:45',
   },
   {
     id: 3,
-    name: 'Mid-Stay Feedback',
-    event: 'Mid-stay',
-    listing: 'Polacchi42',
-    creationDate: '2024-01-25',
-    description: 'Requests feedback during the middle of guest stay',
-    status: 'Inactive',
+    name: 'mid-stay review',
+    event: '3 days after check-in',
+    listings: ['La Dimora Del Cavaliere', 'Navigli', 'Polacchi42', 'Superattico'],
+    creationDate: '2024-09-16 14:15:22',
   },
   {
     id: 4,
-    name: 'Extended Stay Review',
-    event: 'Extended Stay',
-    listing: 'Superattico - Via Del C...',
-    creationDate: '2024-02-01',
-    description: 'Special review request for guests staying longer than 7 days',
-    status: 'Active',
+    name: 'checkout reminder',
+    event: '1 day before checkout',
+    listings: ['Navigli', 'Polacchi42'],
+    creationDate: '2024-09-17 10:45:33',
   },
   {
     id: 5,
-    name: 'Cancellation Review',
-    event: 'Cancellation',
-    listing: 'All Listings',
-    creationDate: '2024-02-05',
-    description: 'Sends review request for cancelled reservations',
-    status: 'Draft',
-  },
-  {
-    id: 6,
-    name: 'Repeat Guest Review',
-    event: 'Repeat Guest',
-    listing: 'Villa Del Sol',
-    creationDate: '2024-02-10',
-    description: 'Customized review request for returning guests',
-    status: 'Active',
+    name: 'post-stay review',
+    event: '1 day after checkout',
+    listings: ['La Dimora Del Cavaliere', 'Navigli', 'Polacchi42', 'Superattico', 'Villa Del Sol'],
+    creationDate: '2024-09-18 16:20:11',
   },
 ];
 
@@ -154,89 +135,57 @@ export function AutoReviewsView() {
                 height: '100%',
                 display: 'flex',
                 flexDirection: 'column',
-                '&:hover': {
-                  boxShadow: 3,
-                },
+                backgroundColor: 'grey.50',
                 border: 1,
                 borderColor: 'grey.200',
+                borderRadius: 2,
               }}
             >
-              <CardContent sx={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
+              <CardContent sx={{ flex: 1, display: 'flex', flexDirection: 'column', p: 3 }}>
                 {/* Name at the top */}
-                <Typography variant="h6" sx={{ fontWeight: 600, mb: 2 }}>
+                <Typography variant="h6" sx={{ fontWeight: 600, mb: 2, color: 'text.primary' }}>
                   {autoReview.name}
                 </Typography>
 
-                {/* Description */}
-                <Typography variant="body2" color="text.secondary" sx={{ mb: 3, flex: 1 }}>
-                  {autoReview.description}
-                </Typography>
+                {/* Event */}
+                <Box sx={{ mb: 2 }}>
+                  <Typography variant="body2" sx={{ fontWeight: 500 }}>
+                    Event: {autoReview.event}
+                  </Typography>
+                </Box>
 
-                {/* Details */}
-                <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1.5 }}>
-                  <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                    <Typography variant="caption" color="text.secondary">
-                      Event:
-                    </Typography>
-                    <Typography variant="body2" sx={{ fontWeight: 500 }}>
-                      {autoReview.event}
-                    </Typography>
-                  </Box>
-                  
-                  <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                    <Typography variant="caption" color="text.secondary">
-                      Listing:
-                    </Typography>
-                    <Typography variant="body2" sx={{ fontWeight: 500 }}>
-                      {autoReview.listing}
-                    </Typography>
-                  </Box>
-                  
-                  <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                    <Typography variant="caption" color="text.secondary">
-                      Creation Date:
-                    </Typography>
-                    <Typography variant="body2" sx={{ fontWeight: 500 }}>
-                      {autoReview.creationDate}
-                    </Typography>
-                  </Box>
-
-                  <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                    <Typography variant="caption" color="text.secondary">
-                      Status:
-                    </Typography>
-                    <Box
-                      sx={{
-                        px: 1.5,
-                        py: 0.5,
-                        borderRadius: 1,
-                        bgcolor: autoReview.status === 'Active' ? 'success.lighter' : 
-                                autoReview.status === 'Inactive' ? 'error.lighter' : 'warning.lighter',
-                        color: autoReview.status === 'Active' ? 'success.darker' : 
-                               autoReview.status === 'Inactive' ? 'error.darker' : 'warning.darker',
-                        fontSize: '0.75rem',
-                        fontWeight: 500,
-                      }}
-                    >
-                      {autoReview.status}
-                    </Box>
+                {/* Listings */}
+                <Box sx={{ mb: 2 }}>
+                  <Typography variant="body2" sx={{ fontWeight: 500, mb: 1 }}>
+                    Listings:
+                  </Typography>
+                  <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
+                    {autoReview.listings.slice(0, 3).map((listing, index) => (
+                      <Typography 
+                        key={index} 
+                        variant="body2" 
+                        sx={{ 
+                          color: 'primary.main',
+                          fontWeight: 500,
+                        }}
+                      >
+                        {listing}
+                        {index < Math.min(autoReview.listings.length, 3) - 1 && ', '}
+                      </Typography>
+                    ))}
+                    {autoReview.listings.length > 3 && (
+                      <Typography variant="body2" sx={{ color: 'primary.main', fontWeight: 500 }}>
+                        More+{autoReview.listings.length - 3}
+                      </Typography>
+                    )}
                   </Box>
                 </Box>
 
-                {/* Action Buttons */}
-                <Box sx={{ display: 'flex', justifyContent: 'flex-end', gap: 1, mt: 2 }}>
-                  <Button size="small" variant="outlined">
-                    <Iconify icon={"eva:edit-fill" as any} sx={{ mr: 0.5 }} />
-                    Edit
-                  </Button>
-                  <Button size="small" variant="outlined">
-                    <Iconify icon={"eva:copy-fill" as any} sx={{ mr: 0.5 }} />
-                    Copy
-                  </Button>
-                  <Button size="small" variant="outlined" color="error">
-                    <Iconify icon={"eva:trash-2-fill" as any} sx={{ mr: 0.5 }} />
-                    Delete
-                  </Button>
+                {/* Creation Date */}
+                <Box sx={{ mt: 'auto' }}>
+                  <Typography variant="body2" sx={{ fontWeight: 500 }}>
+                    Creation date: {autoReview.creationDate}
+                  </Typography>
                 </Box>
               </CardContent>
             </Card>
