@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import React, { useState } from 'react';
 
 import Box from '@mui/material/Box';
 import Tab from '@mui/material/Tab';
@@ -202,6 +202,7 @@ export function ChargesView() {
   const [selectedCharge, setSelectedCharge] = useState<any>(null);
   const [isEditMode, setIsEditMode] = useState(false);
   const [charges, setCharges] = useState(mockCharges);
+  const [expandedReservations, setExpandedReservations] = useState<Set<string>>(new Set());
   const [visibleColumns, setVisibleColumns] = useState({
     guestName: true,
     listing: true,
@@ -274,6 +275,18 @@ export function ChargesView() {
     }));
   };
 
+  const handleReservationToggle = (reservationId: string) => {
+    setExpandedReservations(prev => {
+      const newSet = new Set(prev);
+      if (newSet.has(reservationId)) {
+        newSet.delete(reservationId);
+      } else {
+        newSet.add(reservationId);
+      }
+      return newSet;
+    });
+  };
+
   const handleSaveCharge = (chargeData: any) => {
     if (isEditMode && selectedCharge) {
       // Update existing charge
@@ -320,7 +333,7 @@ export function ChargesView() {
     } else if (filterTab === 2) { // Past Due
       filtered = charges.filter(charge => charge.status === 'FAILED' || charge.status === 'OVERDUE');
     } else if (filterTab === 3) { // By Reservation
-      // Group by reservation - for now just show all
+      // Group by reservation - show all for grouping
       filtered = charges;
     }
     
@@ -336,11 +349,66 @@ export function ChargesView() {
     return filtered;
   };
 
-  const filteredCharges = getFilteredCharges();
-  const totalPages = Math.ceil(filteredCharges.length / rowsPerPage);
+  // Group charges by reservation for "By Reservation" view
+  const getGroupedCharges = () => {
+    const filtered = getFilteredCharges();
+    
+    if (filterTab !== 3) { // Not "By Reservation"
+      return filtered.map(charge => ({ type: 'charge', data: charge }));
+    }
+    
+    // Group by reservation
+    const grouped = filtered.reduce((acc, charge) => {
+      const reservationId = charge.reservationId;
+      if (!acc[reservationId]) {
+        acc[reservationId] = [];
+      }
+      acc[reservationId].push(charge);
+      return acc;
+    }, {} as Record<string, any[]>);
+    
+    // Convert to array format for rendering
+    const result: Array<{ type: 'reservation' | 'charge', data: any }> = [];
+    
+    Object.entries(grouped).forEach(([reservationId, reservationCharges]) => {
+      // Add reservation summary row
+      const totalAmount = reservationCharges.reduce((sum, charge) => sum + charge.amount, 0);
+      const paidAmount = reservationCharges.reduce((sum, charge) => sum + charge.balance.paid, 0);
+      const unpaidAmount = totalAmount - paidAmount;
+      
+      result.push({
+        type: 'reservation',
+        data: {
+          reservationId,
+          guestName: reservationCharges[0].guestName,
+          listing: reservationCharges[0].listing,
+          checkIn: reservationCharges[0].checkIn,
+          checkOut: reservationCharges[0].checkOut,
+          channel: reservationCharges[0].channel,
+          totalAmount,
+          paidAmount,
+          unpaidAmount,
+          charges: reservationCharges,
+          status: unpaidAmount > 0 ? 'UNPAID' : 'PAID'
+        }
+      });
+      
+      // Add individual charge rows if expanded
+      if (expandedReservations.has(reservationId)) {
+        reservationCharges.forEach(charge => {
+          result.push({ type: 'charge', data: charge });
+        });
+      }
+    });
+    
+    return result;
+  };
+
+  const groupedCharges = getGroupedCharges();
+  const totalPages = Math.ceil(groupedCharges.length / rowsPerPage);
   const startIndex = currentPage * rowsPerPage;
   const endIndex = startIndex + rowsPerPage;
-  const currentCharges = filteredCharges.slice(startIndex, endIndex);
+  const currentCharges = groupedCharges.slice(startIndex, endIndex);
 
   const formatCurrency = (amount: number) => new Intl.NumberFormat('en-US', {
     style: 'currency',
@@ -474,20 +542,20 @@ export function ChargesView() {
           </Box>
         </Box>
 
-        <TextField
+            <TextField
           placeholder="Search"
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
           sx={{ width: 200 }}
-          InputProps={{
-            startAdornment: (
-              <InputAdornment position="start">
-                <Iconify icon={"eva:search-fill" as any} />
-              </InputAdornment>
-            ),
-          }}
-        />
-      </Box>
+              InputProps={{
+                startAdornment: (
+                  <InputAdornment position="start">
+                    <Iconify icon={"eva:search-fill" as any} />
+                  </InputAdornment>
+                ),
+              }}
+            />
+        </Box>
 
       {/* Charges Table */}
       <Paper sx={{ mb: 3 }}>
@@ -495,18 +563,34 @@ export function ChargesView() {
           <Table>
             <TableHead sx={{ position: 'relative' }}>
               <TableRow>
-                {visibleColumns.guestName && <TableCell>Guest name</TableCell>}
-                {visibleColumns.listing && <TableCell>Listing</TableCell>}
-                {visibleColumns.reservationCheckIn && <TableCell>Reservation check-in</TableCell>}
-                {visibleColumns.reservationCheckOut && <TableCell>Reservation check-out</TableCell>}
-                {visibleColumns.type && <TableCell>Type</TableCell>}
-                {visibleColumns.chargeName && <TableCell>Charge name</TableCell>}
-                {visibleColumns.status && <TableCell>Status</TableCell>}
-                {visibleColumns.dueDate && <TableCell>Due date</TableCell>}
-                {visibleColumns.chargeDate && <TableCell>Charge date</TableCell>}
-                {visibleColumns.chargeId && <TableCell>Charge ID</TableCell>}
-                {visibleColumns.amount && <TableCell align="right">Amount</TableCell>}
-                <TableCell>Actions</TableCell>
+                {filterTab === 3 ? (
+                  // By Reservation view headers
+                  <>
+                    <TableCell>Channel</TableCell>
+                    <TableCell>Balance</TableCell>
+                    <TableCell>Status</TableCell>
+                    <TableCell>Reservation</TableCell>
+                <TableCell>Listing</TableCell>
+                    <TableCell>Reservation dates</TableCell>
+                    <TableCell>Actions</TableCell>
+                  </>
+                ) : (
+                  // Regular view headers
+                  <>
+                    {visibleColumns.guestName && <TableCell>Guest name</TableCell>}
+                    {visibleColumns.listing && <TableCell>Listing</TableCell>}
+                    {visibleColumns.reservationCheckIn && <TableCell>Reservation check-in</TableCell>}
+                    {visibleColumns.reservationCheckOut && <TableCell>Reservation check-out</TableCell>}
+                    {visibleColumns.type && <TableCell>Type</TableCell>}
+                    {visibleColumns.chargeName && <TableCell>Charge name</TableCell>}
+                    {visibleColumns.status && <TableCell>Status</TableCell>}
+                    {visibleColumns.dueDate && <TableCell>Due date</TableCell>}
+                    {visibleColumns.chargeDate && <TableCell>Charge date</TableCell>}
+                    {visibleColumns.chargeId && <TableCell>Charge ID</TableCell>}
+                    {visibleColumns.amount && <TableCell align="right">Amount</TableCell>}
+                    <TableCell>Actions</TableCell>
+                  </>
+                )}
               </TableRow>
               {/* Floating sticky settings icon */}
               <IconButton 
@@ -530,100 +614,248 @@ export function ChargesView() {
               </IconButton>
             </TableHead>
             <TableBody>
-              {currentCharges.map((charge) => (
-                <TableRow key={charge.id} hover>
-                  {visibleColumns.guestName && (
-                    <TableCell>
-                      <Typography variant="body2" sx={{ fontWeight: 500, color: 'primary.main', cursor: 'pointer' }}>
-                        {charge.guestName}
-                      </Typography>
-                    </TableCell>
-                  )}
-                  {visibleColumns.listing && (
-                    <TableCell>
-                      <Typography variant="body2" sx={{ color: 'primary.main', cursor: 'pointer' }}>
-                        {charge.listing}
-                      </Typography>
-                    </TableCell>
-                  )}
-                  {visibleColumns.reservationCheckIn && (
-                    <TableCell>
-                      <Typography variant="body2">
-                        {charge.checkIn}
-                      </Typography>
-                    </TableCell>
-                  )}
-                  {visibleColumns.reservationCheckOut && (
-                    <TableCell>
-                      <Typography variant="body2">
-                        {charge.checkOut}
-                      </Typography>
-                    </TableCell>
-                  )}
-                  {visibleColumns.type && (
-                    <TableCell>
-                      <Chip
-                        label={charge.type}
-                        size="small"
-                        sx={{ bgcolor: 'primary.main', color: 'white', fontWeight: 500 }}
-                      />
-                    </TableCell>
-                  )}
-                  {visibleColumns.chargeName && (
-                    <TableCell>
-                      <Typography variant="body2">
-                        {charge.chargeName}
-                      </Typography>
-                    </TableCell>
-                  )}
-                  {visibleColumns.status && (
-                    <TableCell>
-                      <Chip
-                        label={charge.status}
-                        size="small"
-                        color={getStatusColor(charge.status) as any}
-                        sx={{ fontWeight: 500 }}
-                      />
-                    </TableCell>
-                  )}
-                  {visibleColumns.dueDate && (
-                    <TableCell>
-                      <Typography variant="body2">
-                        {charge.dueDate}
-                      </Typography>
-                    </TableCell>
-                  )}
-                  {visibleColumns.chargeDate && (
-                    <TableCell>
-                      <Typography variant="body2">
-                        {charge.chargeDate || '-'}
-                      </Typography>
-                    </TableCell>
-                  )}
-                  {visibleColumns.chargeId && (
-                    <TableCell>
-                      <Typography variant="body2">
-                        {charge.chargeId}
-                      </Typography>
-                    </TableCell>
-                  )}
-                  {visibleColumns.amount && (
-                    <TableCell align="right">
-                      <Typography variant="body2" sx={{ fontWeight: 500 }}>
-                        {formatCurrency(charge.amount)}
-                      </Typography>
-                    </TableCell>
-                  )}
+              {currentCharges.map((item, index) => {
+                if (item.type === 'reservation') {
+                  const reservation = item.data;
+                  const isExpanded = expandedReservations.has(reservation.reservationId);
+                  
+                  return (
+                    <React.Fragment key={`reservation-${reservation.reservationId}`}>
+                      {/* Reservation Summary Row */}
+                      <TableRow hover sx={{ bgcolor: 'grey.50' }}>
+                        <TableCell>
+                          <Box
+                            sx={{
+                              width: 24,
+                              height: 24,
+                              borderRadius: '50%',
+                              bgcolor: getChannelColor(reservation.channel),
+                              display: 'flex',
+                              alignItems: 'center',
+                              justifyContent: 'center',
+                              color: 'white',
+                              fontSize: '0.75rem',
+                              fontWeight: 600
+                            }}
+                          >
+                            {getChannelIcon(reservation.channel)}
+                          </Box>
+                        </TableCell>
+                        <TableCell>
+                          <Box sx={{ display: 'flex', flexDirection: 'column', gap: 0.5 }}>
+                            <Typography variant="body2" sx={{ fontWeight: 500 }}>
+                              {formatCurrency(reservation.paidAmount)} of {formatCurrency(reservation.totalAmount)}
+                            </Typography>
+                            <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
+                              <Box
+                                sx={{
+                                  width: 6,
+                                  height: 6,
+                                  borderRadius: '50%',
+                                  bgcolor: reservation.status === 'UNPAID' ? 'error.main' : 'success.main'
+                                }}
+                              />
+                              <Typography 
+                                variant="caption" 
+                                sx={{ 
+                                  color: reservation.status === 'UNPAID' ? 'error.main' : 'success.main',
+                                  fontWeight: 500
+                                }}
+                              >
+                                {reservation.status === 'UNPAID' ? 'Unpaid' : 'Paid'}
+                              </Typography>
+                            </Box>
+                          </Box>
+                        </TableCell>
+                        <TableCell>
+                          <Chip
+                            label="MODIFIED"
+                            size="small"
+                            sx={{ bgcolor: 'info.light', color: 'info.contrastText', fontWeight: 500 }}
+                          />
+                        </TableCell>
                   <TableCell>
-                    <IconButton
+                    <Typography variant="body2" sx={{ fontWeight: 500 }}>
+                            {reservation.guestName} ({reservation.reservationId})
+                          </Typography>
+                        </TableCell>
+                        <TableCell>
+                          <Typography variant="body2" sx={{ color: 'primary.main', cursor: 'pointer' }}>
+                            {reservation.listing}
+                    </Typography>
+                  </TableCell>
+                  <TableCell>
+                    <Typography variant="body2">
+                            {reservation.checkIn} - {reservation.checkOut}
+                          </Typography>
+                        </TableCell>
+                        <TableCell>
+                          <Box sx={{ display: 'flex', gap: 1 }}>
+                            <IconButton
+                              size="small"
+                              onClick={(e) => handleActionMenuOpen(e, reservation)}
+                            >
+                              <Iconify icon={"eva:more-vertical-fill" as any} />
+                            </IconButton>
+                            <IconButton
+                              size="small"
+                              onClick={() => handleReservationToggle(reservation.reservationId)}
+                            >
+                              <Iconify 
+                                icon={isExpanded ? "eva:chevron-up-fill" : "eva:chevron-down-fill" as any} 
+                              />
+                            </IconButton>
+                          </Box>
+                        </TableCell>
+                      </TableRow>
+                      
+                      {/* Expanded Charge Details */}
+                      {isExpanded && reservation.charges.map((charge: any) => (
+                        <TableRow key={`charge-${charge.id}`} sx={{ bgcolor: 'background.paper' }}>
+                          <TableCell colSpan={2}>
+                            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                              <Chip
+                                label={charge.type}
+                                size="small"
+                                sx={{ bgcolor: 'success.main', color: 'white', fontWeight: 500 }}
+                              />
+                              <Typography variant="body2" sx={{ fontWeight: 500 }}>
+                                {formatCurrency(charge.amount)}
+                              </Typography>
+                            </Box>
+                          </TableCell>
+                          <TableCell>
+                            <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
+                              <Chip
+                                label={charge.status}
+                                size="small"
+                                color={getStatusColor(charge.status) as any}
+                                sx={{ fontWeight: 500 }}
+                              />
+                              <Iconify icon={"eva:info-fill" as any} width={14} />
+                            </Box>
+                          </TableCell>
+                          <TableCell>
+                            <Typography variant="body2">
+                              Due date: {charge.dueDate}
+                    </Typography>
+                  </TableCell>
+                  <TableCell>
+                    <Typography variant="body2">
+                              {charge.chargeName}
+                    </Typography>
+                  </TableCell>
+                          <TableCell>
+                            <IconButton
+                              size="small"
+                              onClick={(e) => handleActionMenuOpen(e, charge)}
+                            >
+                              <Iconify icon={"eva:more-vertical-fill" as any} />
+                            </IconButton>
+                          </TableCell>
+                        </TableRow>
+                      ))}
+                    </React.Fragment>
+                  );
+                } else {
+                  // Regular charge row
+                  const charge = item.data;
+                  return (
+                    <TableRow key={charge.id} hover>
+                      {visibleColumns.guestName && (
+                        <TableCell>
+                          <Typography variant="body2" sx={{ fontWeight: 500, color: 'primary.main', cursor: 'pointer' }}>
+                            {charge.guestName}
+                          </Typography>
+                        </TableCell>
+                      )}
+                      {visibleColumns.listing && (
+                        <TableCell>
+                          <Typography variant="body2" sx={{ color: 'primary.main', cursor: 'pointer' }}>
+                            {charge.listing}
+                          </Typography>
+                        </TableCell>
+                      )}
+                      {visibleColumns.reservationCheckIn && (
+                  <TableCell>
+                    <Typography variant="body2">
+                      {charge.checkIn}
+                    </Typography>
+                  </TableCell>
+                      )}
+                      {visibleColumns.reservationCheckOut && (
+                  <TableCell>
+                    <Typography variant="body2">
+                      {charge.checkOut}
+                    </Typography>
+                  </TableCell>
+                      )}
+                      {visibleColumns.type && (
+                  <TableCell>
+                          <Chip
+                            label={charge.type}
+                            size="small"
+                            sx={{ bgcolor: 'primary.main', color: 'white', fontWeight: 500 }}
+                          />
+                  </TableCell>
+                      )}
+                      {visibleColumns.chargeName && (
+                  <TableCell>
+                    <Typography variant="body2">
+                      {charge.chargeName}
+                    </Typography>
+                  </TableCell>
+                      )}
+                      {visibleColumns.status && (
+                  <TableCell>
+                    <Chip
+                      label={charge.status}
                       size="small"
-                      onClick={(e) => handleActionMenuOpen(e, charge)}
-                    >
-                      <Iconify icon={"eva:more-vertical-fill" as any} />
-                    </IconButton>
+                            color={getStatusColor(charge.status) as any}
+                            sx={{ fontWeight: 500 }}
+                    />
+                  </TableCell>
+                      )}
+                      {visibleColumns.dueDate && (
+                  <TableCell>
+                    <Typography variant="body2">
+                      {charge.dueDate}
+                    </Typography>
+                  </TableCell>
+                      )}
+                      {visibleColumns.chargeDate && (
+                  <TableCell>
+                    <Typography variant="body2">
+                            {charge.chargeDate || '-'}
+                    </Typography>
+                  </TableCell>
+                      )}
+                      {visibleColumns.chargeId && (
+                  <TableCell>
+                    <Typography variant="body2">
+                      {charge.chargeId}
+                    </Typography>
+                  </TableCell>
+                      )}
+                      {visibleColumns.amount && (
+                  <TableCell align="right">
+                    <Typography variant="body2" sx={{ fontWeight: 500 }}>
+                      {formatCurrency(charge.amount)}
+                    </Typography>
+                        </TableCell>
+                      )}
+                      <TableCell>
+                        <IconButton
+                          size="small"
+                          onClick={(e) => handleActionMenuOpen(e, charge)}
+                        >
+                          <Iconify icon={"eva:more-vertical-fill" as any} />
+                        </IconButton>
                   </TableCell>
                 </TableRow>
-              ))}
+                  );
+                }
+              })}
             </TableBody>
           </Table>
         </TableContainer>
