@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 import Box from '@mui/material/Box';
 import Menu from '@mui/material/Menu';
@@ -21,6 +21,10 @@ import InputLabel from '@mui/material/InputLabel';
 import FormControl from '@mui/material/FormControl';
 import TableContainer from '@mui/material/TableContainer';
 import InputAdornment from '@mui/material/InputAdornment';
+import Dialog from '@mui/material/Dialog';
+import DialogTitle from '@mui/material/DialogTitle';
+import DialogContent from '@mui/material/DialogContent';
+import DialogActions from '@mui/material/DialogActions';
 
 import { useRouter } from 'src/routes/hooks';
 
@@ -79,33 +83,171 @@ export function CustomFieldsView() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [actionMenuAnchor, setActionMenuAnchor] = useState<null | HTMLElement>(null);
   const [searchTerm, setSearchTerm] = useState('');
+  const [customFields, setCustomFields] = useState<any[]>([]);
+  const [selectedField, setSelectedField] = useState<any>(null);
+  const [isEditMode, setIsEditMode] = useState(false);
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [formData, setFormData] = useState({
+    name: '',
+    type: '',
+    public: false,
+    options: [] as string[],
+  });
+
+  // Load custom fields from localStorage
+  const loadCustomFields = () => {
+    const savedFields = localStorage.getItem('customFields');
+    if (savedFields) {
+      return JSON.parse(savedFields);
+    }
+    return mockCustomFields;
+  };
+
+  useEffect(() => {
+    setCustomFields(loadCustomFields());
+  }, []);
 
   const handleBackToTasks = () => {
     router.push('/tasks/manage-tasks');
   };
 
-  const handleActionMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
+  const handleActionMenuOpen = (event: React.MouseEvent<HTMLElement>, field: any) => {
     setActionMenuAnchor(event.currentTarget);
+    setSelectedField(field);
   };
 
   const handleActionMenuClose = () => {
     setActionMenuAnchor(null);
+    setSelectedField(null);
   };
 
   const handleAddCustomField = () => {
+    setIsEditMode(false);
+    setFormData({
+      name: '',
+      type: '',
+      public: false,
+      options: [],
+    });
     setSidebarOpen(true);
+  };
+
+  const handleEditField = () => {
+    if (selectedField) {
+      setIsEditMode(true);
+      setFormData({
+        name: selectedField.name,
+        type: selectedField.type,
+        public: selectedField.public,
+        options: [...selectedField.options],
+      });
+      setSidebarOpen(true);
+    }
+    handleActionMenuClose();
+  };
+
+  const handleDeleteField = () => {
+    setDeleteDialogOpen(true);
+    handleActionMenuClose();
+  };
+
+  const handleDeleteConfirm = () => {
+    if (selectedField) {
+      const updatedFields = customFields.filter((field: any) => field.id !== selectedField.id);
+      localStorage.setItem('customFields', JSON.stringify(updatedFields));
+      setCustomFields(updatedFields);
+    }
+    setDeleteDialogOpen(false);
+    setSelectedField(null);
+  };
+
+  const handleDeleteCancel = () => {
+    setDeleteDialogOpen(false);
+    setSelectedField(null);
   };
 
   const handleSidebarClose = () => {
     setSidebarOpen(false);
+    setIsEditMode(false);
+    setFormData({
+      name: '',
+      type: '',
+      public: false,
+      options: [],
+    });
+  };
+
+  const handleFormChange = (field: string, value: any) => {
+    setFormData(prev => ({
+      ...prev,
+      [field]: value,
+    }));
+  };
+
+  const handleAddOption = () => {
+    setFormData(prev => ({
+      ...prev,
+      options: [...prev.options, ''],
+    }));
+  };
+
+  const handleOptionChange = (index: number, value: string) => {
+    setFormData(prev => ({
+      ...prev,
+      options: prev.options.map((option, i) => i === index ? value : option),
+    }));
+  };
+
+  const handleRemoveOption = (index: number) => {
+    setFormData(prev => ({
+      ...prev,
+      options: prev.options.filter((_, i) => i !== index),
+    }));
+  };
+
+  const handleSaveField = () => {
+    const fieldsData = loadCustomFields();
+    
+    if (isEditMode && selectedField) {
+      const updatedFields = fieldsData.map((field: any) =>
+        field.id === selectedField.id
+          ? {
+              ...field,
+              name: formData.name,
+              type: formData.type,
+              public: formData.public,
+              options: formData.options.filter(option => option.trim() !== ''),
+            }
+          : field
+      );
+      localStorage.setItem('customFields', JSON.stringify(updatedFields));
+      setCustomFields(updatedFields);
+    } else {
+      const newField = {
+        id: Date.now(),
+        name: formData.name,
+        type: formData.type,
+        public: formData.public,
+        options: formData.options.filter(option => option.trim() !== ''),
+        createdAt: new Date().toISOString().split('T')[0],
+      };
+      const updatedFields = [...fieldsData, newField];
+      localStorage.setItem('customFields', JSON.stringify(updatedFields));
+      setCustomFields(updatedFields);
+    }
+    
+    handleSidebarClose();
   };
 
   const handlePublicToggle = (fieldId: number) => {
-    // In a real app, this would update the field's public status
-    console.log('Toggle public status for field:', fieldId);
+    const updatedFields = customFields.map((field: any) =>
+      field.id === fieldId ? { ...field, public: !field.public } : field
+    );
+    localStorage.setItem('customFields', JSON.stringify(updatedFields));
+    setCustomFields(updatedFields);
   };
 
-  const filteredFields = mockCustomFields.filter(field =>
+  const filteredFields = customFields.filter(field =>
     field.name.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
@@ -214,14 +356,20 @@ export function CustomFieldsView() {
                   </TableCell>
                   <TableCell align="center">
                     <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
-                      <IconButton size="small">
+                      <IconButton 
+                        size="small" 
+                        onClick={() => {
+                          setSelectedField(field);
+                          handleEditField();
+                        }}
+                      >
                         <Iconify icon={"eva:edit-fill" as any} width={16} />
                       </IconButton>
                       <IconButton 
                         size="small" 
-                        onClick={handleActionMenuOpen}
+                        onClick={(e) => handleActionMenuOpen(e, field)}
                       >
-                        <Iconify icon={"eva:more-vertical-fill" as any} width={16} />
+                        <Iconify icon={"eva:trash-2-fill" as any} width={16} />
                       </IconButton>
                     </Box>
                   </TableCell>
@@ -261,7 +409,7 @@ export function CustomFieldsView() {
       >
         <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 3 }}>
           <Typography variant="h6" sx={{ fontWeight: 600 }}>
-            Add Custom Field
+            {isEditMode ? 'Edit Custom Field' : 'Add Custom Field'}
           </Typography>
           <IconButton onClick={handleSidebarClose}>
             <Iconify icon={"eva:close-fill" as any} />
@@ -273,11 +421,17 @@ export function CustomFieldsView() {
             fullWidth
             label="Field Name"
             placeholder="Enter field name..."
+            value={formData.name}
+            onChange={(e) => handleFormChange('name', e.target.value)}
           />
 
           <FormControl fullWidth>
             <InputLabel>Field Type</InputLabel>
-            <Select label="Field Type">
+            <Select 
+              label="Field Type"
+              value={formData.type}
+              onChange={(e) => handleFormChange('type', e.target.value)}
+            >
               <MenuItem value="text">Text</MenuItem>
               <MenuItem value="textarea">Text Area</MenuItem>
               <MenuItem value="number">Number</MenuItem>
@@ -292,32 +446,40 @@ export function CustomFieldsView() {
 
           <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
             <Typography variant="body2">Public Field</Typography>
-            <Switch />
+            <Switch 
+              checked={formData.public}
+              onChange={(e) => handleFormChange('public', e.target.checked)}
+            />
           </Box>
 
           <Box>
             <Typography variant="subtitle2" sx={{ mb: 1, fontWeight: 600 }}>
               Options (for dropdown/checkbox)
             </Typography>
-            <TextField
-              fullWidth
-              placeholder="Enter option..."
-              size="small"
-              sx={{ mb: 1 }}
-            />
-            <TextField
-              fullWidth
-              placeholder="Enter option..."
-              size="small"
-              sx={{ mb: 1 }}
-            />
-            <TextField
-              fullWidth
-              placeholder="Enter option..."
-              size="small"
-              sx={{ mb: 1 }}
-            />
-            <Button variant="outlined" size="small" startIcon={<Iconify icon={"eva:plus-fill" as any} />}>
+            {formData.options.map((option, index) => (
+              <Box key={index} sx={{ display: 'flex', gap: 1, mb: 1 }}>
+                <TextField
+                  fullWidth
+                  placeholder="Enter option..."
+                  size="small"
+                  value={option}
+                  onChange={(e) => handleOptionChange(index, e.target.value)}
+                />
+                <IconButton 
+                  size="small" 
+                  onClick={() => handleRemoveOption(index)}
+                  sx={{ color: 'error.main' }}
+                >
+                  <Iconify icon={"eva:close-fill" as any} width={16} />
+                </IconButton>
+              </Box>
+            ))}
+            <Button 
+              variant="outlined" 
+              size="small" 
+              startIcon={<Iconify icon={"eva:plus-fill" as any} />}
+              onClick={handleAddOption}
+            >
               Add Option
             </Button>
           </Box>
@@ -333,37 +495,29 @@ export function CustomFieldsView() {
             <Button
               fullWidth
               variant="contained"
-              onClick={handleSidebarClose}
+              onClick={handleSaveField}
             >
-              Add Field
+              {isEditMode ? 'Update Field' : 'Add Field'}
             </Button>
           </Box>
         </Box>
       </Drawer>
 
-      {/* Action Menu */}
-      <Menu
-        anchorEl={actionMenuAnchor}
-        open={Boolean(actionMenuAnchor)}
-        onClose={handleActionMenuClose}
-      >
-        <MenuItem onClick={handleActionMenuClose}>
-          <Iconify icon={"eva:edit-fill" as any} sx={{ mr: 1 }} />
-          Edit
-        </MenuItem>
-        <MenuItem onClick={handleActionMenuClose}>
-          <Iconify icon={"eva:copy-fill" as any} sx={{ mr: 1 }} />
-          Duplicate
-        </MenuItem>
-        <MenuItem onClick={handleActionMenuClose}>
-          <Iconify icon={"eva:settings-fill" as any} sx={{ mr: 1 }} />
-          Settings
-        </MenuItem>
-        <MenuItem onClick={handleActionMenuClose} sx={{ color: 'error.main' }}>
-          <Iconify icon={"eva:trash-2-fill" as any} sx={{ mr: 1 }} />
-          Delete
-        </MenuItem>
-      </Menu>
+      {/* Delete Confirmation Dialog */}
+      <Dialog open={deleteDialogOpen} onClose={handleDeleteCancel}>
+        <DialogTitle>Delete Custom Field?</DialogTitle>
+        <DialogContent>
+          <Typography>
+            Are you sure you want to delete "{selectedField?.name}"? This action cannot be undone.
+          </Typography>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleDeleteCancel}>Cancel</Button>
+          <Button onClick={handleDeleteConfirm} color="error" variant="contained">
+            Delete
+          </Button>
+        </DialogActions>
+      </Dialog>
     </DashboardContent>
   );
 }
