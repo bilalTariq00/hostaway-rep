@@ -403,90 +403,145 @@ export function ManageReviewsView() {
             Column Settings
           </Button>
         </Box>
-        <TableContainer sx={{ maxHeight: 600, overflowX: 'auto' }}>
-          <Table stickyHeader>
+        <TableContainer sx={{ 
+          maxHeight: 600, 
+          overflowX: 'auto', 
+          overflowY: 'auto',
+          scrollBehavior: 'smooth',
+          '&::-webkit-scrollbar': {
+            width: '8px',
+            height: '8px',
+          },
+          '&::-webkit-scrollbar-track': {
+            background: '#f1f1f1',
+            borderRadius: '4px',
+          },
+          '&::-webkit-scrollbar-thumb': {
+            background: '#c1c1c1',
+            borderRadius: '4px',
+            '&:hover': {
+              background: '#a8a8a8',
+            },
+          },
+        }}>
+          <Table 
+            stickyHeader 
+            sx={{ 
+              '& .MuiTableHead-root': { 
+                position: 'sticky', 
+                top: 0, 
+                zIndex: 2,
+                backgroundColor: 'background.paper'
+              },
+              '& .MuiTableCell-root': {
+                whiteSpace: 'nowrap',
+                overflow: 'hidden',
+                textOverflow: 'ellipsis',
+              },
+              '& .MuiTableRow-root': {
+                '&:hover': {
+                  backgroundColor: 'action.hover',
+                },
+              },
+            }}
+          >
             <TableHead>
               <TableRow>
                 {visibleColumns.guestName && (
-                  <TableCell sx={{ position: 'sticky', left: 0, bgcolor: 'background.paper', zIndex: 1, minWidth: 150 }}>
-                    Guest Name
-                  </TableCell>
+                  <TableCell sx={{ 
+                    position: 'sticky', 
+                    left: 0, 
+                    bgcolor: 'background.paper', 
+                    zIndex: 3, 
+                    minWidth: 150,
+                    borderRight: '1px solid',
+                    borderColor: 'divider'
+                  }}>
+                  Guest Name
+                </TableCell>
                 )}
-                {visibleColumns.reservationId && <TableCell>Reservation ID</TableCell>}
-                {visibleColumns.externalReservationId && <TableCell>External Reservation ID</TableCell>}
-                {visibleColumns.listingName && <TableCell>Listing Name</TableCell>}
-                {visibleColumns.listingExternalName && <TableCell>Listing External Name</TableCell>}
-                {visibleColumns.listingId && <TableCell>Listing ID</TableCell>}
-                {visibleColumns.channel && <TableCell>Channel</TableCell>}
-                {visibleColumns.origin && <TableCell>Origin</TableCell>}
-                {visibleColumns.checkIn && <TableCell>Check-in</TableCell>}
-                {visibleColumns.checkOut && <TableCell>Check-out</TableCell>}
-                {visibleColumns.status && <TableCell>Status</TableCell>}
-                {visibleColumns.schedule && <TableCell>Schedule</TableCell>}
-                {visibleColumns.triggerEvent && <TableCell>Trigger Event</TableCell>}
-                {visibleColumns.overallReview && <TableCell>Overall Review</TableCell>}
-                {visibleColumns.rating && <TableCell>Rating</TableCell>}
+                {visibleColumns.reservationId && <TableCell sx={{ minWidth: 120 }}>Reservation ID</TableCell>}
+                {visibleColumns.externalReservationId && <TableCell sx={{ minWidth: 200 }}>External Reservation ID</TableCell>}
+                {visibleColumns.listingName && <TableCell sx={{ minWidth: 120 }}>Listing Name</TableCell>}
+                {visibleColumns.listingExternalName && <TableCell sx={{ minWidth: 250 }}>Listing External Name</TableCell>}
+                {visibleColumns.listingId && <TableCell sx={{ minWidth: 100 }}>Listing ID</TableCell>}
+                {visibleColumns.channel && <TableCell sx={{ minWidth: 100 }}>Channel</TableCell>}
+                {visibleColumns.origin && <TableCell sx={{ minWidth: 80 }}>Origin</TableCell>}
+                {visibleColumns.checkIn && <TableCell sx={{ minWidth: 150 }}>Check-in</TableCell>}
+                {visibleColumns.checkOut && <TableCell sx={{ minWidth: 150 }}>Check-out</TableCell>}
+                {visibleColumns.status && <TableCell sx={{ minWidth: 120 }}>Status</TableCell>}
+                {visibleColumns.schedule && <TableCell sx={{ minWidth: 120 }}>Schedule</TableCell>}
+                {visibleColumns.triggerEvent && <TableCell sx={{ minWidth: 150 }}>Trigger Event</TableCell>}
+                {visibleColumns.overallReview && <TableCell sx={{ minWidth: 300 }}>Overall Review</TableCell>}
+                {visibleColumns.rating && <TableCell sx={{ minWidth: 100 }}>Rating</TableCell>}
               </TableRow>
             </TableHead>
             <TableBody>
               {currentReviews.map((review) => (
                 <TableRow key={review.id} hover>
                   {visibleColumns.guestName && (
-                    <TableCell sx={{ position: 'sticky', left: 0, bgcolor: 'background.paper', zIndex: 1 }}>
+                    <TableCell sx={{ 
+                      position: 'sticky', 
+                      left: 0, 
+                      bgcolor: 'background.paper', 
+                      zIndex: 2,
+                      borderRight: '1px solid',
+                      borderColor: 'divider'
+                    }}>
                       <Typography variant="body2" sx={{ fontWeight: 500, color: 'primary.main', cursor: 'pointer' }}>
-                        {review.guestName}
-                      </Typography>
-                    </TableCell>
+                      {review.guestName}
+                    </Typography>
+                  </TableCell>
                   )}
                   {visibleColumns.reservationId && (
-                    <TableCell>
+                  <TableCell sx={{ minWidth: 120 }}>
                       <Typography 
                         variant="body2" 
                         sx={{ color: 'primary.main', cursor: 'pointer' }}
                         onClick={() => handleReservationClick(review.reservationId)}
                       >
-                        {review.reservationId}
-                      </Typography>
-                    </TableCell>
+                      {review.reservationId}
+                    </Typography>
+                  </TableCell>
                   )}
                   {visibleColumns.externalReservationId && (
-                    <TableCell>
-                      <Typography variant="body2">
-                        {review.externalReservationId}
-                      </Typography>
-                    </TableCell>
+                  <TableCell sx={{ minWidth: 200 }}>
+                    <Typography variant="body2">
+                      {review.externalReservationId}
+                    </Typography>
+                  </TableCell>
                   )}
                   {visibleColumns.listingName && (
-                    <TableCell>
+                  <TableCell sx={{ minWidth: 120 }}>
                       <Typography 
                         variant="body2" 
                         sx={{ color: 'primary.main', cursor: 'pointer' }}
                         onClick={() => handleListingClick(review.listingId)}
                       >
-                        {review.listingName}
-                      </Typography>
-                    </TableCell>
+                      {review.listingName}
+                    </Typography>
+                  </TableCell>
                   )}
                   {visibleColumns.listingExternalName && (
-                    <TableCell>
+                  <TableCell sx={{ minWidth: 250 }}>
                       <Typography 
                         variant="body2" 
                         sx={{ color: 'primary.main', cursor: 'pointer' }}
                         onClick={() => handleListingClick(review.listingId)}
                       >
-                        {review.listingExternalName}
-                      </Typography>
-                    </TableCell>
+                      {review.listingExternalName}
+                    </Typography>
+                  </TableCell>
                   )}
                   {visibleColumns.listingId && (
-                    <TableCell>
-                      <Typography variant="body2">
-                        {review.listingId}
-                      </Typography>
-                    </TableCell>
+                  <TableCell sx={{ minWidth: 100 }}>
+                    <Typography variant="body2">
+                      {review.listingId}
+                    </Typography>
+                  </TableCell>
                   )}
                   {visibleColumns.channel && (
-                    <TableCell>
+                  <TableCell sx={{ minWidth: 100 }}>
                       <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
                         <Box
                           sx={{
@@ -500,31 +555,31 @@ export function ManageReviewsView() {
                           {review.channel}
                         </Typography>
                       </Box>
-                    </TableCell>
+                  </TableCell>
                   )}
                   {visibleColumns.origin && (
-                    <TableCell>
-                      <Typography variant="body2">
-                        {review.origin}
-                      </Typography>
-                    </TableCell>
+                  <TableCell sx={{ minWidth: 80 }}>
+                    <Typography variant="body2">
+                      {review.origin}
+                    </Typography>
+                  </TableCell>
                   )}
                   {visibleColumns.checkIn && (
-                    <TableCell>
-                      <Typography variant="body2">
-                        {review.checkIn}
-                      </Typography>
-                    </TableCell>
+                  <TableCell sx={{ minWidth: 150 }}>
+                    <Typography variant="body2">
+                      {review.checkIn}
+                    </Typography>
+                  </TableCell>
                   )}
                   {visibleColumns.checkOut && (
-                    <TableCell>
-                      <Typography variant="body2">
-                        {review.checkOut}
-                      </Typography>
-                    </TableCell>
+                  <TableCell sx={{ minWidth: 150 }}>
+                    <Typography variant="body2">
+                      {review.checkOut}
+                    </Typography>
+                  </TableCell>
                   )}
                   {visibleColumns.status && (
-                    <TableCell>
+                  <TableCell sx={{ minWidth: 120 }}>
                       <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
                         {review.status === 'Published' ? (
                           <Box
@@ -556,24 +611,24 @@ export function ManageReviewsView() {
                           {review.status}
                         </Typography>
                       </Box>
-                    </TableCell>
+                  </TableCell>
                   )}
                   {visibleColumns.schedule && (
-                    <TableCell>
-                      <Typography variant="body2">
+                  <TableCell sx={{ minWidth: 120 }}>
+                    <Typography variant="body2">
                         {review.schedule || '-'}
-                      </Typography>
-                    </TableCell>
+                    </Typography>
+                  </TableCell>
                   )}
                   {visibleColumns.triggerEvent && (
-                    <TableCell>
-                      <Typography variant="body2">
+                  <TableCell sx={{ minWidth: 150 }}>
+                    <Typography variant="body2">
                         {review.triggerEvent || '-'}
-                      </Typography>
-                    </TableCell>
+                    </Typography>
+                  </TableCell>
                   )}
                   {visibleColumns.overallReview && (
-                    <TableCell>
+                  <TableCell sx={{ minWidth: 300 }}>
                       <Typography variant="body2" sx={{ maxWidth: 300 }}>
                         {review.overallReview}
                         {review.overallReview.includes('More') && (
@@ -585,11 +640,11 @@ export function ManageReviewsView() {
                     </TableCell>
                   )}
                   {visibleColumns.rating && (
-                    <TableCell>
+                  <TableCell sx={{ minWidth: 100 }}>
                       <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
                         {renderStars(review.rating)}
-                      </Box>
-                    </TableCell>
+                    </Box>
+                  </TableCell>
                   )}
                 </TableRow>
               ))}
