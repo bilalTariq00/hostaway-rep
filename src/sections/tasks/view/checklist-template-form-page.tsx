@@ -1,18 +1,17 @@
 import { useState, useEffect } from 'react';
+import { useParams, useLocation } from 'react-router-dom';
 
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
+import Switch from '@mui/material/Switch';
+import Dialog from '@mui/material/Dialog';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 import IconButton from '@mui/material/IconButton';
-import Switch from '@mui/material/Switch';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import Dialog from '@mui/material/Dialog';
 import DialogTitle from '@mui/material/DialogTitle';
 import DialogContent from '@mui/material/DialogContent';
 import DialogActions from '@mui/material/DialogActions';
-
-import { useParams, useLocation } from 'react-router-dom';
+import FormControlLabel from '@mui/material/FormControlLabel';
 
 import { useRouter } from 'src/routes/hooks';
 
@@ -203,7 +202,7 @@ export function ChecklistTemplateFormPage() {
         <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 2 }}>
           <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
             <IconButton onClick={() => router.push('/tasks/checklist-templates')}>
-              <Iconify icon="eva:arrow-back-fill" />
+              <Iconify icon={"eva:arrow-back-fill" as any} />
             </IconButton>
             <Typography variant="h4" sx={{ fontWeight: 600 }}>
               {getPageTitle()}
@@ -259,7 +258,7 @@ export function ChecklistTemplateFormPage() {
                 variant="contained"
                 size="small"
                 onClick={handleAddTask}
-                startIcon={<Iconify icon="eva:plus-fill" />}
+                startIcon={<Iconify icon={"eva:plus-fill" as any} />}
               >
                 Add
               </Button>
@@ -268,7 +267,7 @@ export function ChecklistTemplateFormPage() {
             {formData.tasks.map((task, index) => (
               <Box key={index} sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1 }}>
                 <IconButton size="small" sx={{ cursor: 'grab' }}>
-                  <Iconify icon="eva:menu-fill" />
+                  <Iconify icon={"eva:menu-fill" as any} />
                 </IconButton>
                 <TextField
                   fullWidth
@@ -282,14 +281,14 @@ export function ChecklistTemplateFormPage() {
                   onClick={() => handleRemoveTask(index)}
                   sx={{ color: 'error.main' }}
                 >
-                  <Iconify icon="eva:trash-2-fill" />
+                  <Iconify icon={"eva:trash-2-fill" as any} />
                 </IconButton>
               </Box>
             ))}
 
             {formData.tasks.length === 0 && (
               <Typography variant="body2" color="text.secondary" sx={{ textAlign: 'center', py: 2 }}>
-                No tasks added yet. Click "Add" to create your first task.
+                No tasks added yet. Click &quot;Add&quot; to create your first task.
               </Typography>
             )}
           </Box>
@@ -319,7 +318,7 @@ export function ChecklistTemplateFormPage() {
                 variant="outlined"
                 color="error"
                 onClick={() => setDeleteDialogOpen(true)}
-                startIcon={<Iconify icon="eva:trash-2-fill" />}
+                startIcon={<Iconify icon={"eva:trash-2-fill" as any} />}
               >
                 Delete Template
               </Button>

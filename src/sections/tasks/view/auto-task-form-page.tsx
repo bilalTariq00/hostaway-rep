@@ -52,15 +52,15 @@ export function AutoTaskFormPage() {
   
   // Load existing auto-tasks from localStorage
   const loadAutoTasks = () => {
-    const storedTasks = localStorage.getItem('autoTasks');
-    if (storedTasks) {
-      return JSON.parse(storedTasks);
+    const tasksData = localStorage.getItem('autoTasks');
+    if (tasksData) {
+      return JSON.parse(tasksData);
     }
     return [];
   };
   
-  const storedTasks = loadAutoTasks();
-  const foundAutoTask = storedTasks.find((task: any) => task.id === parseInt(id || '0'));
+  const existingTasks = loadAutoTasks();
+  const foundAutoTask = existingTasks.find((task: any) => task.id === parseInt(id || '0'));
   
   const initialData = isEdit && foundAutoTask ? {
     title: foundAutoTask.name || '',
@@ -148,7 +148,7 @@ export function AutoTaskFormPage() {
     console.log('Saving auto-task:', formData);
     
     // Get existing auto-tasks from localStorage or use mock data
-    const storedTasks = JSON.parse(localStorage.getItem('autoTasks') || '[]');
+    const tasksData = JSON.parse(localStorage.getItem('autoTasks') || '[]');
     
     if (isDuplicate) {
       // Create a new auto-task with the duplicated data
@@ -163,12 +163,12 @@ export function AutoTaskFormPage() {
         description: formData.description,
       };
       
-      const updatedAutoTasks = [...storedTasks, newAutoTask];
+      const updatedAutoTasks = [...tasksData, newAutoTask];
       localStorage.setItem('autoTasks', JSON.stringify(updatedAutoTasks));
       console.log('Created duplicate auto-task:', newAutoTask);
     } else if (isEdit && id) {
       // Update existing auto-task
-      const updatedAutoTasks = storedTasks.map((task: any) => 
+      const updatedAutoTasks = tasksData.map((task: any) => 
         task.id === parseInt(id) 
           ? {
               ...task,
@@ -197,7 +197,7 @@ export function AutoTaskFormPage() {
         description: formData.description,
       };
       
-      const updatedAutoTasks = [...storedTasks, newAutoTask];
+      const updatedAutoTasks = [...tasksData, newAutoTask];
       localStorage.setItem('autoTasks', JSON.stringify(updatedAutoTasks));
       console.log('Created new auto-task:', newAutoTask);
     }

@@ -8,16 +8,16 @@ import Grid from '@mui/material/Grid';
 import Card from '@mui/material/Card';
 import List from '@mui/material/List';
 import Button from '@mui/material/Button';
+import Dialog from '@mui/material/Dialog';
 import MenuItem from '@mui/material/MenuItem';
 import ListItem from '@mui/material/ListItem';
 import Checkbox from '@mui/material/Checkbox';
 import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
 import CardContent from '@mui/material/CardContent';
+import DialogTitle from '@mui/material/DialogTitle';
 import ListItemText from '@mui/material/ListItemText';
 import ListItemIcon from '@mui/material/ListItemIcon';
-import Dialog from '@mui/material/Dialog';
-import DialogTitle from '@mui/material/DialogTitle';
 import DialogContent from '@mui/material/DialogContent';
 import DialogActions from '@mui/material/DialogActions';
 
@@ -267,7 +267,7 @@ export function ChecklistTemplatesView() {
                     Tasks we have to do:
                   </Typography>
                   <List dense sx={{ maxHeight: 200, overflow: 'auto' }}>
-                    {template.tasks.slice(0, 4).map((task, index) => (
+                    {template.tasks.slice(0, 4).map((task: string, index: number) => (
                       <ListItem key={index} sx={{ py: 0.5, px: 0 }}>
                         <ListItemIcon sx={{ minWidth: 32 }}>
                           <Checkbox
@@ -341,7 +341,7 @@ export function ChecklistTemplatesView() {
         <DialogTitle>Duplicate?</DialogTitle>
         <DialogContent>
           <Typography>
-            Are you sure you want to duplicate this checklist template? This will create a copy with "(Copy)" added to the name.
+            Are you sure you want to duplicate this checklist template? This will create a copy with &quot;(Copy)&quot; added to the name.
           </Typography>
         </DialogContent>
         <DialogActions>

@@ -1,26 +1,25 @@
 import { useState, useEffect } from 'react';
+import { useParams, useLocation } from 'react-router-dom';
 
 import Box from '@mui/material/Box';
+import Grid from '@mui/material/Grid';
+import Card from '@mui/material/Card';
 import Button from '@mui/material/Button';
+import Select from '@mui/material/Select';
+import Dialog from '@mui/material/Dialog';
+import Rating from '@mui/material/Rating';
+import MenuItem from '@mui/material/MenuItem';
+import Checkbox from '@mui/material/Checkbox';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 import IconButton from '@mui/material/IconButton';
-import Select from '@mui/material/Select';
-import MenuItem from '@mui/material/MenuItem';
 import InputLabel from '@mui/material/InputLabel';
 import FormControl from '@mui/material/FormControl';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import Checkbox from '@mui/material/Checkbox';
-import Dialog from '@mui/material/Dialog';
 import DialogTitle from '@mui/material/DialogTitle';
+import CardContent from '@mui/material/CardContent';
 import DialogContent from '@mui/material/DialogContent';
 import DialogActions from '@mui/material/DialogActions';
-import Grid from '@mui/material/Grid';
-import Card from '@mui/material/Card';
-import CardContent from '@mui/material/CardContent';
-import Rating from '@mui/material/Rating';
-
-import { useParams, useLocation } from 'react-router-dom';
+import FormControlLabel from '@mui/material/FormControlLabel';
 
 import { useRouter } from 'src/routes/hooks';
 
@@ -138,7 +137,7 @@ export function TaskFormPage() {
       const savedTasks = localStorage.getItem('tasks');
       const savedArchivedTasks = localStorage.getItem('archivedTasks');
       
-      let allTasks = [];
+      let allTasks: any[] = [];
       
       if (savedTasks) {
         allTasks = [...allTasks, ...JSON.parse(savedTasks)];
@@ -259,7 +258,7 @@ export function TaskFormPage() {
       const savedTasks = localStorage.getItem('tasks');
       const savedArchivedTasks = localStorage.getItem('archivedTasks');
       
-      let allTasks = [];
+      let allTasks: any[] = [];
       
       if (savedTasks) {
         allTasks = [...allTasks, ...JSON.parse(savedTasks)];
@@ -317,7 +316,7 @@ export function TaskFormPage() {
         const savedTasks = localStorage.getItem('tasks');
         const savedArchivedTasks = localStorage.getItem('archivedTasks');
         
-        let allTasks = [];
+        let allTasks: any[] = [];
         
         if (savedTasks) {
           allTasks = [...allTasks, ...JSON.parse(savedTasks)];
@@ -358,7 +357,7 @@ export function TaskFormPage() {
         <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 2 }}>
           <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
             <IconButton onClick={() => router.push('/tasks/archive')}>
-              <Iconify icon="eva:arrow-back-fill" />
+              <Iconify icon={"eva:arrow-back-fill" as any} />
             </IconButton>
             <Typography variant="h4" sx={{ fontWeight: 600 }}>
               {getPageTitle()}
@@ -597,7 +596,7 @@ export function TaskFormPage() {
                       onClick={() => handleRemoveChecklistItem(index)}
                       sx={{ color: 'error.main' }}
                     >
-                      <Iconify icon="eva:trash-2-fill" />
+                      <Iconify icon={"eva:trash-2-fill" as any} />
                     </IconButton>
                   )}
                 </Box>
@@ -615,7 +614,7 @@ export function TaskFormPage() {
                     variant="contained"
                     size="small"
                     onClick={handleAddChecklistItem}
-                    startIcon={<Iconify icon="eva:plus-fill" />}
+                    startIcon={<Iconify icon={"eva:plus-fill" as any} />}
                   >
                     Add
                   </Button>
@@ -833,7 +832,7 @@ export function TaskFormPage() {
                 variant="outlined"
                 color="error"
                 onClick={() => setDeleteDialogOpen(true)}
-                startIcon={<Iconify icon="eva:trash-2-fill" />}
+                startIcon={<Iconify icon={"eva:trash-2-fill" as any} />}
               >
                 Delete Task
               </Button>

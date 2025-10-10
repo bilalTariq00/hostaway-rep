@@ -1,13 +1,13 @@
 import { useState, useEffect } from 'react';
 
 import Box from '@mui/material/Box';
-import Menu from '@mui/material/Menu';
 import Paper from '@mui/material/Paper';
 import Table from '@mui/material/Table';
 import Button from '@mui/material/Button';
 import Drawer from '@mui/material/Drawer';
 import Select from '@mui/material/Select';
 import Switch from '@mui/material/Switch';
+import Dialog from '@mui/material/Dialog';
 import MenuItem from '@mui/material/MenuItem';
 import TableRow from '@mui/material/TableRow';
 import TextField from '@mui/material/TextField';
@@ -19,12 +19,11 @@ import Pagination from '@mui/material/Pagination';
 import Typography from '@mui/material/Typography';
 import InputLabel from '@mui/material/InputLabel';
 import FormControl from '@mui/material/FormControl';
-import TableContainer from '@mui/material/TableContainer';
-import InputAdornment from '@mui/material/InputAdornment';
-import Dialog from '@mui/material/Dialog';
 import DialogTitle from '@mui/material/DialogTitle';
 import DialogContent from '@mui/material/DialogContent';
 import DialogActions from '@mui/material/DialogActions';
+import TableContainer from '@mui/material/TableContainer';
+import InputAdornment from '@mui/material/InputAdornment';
 
 import { useRouter } from 'src/routes/hooks';
 
@@ -81,7 +80,6 @@ export function CustomFieldsView() {
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage] = useState(50);
   const [sidebarOpen, setSidebarOpen] = useState(false);
-  const [actionMenuAnchor, setActionMenuAnchor] = useState<null | HTMLElement>(null);
   const [searchTerm, setSearchTerm] = useState('');
   const [customFields, setCustomFields] = useState<any[]>([]);
   const [selectedField, setSelectedField] = useState<any>(null);
@@ -111,15 +109,6 @@ export function CustomFieldsView() {
     router.push('/tasks/manage-tasks');
   };
 
-  const handleActionMenuOpen = (event: React.MouseEvent<HTMLElement>, field: any) => {
-    setActionMenuAnchor(event.currentTarget);
-    setSelectedField(field);
-  };
-
-  const handleActionMenuClose = () => {
-    setActionMenuAnchor(null);
-    setSelectedField(null);
-  };
 
   const handleAddCustomField = () => {
     setIsEditMode(false);
@@ -144,10 +133,6 @@ export function CustomFieldsView() {
     setSidebarOpen(true);
   };
 
-  const handleDeleteField = () => {
-    setDeleteDialogOpen(true);
-    handleActionMenuClose();
-  };
 
   const handleDeleteConfirm = () => {
     if (selectedField) {
@@ -324,7 +309,7 @@ export function CustomFieldsView() {
                   <TableCell>
                     {field.options.length > 0 ? (
                       <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
-                        {field.options.slice(0, 2).map((option, index) => (
+                        {field.options.slice(0, 2).map((option: string, index: number) => (
                           <Typography key={index} variant="caption" sx={{ 
                             bgcolor: 'grey.100', 
                             px: 1, 
@@ -506,7 +491,7 @@ export function CustomFieldsView() {
         <DialogTitle>Delete Custom Field?</DialogTitle>
         <DialogContent>
           <Typography>
-            Are you sure you want to delete "{selectedField?.name}"? This action cannot be undone.
+            Are you sure you want to delete &quot;{selectedField?.name}&quot;? This action cannot be undone.
           </Typography>
         </DialogContent>
         <DialogActions>

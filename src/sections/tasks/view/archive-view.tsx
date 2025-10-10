@@ -10,8 +10,11 @@ import Paper from '@mui/material/Paper';
 import Table from '@mui/material/Table';
 import Button from '@mui/material/Button';
 import Select from '@mui/material/Select';
+import Dialog from '@mui/material/Dialog';
+import Popover from '@mui/material/Popover';
 import MenuItem from '@mui/material/MenuItem';
 import TableRow from '@mui/material/TableRow';
+import Checkbox from '@mui/material/Checkbox';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
 import TableHead from '@mui/material/TableHead';
@@ -20,14 +23,11 @@ import Pagination from '@mui/material/Pagination';
 import Typography from '@mui/material/Typography';
 import InputLabel from '@mui/material/InputLabel';
 import FormControl from '@mui/material/FormControl';
-import TableContainer from '@mui/material/TableContainer';
-import Dialog from '@mui/material/Dialog';
 import DialogTitle from '@mui/material/DialogTitle';
 import DialogContent from '@mui/material/DialogContent';
 import DialogActions from '@mui/material/DialogActions';
-import Checkbox from '@mui/material/Checkbox';
+import TableContainer from '@mui/material/TableContainer';
 import FormControlLabel from '@mui/material/FormControlLabel';
-import Popover from '@mui/material/Popover';
 
 import { useRouter } from 'src/routes/hooks';
 
@@ -117,7 +117,7 @@ export function ArchiveView() {
     const savedTasks = localStorage.getItem('tasks');
     const savedArchivedTasks = localStorage.getItem('archivedTasks');
     
-    let allTasks = [];
+    let allTasks: any[] = [];
     
     if (savedTasks) {
       allTasks = [...allTasks, ...JSON.parse(savedTasks)];
@@ -402,7 +402,7 @@ export function ArchiveView() {
           <Button
             variant="outlined"
             size="small"
-            startIcon={<Iconify icon="eva:settings-fill" />}
+            startIcon={<Iconify icon={"eva:settings-fill" as any} />}
             onClick={handleSettingsOpen}
           >
             Column Settings
@@ -619,7 +619,7 @@ export function ArchiveView() {
         <DialogTitle>Duplicate?</DialogTitle>
         <DialogContent>
           <Typography>
-            Are you sure you want to duplicate this task? This will create a copy with "(Copy)" added to the title.
+            Are you sure you want to duplicate this task? This will create a copy with &quot;(Copy)&quot; added to the title.
           </Typography>
         </DialogContent>
         <DialogActions>
