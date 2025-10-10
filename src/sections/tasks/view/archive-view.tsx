@@ -89,17 +89,41 @@ export function ArchiveView() {
   const [selectedAssignee, setSelectedAssignee] = useState('');
   const [archivedTasks, setArchivedTasks] = useState<any[]>([]);
 
-  // Load archived tasks from localStorage
-  const loadArchivedTasks = () => {
-    const savedTasks = localStorage.getItem('archivedTasks');
+  // Load tasks from localStorage (both archived and regular tasks)
+  const loadTasks = () => {
+    const savedTasks = localStorage.getItem('tasks');
+    const savedArchivedTasks = localStorage.getItem('archivedTasks');
+    
+    let allTasks = [];
+    
     if (savedTasks) {
-      return JSON.parse(savedTasks);
+      allTasks = [...allTasks, ...JSON.parse(savedTasks)];
     }
-    return mockArchivedTasks;
+    
+    if (savedArchivedTasks) {
+      allTasks = [...allTasks, ...JSON.parse(savedArchivedTasks)];
+    }
+    
+    // If no saved tasks, use mock data
+    if (allTasks.length === 0) {
+      allTasks = mockArchivedTasks;
+    }
+    
+    return allTasks;
   };
 
   useEffect(() => {
-    setArchivedTasks(loadArchivedTasks());
+    setArchivedTasks(loadTasks());
+  }, []);
+
+  // Refresh data when component becomes visible (e.g., returning from form)
+  useEffect(() => {
+    const handleFocus = () => {
+      setArchivedTasks(loadTasks());
+    };
+    
+    window.addEventListener('focus', handleFocus);
+    return () => window.removeEventListener('focus', handleFocus);
   }, []);
 
   const handleTabChange = (event: React.SyntheticEvent, newValue: number) => {
@@ -157,7 +181,7 @@ export function ArchiveView() {
 
   const handleRestoreTask = () => {
     if (selectedTask) {
-      const tasksData = loadArchivedTasks();
+      const tasksData = loadTasks();
       const updatedTasks = tasksData.filter((task: any) => task.id !== selectedTask.id);
       localStorage.setItem('archivedTasks', JSON.stringify(updatedTasks));
       setArchivedTasks(updatedTasks);
@@ -172,7 +196,7 @@ export function ArchiveView() {
 
   const handleDeleteConfirm = () => {
     if (selectedTask) {
-      const tasksData = loadArchivedTasks();
+      const tasksData = loadTasks();
       const updatedTasks = tasksData.filter((task: any) => task.id !== selectedTask.id);
       localStorage.setItem('archivedTasks', JSON.stringify(updatedTasks));
       setArchivedTasks(updatedTasks);

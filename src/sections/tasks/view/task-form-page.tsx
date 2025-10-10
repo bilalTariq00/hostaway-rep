@@ -136,10 +136,24 @@ export function TaskFormPage() {
   useEffect(() => {
     const loadTasks = () => {
       const savedTasks = localStorage.getItem('tasks');
+      const savedArchivedTasks = localStorage.getItem('archivedTasks');
+      
+      let allTasks = [];
+      
       if (savedTasks) {
-        return JSON.parse(savedTasks);
+        allTasks = [...allTasks, ...JSON.parse(savedTasks)];
       }
-      return mockTasks;
+      
+      if (savedArchivedTasks) {
+        allTasks = [...allTasks, ...JSON.parse(savedArchivedTasks)];
+      }
+      
+      // If no saved tasks, use mock data
+      if (allTasks.length === 0) {
+        allTasks = mockTasks;
+      }
+      
+      return allTasks;
     };
 
     const existingTasks = loadTasks();
@@ -241,7 +255,29 @@ export function TaskFormPage() {
   const handleSaveTask = () => {
     if (isView) return;
 
-    const tasksData = JSON.parse(localStorage.getItem('tasks') || JSON.stringify(mockTasks));
+    const loadTasks = () => {
+      const savedTasks = localStorage.getItem('tasks');
+      const savedArchivedTasks = localStorage.getItem('archivedTasks');
+      
+      let allTasks = [];
+      
+      if (savedTasks) {
+        allTasks = [...allTasks, ...JSON.parse(savedTasks)];
+      }
+      
+      if (savedArchivedTasks) {
+        allTasks = [...allTasks, ...JSON.parse(savedArchivedTasks)];
+      }
+      
+      // If no saved tasks, use mock data
+      if (allTasks.length === 0) {
+        allTasks = mockTasks;
+      }
+      
+      return allTasks;
+    };
+
+    const tasksData = loadTasks();
     
     if (isDuplicate) {
       const newTask = {
@@ -277,7 +313,29 @@ export function TaskFormPage() {
 
   const handleDeleteTask = () => {
     if (id) {
-      const tasksData = JSON.parse(localStorage.getItem('tasks') || JSON.stringify(mockTasks));
+      const loadTasks = () => {
+        const savedTasks = localStorage.getItem('tasks');
+        const savedArchivedTasks = localStorage.getItem('archivedTasks');
+        
+        let allTasks = [];
+        
+        if (savedTasks) {
+          allTasks = [...allTasks, ...JSON.parse(savedTasks)];
+        }
+        
+        if (savedArchivedTasks) {
+          allTasks = [...allTasks, ...JSON.parse(savedArchivedTasks)];
+        }
+        
+        // If no saved tasks, use mock data
+        if (allTasks.length === 0) {
+          allTasks = mockTasks;
+        }
+        
+        return allTasks;
+      };
+
+      const tasksData = loadTasks();
       const updatedTasks = tasksData.filter((task: any) => task.id !== parseInt(id));
       localStorage.setItem('tasks', JSON.stringify(updatedTasks));
     }
