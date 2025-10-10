@@ -109,6 +109,7 @@ export function ChecklistTemplatesView() {
   const [actionMenuAnchor, setActionMenuAnchor] = useState<null | HTMLElement>(null);
   const [selectedTemplate, setSelectedTemplate] = useState<any>(null);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [duplicateDialogOpen, setDuplicateDialogOpen] = useState(false);
   const [checklistTemplates, setChecklistTemplates] = useState<any[]>([]);
 
   // Load checklist templates from localStorage
@@ -153,10 +154,21 @@ export function ChecklistTemplatesView() {
   };
 
   const handleDuplicateTemplate = () => {
+    setDuplicateDialogOpen(true);
+    handleActionMenuClose();
+  };
+
+  const handleDuplicateConfirm = () => {
     if (selectedTemplate) {
       router.push(`/tasks/checklist-templates/${selectedTemplate.id}/duplicate`);
     }
-    handleActionMenuClose();
+    setDuplicateDialogOpen(false);
+    setSelectedTemplate(null);
+  };
+
+  const handleDuplicateCancel = () => {
+    setDuplicateDialogOpen(false);
+    setSelectedTemplate(null);
   };
 
   const handleDeleteTemplate = () => {
@@ -291,7 +303,7 @@ export function ChecklistTemplatesView() {
                   <IconButton size="small" onClick={() => router.push(`/tasks/checklist-templates/${template.id}/edit`)}>
                     <Iconify icon={"eva:edit-fill" as any} width={16} />
                   </IconButton>
-                  <IconButton size="small" onClick={() => router.push(`/tasks/checklist-templates/${template.id}/duplicate`)}>
+                  <IconButton size="small" onClick={() => { setSelectedTemplate(template); setDuplicateDialogOpen(true); }}>
                     <Iconify icon={"eva:copy-fill" as any} width={16} />
                   </IconButton>
                   <IconButton size="small" sx={{ color: 'error.main' }} onClick={() => { setSelectedTemplate(template); setDeleteDialogOpen(true); }}>
@@ -323,6 +335,22 @@ export function ChecklistTemplatesView() {
           Delete
         </MenuItem>
       </Menu>
+
+      {/* Duplicate Confirmation Dialog */}
+      <Dialog open={duplicateDialogOpen} onClose={handleDuplicateCancel}>
+        <DialogTitle>Duplicate?</DialogTitle>
+        <DialogContent>
+          <Typography>
+            Are you sure you want to duplicate this checklist template? This will create a copy with "(Copy)" added to the name.
+          </Typography>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleDuplicateCancel}>No</Button>
+          <Button onClick={handleDuplicateConfirm} variant="contained">
+            Yes
+          </Button>
+        </DialogActions>
+      </Dialog>
 
       {/* Delete Confirmation Dialog */}
       <Dialog open={deleteDialogOpen} onClose={handleDeleteCancel}>
