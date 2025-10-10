@@ -219,10 +219,24 @@ export function ArchiveView() {
 
   const handleDeleteConfirm = () => {
     if (selectedTask) {
-      const tasksData = loadTasks();
-      const updatedTasks = tasksData.filter((task: any) => task.id !== selectedTask.id);
-      localStorage.setItem('tasks', JSON.stringify(updatedTasks));
-      setArchivedTasks(updatedTasks);
+      // Remove from both storage locations
+      const savedTasks = localStorage.getItem('tasks');
+      const savedArchivedTasks = localStorage.getItem('archivedTasks');
+      
+      if (savedTasks) {
+        const tasksData = JSON.parse(savedTasks);
+        const updatedTasks = tasksData.filter((task: any) => task.id !== selectedTask.id);
+        localStorage.setItem('tasks', JSON.stringify(updatedTasks));
+      }
+      
+      if (savedArchivedTasks) {
+        const archivedData = JSON.parse(savedArchivedTasks);
+        const updatedArchived = archivedData.filter((task: any) => task.id !== selectedTask.id);
+        localStorage.setItem('archivedTasks', JSON.stringify(updatedArchived));
+      }
+      
+      // Refresh the display
+      setArchivedTasks(loadTasks());
     }
     setDeleteDialogOpen(false);
     setSelectedTask(null);
@@ -261,18 +275,9 @@ export function ArchiveView() {
           <Typography variant="h4" sx={{ fontWeight: 600 }}>
             Tasks
           </Typography>
-          <Box sx={{ display: 'flex', gap: 2 }}>
-            <Button
-              variant="outlined"
-              startIcon={<Iconify icon="eva:settings-fill" />}
-              onClick={handleSettingsOpen}
-            >
-              Settings
-            </Button>
-            <Button variant="contained" onClick={handleAddTask}>
-              Add Tasks
-            </Button>
-          </Box>
+          <Button variant="contained" onClick={handleAddTask}>
+            Add Tasks
+          </Button>
         </Box>
 
         <Tabs
@@ -363,6 +368,18 @@ export function ArchiveView() {
 
       {/* Data Mapping - Archived Tasks Table */}
       <Paper sx={{ mb: 3 }}>
+        {/* Table Header with Settings */}
+        <Box sx={{ p: 2, borderBottom: 1, borderColor: 'divider', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+          <Typography variant="h6">Tasks Table</Typography>
+          <Button
+            variant="outlined"
+            size="small"
+            startIcon={<Iconify icon="eva:settings-fill" />}
+            onClick={handleSettingsOpen}
+          >
+            Column Settings
+          </Button>
+        </Box>
         <TableContainer>
           <Table>
             <TableHead>
@@ -615,23 +632,99 @@ export function ArchiveView() {
           horizontal: 'right',
         }}
       >
-        <Box sx={{ p: 2, minWidth: 200 }}>
+        <Box sx={{ p: 2, minWidth: 250 }}>
           <Typography variant="h6" sx={{ mb: 2 }}>
-            Column Settings
+            Show/Hide Columns
           </Typography>
-          <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
-            {Object.entries(visibleColumns).map(([key, value]) => (
-              <FormControlLabel
-                key={key}
-                control={
-                  <Checkbox
-                    checked={value}
-                    onChange={() => handleColumnToggle(key)}
-                  />
-                }
-                label={key.charAt(0).toUpperCase() + key.slice(1).replace(/([A-Z])/g, ' $1')}
-              />
-            ))}
+          <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
+            Select which columns to display in the table
+          </Typography>
+          <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1, maxHeight: 300, overflowY: 'auto' }}>
+            {Object.entries(visibleColumns).map(([key, value]) => {
+              const columnLabels: { [key: string]: string } = {
+                task: 'Task Title',
+                description: 'Description',
+                status: 'Status',
+                priority: 'Priority',
+                assignee: 'Assignee',
+                supervisor: 'Supervisor',
+                group: 'Group',
+                startDate: 'Start Date',
+                endDate: 'End Date',
+                category: 'Category',
+                listing: 'Listing',
+                channel: 'Channel',
+                reservation: 'Reservation',
+                cost: 'Cost',
+                archivedDate: 'Archived Date',
+              };
+              
+              return (
+                <FormControlLabel
+                  key={key}
+                  control={
+                    <Checkbox
+                      checked={value}
+                      onChange={() => handleColumnToggle(key)}
+                      size="small"
+                    />
+                  }
+                  label={columnLabels[key] || key}
+                  sx={{ '& .MuiFormControlLabel-label': { fontSize: '0.875rem' } }}
+                />
+              );
+            })}
+          </Box>
+          <Box sx={{ mt: 2, pt: 2, borderTop: 1, borderColor: 'divider' }}>
+            <Button
+              size="small"
+              onClick={() => {
+                setVisibleColumns({
+                  task: true,
+                  description: true,
+                  status: true,
+                  priority: true,
+                  assignee: true,
+                  supervisor: true,
+                  group: true,
+                  startDate: true,
+                  endDate: true,
+                  category: true,
+                  listing: true,
+                  channel: true,
+                  reservation: true,
+                  cost: true,
+                  archivedDate: true,
+                });
+              }}
+            >
+              Show All
+            </Button>
+            <Button
+              size="small"
+              onClick={() => {
+                setVisibleColumns({
+                  task: true,
+                  description: false,
+                  status: true,
+                  priority: true,
+                  assignee: true,
+                  supervisor: false,
+                  group: false,
+                  startDate: false,
+                  endDate: false,
+                  category: false,
+                  listing: true,
+                  channel: true,
+                  reservation: false,
+                  cost: false,
+                  archivedDate: false,
+                });
+              }}
+              sx={{ ml: 1 }}
+            >
+              Show Essential
+            </Button>
           </Box>
         </Box>
       </Popover>
