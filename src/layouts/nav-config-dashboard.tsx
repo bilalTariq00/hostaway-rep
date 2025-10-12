@@ -296,36 +296,36 @@ export const navData = [
       },
     ],
   },
-  {
-    title: 'Booking Engine',
-    path: '/booking-engine',
-    icon: icon('ic-cart'),
-    children: [
-      {
-        title: 'Design',
-        path: '/booking-engine/design',
-        icon: icon('ic-cart'),
-      },
-      {
-        title: 'Listing',
-        path: '/booking-engine/listing',
-        icon: icon('ic-cart'),
-      },
-      {
-        title: 'Pages',
-        path: '/booking-engine/pages',
-        icon: icon('ic-cart'),
-      },
-      {
-        title: 'Settings',
-        path: '/booking-engine/settings',
-        icon: icon('ic-cart'),
-      },
-      {
-        title: 'Translations',
-        path: '/booking-engine/translations',
-        icon: icon('ic-cart'),
-      },
-    ],
-  },
+  // {
+  //   title: 'Booking Engine',
+  //   path: '/booking-engine',
+  //   icon: icon('ic-cart'),
+  //   children: [
+  //     {
+  //       title: 'Design',
+  //       path: '/booking-engine/design',
+  //       icon: icon('ic-cart'),
+  //     },
+  //     {
+  //       title: 'Listing',
+  //       path: '/booking-engine/listing',
+  //       icon: icon('ic-cart'),
+  //     },
+  //     {
+  //       title: 'Pages',
+  //       path: '/booking-engine/pages',
+  //       icon: icon('ic-cart'),
+  //     },
+  //     {
+  //       title: 'Settings',
+  //       path: '/booking-engine/settings',
+  //       icon: icon('ic-cart'),
+  //     },
+  //     {
+  //       title: 'Translations',
+  //       path: '/booking-engine/translations',
+  //       icon: icon('ic-cart'),
+  //     },
+  //   ],
+  // },
 ];
