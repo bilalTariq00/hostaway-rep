@@ -65,6 +65,8 @@ export const DocumentTemplatesPage = lazy(() => import('src/sections/guest-payme
 export const SmartLocksPage = lazy(() => import('src/sections/smart-locks/view/smart-locks-view').then(module => ({ default: module.SmartLocksView })));
 export const ListingMappingPage = lazy(() => import('src/sections/channel-manager/view/listing-mapping-view').then(module => ({ default: module.ListingMappingView })));
 export const ChannelsPage = lazy(() => import('src/sections/channel-manager/view/channels-view').then(module => ({ default: module.ChannelsView })));
+export const AirbnbPage = lazy(() => import('src/sections/channel-manager/view/airbnb-view').then(module => ({ default: module.AirbnbView })));
+export const BookingPage = lazy(() => import('src/sections/channel-manager/view/booking-view').then(module => ({ default: module.BookingView })));
 export const DesignPage = lazy(() => import('src/sections/booking-engine/view/design-view').then(module => ({ default: module.DesignView })));
 export const BookingListingsPage = lazy(() => import('src/sections/booking-engine/view/listings-view').then(module => ({ default: module.ListingsView })));
 export const BookingPagesPage = lazy(() => import('src/sections/booking-engine/view/pages-view').then(module => ({ default: module.PagesView })));
@@ -184,6 +186,8 @@ export const routesSection: RouteObject[] = [
       { path: 'channel-manager', element: <ListingMappingPage /> },
       { path: 'channel-manager/listing-mapping', element: <ListingMappingPage /> },
       { path: 'channel-manager/channels', element: <ChannelsPage /> },
+      { path: 'channel-manager/airbnb', element: <AirbnbPage /> },
+      { path: 'channel-manager/booking', element: <BookingPage /> },
       { path: 'booking-engine', element: <DesignPage /> },
       { path: 'booking-engine/design', element: <DesignPage /> },
       { path: 'booking-engine/listing', element: <BookingListingsPage /> },
