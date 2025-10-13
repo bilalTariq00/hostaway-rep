@@ -10,6 +10,7 @@ import Table from '@mui/material/Table';
 import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
 import Select from '@mui/material/Select';
+import Tooltip from '@mui/material/Tooltip';
 import Checkbox from '@mui/material/Checkbox';
 import MenuItem from '@mui/material/MenuItem';
 import TableRow from '@mui/material/TableRow';
@@ -175,28 +176,80 @@ export function ChannelsView() {
     // Handle support contact
   };
 
+  const getInfoTooltipContent = (channel: any) => {
+    if (channel.name === 'Vrbo iCAL') {
+      return (
+        <Box>
+          <Typography variant="body2" sx={{ fontWeight: 600, mb: 1 }}>
+            Vrbo iCAL Connection
+          </Typography>
+          <Typography variant="caption" sx={{ display: 'block', mb: 0.5 }}>
+            • Syncs availability between Hostaway and Vrbo
+          </Typography>
+          <Typography variant="caption" sx={{ display: 'block', mb: 0.5 }}>
+            • Updates are slower than API connections
+          </Typography>
+          <Typography variant="caption" sx={{ display: 'block', mb: 0.5 }}>
+            • Requires manual calendar export/import
+          </Typography>
+          <Typography variant="caption" sx={{ display: 'block' }}>
+            • Guest messaging not supported
+          </Typography>
+        </Box>
+      );
+    }
+    if (channel.name === 'Custom iCAL') {
+      return (
+        <Box>
+          <Typography variant="body2" sx={{ fontWeight: 600, mb: 1 }}>
+            Custom iCAL Connection
+          </Typography>
+          <Typography variant="caption" sx={{ display: 'block', mb: 0.5 }}>
+            • Connect any calendar that supports iCAL
+          </Typography>
+          <Typography variant="caption" sx={{ display: 'block', mb: 0.5 }}>
+            • Two-way sync with external calendars
+          </Typography>
+          <Typography variant="caption" sx={{ display: 'block', mb: 0.5 }}>
+            • Perfect for personal calendars
+          </Typography>
+          <Typography variant="caption" sx={{ display: 'block' }}>
+            • Manual setup required
+          </Typography>
+        </Box>
+      );
+    }
+    return '';
+  };
+
   const getStatusChip = (status: string) => {
     if (status === 'active') {
       return (
         <Box
           sx={{
-            bgcolor: '#4CAF50',
+            bgcolor: 'primary.main',
             color: 'white',
-            px: 1,
-            py: 0.2,
+            px: 1.5,
+            py: 0.5,
             borderRadius: 2,
-            fontSize: '0.6rem',
-            fontWeight: 700,
+            fontSize: '0.7rem',
+            fontWeight: 600,
             textTransform: 'uppercase',
             letterSpacing: '0.3px',
-            minWidth: 45,
+            minWidth: 60,
             textAlign: 'center',
             flexShrink: 0,
-            height: 18,
+            height: 26,
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
             lineHeight: 1,
+            boxShadow: '0 2px 6px rgba(0, 166, 153, 0.25)',
+            '&:hover': {
+              transform: 'translateY(-1px)',
+              boxShadow: '0 4px 12px rgba(0, 166, 153, 0.35)',
+            },
+            transition: 'all 0.2s ease-in-out',
           }}
         >
           Active
@@ -206,23 +259,29 @@ export function ChannelsView() {
     return (
       <Box
         sx={{
-          bgcolor: '#9E9E9E',
-          color: 'white',
-          px: 1,
-          py: 0.2,
+          bgcolor: 'grey.300',
+          color: 'grey.700',
+          px: 1.5,
+          py: 0.5,
           borderRadius: 2,
-          fontSize: '0.6rem',
-          fontWeight: 700,
+          fontSize: '0.7rem',
+          fontWeight: 600,
           textTransform: 'uppercase',
           letterSpacing: '0.3px',
-          minWidth: 45,
+          minWidth: 60,
           textAlign: 'center',
           flexShrink: 0,
-          height: 18,
+          height: 26,
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
           lineHeight: 1,
+          boxShadow: '0 2px 4px rgba(158, 158, 158, 0.2)',
+          '&:hover': {
+            transform: 'translateY(-1px)',
+            boxShadow: '0 4px 8px rgba(158, 158, 158, 0.3)',
+          },
+          transition: 'all 0.2s ease-in-out',
         }}
       >
         Not Connected
@@ -246,7 +305,17 @@ export function ChannelsView() {
       </Box>
 
       {/* Channels Table */}
-      <Card sx={{ boxShadow: 'none', border: '1px solid', borderColor: '#E0E0E0', borderRadius: 2 }}>
+      <Card sx={{ 
+        boxShadow: '0 4px 20px rgba(0,0,0,0.08)', 
+        border: '1px solid', 
+        borderColor: 'grey.200', 
+        borderRadius: 3,
+        overflow: 'hidden',
+        '&:hover': {
+          boxShadow: '0 8px 30px rgba(0,0,0,0.12)',
+        },
+        transition: 'box-shadow 0.3s ease-in-out',
+      }}>
         <TableContainer>
           <Table>
             <TableHead>
@@ -258,8 +327,15 @@ export function ChannelsView() {
               </TableRow>
             </TableHead>
             <TableBody>
-              {mockChannels.map((channel) => (
-                <TableRow key={channel.id} sx={{ '&:hover': { bgcolor: '#FAFAFA' } }}>
+        {mockChannels.map((channel) => (
+                <TableRow key={channel.id} sx={{ 
+                  '&:hover': { 
+                    bgcolor: 'grey.50',
+                    transform: 'scale(1.01)',
+                    boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
+                  },
+                  transition: 'all 0.2s ease-in-out',
+                }}>
                   {/* Status Column */}
                   <TableCell sx={{ py: 2 }}>
                     {getStatusChip(channel.status)}
@@ -267,7 +343,7 @@ export function ChannelsView() {
                   
                   {/* Channel Column */}
                   <TableCell sx={{ py: 2 }}>
-                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
                       <Box
                         sx={{
                           width: 40,
@@ -312,8 +388,8 @@ export function ChannelsView() {
                         </Box>
                       </Box>
                       <Typography variant="subtitle1" sx={{ fontWeight: 600, fontSize: '1rem', color: '#333' }}>
-                        {channel.name}
-                      </Typography>
+                    {channel.name}
+                  </Typography>
                     </Box>
                   </TableCell>
                   
@@ -324,24 +400,31 @@ export function ChannelsView() {
                         label={channel.partnerBadge} 
                         size="small" 
                         sx={{ 
-                          fontSize: '0.6rem',
-                          height: 18,
+                          fontSize: '0.7rem',
+                          height: 24,
                           bgcolor: channel.name === 'Airbnb' ? '#FF5A5F' : 
-                                  channel.name === 'Booking.com' ? '#003580' : '#FF6B35',
+                                  channel.name === 'Booking.com' ? '#003580' : 
+                                  channel.name === 'Vrbo' ? '#00A699' : '#FF6B35',
                           color: 'white',
                           fontWeight: 600,
-                          borderRadius: 1.5,
+                          borderRadius: 2,
+                          boxShadow: '0 2px 6px rgba(0,0,0,0.15)',
                           '& .MuiChip-label': {
-                            px: 0.8,
-                            py: 0.2,
+                            px: 1.2,
+                            py: 0.4,
                             lineHeight: 1.2,
-                          }
+                          },
+                          '&:hover': {
+                            transform: 'translateY(-1px)',
+                            boxShadow: '0 4px 10px rgba(0,0,0,0.2)',
+                          },
+                          transition: 'all 0.2s ease-in-out',
                         }} 
                       />
                     ) : (
                       <Typography variant="body2" color="text.secondary" sx={{ fontSize: '0.8rem' }}>
                         -
-                      </Typography>
+                  </Typography>
                     )}
                   </TableCell>
                   
@@ -349,224 +432,169 @@ export function ChannelsView() {
                   <TableCell sx={{ py: 2, textAlign: 'center' }}>
                     <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 1 }}>
                       {channel.hasInfo && (
-                        <Box sx={{ 
-                          width: 20, 
-                          height: 20, 
-                          borderRadius: '50%', 
-                          bgcolor: '#666', 
-                          display: 'flex', 
-                          alignItems: 'center', 
-                          justifyContent: 'center',
-                          mr: 0.5
-                        }}>
-                          <Typography sx={{ color: 'white', fontSize: '0.7rem', fontWeight: 'bold' }}>i</Typography>
-                        </Box>
+                        <Tooltip
+                          title={getInfoTooltipContent(channel)}
+                          arrow
+                          placement="top"
+                          enterDelay={300}
+                          leaveDelay={200}
+                          componentsProps={{
+                            tooltip: {
+                              sx: {
+                                bgcolor: 'grey.900',
+                                color: 'white',
+                                fontSize: '0.75rem',
+                                maxWidth: 280,
+                                '& .MuiTooltip-arrow': {
+                                  color: 'grey.900',
+                                },
+                              },
+                            },
+                          }}
+                        >
+                          <Box sx={{ 
+                            width: 20, 
+                            height: 20, 
+                            borderRadius: '50%', 
+                            bgcolor: 'primary.main', 
+                            display: 'flex', 
+                            alignItems: 'center', 
+                            justifyContent: 'center',
+                            mr: 0.5,
+                            cursor: 'pointer',
+                            '&:hover': {
+                              bgcolor: 'primary.dark',
+                              transform: 'scale(1.1)',
+                            },
+                            transition: 'all 0.2s ease-in-out',
+                          }}>
+                            <Typography sx={{ color: 'white', fontSize: '0.7rem', fontWeight: 'bold' }}>i</Typography>
+                </Box>
+                        </Tooltip>
                       )}
-                      {channel.type === 'config' ? (
-                        <Button
-                          variant="outlined"
+                {channel.type === 'config' ? (
+                  <Button
+                    variant="outlined"
                           startIcon={<Settings size={14} />}
-                          onClick={() => handleConfigClick(channel)}
+                    onClick={() => handleConfigClick(channel)}
                           sx={{ 
                             textTransform: 'none', 
-                            borderColor: '#2196F3', 
-                            color: '#1976D2',
+                            borderColor: 'primary.main', 
+                            color: 'primary.main',
                             fontSize: '0.8rem',
-                            px: 2,
-                            py: 0.5,
-                            minWidth: 100,
-                            height: 32,
-                            borderRadius: 2
+                            px: 2.5,
+                            py: 0.8,
+                            minWidth: 110,
+                            height: 36,
+                            borderRadius: 2,
+                            fontWeight: 500,
+                            borderWidth: 1.5,
+                            '&:hover': {
+                              borderColor: 'primary.dark',
+                              bgcolor: 'primary.main',
+                              color: 'white',
+                              transform: 'translateY(-1px)',
+                              boxShadow: '0 4px 12px rgba(0, 166, 153, 0.3)',
+                            },
+                            transition: 'all 0.2s ease-in-out',
                           }}
                         >
                           Configure
-                        </Button>
-                      ) : (
-                        <Button
-                          variant="contained"
+                  </Button>
+                ) : (
+                  <Button
+                    variant="contained"
                           startIcon={<ArrowRight size={14} />}
-                          onClick={() => handleActivateClick(channel)}
+                    onClick={() => handleActivateClick(channel)}
                           sx={{ 
                             textTransform: 'none', 
-                            bgcolor: '#00A699',
+                            bgcolor: 'primary.main',
                             fontSize: '0.8rem',
-                            px: 2,
-                            py: 0.5,
-                            minWidth: 100,
-                            height: 32,
+                            px: 2.5,
+                            py: 0.8,
+                            minWidth: 110,
+                            height: 36,
                             borderRadius: 2,
                             fontWeight: 600,
+                            boxShadow: '0 3px 10px rgba(0, 166, 153, 0.3)',
                             '&:hover': {
-                              bgcolor: '#008A7A',
-                            }
+                              bgcolor: 'primary.dark',
+                              boxShadow: '0 6px 16px rgba(0, 166, 153, 0.4)',
+                              transform: 'translateY(-2px)',
+                            },
+                            transition: 'all 0.2s ease-in-out',
                           }}
-                        >
-                          Activate
-                        </Button>
-                      )}
-                    </Box>
+                  >
+                    Activate
+                  </Button>
+                )}
+              </Box>
                   </TableCell>
                 </TableRow>
               ))}
             </TableBody>
           </Table>
         </TableContainer>
-      </Card>
+          </Card>
 
       {/* Terms Confirmation Modal */}
       <Dialog
         open={termsModalOpen}
         onClose={() => setTermsModalOpen(false)}
-        maxWidth="md"
-        fullWidth
+        maxWidth="sm"
         PaperProps={{
           sx: {
             borderRadius: 3,
             boxShadow: '0 8px 32px rgba(0,0,0,0.12)',
-            bgcolor: '#F8F9FA',
+            bgcolor: 'white',
+            maxHeight: '80vh',
           },
         }}
       >
         <DialogTitle sx={{ pb: 1 }}>
-          <Typography variant="h4" sx={{ fontWeight: 700, textAlign: 'center', mb: 2, color: '#333' }}>
+          <Typography variant="h5" sx={{ fontWeight: 600, textAlign: 'center', mb: 2, color: '#333' }}>
             Please confirm the next statements to continue
           </Typography>
           <Typography variant="body2" color="text.secondary" sx={{ textAlign: 'center', lineHeight: 1.6 }}>
             The following Hostaway terms of services apply to the use of the Hostaway software including all channel connections and 3rd party connections.
             </Typography>
         </DialogTitle>
-        <DialogContent sx={{ px: 4, py: 2 }}>
+        <DialogContent sx={{ px: 3, py: 1 }}>
           <Box sx={{ mt: 2 }}>
             {selectedChannel?.name === 'Booking.com' ? (
               <>
-                <Box sx={{ display: 'flex', alignItems: 'flex-start', gap: 2, mb: 3 }}>
-                  <Box sx={{ 
-                    width: 20, 
-                    height: 20, 
-                    borderRadius: '50%', 
-                    bgcolor: '#E0E0E0', 
-                    display: 'flex', 
-                    alignItems: 'center', 
-                    justifyContent: 'center',
-                    flexShrink: 0,
-                    mt: 0.5
-                  }}>
-                    <img 
-                      src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz4KPHN2ZyB3aWR0aD0iMzRweCIgaGVpZ2h0PSIzNXB4IiB2aWV3Qm94PSIwIDAgMzQgMzUiIHZlcnNpb249IjEuMSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB4bWxuczp4bGluaz0iaHR0cDovL3d3dy53My5vcmcvMTk5OS94bGluayI+CiAgICA8IS0tIEdlbmVyYXRvcjogc2tldGNodG9vbCA2My4xICgxMDEwMTApIC0gaHR0cHM6Ly9za2V0Y2guY29tIC0tPgogICAgPHRpdGxlPjU3MzJCMUNCLUU3MzMtNEE2Qy1BQ0E5LTBEMjM3OEE3NEQ0NTwvdGl0bGU+CiAgICA8ZGVzYz5DcmVhdGVkIHdpdGggc2tldGNodG9vbC48L2Rlc2M+CiAgICA8ZyBpZD0iUGFnZS0xIiBzdHJva2U9Im5vbmUiIHN0cm9rZS13aWR0aD0iMSIgZmlsbD0ibm9uZSIgZmlsbC1ydWxlPSJldmVub2RkIj4KICAgICAgICA8ZyBpZD0iTGVnYWwtc3RhdGVtZW50cy1zdmctaWNvbnMiIHRyYW5zZm9ybT0idHJhbnNsYXRlKC0xNTAuMDAwMDAwLCAtMTg0LjAwMDAwMCkiPgogICAgICAgICAgICA8ZyBpZD0iR3JvdXAtMTE0LUNvcHkiIHRyYW5zZm9ybT0idHJhbnNsYXRlKDE1MS4wMDAwMDAsIDE4NS4wMDAwMDApIj4KICAgICAgICAgICAgICAgIDxwYXRoIGQ9Ik02LjM1MzU4NTExLDYgTDI5LjY0NjQxNDksNiBDMzAuOTQ2MjY0MSw2IDMyLDcuMDUzNzM1OTUgMzIsOC4zNTM1ODUxMSBMMzIsMjcgQzMyLDMwLjMxMzcwODUgMjkuMzEzNzA4NSwzMyAyNiwzMyBMNi4zNTM1ODUxMSwzMyBDNS4wNTM3MzU5NSwzMyA0LDMxLjk0NjI2NDEgNCwzMC42NDY0MTQ5IEw0LDguMzUzNTg1MTEgQzQsNy4wNTM3MzU5NSA1LjA1MzczNTk1LDYgNi4zNTM1ODUxMSw2IFoiIGlkPSJSZWN0YW5nbGUtQ29weS0zMSIgc3Ryb2tlPSIjNzg4OTk5IiBmaWxsPSIjRTdFQUYzIj48L3BhdGg+CiAgICAgICAgICAgICAgICA8cGF0aCBkPSJNNC4zNTM1ODUxMSw0IEwyNy42NDY0MTQ5LDQgQzI4Ljk0NjI2NDEsNCAzMCw1LjA1MzczNTk1IDMwLDYuMzUzNTg1MTEgTDMwLDI3IEMzMCwyOS4yMDkxMzkgMjguMjA5MTM5LDMxIDI2LDMxIEw0LjM1MzU4NTExLDMxIEMzLjA1MzczNTk1LDMxIDIsMjkuOTQ2MjY0MSAyLDI4LjY0NjQxNDkgTDIsNi4zNTM1ODUxMSBDMiw1LjA1MzczNTk1IDMuMDUzNzM1OTUsNCA0LjM1MzU4NTExLDQgWiIgaWQ9IlJlY3RhbmdsZS1Db3B5LTMxIiBzdHJva2U9IiM3ODg5OTkiIGZpbGw9IiNFN0VBRjMiPjwvcGF0aD4KICAgICAgICAgICAgICAgIDxyZWN0IGlkPSJSZWN0YW5nbGUtQ29weS0zMSIgc3Ryb2tlPSIjNzg4OTk5IiBmaWxsPSIjRkZGRkZGIiB4PSIwIiB5PSIyIiB3aWR0aD0iMjgiIGhlaWdodD0iMjciIHJ4PSIyLjM1MzU4NTExIj48L3JlY3Q+CiAgICAgICAgICAgICAgICA8cGF0aCBkPSJNMi4zNTM1ODUxMSwyIEwyNS42NDY0MTQ5LDIgQzI2Ljk0NjI2NDEsMiAyOCwzLjA1MzczNTk1IDI4LDQuMzUzNTg1MTEgTDI4LDkgTDI4LDkgTDAsOSBMMCw0LjM1MzU4NTExIEMyLjg0OTAzNTk4ZS0xNiwzLjA1MzczNTk1IDEuMDUzNzM1OTUsMiAyLjM1MzU4NTExLDIgWiIgaWQ9IlJlY3RhbmdsZS1Db3B5LTMyIiBzdHJva2U9IiM3ODg5OTkiIGZpbGw9IiNDNUNDRDciPjwvcGF0aD4KICAgICAgICAgICAgICAgIDxyZWN0IGlkPSJSZWN0YW5nbGUtQ29weS0zMyIgc3Ryb2tlPSIjNzg4OTk5IiBmaWxsPSIjRjhGOUZDIiBzdHJva2UtbGluZWpvaW49InJvdW5kIiB4PSIxOCIgeT0iMCIgd2lkdGg9IjIiIGhlaWdodD0iNSIgcng9IjEiPjwvcmVjdD4KICAgICAgICAgICAgICAgIDxyZWN0IGlkPSJSZWN0YW5nbGUtQ29weS0zMyIgc3Ryb2tlPSIjNzg4OTk5IiBmaWxsPSIjRjhGOUZDIiBzdHJva2UtbGluZWpvaW49InJvdW5kIiB4PSIyMyIgeT0iMCIgd2lkdGg9IjIiIGhlaWdodD0iNSIgcng9IjEiPjwvcmVjdD4KICAgICAgICAgICAgICAgIDxyZWN0IGlkPSJSZWN0YW5nbGUtQ29weS0zNSIgc3Ryb2tlPSIjNzg4OTk5IiBmaWxsPSIjRjhGOUZDIiBzdHJva2UtbGluZWpvaW49InJvdW5kIiB4PSIxMyIgeT0iMCIgd2lkdGg9IjIiIGhlaWdodD0iNSIgcng9IjEiPjwvcmVjdD4KICAgICAgICAgICAgICAgIDxyZWN0IGlkPSJSZWN0YW5nbGUtQ29weS0zNyIgc3Ryb2tlPSIjNzg4OTk5IiBmaWxsPSIjRjhGOUZDIiBzdHJva2UtbGluZWpvaW49InJvdW5kIiB4PSI4IiB5PSIwIiB3aWR0aD0iMiIgaGVpZ2h0PSI1IiByeD0iMSI+PC9yZWN0PgogICAgICAgICAgICAgICAgPHJlY3QgaWQ9IlJlY3RhbmdsZS1Db3B5LTM5IiBzdHJva2U9IiM3ODg5OTkiIGZpbGw9IiNGOEY5RkMiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIHg9IjMiIHk9IjAiIHdpZHRoPSIyIiBoZWlnaHQ9IjUiIHJ4PSIxIj48L3JlY3Q+CiAgICAgICAgICAgICAgICA8cmVjdCBpZD0iUmVjdGFuZ2xlIiBmaWxsPSIjRTdFQUYzIiB4PSIzIiB5PSIxMiIgd2lkdGg9IjYiIGhlaWdodD0iNiIgcng9IjAuNSI+PC9yZWN0PgogICAgICAgICAgICAgICAgPHJlY3QgaWQ9IlJlY3RhbmdsZS1Db3B5LTE2IiBmaWxsPSIjRTdFQUYzIiB4PSIxMSIgeT0iMTIiIHdpZHRoPSI2IiBoZWlnaHQ9IjYiIHJ4PSIwLjUiPjwvcmVjdD4KICAgICAgICAgICAgICAgIDxyZWN0IGlkPSJSZWN0YW5nbGUtQ29weS0xOCIgZmlsbD0iI0U3RUFGMyIgeD0iMTkiIHk9IjEyIiB3aWR0aD0iNiIgaGVpZ2h0PSI2IiByeD0iMC41Ij48L3JlY3Q+CiAgICAgICAgICAgICAgICA8cmVjdCBpZD0iUmVjdGFuZ2xlIiBmaWxsPSIjRTdFQUYzIiB4PSIzIiB5PSIyMCIgd2lkdGg9IjYiIGhlaWdodD0iNiIgcng9IjAuNSI+PC9yZWN0PgogICAgICAgICAgICAgICAgPHJlY3QgaWQ9IlJlY3RhbmdsZS1Db3B5LTE2IiBmaWxsPSIjRTdFQUYzIiB4PSIxMSIgeT0iMjAiIHdpZHRoPSI2IiBoZWlnaHQ9IjYiIHJ4PSIwLjUiPjwvcmVjdD4KICAgICAgICAgICAgICAgIDxwb2x5bGluZSBpZD0iUGF0aC0xMC1Db3B5LTExIiBzdHJva2U9IiM3ODg5OTkiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIgcG9pbnRzPSIxMi41IDE1LjI2MzM1ODIgMTMuMzc1Njc2IDE2LjUgMTUuNSAxMy41Ij48L3BvbHlsaW5lPgogICAgICAgICAgICAgICAgPHBvbHlsaW5lIGlkPSJQYXRoLTEwLUNvcHktMTEiIHN0cm9rZT0iIzc4ODk5OSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIiBwb2ludHM9IjIwLjUgMTUuMjYzMzU4MiAyMS4zNzU2NzYgMTYuNSAyMy41IDEzLjUiPjwvcG9seWxpbmU+CiAgICAgICAgICAgICAgICA8cG9seWxpbmUgaWQ9IlBhdGgtMTAtQ29weS0xMSIgc3Ryb2tlPSIjNzg4OTk5IiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIHBvaW50cz0iMTIuNSAyMy4yNjMzNTgyIDEzLjM3NTY3NiAyNC41IDE1LjUgMjEuNSI+PC9wb2x5bGluZT4KICAgICAgICAgICAgICAgIDxwb2x5bGluZSBpZD0iUGF0aC0xMC1Db3B5LTExIiBzdHJva2U9IiM3ODg5OTkiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIgcG9pbnRzPSI0LjUgMjMuMjYzMzU4MiA1LjM3NTY3NTk3IDI0LjUgNy41IDIxLjUiPjwvcG9seWxpbmU+CiAgICAgICAgICAgICAgICA8cmVjdCBpZD0iUmVjdGFuZ2xlLUNvcHktMTgiIGZpbGw9IiNFN0VBRjMiIHg9IjE5IiB5PSIyMCIgd2lkdGg9IjYiIGhlaWdodD0iNiIgcng9IjAuNSI+PC9yZWN0PgogICAgICAgICAgICA8L2c+CiAgICAgICAgPC9nPgogICAgPC9nPgo8L3N2Zz4="
-                      alt="Legal Documents"
-                      style={{ width: '100%', height: '100%', objectFit: 'contain' }}
-                    />
-                  </Box>
+                <Box sx={{ display: 'flex', alignItems: 'flex-start', gap: 2, mb: 2 }}>
+                  <FileCheck size={20} color="#4CAF50" />
                   <Typography variant="body2">
                     When Booking.com is connected, all current Hostaway availability and rates will be uploaded and replace current Booking.com settings.
                   </Typography>
                 </Box>
-                <Box sx={{ display: 'flex', alignItems: 'flex-start', gap: 2, mb: 3 }}>
-                  <Box sx={{ 
-                    width: 20, 
-                    height: 20, 
-                    borderRadius: '50%', 
-                    bgcolor: '#E0E0E0', 
-                    display: 'flex', 
-                    alignItems: 'center', 
-                    justifyContent: 'center',
-                    flexShrink: 0,
-                    mt: 0.5
-                  }}>
-                    <img 
-                      src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz4KPHN2ZyB3aWR0aD0iMzRweCIgaGVpZ2h0PSIzNXB4IiB2aWV3Qm94PSIwIDAgMzQgMzUiIHZlcnNpb249IjEuMSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB4bWxuczp4bGluaz0iaHR0cDovL3d3dy53My5vcmcvMTk5OS94bGluayI+CiAgICA8IS0tIEdlbmVyYXRvcjogc2tldGNodG9vbCA2My4xICgxMDEwMTApIC0gaHR0cHM6Ly9za2V0Y2guY29tIC0tPgogICAgPHRpdGxlPjU3MzJCMUNCLUU3MzMtNEE2Qy1BQ0E5LTBEMjM3OEE3NEQ0NTwvdGl0bGU+CiAgICA8ZGVzYz5DcmVhdGVkIHdpdGggc2tldGNodG9vbC48L2Rlc2M+CiAgICA8ZyBpZD0iUGFnZS0xIiBzdHJva2U9Im5vbmUiIHN0cm9rZS13aWR0aD0iMSIgZmlsbD0ibm9uZSIgZmlsbC1ydWxlPSJldmVub2RkIj4KICAgICAgICA8ZyBpZD0iTGVnYWwtc3RhdGVtZW50cy1zdmctaWNvbnMiIHRyYW5zZm9ybT0idHJhbnNsYXRlKC0xNTAuMDAwMDAwLCAtMTg0LjAwMDAwMCkiPgogICAgICAgICAgICA8ZyBpZD0iR3JvdXAtMTE0LUNvcHkiIHRyYW5zZm9ybT0idHJhbnNsYXRlKDE1MS4wMDAwMDAsIDE4NS4wMDAwMDApIj4KICAgICAgICAgICAgICAgIDxwYXRoIGQ9Ik02LjM1MzU4NTExLDYgTDI5LjY0NjQxNDksNiBDMzAuOTQ2MjY0MSw2IDMyLDcuMDUzNzM1OTUgMzIsOC4zNTM1ODUxMSBMMzIsMjcgQzMyLDMwLjMxMzcwODUgMjkuMzEzNzA4NSwzMyAyNiwzMyBMNi4zNTM1ODUxMSwzMyBDNS4wNTM3MzU5NSwzMyA0LDMxLjk0NjI2NDEgNCwzMC42NDY0MTQ5IEw0LDguMzUzNTg1MTEgQzQsNy4wNTM3MzU5NSA1LjA1MzczNTk1LDYgNi4zNTM1ODUxMSw2IFoiIGlkPSJSZWN0YW5nbGUtQ29weS0zMSIgc3Ryb2tlPSIjNzg4OTk5IiBmaWxsPSIjRTdFQUYzIj48L3BhdGg+CiAgICAgICAgICAgICAgICA8cGF0aCBkPSJNNC4zNTM1ODUxMSw0IEwyNy42NDY0MTQ5LDQgQzI4Ljk0NjI2NDEsNCAzMCw1LjA1MzczNTk1IDMwLDYuMzUzNTg1MTEgTDMwLDI3IEMzMCwyOS4yMDkxMzkgMjguMjA5MTM5LDMxIDI2LDMxIEw0LjM1MzU4NTExLDMxIEMzLjA1MzczNTk1LDMxIDIsMjkuOTQ2MjY0MSAyLDI4LjY0NjQxNDkgTDIsNi4zNTM1ODUxMSBDMiw1LjA1MzczNTk1IDMuMDUzNzM1OTUsNCA0LjM1MzU4NTExLDQgWiIgaWQ9IlJlY3RhbmdsZS1Db3B5LTMxIiBzdHJva2U9IiM3ODg5OTkiIGZpbGw9IiNFN0VBRjMiPjwvcGF0aD4KICAgICAgICAgICAgICAgIDxyZWN0IGlkPSJSZWN0YW5nbGUtQ29weS0zMSIgc3Ryb2tlPSIjNzg4OTk5IiBmaWxsPSIjRkZGRkZGIiB4PSIwIiB5PSIyIiB3aWR0aD0iMjgiIGhlaWdodD0iMjciIHJ4PSIyLjM1MzU4NTExIj48L3JlY3Q+CiAgICAgICAgICAgICAgICA8cGF0aCBkPSJNMi4zNTM1ODUxMSwyIEwyNS42NDY0MTQ5LDIgQzI2Ljk0NjI2NDEsMiAyOCwzLjA1MzczNTk1IDI4LDQuMzUzNTg1MTEgTDI4LDkgTDI4LDkgTDAsOSBMMCw0LjM1MzU4NTExIEMyLjg0OTAzNTk4ZS0xNiwzLjA1MzczNTk1IDEuMDUzNzM1OTUsMiAyLjM1MzU4NTExLDIgWiIgaWQ9IlJlY3RhbmdsZS1Db3B5LTMyIiBzdHJva2U9IiM3ODg5OTkiIGZpbGw9IiNDNUNDRDciPjwvcGF0aD4KICAgICAgICAgICAgICAgIDxyZWN0IGlkPSJSZWN0YW5nbGUtQ29weS0zMyIgc3Ryb2tlPSIjNzg4OTk5IiBmaWxsPSIjRjhGOUZDIiBzdHJva2UtbGluZWpvaW49InJvdW5kIiB4PSIxOCIgeT0iMCIgd2lkdGg9IjIiIGhlaWdodD0iNSIgcng9IjEiPjwvcmVjdD4KICAgICAgICAgICAgICAgIDxyZWN0IGlkPSJSZWN0YW5nbGUtQ29weS0zMyIgc3Ryb2tlPSIjNzg4OTk5IiBmaWxsPSIjRjhGOUZDIiBzdHJva2UtbGluZWpvaW49InJvdW5kIiB4PSIyMyIgeT0iMCIgd2lkdGg9IjIiIGhlaWdodD0iNSIgcng9IjEiPjwvcmVjdD4KICAgICAgICAgICAgICAgIDxyZWN0IGlkPSJSZWN0YW5nbGUtQ29weS0zNSIgc3Ryb2tlPSIjNzg4OTk5IiBmaWxsPSIjRjhGOUZDIiBzdHJva2UtbGluZWpvaW49InJvdW5kIiB4PSIxMyIgeT0iMCIgd2lkdGg9IjIiIGhlaWdodD0iNSIgcng9IjEiPjwvcmVjdD4KICAgICAgICAgICAgICAgIDxyZWN0IGlkPSJSZWN0YW5nbGUtQ29weS0zNyIgc3Ryb2tlPSIjNzg4OTk5IiBmaWxsPSIjRjhGOUZDIiBzdHJva2UtbGluZWpvaW49InJvdW5kIiB4PSI4IiB5PSIwIiB3aWR0aD0iMiIgaGVpZ2h0PSI1IiByeD0iMSI+PC9yZWN0PgogICAgICAgICAgICAgICAgPHJlY3QgaWQ9IlJlY3RhbmdsZS1Db3B5LTM5IiBzdHJva2U9IiM3ODg5OTkiIGZpbGw9IiNGOEY5RkMiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIHg9IjMiIHk9IjAiIHdpZHRoPSIyIiBoZWlnaHQ9IjUiIHJ4PSIxIj48L3JlY3Q+CiAgICAgICAgICAgICAgICA8cmVjdCBpZD0iUmVjdGFuZ2xlIiBmaWxsPSIjRTdFQUYzIiB4PSIzIiB5PSIxMiIgd2lkdGg9IjYiIGhlaWdodD0iNiIgcng9IjAuNSI+PC9yZWN0PgogICAgICAgICAgICAgICAgPHJlY3QgaWQ9IlJlY3RhbmdsZS1Db3B5LTE2IiBmaWxsPSIjRTdFQUYzIiB4PSIxMSIgeT0iMTIiIHdpZHRoPSI2IiBoZWlnaHQ9IjYiIHJ4PSIwLjUiPjwvcmVjdD4KICAgICAgICAgICAgICAgIDxyZWN0IGlkPSJSZWN0YW5nbGUtQ29weS0xOCIgZmlsbD0iI0U3RUFGMyIgeD0iMTkiIHk9IjEyIiB3aWR0aD0iNiIgaGVpZ2h0PSI2IiByeD0iMC41Ij48L3JlY3Q+CiAgICAgICAgICAgICAgICA8cmVjdCBpZD0iUmVjdGFuZ2xlIiBmaWxsPSIjRTdFQUYzIiB4PSIzIiB5PSIyMCIgd2lkdGg9IjYiIGhlaWdodD0iNiIgcng9IjAuNSI+PC9yZWN0PgogICAgICAgICAgICAgICAgPHJlY3QgaWQ9IlJlY3RhbmdsZS1Db3B5LTE2IiBmaWxsPSIjRTdFQUYzIiB4PSIxMSIgeT0iMjAiIHdpZHRoPSI2IiBoZWlnaHQ9IjYiIHJ4PSIwLjUiPjwvcmVjdD4KICAgICAgICAgICAgICAgIDxwb2x5bGluZSBpZD0iUGF0aC0xMC1Db3B5LTExIiBzdHJva2U9IiM3ODg5OTkiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIgcG9pbnRzPSIxMi41IDE1LjI2MzM1ODIgMTMuMzc1Njc2IDE2LjUgMTUuNSAxMy41Ij48L3BvbHlsaW5lPgogICAgICAgICAgICAgICAgPHBvbHlsaW5lIGlkPSJQYXRoLTEwLUNvcHktMTEiIHN0cm9rZT0iIzc4ODk5OSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIiBwb2ludHM9IjIwLjUgMTUuMjYzMzU4MiAyMS4zNzU2NzYgMTYuNSAyMy41IDEzLjUiPjwvcG9seWxpbmU+CiAgICAgICAgICAgICAgICA8cG9seWxpbmUgaWQ9IlBhdGgtMTAtQ29weS0xMSIgc3Ryb2tlPSIjNzg4OTk5IiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIHBvaW50cz0iMTIuNSAyMy4yNjMzNTgyIDEzLjM3NTY3NiAyNC41IDE1LjUgMjEuNSI+PC9wb2x5bGluZT4KICAgICAgICAgICAgICAgIDxwb2x5bGluZSBpZD0iUGF0aC0xMC1Db3B5LTExIiBzdHJva2U9IiM3ODg5OTkiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIgcG9pbnRzPSI0LjUgMjMuMjYzMzU4MiA1LjM3NTY3NTk3IDI0LjUgNy41IDIxLjUiPjwvcG9seWxpbmU+CiAgICAgICAgICAgICAgICA8cmVjdCBpZD0iUmVjdGFuZ2xlLUNvcHktMTgiIGZpbGw9IiNFN0VBRjMiIHg9IjE5IiB5PSIyMCIgd2lkdGg9IjYiIGhlaWdodD0iNiIgcng9IjAuNSI+PC9yZWN0PgogICAgICAgICAgICA8L2c+CiAgICAgICAgPC9nPgogICAgPC9nPgo8L3N2Zz4="
-                      alt="Legal Documents"
-                      style={{ width: '100%', height: '100%', objectFit: 'contain' }}
-                    />
-                  </Box>
+                <Box sx={{ display: 'flex', alignItems: 'flex-start', gap: 2, mb: 2 }}>
+                  <CheckCircle size={20} color="#2196F3" />
                   <Typography variant="body2">
                     I will ensure that my rates and availability are up to date on Hostaway before connecting.
                   </Typography>
                 </Box>
-                <Box sx={{ display: 'flex', alignItems: 'flex-start', gap: 2, mb: 3 }}>
-                  <Box sx={{ 
-                    width: 20, 
-                    height: 20, 
-                    borderRadius: '50%', 
-                    bgcolor: '#E0E0E0', 
-                    display: 'flex', 
-                    alignItems: 'center', 
-                    justifyContent: 'center',
-                    flexShrink: 0,
-                    mt: 0.5
-                  }}>
-                    <img 
-                      src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz4KPHN2ZyB3aWR0aD0iMzRweCIgaGVpZ2h0PSIzNXB4IiB2aWV3Qm94PSIwIDAgMzQgMzUiIHZlcnNpb249IjEuMSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB4bWxuczp4bGluaz0iaHR0cDovL3d3dy53My5vcmcvMTk5OS94bGluayI+CiAgICA8IS0tIEdlbmVyYXRvcjogc2tldGNodG9vbCA2My4xICgxMDEwMTApIC0gaHR0cHM6Ly9za2V0Y2guY29tIC0tPgogICAgPHRpdGxlPjU3MzJCMUNCLUU3MzMtNEE2Qy1BQ0E5LTBEMjM3OEE3NEQ0NTwvdGl0bGU+CiAgICA8ZGVzYz5DcmVhdGVkIHdpdGggc2tldGNodG9vbC48L2Rlc2M+CiAgICA8ZyBpZD0iUGFnZS0xIiBzdHJva2U9Im5vbmUiIHN0cm9rZS13aWR0aD0iMSIgZmlsbD0ibm9uZSIgZmlsbC1ydWxlPSJldmVub2RkIj4KICAgICAgICA8ZyBpZD0iTGVnYWwtc3RhdGVtZW50cy1zdmctaWNvbnMiIHRyYW5zZm9ybT0idHJhbnNsYXRlKC0xNTAuMDAwMDAwLCAtMTg0LjAwMDAwMCkiPgogICAgICAgICAgICA8ZyBpZD0iR3JvdXAtMTE0LUNvcHkiIHRyYW5zZm9ybT0idHJhbnNsYXRlKDE1MS4wMDAwMDAsIDE4NS4wMDAwMDApIj4KICAgICAgICAgICAgICAgIDxwYXRoIGQ9Ik02LjM1MzU4NTExLDYgTDI5LjY0NjQxNDksNiBDMzAuOTQ2MjY0MSw2IDMyLDcuMDUzNzM1OTUgMzIsOC4zNTM1ODUxMSBMMzIsMjcgQzMyLDMwLjMxMzcwODUgMjkuMzEzNzA4NSwzMyAyNiwzMyBMNi4zNTM1ODUxMSwzMyBDNS4wNTM3MzU5NSwzMyA0LDMxLjk0NjI2NDEgNCwzMC42NDY0MTQ5IEw0LDguMzUzNTg1MTEgQzQsNy4wNTM3MzU5NSA1LjA1MzczNTk1LDYgNi4zNTM1ODUxMSw2IFoiIGlkPSJSZWN0YW5nbGUtQ29weS0zMSIgc3Ryb2tlPSIjNzg4OTk5IiBmaWxsPSIjRTdFQUYzIj48L3BhdGg+CiAgICAgICAgICAgICAgICA8cGF0aCBkPSJNNC4zNTM1ODUxMSw0IEwyNy42NDY0MTQ5LDQgQzI4Ljk0NjI2NDEsNCAzMCw1LjA1MzczNTk1IDMwLDYuMzUzNTg1MTEgTDMwLDI3IEMzMCwyOS4yMDkxMzkgMjguMjA5MTM5LDMxIDI2LDMxIEw0LjM1MzU4NTExLDMxIEMzLjA1MzczNTk1LDMxIDIsMjkuOTQ2MjY0MSAyLDI4LjY0NjQxNDkgTDIsNi4zNTM1ODUxMSBDMiw1LjA1MzczNTk1IDMuMDUzNzM1OTUsNCA0LjM1MzU4NTExLDQgWiIgaWQ9IlJlY3RhbmdsZS1Db3B5LTMxIiBzdHJva2U9IiM3ODg5OTkiIGZpbGw9IiNFN0VBRjMiPjwvcGF0aD4KICAgICAgICAgICAgICAgIDxyZWN0IGlkPSJSZWN0YW5nbGUtQ29weS0zMSIgc3Ryb2tlPSIjNzg4OTk5IiBmaWxsPSIjRkZGRkZGIiB4PSIwIiB5PSIyIiB3aWR0aD0iMjgiIGhlaWdodD0iMjciIHJ4PSIyLjM1MzU4NTExIj48L3JlY3Q+CiAgICAgICAgICAgICAgICA8cGF0aCBkPSJNMi4zNTM1ODUxMSwyIEwyNS42NDY0MTQ5LDIgQzI2Ljk0NjI2NDEsMiAyOCwzLjA1MzczNTk1IDI4LDQuMzUzNTg1MTEgTDI4LDkgTDI4LDkgTDAsOSBMMCw0LjM1MzU4NTExIEMyLjg0OTAzNTk4ZS0xNiwzLjA1MzczNTk1IDEuMDUzNzM1OTUsMiAyLjM1MzU4NTExLDIgWiIgaWQ9IlJlY3RhbmdsZS1Db3B5LTMyIiBzdHJva2U9IiM3ODg5OTkiIGZpbGw9IiNDNUNDRDciPjwvcGF0aD4KICAgICAgICAgICAgICAgIDxyZWN0IGlkPSJSZWN0YW5nbGUtQ29weS0zMyIgc3Ryb2tlPSIjNzg4OTk5IiBmaWxsPSIjRjhGOUZDIiBzdHJva2UtbGluZWpvaW49InJvdW5kIiB4PSIxOCIgeT0iMCIgd2lkdGg9IjIiIGhlaWdodD0iNSIgcng9IjEiPjwvcmVjdD4KICAgICAgICAgICAgICAgIDxyZWN0IGlkPSJSZWN0YW5nbGUtQ29weS0zMyIgc3Ryb2tlPSIjNzg4OTk5IiBmaWxsPSIjRjhGOUZDIiBzdHJva2UtbGluZWpvaW49InJvdW5kIiB4PSIyMyIgeT0iMCIgd2lkdGg9IjIiIGhlaWdodD0iNSIgcng9IjEiPjwvcmVjdD4KICAgICAgICAgICAgICAgIDxyZWN0IGlkPSJSZWN0YW5nbGUtQ29weS0zNSIgc3Ryb2tlPSIjNzg4OTk5IiBmaWxsPSIjRjhGOUZDIiBzdHJva2UtbGluZWpvaW49InJvdW5kIiB4PSIxMyIgeT0iMCIgd2lkdGg9IjIiIGhlaWdodD0iNSIgcng9IjEiPjwvcmVjdD4KICAgICAgICAgICAgICAgIDxyZWN0IGlkPSJSZWN0YW5nbGUtQ29weS0zNyIgc3Ryb2tlPSIjNzg4OTk5IiBmaWxsPSIjRjhGOUZDIiBzdHJva2UtbGluZWpvaW49InJvdW5kIiB4PSI4IiB5PSIwIiB3aWR0aD0iMiIgaGVpZ2h0PSI1IiByeD0iMSI+PC9yZWN0PgogICAgICAgICAgICAgICAgPHJlY3QgaWQ9IlJlY3RhbmdsZS1Db3B5LTM5IiBzdHJva2U9IiM3ODg5OTkiIGZpbGw9IiNGOEY5RkMiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIHg9IjMiIHk9IjAiIHdpZHRoPSIyIiBoZWlnaHQ9IjUiIHJ4PSIxIj48L3JlY3Q+CiAgICAgICAgICAgICAgICA8cmVjdCBpZD0iUmVjdGFuZ2xlIiBmaWxsPSIjRTdFQUYzIiB4PSIzIiB5PSIxMiIgd2lkdGg9IjYiIGhlaWdodD0iNiIgcng9IjAuNSI+PC9yZWN0PgogICAgICAgICAgICAgICAgPHJlY3QgaWQ9IlJlY3RhbmdsZS1Db3B5LTE2IiBmaWxsPSIjRTdFQUYzIiB4PSIxMSIgeT0iMTIiIHdpZHRoPSI2IiBoZWlnaHQ9IjYiIHJ4PSIwLjUiPjwvcmVjdD4KICAgICAgICAgICAgICAgIDxyZWN0IGlkPSJSZWN0YW5nbGUtQ29weS0xOCIgZmlsbD0iI0U3RUFGMyIgeD0iMTkiIHk9IjEyIiB3aWR0aD0iNiIgaGVpZ2h0PSI2IiByeD0iMC41Ij48L3JlY3Q+CiAgICAgICAgICAgICAgICA8cmVjdCBpZD0iUmVjdGFuZ2xlIiBmaWxsPSIjRTdFQUYzIiB4PSIzIiB5PSIyMCIgd2lkdGg9IjYiIGhlaWdodD0iNiIgcng9IjAuNSI+PC9yZWN0PgogICAgICAgICAgICAgICAgPHJlY3QgaWQ9IlJlY3RhbmdsZS1Db3B5LTE2IiBmaWxsPSIjRTdFQUYzIiB4PSIxMSIgeT0iMjAiIHdpZHRoPSI2IiBoZWlnaHQ9IjYiIHJ4PSIwLjUiPjwvcmVjdD4KICAgICAgICAgICAgICAgIDxwb2x5bGluZSBpZD0iUGF0aC0xMC1Db3B5LTExIiBzdHJva2U9IiM3ODg5OTkiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIgcG9pbnRzPSIxMi41IDE1LjI2MzM1ODIgMTMuMzc1Njc2IDE2LjUgMTUuNSAxMy41Ij48L3BvbHlsaW5lPgogICAgICAgICAgICAgICAgPHBvbHlsaW5lIGlkPSJQYXRoLTEwLUNvcHktMTEiIHN0cm9rZT0iIzc4ODk5OSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIiBwb2ludHM9IjIwLjUgMTUuMjYzMzU4MiAyMS4zNzU2NzYgMTYuNSAyMy41IDEzLjUiPjwvcG9seWxpbmU+CiAgICAgICAgICAgICAgICA8cG9seWxpbmUgaWQ9IlBhdGgtMTAtQ29weS0xMSIgc3Ryb2tlPSIjNzg4OTk5IiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIHBvaW50cz0iMTIuNSAyMy4yNjMzNTgyIDEzLjM3NTY3NiAyNC41IDE1LjUgMjEuNSI+PC9wb2x5bGluZT4KICAgICAgICAgICAgICAgIDxwb2x5bGluZSBpZD0iUGF0aC0xMC1Db3B5LTExIiBzdHJva2U9IiM3ODg5OTkiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIgcG9pbnRzPSI0LjUgMjMuMjYzMzU4MiA1LjM3NTY3NTk3IDI0LjUgNy41IDIxLjUiPjwvcG9seWxpbmU+CiAgICAgICAgICAgICAgICA8cmVjdCBpZD0iUmVjdGFuZ2xlLUNvcHktMTgiIGZpbGw9IiNFN0VBRjMiIHg9IjE5IiB5PSIyMCIgd2lkdGg9IjYiIGhlaWdodD0iNiIgcng9IjAuNSI+PC9yZWN0PgogICAgICAgICAgICA8L2c+CiAgICAgICAgPC9nPgogICAgPC9nPgo8L3N2Zz4="
-                      alt="Legal Documents"
-                      style={{ width: '100%', height: '100%', objectFit: 'contain' }}
-                    />
-                  </Box>
+                <Box sx={{ display: 'flex', alignItems: 'flex-start', gap: 2, mb: 2 }}>
+                  <CreditCard size={20} color="#FF9800" />
                   <Typography variant="body2">
                     When different currencies are used in Booking.com and Hostaway, I will immediately adjust the markup to reflect this to avoid bookings at low rates.
                   </Typography>
                 </Box>
-                <Box sx={{ display: 'flex', alignItems: 'flex-start', gap: 2, mb: 3 }}>
-                  <Box sx={{ 
-                    width: 20, 
-                    height: 20, 
-                    borderRadius: '50%', 
-                    bgcolor: '#E0E0E0', 
-                    display: 'flex', 
-                    alignItems: 'center', 
-                    justifyContent: 'center',
-                    flexShrink: 0,
-                    mt: 0.5
-                  }}>
-                    <img 
-                      src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz4KPHN2ZyB3aWR0aD0iMzRweCIgaGVpZ2h0PSIzNXB4IiB2aWV3Qm94PSIwIDAgMzQgMzUiIHZlcnNpb249IjEuMSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB4bWxuczp4bGluaz0iaHR0cDovL3d3dy53My5vcmcvMTk5OS94bGluayI+CiAgICA8IS0tIEdlbmVyYXRvcjogc2tldGNodG9vbCA2My4xICgxMDEwMTApIC0gaHR0cHM6Ly9za2V0Y2guY29tIC0tPgogICAgPHRpdGxlPjU3MzJCMUNCLUU3MzMtNEE2Qy1BQ0E5LTBEMjM3OEE3NEQ0NTwvdGl0bGU+CiAgICA8ZGVzYz5DcmVhdGVkIHdpdGggc2tldGNodG9vbC48L2Rlc2M+CiAgICA8ZyBpZD0iUGFnZS0xIiBzdHJva2U9Im5vbmUiIHN0cm9rZS13aWR0aD0iMSIgZmlsbD0ibm9uZSIgZmlsbC1ydWxlPSJldmVub2RkIj4KICAgICAgICA8ZyBpZD0iTGVnYWwtc3RhdGVtZW50cy1zdmctaWNvbnMiIHRyYW5zZm9ybT0idHJhbnNsYXRlKC0xNTAuMDAwMDAwLCAtMTg0LjAwMDAwMCkiPgogICAgICAgICAgICA8ZyBpZD0iR3JvdXAtMTE0LUNvcHkiIHRyYW5zZm9ybT0idHJhbnNsYXRlKDE1MS4wMDAwMDAsIDE4NS4wMDAwMDApIj4KICAgICAgICAgICAgICAgIDxwYXRoIGQ9Ik02LjM1MzU4NTExLDYgTDI5LjY0NjQxNDksNiBDMzAuOTQ2MjY0MSw2IDMyLDcuMDUzNzM1OTUgMzIsOC4zNTM1ODUxMSBMMzIsMjcgQzMyLDMwLjMxMzcwODUgMjkuMzEzNzA4NSwzMyAyNiwzMyBMNi4zNTM1ODUxMSwzMyBDNS4wNTM3MzU5NSwzMyA0LDMxLjk0NjI2NDEgNCwzMC42NDY0MTQ5IEw0LDguMzUzNTg1MTEgQzQsNy4wNTM3MzU5NSA1LjA1MzczNTk1LDYgNi4zNTM1ODUxMSw2IFoiIGlkPSJSZWN0YW5nbGUtQ29weS0zMSIgc3Ryb2tlPSIjNzg4OTk5IiBmaWxsPSIjRTdFQUYzIj48L3BhdGg+CiAgICAgICAgICAgICAgICA8cGF0aCBkPSJNNC4zNTM1ODUxMSw0IEwyNy42NDY0MTQ5LDQgQzI4Ljk0NjI2NDEsNCAzMCw1LjA1MzczNTk1IDMwLDYuMzUzNTg1MTEgTDMwLDI3IEMzMCwyOS4yMDkxMzkgMjguMjA5MTM5LDMxIDI2LDMxIEw0LjM1MzU4NTExLDMxIEMzLjA1MzczNTk1LDMxIDIsMjkuOTQ2MjY0MSAyLDI4LjY0NjQxNDkgTDIsNi4zNTM1ODUxMSBDMiw1LjA1MzczNTk1IDMuMDUzNzM1OTUsNCA0LjM1MzU4NTExLDQgWiIgaWQ9IlJlY3RhbmdsZS1Db3B5LTMxIiBzdHJva2U9IiM3ODg5OTkiIGZpbGw9IiNFN0VBRjMiPjwvcGF0aD4KICAgICAgICAgICAgICAgIDxyZWN0IGlkPSJSZWN0YW5nbGUtQ29weS0zMSIgc3Ryb2tlPSIjNzg4OTk5IiBmaWxsPSIjRkZGRkZGIiB4PSIwIiB5PSIyIiB3aWR0aD0iMjgiIGhlaWdodD0iMjciIHJ4PSIyLjM1MzU4NTExIj48L3JlY3Q+CiAgICAgICAgICAgICAgICA8cGF0aCBkPSJNMi4zNTM1ODUxMSwyIEwyNS42NDY0MTQ5LDIgQzI2Ljk0NjI2NDEsMiAyOCwzLjA1MzczNTk1IDI4LDQuMzUzNTg1MTEgTDI4LDkgTDI4LDkgTDAsOSBMMCw0LjM1MzU4NTExIEMyLjg0OTAzNTk4ZS0xNiwzLjA1MzczNTk1IDEuMDUzNzM1OTUsMiAyLjM1MzU4NTExLDIgWiIgaWQ9IlJlY3RhbmdsZS1Db3B5LTMyIiBzdHJva2U9IiM3ODg5OTkiIGZpbGw9IiNDNUNDRDciPjwvcGF0aD4KICAgICAgICAgICAgICAgIDxyZWN0IGlkPSJSZWN0YW5nbGUtQ29weS0zMyIgc3Ryb2tlPSIjNzg4OTk5IiBmaWxsPSIjRjhGOUZDIiBzdHJva2UtbGluZWpvaW49InJvdW5kIiB4PSIxOCIgeT0iMCIgd2lkdGg9IjIiIGhlaWdodD0iNSIgcng9IjEiPjwvcmVjdD4KICAgICAgICAgICAgICAgIDxyZWN0IGlkPSJSZWN0YW5nbGUtQ29weS0zMyIgc3Ryb2tlPSIjNzg4OTk5IiBmaWxsPSIjRjhGOUZDIiBzdHJva2UtbGluZWpvaW49InJvdW5kIiB4PSIyMyIgeT0iMCIgd2lkdGg9IjIiIGhlaWdodD0iNSIgcng9IjEiPjwvcmVjdD4KICAgICAgICAgICAgICAgIDxyZWN0IGlkPSJSZWN0YW5nbGUtQ29weS0zNSIgc3Ryb2tlPSIjNzg4OTk5IiBmaWxsPSIjRjhGOUZDIiBzdHJva2UtbGluZWpvaW49InJvdW5kIiB4PSIxMyIgeT0iMCIgd2lkdGg9IjIiIGhlaWdodD0iNSIgcng9IjEiPjwvcmVjdD4KICAgICAgICAgICAgICAgIDxyZWN0IGlkPSJSZWN0YW5nbGUtQ29weS0zNyIgc3Ryb2tlPSIjNzg4OTk5IiBmaWxsPSIjRjhGOUZDIiBzdHJva2UtbGluZWpvaW49InJvdW5kIiB4PSI4IiB5PSIwIiB3aWR0aD0iMiIgaGVpZ2h0PSI1IiByeD0iMSI+PC9yZWN0PgogICAgICAgICAgICAgICAgPHJlY3QgaWQ9IlJlY3RhbmdsZS1Db3B5LTM5IiBzdHJva2U9IiM3ODg5OTkiIGZpbGw9IiNGOEY5RkMiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIHg9IjMiIHk9IjAiIHdpZHRoPSIyIiBoZWlnaHQ9IjUiIHJ4PSIxIj48L3JlY3Q+CiAgICAgICAgICAgICAgICA8cmVjdCBpZD0iUmVjdGFuZ2xlIiBmaWxsPSIjRTdFQUYzIiB4PSIzIiB5PSIxMiIgd2lkdGg9IjYiIGhlaWdodD0iNiIgcng9IjAuNSI+PC9yZWN0PgogICAgICAgICAgICAgICAgPHJlY3QgaWQ9IlJlY3RhbmdsZS1Db3B5LTE2IiBmaWxsPSIjRTdFQUYzIiB4PSIxMSIgeT0iMTIiIHdpZHRoPSI2IiBoZWlnaHQ9IjYiIHJ4PSIwLjUiPjwvcmVjdD4KICAgICAgICAgICAgICAgIDxyZWN0IGlkPSJSZWN0YW5nbGUtQ29weS0xOCIgZmlsbD0iI0U3RUFGMyIgeD0iMTkiIHk9IjEyIiB3aWR0aD0iNiIgaGVpZ2h0PSI2IiByeD0iMC41Ij48L3JlY3Q+CiAgICAgICAgICAgICAgICA8cmVjdCBpZD0iUmVjdGFuZ2xlIiBmaWxsPSIjRTdFQUYzIiB4PSIzIiB5PSIyMCIgd2lkdGg9IjYiIGhlaWdodD0iNiIgcng9IjAuNSI+PC9yZWN0PgogICAgICAgICAgICAgICAgPHJlY3QgaWQ9IlJlY3RhbmdsZS1Db3B5LTE2IiBmaWxsPSIjRTdFQUYzIiB4PSIxMSIgeT0iMjAiIHdpZHRoPSI2IiBoZWlnaHQ9IjYiIHJ4PSIwLjUiPjwvcmVjdD4KICAgICAgICAgICAgICAgIDxwb2x5bGluZSBpZD0iUGF0aC0xMC1Db3B5LTExIiBzdHJva2U9IiM3ODg5OTkiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIgcG9pbnRzPSIxMi41IDE1LjI2MzM1ODIgMTMuMzc1Njc2IDE2LjUgMTUuNSAxMy41Ij48L3BvbHlsaW5lPgogICAgICAgICAgICAgICAgPHBvbHlsaW5lIGlkPSJQYXRoLTEwLUNvcHktMTEiIHN0cm9rZT0iIzc4ODk5OSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIiBwb2ludHM9IjIwLjUgMTUuMjYzMzU4MiAyMS4zNzU2NzYgMTYuNSAyMy41IDEzLjUiPjwvcG9seWxpbmU+CiAgICAgICAgICAgICAgICA8cG9seWxpbmUgaWQ9IlBhdGgtMTAtQ29weS0xMSIgc3Ryb2tlPSIjNzg4OTk5IiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIHBvaW50cz0iMTIuNSAyMy4yNjMzNTgyIDEzLjM3NTY3NiAyNC41IDE1LjUgMjEuNSI+PC9wb2x5bGluZT4KICAgICAgICAgICAgICAgIDxwb2x5bGluZSBpZD0iUGF0aC0xMC1Db3B5LTExIiBzdHJva2U9IiM3ODg5OTkiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIgcG9pbnRzPSI0LjUgMjMuMjYzMzU4MiA1LjM3NTY3NTk3IDI0LjUgNy41IDIxLjUiPjwvcG9seWxpbmU+CiAgICAgICAgICAgICAgICA8cmVjdCBpZD0iUmVjdGFuZ2xlLUNvcHktMTgiIGZpbGw9IiNFN0VBRjMiIHg9IjE5IiB5PSIyMCIgd2lkdGg9IjYiIGhlaWdodD0iNiIgcng9IjAuNSI+PC9yZWN0PgogICAgICAgICAgICA8L2c+CiAgICAgICAgPC9nPgogICAgPC9nPgo8L3N2Zz4="
-                      alt="Legal Documents"
-                      style={{ width: '100%', height: '100%', objectFit: 'contain' }}
-                    />
-                  </Box>
+                <Box sx={{ display: 'flex', alignItems: 'flex-start', gap: 2, mb: 2 }}>
+                  <MessageSquare size={20} color="#9C27B0" />
                   <Typography variant="body2">
                     Booking.com will manually activate my guest messaging connection with the Hostaway software. This may take a couple of weeks. Until then I will have to manage the guest messaging from the Booking.com platform.
                   </Typography>
                 </Box>
-                <Box sx={{ display: 'flex', alignItems: 'flex-start', gap: 2, mb: 3 }}>
-                  <Box sx={{ 
-                    width: 20, 
-                    height: 20, 
-                    borderRadius: '50%', 
-                    bgcolor: '#E0E0E0', 
-                    display: 'flex', 
-                    alignItems: 'center', 
-                    justifyContent: 'center',
-                    flexShrink: 0,
-                    mt: 0.5
-                  }}>
-                    <img 
-                      src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz4KPHN2ZyB3aWR0aD0iMzRweCIgaGVpZ2h0PSIzNXB4IiB2aWV3Qm94PSIwIDAgMzQgMzUiIHZlcnNpb249IjEuMSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB4bWxuczp4bGluaz0iaHR0cDovL3d3dy53My5vcmcvMTk5OS94bGluayI+CiAgICA8IS0tIEdlbmVyYXRvcjogc2tldGNodG9vbCA2My4xICgxMDEwMTApIC0gaHR0cHM6Ly9za2V0Y2guY29tIC0tPgogICAgPHRpdGxlPjU3MzJCMUNCLUU3MzMtNEE2Qy1BQ0E5LTBEMjM3OEE3NEQ0NTwvdGl0bGU+CiAgICA8ZGVzYz5DcmVhdGVkIHdpdGggc2tldGNodG9vbC48L2Rlc2M+CiAgICA8ZyBpZD0iUGFnZS0xIiBzdHJva2U9Im5vbmUiIHN0cm9rZS13aWR0aD0iMSIgZmlsbD0ibm9uZSIgZmlsbC1ydWxlPSJldmVub2RkIj4KICAgICAgICA8ZyBpZD0iTGVnYWwtc3RhdGVtZW50cy1zdmctaWNvbnMiIHRyYW5zZm9ybT0idHJhbnNsYXRlKC0xNTAuMDAwMDAwLCAtMTg0LjAwMDAwMCkiPgogICAgICAgICAgICA8ZyBpZD0iR3JvdXAtMTE0LUNvcHkiIHRyYW5zZm9ybT0idHJhbnNsYXRlKDE1MS4wMDAwMDAsIDE4NS4wMDAwMDApIj4KICAgICAgICAgICAgICAgIDxwYXRoIGQ9Ik02LjM1MzU4NTExLDYgTDI5LjY0NjQxNDksNiBDMzAuOTQ2MjY0MSw2IDMyLDcuMDUzNzM1OTUgMzIsOC4zNTM1ODUxMSBMMzIsMjcgQzMyLDMwLjMxMzcwODUgMjkuMzEzNzA4NSwzMyAyNiwzMyBMNi4zNTM1ODUxMSwzMyBDNS4wNTM3MzU5NSwzMyA0LDMxLjk0NjI2NDEgNCwzMC42NDY0MTQ5IEw0LDguMzUzNTg1MTEgQzQsNy4wNTM3MzU5NSA1LjA1MzczNTk1LDYgNi4zNTM1ODUxMSw2IFoiIGlkPSJSZWN0YW5nbGUtQ29weS0zMSIgc3Ryb2tlPSIjNzg4OTk5IiBmaWxsPSIjRTdFQUYzIj48L3BhdGg+CiAgICAgICAgICAgICAgICA8cGF0aCBkPSJNNC4zNTM1ODUxMSw0IEwyNy42NDY0MTQ5LDQgQzI4Ljk0NjI2NDEsNCAzMCw1LjA1MzczNTk1IDMwLDYuMzUzNTg1MTEgTDMwLDI3IEMzMCwyOS4yMDkxMzkgMjguMjA5MTM5LDMxIDI2LDMxIEw0LjM1MzU4NTExLDMxIEMzLjA1MzczNTk1LDMxIDIsMjkuOTQ2MjY0MSAyLDI4LjY0NjQxNDkgTDIsNi4zNTM1ODUxMSBDMiw1LjA1MzczNTk1IDMuMDUzNzM1OTUsNCA0LjM1MzU4NTExLDQgWiIgaWQ9IlJlY3RhbmdsZS1Db3B5LTMxIiBzdHJva2U9IiM3ODg5OTkiIGZpbGw9IiNFN0VBRjMiPjwvcGF0aD4KICAgICAgICAgICAgICAgIDxyZWN0IGlkPSJSZWN0YW5nbGUtQ29weS0zMSIgc3Ryb2tlPSIjNzg4OTk5IiBmaWxsPSIjRkZGRkZGIiB4PSIwIiB5PSIyIiB3aWR0aD0iMjgiIGhlaWdodD0iMjciIHJ4PSIyLjM1MzU4NTExIj48L3JlY3Q+CiAgICAgICAgICAgICAgICA8cGF0aCBkPSJNMi4zNTM1ODUxMSwyIEwyNS42NDY0MTQ5LDIgQzI2Ljk0NjI2NDEsMiAyOCwzLjA1MzczNTk1IDI4LDQuMzUzNTg1MTEgTDI4LDkgTDI4LDkgTDAsOSBMMCw0LjM1MzU4NTExIEMyLjg0OTAzNTk4ZS0xNiwzLjA1MzczNTk1IDEuMDUzNzM1OTUsMiAyLjM1MzU4NTExLDIgWiIgaWQ9IlJlY3RhbmdsZS1Db3B5LTMyIiBzdHJva2U9IiM3ODg5OTkiIGZpbGw9IiNDNUNDRDciPjwvcGF0aD4KICAgICAgICAgICAgICAgIDxyZWN0IGlkPSJSZWN0YW5nbGUtQ29weS0zMyIgc3Ryb2tlPSIjNzg4OTk5IiBmaWxsPSIjRjhGOUZDIiBzdHJva2UtbGluZWpvaW49InJvdW5kIiB4PSIxOCIgeT0iMCIgd2lkdGg9IjIiIGhlaWdodD0iNSIgcng9IjEiPjwvcmVjdD4KICAgICAgICAgICAgICAgIDxyZWN0IGlkPSJSZWN0YW5nbGUtQ29weS0zMyIgc3Ryb2tlPSIjNzg4OTk5IiBmaWxsPSIjRjhGOUZDIiBzdHJva2UtbGluZWpvaW49InJvdW5kIiB4PSIyMyIgeT0iMCIgd2lkdGg9IjIiIGhlaWdodD0iNSIgcng9IjEiPjwvcmVjdD4KICAgICAgICAgICAgICAgIDxyZWN0IGlkPSJSZWN0YW5nbGUtQ29weS0zNSIgc3Ryb2tlPSIjNzg4OTk5IiBmaWxsPSIjRjhGOUZDIiBzdHJva2UtbGluZWpvaW49InJvdW5kIiB4PSIxMyIgeT0iMCIgd2lkdGg9IjIiIGhlaWdodD0iNSIgcng9IjEiPjwvcmVjdD4KICAgICAgICAgICAgICAgIDxyZWN0IGlkPSJSZWN0YW5nbGUtQ29weS0zNyIgc3Ryb2tlPSIjNzg4OTk5IiBmaWxsPSIjRjhGOUZDIiBzdHJva2UtbGluZWpvaW49InJvdW5kIiB4PSI4IiB5PSIwIiB3aWR0aD0iMiIgaGVpZ2h0PSI1IiByeD0iMSI+PC9yZWN0PgogICAgICAgICAgICAgICAgPHJlY3QgaWQ9IlJlY3RhbmdsZS1Db3B5LTM5IiBzdHJva2U9IiM3ODg5OTkiIGZpbGw9IiNGOEY5RkMiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIHg9IjMiIHk9IjAiIHdpZHRoPSIyIiBoZWlnaHQ9IjUiIHJ4PSIxIj48L3JlY3Q+CiAgICAgICAgICAgICAgICA8cmVjdCBpZD0iUmVjdGFuZ2xlIiBmaWxsPSIjRTdFQUYzIiB4PSIzIiB5PSIxMiIgd2lkdGg9IjYiIGhlaWdodD0iNiIgcng9IjAuNSI+PC9yZWN0PgogICAgICAgICAgICAgICAgPHJlY3QgaWQ9IlJlY3RhbmdsZS1Db3B5LTE2IiBmaWxsPSIjRTdFQUYzIiB4PSIxMSIgeT0iMTIiIHdpZHRoPSI2IiBoZWlnaHQ9IjYiIHJ4PSIwLjUiPjwvcmVjdD4KICAgICAgICAgICAgICAgIDxyZWN0IGlkPSJSZWN0YW5nbGUtQ29weS0xOCIgZmlsbD0iI0U3RUFGMyIgeD0iMTkiIHk9IjEyIiB3aWR0aD0iNiIgaGVpZ2h0PSI2IiByeD0iMC41Ij48L3JlY3Q+CiAgICAgICAgICAgICAgICA8cmVjdCBpZD0iUmVjdGFuZ2xlIiBmaWxsPSIjRTdFQUYzIiB4PSIzIiB5PSIyMCIgd2lkdGg9IjYiIGhlaWdodD0iNiIgcng9IjAuNSI+PC9yZWN0PgogICAgICAgICAgICAgICAgPHJlY3QgaWQ9IlJlY3RhbmdsZS1Db3B5LTE2IiBmaWxsPSIjRTdFQUYzIiB4PSIxMSIgeT0iMjAiIHdpZHRoPSI2IiBoZWlnaHQ9IjYiIHJ4PSIwLjUiPjwvcmVjdD4KICAgICAgICAgICAgICAgIDxwb2x5bGluZSBpZD0iUGF0aC0xMC1Db3B5LTExIiBzdHJva2U9IiM3ODg5OTkiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIgcG9pbnRzPSIxMi41IDE1LjI2MzM1ODIgMTMuMzc1Njc2IDE2LjUgMTUuNSAxMy41Ij48L3BvbHlsaW5lPgogICAgICAgICAgICAgICAgPHBvbHlsaW5lIGlkPSJQYXRoLTEwLUNvcHktMTEiIHN0cm9rZT0iIzc4ODk5OSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIiBwb2ludHM9IjIwLjUgMTUuMjYzMzU4MiAyMS4zNzU2NzYgMTYuNSAyMy41IDEzLjUiPjwvcG9seWxpbmU+CiAgICAgICAgICAgICAgICA8cG9seWxpbmUgaWQ9IlBhdGgtMTAtQ29weS0xMSIgc3Ryb2tlPSIjNzg4OTk5IiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIHBvaW50cz0iMTIuNSAyMy4yNjMzNTgyIDEzLjM3NTY3NiAyNC41IDE1LjUgMjEuNSI+PC9wb2x5bGluZT4KICAgICAgICAgICAgICAgIDxwb2x5bGluZSBpZD0iUGF0aC0xMC1Db3B5LTExIiBzdHJva2U9IiM3ODg5OTkiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIgcG9pbnRzPSI0LjUgMjMuMjYzMzU4MiA1LjM3NTY3NTk3IDI0LjUgNy41IDIxLjUiPjwvcG9seWxpbmU+CiAgICAgICAgICAgICAgICA8cmVjdCBpZD0iUmVjdGFuZ2xlLUNvcHktMTgiIGZpbGw9IiNFN0VBRjMiIHg9IjE5IiB5PSIyMCIgd2lkdGg9IjYiIGhlaWdodD0iNiIgcng9IjAuNSI+PC9yZWN0PgogICAgICAgICAgICA8L2c+CiAgICAgICAgPC9nPgogICAgPC9nPgo8L3N2Zz4="
-                      alt="Legal Documents"
-                      style={{ width: '100%', height: '100%', objectFit: 'contain' }}
-                    />
-                  </Box>
+                <Box sx={{ display: 'flex', alignItems: 'flex-start', gap: 2, mb: 2 }}>
+                  <Settings size={20} color="#607D8B" />
                   <Typography variant="body2">
                     When I change my room mapping in Booking.com after connection, I will remap my listing in Hostaway.
                   </Typography>
                 </Box>
-                <Box sx={{ display: 'flex', alignItems: 'flex-start', gap: 2, mb: 3 }}>
-                  <Box sx={{ 
-                    width: 20, 
-                    height: 20, 
-                    borderRadius: '50%', 
-                    bgcolor: '#E0E0E0', 
-                    display: 'flex', 
-                    alignItems: 'center', 
-                    justifyContent: 'center',
-                    flexShrink: 0,
-                    mt: 0.5
-                  }}>
-                    <img 
-                      src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz4KPHN2ZyB3aWR0aD0iMzRweCIgaGVpZ2h0PSIzNXB4IiB2aWV3Qm94PSIwIDAgMzQgMzUiIHZlcnNpb249IjEuMSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB4bWxuczp4bGluaz0iaHR0cDovL3d3dy53My5vcmcvMTk5OS94bGluayI+CiAgICA8IS0tIEdlbmVyYXRvcjogc2tldGNodG9vbCA2My4xICgxMDEwMTApIC0gaHR0cHM6Ly9za2V0Y2guY29tIC0tPgogICAgPHRpdGxlPjU3MzJCMUNCLUU3MzMtNEE2Qy1BQ0E5LTBEMjM3OEE3NEQ0NTwvdGl0bGU+CiAgICA8ZGVzYz5DcmVhdGVkIHdpdGggc2tldGNodG9vbC48L2Rlc2M+CiAgICA8ZyBpZD0iUGFnZS0xIiBzdHJva2U9Im5vbmUiIHN0cm9rZS13aWR0aD0iMSIgZmlsbD0ibm9uZSIgZmlsbC1ydWxlPSJldmVub2RkIj4KICAgICAgICA8ZyBpZD0iTGVnYWwtc3RhdGVtZW50cy1zdmctaWNvbnMiIHRyYW5zZm9ybT0idHJhbnNsYXRlKC0xNTAuMDAwMDAwLCAtMTg0LjAwMDAwMCkiPgogICAgICAgICAgICA8ZyBpZD0iR3JvdXAtMTE0LUNvcHkiIHRyYW5zZm9ybT0idHJhbnNsYXRlKDE1MS4wMDAwMDAsIDE4NS4wMDAwMDApIj4KICAgICAgICAgICAgICAgIDxwYXRoIGQ9Ik02LjM1MzU4NTExLDYgTDI5LjY0NjQxNDksNiBDMzAuOTQ2MjY0MSw2IDMyLDcuMDUzNzM1OTUgMzIsOC4zNTM1ODUxMSBMMzIsMjcgQzMyLDMwLjMxMzcwODUgMjkuMzEzNzA4NSwzMyAyNiwzMyBMNi4zNTM1ODUxMSwzMyBDNS4wNTM3MzU5NSwzMyA0LDMxLjk0NjI2NDEgNCwzMC42NDY0MTQ5IEw0LDguMzUzNTg1MTEgQzQsNy4wNTM3MzU5NSA1LjA1MzczNTk1LDYgNi4zNTM1ODUxMSw2IFoiIGlkPSJSZWN0YW5nbGUtQ29weS0zMSIgc3Ryb2tlPSIjNzg4OTk5IiBmaWxsPSIjRTdFQUYzIj48L3BhdGg+CiAgICAgICAgICAgICAgICA8cGF0aCBkPSJNNC4zNTM1ODUxMSw0IEwyNy42NDY0MTQ5LDQgQzI4Ljk0NjI2NDEsNCAzMCw1LjA1MzczNTk1IDMwLDYuMzUzNTg1MTEgTDMwLDI3IEMzMCwyOS4yMDkxMzkgMjguMjA5MTM5LDMxIDI2LDMxIEw0LjM1MzU4NTExLDMxIEMzLjA1MzczNTk1LDMxIDIsMjkuOTQ2MjY0MSAyLDI4LjY0NjQxNDkgTDIsNi4zNTM1ODUxMSBDMiw1LjA1MzczNTk1IDMuMDUzNzM1OTUsNCA0LjM1MzU4NTExLDQgWiIgaWQ9IlJlY3RhbmdsZS1Db3B5LTMxIiBzdHJva2U9IiM3ODg5OTkiIGZpbGw9IiNFN0VBRjMiPjwvcGF0aD4KICAgICAgICAgICAgICAgIDxyZWN0IGlkPSJSZWN0YW5nbGUtQ29weS0zMSIgc3Ryb2tlPSIjNzg4OTk5IiBmaWxsPSIjRkZGRkZGIiB4PSIwIiB5PSIyIiB3aWR0aD0iMjgiIGhlaWdodD0iMjciIHJ4PSIyLjM1MzU4NTExIj48L3JlY3Q+CiAgICAgICAgICAgICAgICA8cGF0aCBkPSJNMi4zNTM1ODUxMSwyIEwyNS42NDY0MTQ5LDIgQzI2Ljk0NjI2NDEsMiAyOCwzLjA1MzczNTk1IDI4LDQuMzUzNTg1MTEgTDI4LDkgTDI4LDkgTDAsOSBMMCw0LjM1MzU4NTExIEMyLjg0OTAzNTk4ZS0xNiwzLjA1MzczNTk1IDEuMDUzNzM1OTUsMiAyLjM1MzU4NTExLDIgWiIgaWQ9IlJlY3RhbmdsZS1Db3B5LTMyIiBzdHJva2U9IiM3ODg5OTkiIGZpbGw9IiNDNUNDRDciPjwvcGF0aD4KICAgICAgICAgICAgICAgIDxyZWN0IGlkPSJSZWN0YW5nbGUtQ29weS0zMyIgc3Ryb2tlPSIjNzg4OTk5IiBmaWxsPSIjRjhGOUZDIiBzdHJva2UtbGluZWpvaW49InJvdW5kIiB4PSIxOCIgeT0iMCIgd2lkdGg9IjIiIGhlaWdodD0iNSIgcng9IjEiPjwvcmVjdD4KICAgICAgICAgICAgICAgIDxyZWN0IGlkPSJSZWN0YW5nbGUtQ29weS0zMyIgc3Ryb2tlPSIjNzg4OTk5IiBmaWxsPSIjRjhGOUZDIiBzdHJva2UtbGluZWpvaW49InJvdW5kIiB4PSIyMyIgeT0iMCIgd2lkdGg9IjIiIGhlaWdodD0iNSIgcng9IjEiPjwvcmVjdD4KICAgICAgICAgICAgICAgIDxyZWN0IGlkPSJSZWN0YW5nbGUtQ29weS0zNSIgc3Ryb2tlPSIjNzg4OTk5IiBmaWxsPSIjRjhGOUZDIiBzdHJva2UtbGluZWpvaW49InJvdW5kIiB4PSIxMyIgeT0iMCIgd2lkdGg9IjIiIGhlaWdodD0iNSIgcng9IjEiPjwvcmVjdD4KICAgICAgICAgICAgICAgIDxyZWN0IGlkPSJSZWN0YW5nbGUtQ29weS0zNyIgc3Ryb2tlPSIjNzg4OTk5IiBmaWxsPSIjRjhGOUZDIiBzdHJva2UtbGluZWpvaW49InJvdW5kIiB4PSI4IiB5PSIwIiB3aWR0aD0iMiIgaGVpZ2h0PSI1IiByeD0iMSI+PC9yZWN0PgogICAgICAgICAgICAgICAgPHJlY3QgaWQ9IlJlY3RhbmdsZS1Db3B5LTM5IiBzdHJva2U9IiM3ODg5OTkiIGZpbGw9IiNGOEY5RkMiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIHg9IjMiIHk9IjAiIHdpZHRoPSIyIiBoZWlnaHQ9IjUiIHJ4PSIxIj48L3JlY3Q+CiAgICAgICAgICAgICAgICA8cmVjdCBpZD0iUmVjdGFuZ2xlIiBmaWxsPSIjRTdFQUYzIiB4PSIzIiB5PSIxMiIgd2lkdGg9IjYiIGhlaWdodD0iNiIgcng9IjAuNSI+PC9yZWN0PgogICAgICAgICAgICAgICAgPHJlY3QgaWQ9IlJlY3RhbmdsZS1Db3B5LTE2IiBmaWxsPSIjRTdFQUYzIiB4PSIxMSIgeT0iMTIiIHdpZHRoPSI2IiBoZWlnaHQ9IjYiIHJ4PSIwLjUiPjwvcmVjdD4KICAgICAgICAgICAgICAgIDxyZWN0IGlkPSJSZWN0YW5nbGUtQ29weS0xOCIgZmlsbD0iI0U3RUFGMyIgeD0iMTkiIHk9IjEyIiB3aWR0aD0iNiIgaGVpZ2h0PSI2IiByeD0iMC41Ij48L3JlY3Q+CiAgICAgICAgICAgICAgICA8cmVjdCBpZD0iUmVjdGFuZ2xlIiBmaWxsPSIjRTdFQUYzIiB4PSIzIiB5PSIyMCIgd2lkdGg9IjYiIGhlaWdodD0iNiIgcng9IjAuNSI+PC9yZWN0PgogICAgICAgICAgICAgICAgPHJlY3QgaWQ9IlJlY3RhbmdsZS1Db3B5LTE2IiBmaWxsPSIjRTdFQUYzIiB4PSIxMSIgeT0iMjAiIHdpZHRoPSI2IiBoZWlnaHQ9IjYiIHJ4PSIwLjUiPjwvcmVjdD4KICAgICAgICAgICAgICAgIDxwb2x5bGluZSBpZD0iUGF0aC0xMC1Db3B5LTExIiBzdHJva2U9IiM3ODg5OTkiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIgcG9pbnRzPSIxMi41IDE1LjI2MzM1ODIgMTMuMzc1Njc2IDE2LjUgMTUuNSAxMy41Ij48L3BvbHlsaW5lPgogICAgICAgICAgICAgICAgPHBvbHlsaW5lIGlkPSJQYXRoLTEwLUNvcHktMTEiIHN0cm9rZT0iIzc4ODk5OSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIiBwb2ludHM9IjIwLjUgMTUuMjYzMzU4MiAyMS4zNzU2NzYgMTYuNSAyMy41IDEzLjUiPjwvcG9seWxpbmU+CiAgICAgICAgICAgICAgICA8cG9seWxpbmUgaWQ9IlBhdGgtMTAtQ29weS0xMSIgc3Ryb2tlPSIjNzg4OTk5IiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIHBvaW50cz0iMTIuNSAyMy4yNjMzNTgyIDEzLjM3NTY3NiAyNC41IDE1LjUgMjEuNSI+PC9wb2x5bGluZT4KICAgICAgICAgICAgICAgIDxwb2x5bGluZSBpZD0iUGF0aC0xMC1Db3B5LTExIiBzdHJva2U9IiM3ODg5OTkiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIgcG9pbnRzPSI0LjUgMjMuMjYzMzU4MiA1LjM3NTY3NTk3IDI0LjUgNy41IDIxLjUiPjwvcG9seWxpbmU+CiAgICAgICAgICAgICAgICA8cmVjdCBpZD0iUmVjdGFuZ2xlLUNvcHktMTgiIGZpbGw9IiNFN0VBRjMiIHg9IjE5IiB5PSIyMCIgd2lkdGg9IjYiIGhlaWdodD0iNiIgcng9IjAuNSI+PC9yZWN0PgogICAgICAgICAgICA8L2c+CiAgICAgICAgPC9nPgogICAgPC9nPgo8L3N2Zz4="
-                      alt="Legal Documents"
-                      style={{ width: '100%', height: '100%', objectFit: 'contain' }}
-                    />
-                  </Box>
+                <Box sx={{ display: 'flex', alignItems: 'flex-start', gap: 2, mb: 2 }}>
+                  <Calendar size={20} color="#795548" />
                   <Typography variant="body2">
                     I am not using multi-room availability in my listings on Booking.com. My inventory has to consist of 1 room available per day per room type.
                   </Typography>
@@ -574,91 +602,86 @@ export function ChannelsView() {
               </>
             ) : selectedChannel?.name === 'Expedia' ? (
               <>
-                <Box sx={{ display: 'flex', alignItems: 'flex-start', gap: 2, mb: 3 }}>
+                <Box sx={{ display: 'flex', alignItems: 'flex-start', gap: 2, mb: 2 }}>
                   <Box sx={{ 
-                    width: 20, 
-                    height: 20, 
-                    borderRadius: '50%', 
-                    bgcolor: '#E0E0E0', 
+                    width: 24, 
+                    height: 24, 
+                   
                     display: 'flex', 
                     alignItems: 'center', 
                     justifyContent: 'center',
                     flexShrink: 0,
                     mt: 0.5
                   }}>
-                    <Plug size={12} color="#666" />
+                    <Plug size={24} color="#666" />
                   </Box>
                   <Typography variant="body2" sx={{ lineHeight: 1.5 }}>
                     I understand that the sync process is slower than an API connection.
                   </Typography>
                 </Box>
-                <Box sx={{ display: 'flex', alignItems: 'flex-start', gap: 2, mb: 3 }}>
+                <Box sx={{ display: 'flex', alignItems: 'flex-start', gap: 2, mb: 2 }}>
                   <Box sx={{ 
-                    width: 20, 
-                    height: 20, 
-                    borderRadius: '50%', 
-                    bgcolor: '#E0E0E0', 
+                    width: 22, 
+                    height: 22, 
+                   
                     display: 'flex', 
                     alignItems: 'center', 
                     justifyContent: 'center',
                     flexShrink: 0,
                     mt: 0.5
                   }}>
-                    <FileCheck size={12} color="#666" />
+                    <FileCheck size={22} color="#666" />
                   </Box>
                   <Typography variant="body2" sx={{ lineHeight: 1.5 }}>
                     When the connection is made, I will check to ensure Hostaway reservations are seen in the Vrbo calendar and vice versa.
                   </Typography>
                 </Box>
-                <Box sx={{ display: 'flex', alignItems: 'flex-start', gap: 2, mb: 3 }}>
+                <Box sx={{ display: 'flex', alignItems: 'flex-start', gap: 2, mb: 2 }}>
                   <Box sx={{ 
-                    width: 20, 
-                    height: 20, 
-                    borderRadius: '50%', 
-                    bgcolor: '#E0E0E0', 
+                    width: 22, 
+                    height: 22, 
+                   
                     display: 'flex', 
                     alignItems: 'center', 
                     justifyContent: 'center',
                     flexShrink: 0,
                     mt: 0.5
                   }}>
-                    <Calendar size={12} color="#666" />
+                    <Calendar size={22} color="#666" />
                   </Box>
                   <Typography variant="body2" sx={{ lineHeight: 1.5 }}>
                     I understand that Vrbo is responsible for importing the Hostaway calendar and issues should be reported to Vrbo.
                   </Typography>
                 </Box>
-                <Box sx={{ display: 'flex', alignItems: 'flex-start', gap: 2, mb: 3 }}>
+                <Box sx={{ display: 'flex', alignItems: 'flex-start', gap: 2, mb: 2 }}>
                   <Box sx={{ 
-                    width: 20, 
-                    height: 20, 
-                    borderRadius: '50%', 
-                    bgcolor: '#E0E0E0', 
+                    width: 22, 
+                    height: 22, 
+                  
                     display: 'flex', 
                     alignItems: 'center', 
                     justifyContent: 'center',
                     flexShrink: 0,
                     mt: 0.5
                   }}>
-                    <MessageSquare size={12} color="#666" />
+                    <MessageSquare size={22} color="#666" />
                   </Box>
                   <Typography variant="body2" sx={{ lineHeight: 1.5 }}>
                     The guest messaging service is not available for this connection. I can manually use direct guest email as an alternative.
                   </Typography>
                 </Box>
-                <Box sx={{ display: 'flex', alignItems: 'flex-start', gap: 2, mb: 3 }}>
+                <Box sx={{ display: 'flex', alignItems: 'flex-start', gap: 2, mb: 2 }}>
                   <Box sx={{ 
-                    width: 20, 
-                    height: 20, 
-                    borderRadius: '50%', 
-                    bgcolor: '#E0E0E0', 
+                    width: 22, 
+                    height: 22, 
+                  
                     display: 'flex', 
                     alignItems: 'center', 
                     justifyContent: 'center',
                     flexShrink: 0,
                     mt: 0.5
                   }}>
-                    <CreditCard size={12} color="#666" />
+                    <CreditCard size={22} color="#666" />
                   </Box>
                   <Typography variant="body2" sx={{ lineHeight: 1.5 }}>
                     Rates, listing settings, and guest message services are not supported by iCal.
@@ -667,7 +690,7 @@ export function ChannelsView() {
               </>
             ) : (
               <>
-                <Box sx={{ display: 'flex', alignItems: 'flex-start', gap: 2, mb: 3 }}>
+                <Box sx={{ display: 'flex', alignItems: 'flex-start', gap: 2, mb: 2 }}>
                   <Box sx={{ display: 'flex', gap: 1, mt: 0.5 }}>
                     <Box sx={{ width: 20, height: 20, borderRadius: 1, bgcolor: '#9C27B0', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                       <Typography variant="caption" sx={{ fontSize: '0.7rem', color: 'white' }}>🔌</Typography>
@@ -677,13 +700,13 @@ export function ChannelsView() {
                     I understand that the sync process is slower than an API connection.
             </Typography>
                 </Box>
-                <Box sx={{ display: 'flex', alignItems: 'flex-start', gap: 2, mb: 3 }}>
+                <Box sx={{ display: 'flex', alignItems: 'flex-start', gap: 2, mb: 2 }}>
                   <CheckCircle size={20} color="#4CAF50" />
                   <Typography variant="body2">
                     When the connection is made, I will check to ensure Hostaway reservations are seen in the Vrbo calendar and vice versa.
                     </Typography>
                 </Box>
-                <Box sx={{ display: 'flex', alignItems: 'flex-start', gap: 2, mb: 3 }}>
+                <Box sx={{ display: 'flex', alignItems: 'flex-start', gap: 2, mb: 2 }}>
                   <Box sx={{ display: 'flex', gap: 1, mt: 0.5 }}>
                     <Calendar size={20} color="#2196F3" />
                     <CheckCircle size={20} color="#4CAF50" />
@@ -692,7 +715,7 @@ export function ChannelsView() {
                     I understand that Vrbo is responsible for importing the Hostaway calendar and issues should be reported to Vrbo.
                     </Typography>
                 </Box>
-                <Box sx={{ display: 'flex', alignItems: 'flex-start', gap: 2, mb: 3 }}>
+                <Box sx={{ display: 'flex', alignItems: 'flex-start', gap: 2, mb: 2 }}>
                   <Box sx={{ display: 'flex', gap: 1, mt: 0.5 }}>
                     <Box sx={{ width: 20, height: 20, borderRadius: '50%', bgcolor: '#2196F3', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                       <Typography variant="caption" sx={{ fontSize: '0.7rem', color: 'white' }}>💬</Typography>
@@ -705,7 +728,7 @@ export function ChannelsView() {
                     The guest messaging service is not available for this connection. I can manually use direct guest email as an alternative.
                   </Typography>
                 </Box>
-                <Box sx={{ display: 'flex', alignItems: 'flex-start', gap: 2, mb: 3 }}>
+                <Box sx={{ display: 'flex', alignItems: 'flex-start', gap: 2, mb: 2 }}>
                   <Box sx={{ display: 'flex', gap: 1, mt: 0.5 }}>
                     <Box sx={{ width: 20, height: 20, borderRadius: 1, bgcolor: '#4CAF50', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                       <Typography variant="caption" sx={{ fontSize: '0.7rem', fontWeight: 'bold', color: 'white' }}>$</Typography>
@@ -729,7 +752,7 @@ export function ChannelsView() {
                 onChange={(e) => setAgreedToTerms(e.target.checked)}
                 sx={{
                   '&.Mui-checked': {
-                    color: '#00A699',
+                    color: 'primary.main',
                   },
                 }}
               />
@@ -737,7 +760,7 @@ export function ChannelsView() {
             label={
               <Typography variant="body2" sx={{ fontSize: '0.9rem' }}>
                 I agree to Hostaway{' '}
-                <Typography component="span" sx={{ color: '#00A699', textDecoration: 'underline', cursor: 'pointer', fontWeight: 500 }}>
+                <Typography component="span" sx={{ color: 'primary.main', textDecoration: 'underline', cursor: 'pointer', fontWeight: 500 }}>
                   terms & conditions
                 </Typography>
               </Typography>
@@ -775,13 +798,13 @@ export function ChannelsView() {
             }}
             sx={{ 
               textTransform: 'none', 
-              bgcolor: agreedToTerms ? '#00A699' : '#E0E0E0',
+              bgcolor: agreedToTerms ? 'primary.main' : '#E0E0E0',
               color: agreedToTerms ? 'white' : '#999',
               px: 3,
               py: 1,
               borderRadius: 2,
               '&:hover': {
-                bgcolor: agreedToTerms ? '#008A7A' : '#E0E0E0',
+                bgcolor: agreedToTerms ? 'primary.dark' : '#E0E0E0',
               }
             }}
           >
@@ -794,12 +817,13 @@ export function ChannelsView() {
       <Dialog
         open={icalModalOpen}
         onClose={() => setIcalModalOpen(false)}
-        maxWidth="md"
-        fullWidth
+        maxWidth="sm"
         PaperProps={{
           sx: {
-            borderRadius: 2,
+            borderRadius: 3,
             boxShadow: '0 8px 32px rgba(0,0,0,0.12)',
+            bgcolor: 'white',
+            maxHeight: '80vh',
           },
         }}
       >
@@ -808,12 +832,12 @@ export function ChannelsView() {
             Please open your Homeaway account and go to your Calendar
             </Typography>
         </DialogTitle>
-        <DialogContent>
-          <Box sx={{ mt: 3 }}>
+        <DialogContent sx={{ px: 3, py: 1 }}>
+          <Box sx={{ mt: 2 }}>
             <Typography variant="subtitle1" sx={{ fontWeight: 600, mb: 2 }}>
               Choose listing
                   </Typography>
-            <FormControl fullWidth sx={{ mb: 3 }}>
+            <FormControl fullWidth sx={{ mb: 2 }}>
               <InputLabel>Select listing</InputLabel>
               <Select
                 value={selectedListing}
@@ -849,7 +873,7 @@ export function ChannelsView() {
                   </InputAdornment>
                 ),
               }}
-              sx={{ mb: 3 }}
+              sx={{ mb: 2 }}
             />
 
             <Typography variant="subtitle1" sx={{ fontWeight: 600, mb: 2 }}>
@@ -862,21 +886,30 @@ export function ChannelsView() {
               value={homeawayLink}
               onChange={(e) => setHomeawayLink(e.target.value)}
               placeholder="https://www.homeaway.com/ical/..."
-              sx={{ mb: 3 }}
+              sx={{ mb: 2 }}
             />
                   </Box>
         </DialogContent>
-        <DialogActions sx={{ p: 3, gap: 2 }}>
+        <DialogActions sx={{ p: 2, gap: 2 }}>
           <Button 
+            variant="outlined"
             onClick={() => setIcalModalOpen(false)}
-            sx={{ textTransform: 'none', color: 'text.secondary' }}
+            sx={{ 
+              textTransform: 'none', 
+              borderColor: 'grey.300',
+              color: 'text.secondary',
+              '&:hover': {
+                borderColor: 'grey.400',
+                bgcolor: 'grey.50',
+              }
+            }}
           >
             Cancel
           </Button>
           <Button 
             variant="contained"
             onClick={handleActivateIcal}
-            sx={{ textTransform: 'none', bgcolor: '#00A699' }}
+            sx={{ textTransform: 'none', bgcolor: 'primary.main' }}
           >
             Activate
           </Button>
@@ -936,15 +969,24 @@ export function ChannelsView() {
         </DialogContent>
         <DialogActions sx={{ p: 3, gap: 2 }}>
           <Button 
+            variant="outlined"
             onClick={() => setSupportModalOpen(false)}
-            sx={{ textTransform: 'none', color: 'text.secondary' }}
+            sx={{ 
+              textTransform: 'none', 
+              borderColor: 'grey.300',
+              color: 'text.secondary',
+              '&:hover': {
+                borderColor: 'grey.400',
+                bgcolor: 'grey.50',
+              }
+            }}
           >
             Cancel
           </Button>
           <Button 
             variant="contained"
             onClick={handleContactSupport}
-            sx={{ textTransform: 'none', bgcolor: '#00A699' }}
+            sx={{ textTransform: 'none', bgcolor: 'primary.main' }}
           >
             Save
           </Button>
@@ -955,13 +997,13 @@ export function ChannelsView() {
       <Dialog
         open={secondModalOpen}
         onClose={() => setSecondModalOpen(false)}
-        maxWidth="md"
-        fullWidth
+        maxWidth="sm"
         PaperProps={{
           sx: {
-            borderRadius: 2,
+            borderRadius: 3,
             boxShadow: '0 8px 32px rgba(0,0,0,0.12)',
             bgcolor: 'white',
+            maxHeight: '80vh',
           },
         }}
       >
@@ -975,7 +1017,7 @@ export function ChannelsView() {
             <Typography variant="subtitle1" sx={{ fontWeight: 600, mb: 2, color: '#333' }}>
               Choose listing
             </Typography>
-            <FormControl fullWidth sx={{ mb: 3 }}>
+            <FormControl fullWidth sx={{ mb: 2 }}>
               <InputLabel>Select listing</InputLabel>
               <Select
                 value={selectedListing}
@@ -1031,7 +1073,7 @@ export function ChannelsView() {
                 ),
               }}
               sx={{ 
-                mb: 3,
+                mb: 2,
                 '& .MuiOutlinedInput-root': {
                   '& fieldset': {
                     borderColor: '#E0E0E0',
@@ -1057,7 +1099,7 @@ export function ChannelsView() {
               onChange={(e) => setHomeawayLink(e.target.value)}
               placeholder="https://www.homeaway.com/ical/..."
               sx={{ 
-                mb: 3,
+                mb: 2,
                 '& .MuiOutlinedInput-root': {
                   '& fieldset': {
                     borderColor: '#E0E0E0',
@@ -1073,18 +1115,20 @@ export function ChannelsView() {
             />
           </Box>
         </DialogContent>
-        <DialogActions sx={{ p: 3, gap: 2, justifyContent: 'flex-end' }}>
+        <DialogActions sx={{ p: 2, gap: 2, justifyContent: 'flex-end' }}>
           <Button 
+            variant="outlined"
             onClick={() => setSecondModalOpen(false)}
             sx={{ 
               textTransform: 'none', 
-              color: '#00A699',
-              bgcolor: '#F0F9F8',
+              color: 'primary.main',
+              borderColor: 'primary.main', 
               px: 3,
               py: 1,
               borderRadius: 2,
               '&:hover': {
-                bgcolor: '#E0F2F1',
+                bgcolor: 'primary.main',
+                color: 'white',
               }
             }}
           >
@@ -1095,12 +1139,12 @@ export function ChannelsView() {
             onClick={() => setSecondModalOpen(false)}
             sx={{ 
               textTransform: 'none', 
-              bgcolor: '#00A699',
+              bgcolor: 'primary.main',
               px: 3,
               py: 1,
               borderRadius: 2,
               '&:hover': {
-                bgcolor: '#008A7A',
+                bgcolor: 'primary.dark',
               }
             }}
           >

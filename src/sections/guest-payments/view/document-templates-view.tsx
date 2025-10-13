@@ -314,7 +314,7 @@ export function DocumentTemplatesView() {
                   Tax ID: {templateSettings.taxIdType === 'listing-specific' ? 'Listing Tax ID will be here' : templateSettings.customTaxId}
             </Typography>
               )}
-            </Box>
+          </Box>
         </Box>
 
           <Typography variant="h3" sx={{ 
@@ -626,12 +626,12 @@ export function DocumentTemplatesView() {
               sx={{
                 p: 3,
                 cursor: 'pointer',
-                bgcolor: templateType === 'invoice' ? 'grey.800' : 'white',
+                bgcolor: templateType === 'invoice' ? 'primary.main' : 'white',
                 color: templateType === 'invoice' ? 'white' : 'text.primary',
                 border: templateType === 'invoice' ? 2 : 1,
-                borderColor: templateType === 'invoice' ? 'grey.800' : 'grey.200',
+                borderColor: templateType === 'invoice' ? 'primary.main' : 'grey.200',
                 borderRadius: 2,
-                minHeight: 120,
+                height: 140,
                 display: 'flex',
                 flexDirection: 'column',
                 justifyContent: 'space-between',
@@ -659,12 +659,12 @@ export function DocumentTemplatesView() {
               sx={{
                 p: 3,
                 cursor: 'pointer',
-                bgcolor: templateType === 'charge' ? 'grey.800' : 'white',
+                bgcolor: templateType === 'charge' ? 'primary.main' : 'white',
                 color: templateType === 'charge' ? 'white' : 'text.primary',
                 border: templateType === 'charge' ? 2 : 1,
-                borderColor: templateType === 'charge' ? 'grey.800' : 'grey.200',
+                borderColor: templateType === 'charge' ? 'primary.main' : 'grey.200',
                 borderRadius: 2,
-                minHeight: 120,
+                height: 140,
                 display: 'flex',
                 flexDirection: 'column',
                 justifyContent: 'space-between',
@@ -692,12 +692,12 @@ export function DocumentTemplatesView() {
               sx={{
                 p: 3,
                 cursor: 'pointer',
-                bgcolor: templateType === 'refund' ? 'grey.800' : 'white',
+                bgcolor: templateType === 'refund' ? 'primary.main' : 'white',
                 color: templateType === 'refund' ? 'white' : 'text.primary',
                 border: templateType === 'refund' ? 2 : 1,
-                borderColor: templateType === 'refund' ? 'grey.800' : 'grey.200',
+                borderColor: templateType === 'refund' ? 'primary.main' : 'grey.200',
                 borderRadius: 2,
-                minHeight: 120,
+                height: 140,
                 display: 'flex',
                 flexDirection: 'column',
                 justifyContent: 'space-between',

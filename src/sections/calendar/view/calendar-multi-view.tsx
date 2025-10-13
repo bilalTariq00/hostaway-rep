@@ -1979,7 +1979,7 @@ export function CalendarMultiView() {
                           borderColor: 'divider',
                             position: 'relative',
                             cursor: 'pointer',
-                            bgcolor: isPast ? 'grey.100' : isCurrentMonthDate ? 'white' : 'grey.50',
+                            bgcolor: isBooked ? 'transparent' : (isPast ? 'grey.100' : isCurrentMonthDate ? 'white' : 'grey.50'),
                             opacity: isPast ? 0.6 : isCurrentMonthDate ? 1 : 0.7,
                             '&:hover': {
                               bgcolor: isPast ? 'grey.200' : 'grey.50',
@@ -2017,7 +2017,7 @@ export function CalendarMultiView() {
                                 left: 0,
                                 right: 0,
                                 bottom: 0,
-                                background: 'linear-gradient(135deg, #1976d2 0%, #1565c0 100%)',
+                                background: '#00A699',
                                 color: 'white',
                                 display: 'flex',
                                 alignItems: 'center',
@@ -2029,13 +2029,14 @@ export function CalendarMultiView() {
                                 height: '100%',
                                 minWidth: bookingSpan > 1 ? `${bookingSpan * 84}px` : '84px',
                                 zIndex: 5,
-                                boxShadow: '0 2px 8px rgba(25, 118, 210, 0.3)',
-                                border: '1px solid rgba(255,255,255,0.1)',
+                                boxShadow: 'none',
+                                border: 'none',
+                                margin: 0,
                                 '&:hover': {
-                                  background: 'linear-gradient(135deg, #1565c0 0%, #0d47a1 100%)',
+                                  background: '#008A7A',
                                   transform: 'scale(1.02)',
                                   zIndex: 10,
-                                  boxShadow: '0 4px 12px rgba(25, 118, 210, 0.4)',
+                                  boxShadow: '0 4px 12px rgba(0, 166, 153, 0.4)',
                                 },
                               }}
                               onClick={(e) => {
@@ -2131,32 +2132,7 @@ export function CalendarMultiView() {
                             </Tooltip>
                           ) : isBooked ? (
                             // Show continuation of booking bar (no content, just background)
-                          <Box
-                            sx={{
-                              position: 'absolute',
-                              top: 0,
-                              left: 0,
-                              right: 0,
-                              bottom: 0,
-                              background: 'linear-gradient(135deg, #1976d2 0%, #1565c0 100%)',
-                              cursor: 'pointer',
-                              borderRadius: 0,
-                              width: '100%',
-                              height: '100%',
-                              boxShadow: '0 2px 8px rgba(25, 118, 210, 0.3)',
-                              border: '1px solid rgba(255,255,255,0.1)',
-                              '&:hover': {
-                                background: 'linear-gradient(135deg, #1565c0 0%, #0d47a1 100%)',
-                                transform: 'scale(1.02)',
-                                zIndex: 10,
-                                boxShadow: '0 4px 12px rgba(25, 118, 210, 0.4)',
-                              },
-                            }}
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              handleBookingClick(booking);
-                              }}
-                            />
+                            null
                           ) : (
                             <Box sx={{ 
                               position: 'absolute', 
