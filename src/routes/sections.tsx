@@ -9,6 +9,9 @@ import LinearProgress, { linearProgressClasses } from '@mui/material/LinearProgr
 
 import { AuthLayout } from 'src/layouts/auth';
 import { DashboardLayout } from 'src/layouts/dashboard';
+import { TeamDashboardLayout } from 'src/layouts/team-dashboard/layout';
+
+import { ProtectedRoute } from 'src/components/protected-route';
 
 // ----------------------------------------------------------------------
 
@@ -16,11 +19,17 @@ export const DashboardPage = lazy(() => import('src/pages/dashboard'));
 export const BlogPage = lazy(() => import('src/pages/blog'));
 export const UserPage = lazy(() => import('src/pages/user'));
 export const SignInPage = lazy(() => import('src/pages/sign-in'));
+export const HostawayLoginPage = lazy(() => import('src/pages/hostaway-login').then(module => ({ default: module.HostawayLogin })));
+export const HostawayRegisterPage = lazy(() => import('src/pages/hostaway-register').then(module => ({ default: module.HostawayRegister })));
 export const ProductsPage = lazy(() => import('src/pages/products'));
 export const SettingsPage = lazy(() => import('src/pages/settings'));
 export const ReportsPage = lazy(() => import('src/pages/reports'));
 export const AnalyticsPage = lazy(() => import('src/pages/analytics'));
 export const MessagesPage = lazy(() => import('src/pages/messages'));
+export const TeamDashboardPage = lazy(() => import('src/sections/team-dashboard/view/team-dashboard-view').then(module => ({ default: module.TeamDashboardPage })));
+export const TeamAnalyticsPage = lazy(() => import('src/sections/team-dashboard/view/team-analytics-view').then(module => ({ default: module.TeamAnalyticsView })));
+export const TeamManagementPage = lazy(() => import('src/sections/team-dashboard/view/team-management-view').then(module => ({ default: module.TeamManagementView })));
+export const TeamProfilePage = lazy(() => import('src/sections/team-dashboard/view/team-profile-view').then(module => ({ default: module.TeamProfileView })));
 export const CalendarMultiPage = lazy(() => import('src/sections/calendar/view/calendar-multi-view').then(module => ({ default: module.CalendarMultiView })));
 export const CalendarMonthlyPage = lazy(() => import('src/sections/calendar/view/calendar-monthly-view').then(module => ({ default: module.CalendarMonthlyView })));
 export const CalendarYearlyPage = lazy(() => import('src/sections/calendar/view/calendar-yearly-view').then(module => ({ default: module.CalendarYearlyView })));
@@ -108,11 +117,13 @@ const renderFallback = () => (
 export const routesSection: RouteObject[] = [
   {
     element: (
-      <DashboardLayout>
-        <Suspense fallback={renderFallback()}>
-          <Outlet />
-        </Suspense>
-      </DashboardLayout>
+      <ProtectedRoute requiredRole="user">
+        <DashboardLayout>
+          <Suspense fallback={renderFallback()}>
+            <Outlet />
+          </Suspense>
+        </DashboardLayout>
+      </ProtectedRoute>
     ),
     children: [
       { index: true, element: <DashboardPage /> },
@@ -211,12 +222,37 @@ export const routesSection: RouteObject[] = [
     ],
   },
   {
+    element: (
+      <ProtectedRoute requiredRole="team">
+        <TeamDashboardLayout>
+          <Suspense fallback={renderFallback()}>
+            <Outlet />
+          </Suspense>
+        </TeamDashboardLayout>
+      </ProtectedRoute>
+    ),
+        children: [
+          { path: 'team-dashboard', element: <TeamDashboardPage /> },
+          { path: 'team-dashboard/analytics', element: <TeamAnalyticsPage /> },
+          { path: 'team-dashboard/team', element: <TeamManagementPage /> },
+          { path: 'team-dashboard/team/:id', element: <TeamProfilePage /> },
+        ],
+  },
+  {
     path: 'sign-in',
     element: (
       <AuthLayout>
         <SignInPage />
       </AuthLayout>
     ),
+  },
+  {
+    path: 'login',
+    element: <HostawayLoginPage />,
+  },
+  {
+    path: 'register',
+    element: <HostawayRegisterPage />,
   },
   {
     path: '404',
