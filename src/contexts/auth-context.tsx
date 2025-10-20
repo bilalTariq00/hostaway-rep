@@ -5,7 +5,7 @@ import React, { useState, useEffect, useContext, createContext } from 'react';
 
 // ----------------------------------------------------------------------
 
-export type UserRole = 'user' | 'team';
+export type UserRole = 'user' | 'team' | 'associate' | 'supervisor' | 'manager';
 
 export interface User {
   id: string;
@@ -13,6 +13,7 @@ export interface User {
   name: string;
   role: UserRole;
   avatar?: string;
+  assignedProperties?: string[];
 }
 
 export interface AuthContextType {
@@ -20,6 +21,7 @@ export interface AuthContextType {
   login: (email: string, password: string) => Promise<boolean>;
   logout: () => void;
   isLoading: boolean;
+  createUser: (userData: Omit<User, 'id'>) => Promise<boolean>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -83,6 +85,17 @@ export function AuthProvider({ children }: AuthProviderProps) {
           avatar: undefined,
         };
       }
+      // Check created users
+      else {
+        const createdUsers = JSON.parse(localStorage.getItem('createdUsers') || '[]');
+        const foundUser = createdUsers.find((createdUser: User) => createdUser.email === email);
+        
+        if (foundUser) {
+          // For demo purposes, we'll accept any password for created users
+          // In a real app, you'd verify the password hash
+          userData = foundUser;
+        }
+      }
 
       if (userData) {
         setUser(userData);
@@ -106,11 +119,39 @@ export function AuthProvider({ children }: AuthProviderProps) {
     navigate('/login', { replace: true });
   };
 
+  const createUser = async (userData: Omit<User, 'id'>): Promise<boolean> => {
+    setIsLoading(true);
+    
+    try {
+      // Simulate API call
+      await new Promise(resolve => setTimeout(resolve, 1000));
+
+      // Generate a unique ID
+      const newUser: User = {
+        ...userData,
+        id: Date.now().toString(),
+      };
+
+      // Store the new user in localStorage (in a real app, this would be sent to the server)
+      const existingUsers = JSON.parse(localStorage.getItem('createdUsers') || '[]');
+      existingUsers.push(newUser);
+      localStorage.setItem('createdUsers', JSON.stringify(existingUsers));
+
+      return true;
+    } catch (error) {
+      console.error('Create user error:', error);
+      return false;
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   const value: AuthContextType = {
     user,
     login,
     logout,
     isLoading,
+    createUser,
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

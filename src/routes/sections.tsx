@@ -92,6 +92,8 @@ export const TemplateGroupEditPage = lazy(() => import('src/sections/inbox/view/
 export const AutomationCreatePage = lazy(() => import('src/sections/inbox/view/automation-create-view').then(module => ({ default: module.AutomationCreateView })));
 export const AutomationEditPage = lazy(() => import('src/sections/inbox/view/automation-edit-view').then(module => ({ default: module.AutomationEditView })));
 export const MessageEditPage = lazy(() => import('src/sections/inbox/view/message-edit-view').then(module => ({ default: module.MessageEditView })));
+export const CreateAccountPage = lazy(() => import('src/pages/create-account').then(module => ({ default: module.CreateAccountPage })));
+export const UserManagementPage = lazy(() => import('src/pages/user-management').then(module => ({ default: module.UserManagementPage })));
 export const Page404 = lazy(() => import('src/pages/page-not-found'));
 
 const renderFallback = () => (
@@ -219,6 +221,8 @@ export const routesSection: RouteObject[] = [
         { path: 'inbox/automation-create', element: <AutomationCreatePage /> },
         { path: 'inbox/automation-edit/:id', element: <AutomationEditPage /> },
         { path: 'inbox/message-edit/:id', element: <MessageEditPage /> },
+        { path: 'create-account', element: <CreateAccountPage /> },
+        { path: 'user-management', element: <UserManagementPage /> },
     ],
   },
   {

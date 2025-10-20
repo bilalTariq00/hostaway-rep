@@ -38,6 +38,8 @@ export function HostawayLogin() {
           // Navigate based on user role
           if (userData.role === 'team') {
             navigate('/team-dashboard', { replace: true });
+          } else if (['associate', 'supervisor', 'manager'].includes(userData.role)) {
+            navigate('/', { replace: true });
           } else {
             navigate('/', { replace: true });
           }
@@ -165,8 +167,11 @@ export function HostawayLogin() {
               <Typography variant="body2" sx={{ mb: 0.5 }}>
                 <strong>User:</strong> demo@hostaway.com / password123
               </Typography>
-              <Typography variant="body2">
+              <Typography variant="body2" sx={{ mb: 0.5 }}>
                 <strong>Team:</strong> team@hostaway.com / team123
+              </Typography>
+              <Typography variant="body2">
+                <strong>Created users:</strong> Any password works
               </Typography>
             </Box>
           </Alert>

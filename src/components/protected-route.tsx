@@ -7,7 +7,7 @@ import { useAuth } from 'src/contexts/auth-context';
 
 interface ProtectedRouteProps {
   children: React.ReactNode;
-  requiredRole?: 'user' | 'team';
+  requiredRole?: 'user' | 'team' | 'associate' | 'supervisor' | 'manager';
 }
 
 export function ProtectedRoute({ children, requiredRole }: ProtectedRouteProps) {
@@ -25,6 +25,8 @@ export function ProtectedRoute({ children, requiredRole }: ProtectedRouteProps) 
         // Redirect to appropriate dashboard based on user role
         if (user.role === 'team') {
           navigate('/team-dashboard');
+        } else if (['associate', 'supervisor', 'manager'].includes(user.role)) {
+          navigate('/');
         } else {
           navigate('/');
         }
@@ -35,6 +37,8 @@ export function ProtectedRoute({ children, requiredRole }: ProtectedRouteProps) 
       if (user.role === 'team' && window.location.pathname === '/') {
         navigate('/team-dashboard');
       } else if (user.role === 'user' && window.location.pathname.startsWith('/team-dashboard')) {
+        navigate('/');
+      } else if (['associate', 'supervisor', 'manager'].includes(user.role) && window.location.pathname.startsWith('/team-dashboard')) {
         navigate('/');
       }
     }

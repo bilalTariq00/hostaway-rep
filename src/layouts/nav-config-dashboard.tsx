@@ -280,6 +280,20 @@ export const navData = [
     icon: icon('ic-chart'),
   },
   {
+    title: 'Create Account',
+    path: '/create-account',
+    icon: icon('ic-user'),
+    badge: {
+      text: 'New',
+      color: '#FF8537',
+    },
+  },
+  {
+    title: 'User Management',
+    path: '/user-management',
+    icon: icon('ic-user'),
+  },
+  {
     title: 'Channel Manager',
     path: '/channel-manager',
     icon: icon('ic-message'),
