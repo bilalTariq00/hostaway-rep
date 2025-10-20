@@ -2,16 +2,18 @@ import type { User as UserType } from 'src/contexts/auth-context';
 
 import { useNavigate } from 'react-router';
 import React, { useState, useEffect } from 'react';
-import { Eye, Edit, Trash2, MoreHorizontal } from 'lucide-react';
+import { Eye, Edit, Trash2, ChevronDown } from 'lucide-react';
 
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
 import Chip from '@mui/material/Chip';
+import Menu from '@mui/material/Menu';
 import Table from '@mui/material/Table';
 import Paper from '@mui/material/Paper';
 import Button from '@mui/material/Button';
 import Avatar from '@mui/material/Avatar';
 import Dialog from '@mui/material/Dialog';
+import MenuItem from '@mui/material/MenuItem';
 import TableRow from '@mui/material/TableRow';
 import Checkbox from '@mui/material/Checkbox';
 import TableBody from '@mui/material/TableBody';
@@ -77,21 +79,20 @@ const getClientNames = (clientIds: string[] = []) =>
 const getPropertyNames = (propertyIds: string[] = []) =>
   propertyIds.map(id => mockProperties.find(p => p.id === id)?.name || `Property ${id}`).join(', ');
 
-const getStatusColor = (role: string) => {
-  // For demo purposes, assign status based on role
-  switch (role) {
-    case 'manager': return 'success';
-    case 'supervisor': return 'warning';
-    case 'associate': return 'error';
+const getStatusColor = (status?: string) => {
+  switch (status) {
+    case 'active': return 'success';
+    case 'inactive': return 'warning';
+    case 'suspended': return 'error';
     default: return 'default';
   }
 };
 
-const getStatusLabel = (role: string) => {
-  switch (role) {
-    case 'manager': return 'Active';
-    case 'supervisor': return 'Pending';
-    case 'associate': return 'Banned';
+const getStatusLabel = (status?: string) => {
+  switch (status) {
+    case 'active': return 'Active';
+    case 'inactive': return 'Inactive';
+    case 'suspended': return 'Suspended';
     default: return 'Active';
   }
 };
@@ -103,6 +104,10 @@ export function UserManagementPage() {
   const [viewDialogOpen, setViewDialogOpen] = useState(false);
   const [editDialogOpen, setEditDialogOpen] = useState(false);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [statusChangeDialogOpen, setStatusChangeDialogOpen] = useState(false);
+  const [statusMenuAnchor, setStatusMenuAnchor] = useState<null | HTMLElement>(null);
+  const [userToChangeStatus, setUserToChangeStatus] = useState<UserType | null>(null);
+  const [newStatus, setNewStatus] = useState<'active' | 'inactive' | 'suspended'>('active');
   const [selectedUsers, setSelectedUsers] = useState<string[]>([]);
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
@@ -112,8 +117,18 @@ export function UserManagementPage() {
   useEffect(() => {
     // Load created users from localStorage
     const createdUsers = JSON.parse(localStorage.getItem('createdUsers') || '[]');
-    setUsers(createdUsers);
+    // Ensure all users have a status field
+    const usersWithStatus = createdUsers.map((user: UserType) => ({
+      ...user,
+      status: user.status || 'active'
+    }));
+    setUsers(usersWithStatus);
   }, []);
+
+  // Debug: Log when users state changes
+  useEffect(() => {
+    console.log('Users state updated:', users);
+  }, [users]);
 
   const handleViewUser = (user: UserType) => {
     setSelectedUser(user);
@@ -144,8 +159,52 @@ export function UserManagementPage() {
     setViewDialogOpen(false);
     setEditDialogOpen(false);
     setDeleteDialogOpen(false);
+    setStatusChangeDialogOpen(false);
     setSelectedUser(null);
     setUserToDelete(null);
+    setUserToChangeStatus(null);
+    setStatusMenuAnchor(null);
+  };
+
+  const handleStatusMenuOpen = (event: React.MouseEvent<HTMLElement>, user: UserType) => {
+    event.stopPropagation();
+    setStatusMenuAnchor(event.currentTarget);
+    setUserToChangeStatus(user);
+  };
+
+  const handleStatusMenuClose = () => {
+    setStatusMenuAnchor(null);
+    // Don't clear userToChangeStatus here - we need it for the confirmation dialog
+  };
+
+  const handleStatusSelect = (status: 'active' | 'inactive' | 'suspended') => {
+    if (userToChangeStatus) {
+      console.log('Status selected:', status, 'for user:', userToChangeStatus.name);
+      setNewStatus(status);
+      setStatusChangeDialogOpen(true);
+      handleStatusMenuClose();
+    }
+  };
+
+  const confirmStatusChange = () => {
+    if (userToChangeStatus) {
+      console.log('Before update - userToChangeStatus:', userToChangeStatus);
+      console.log('Before update - newStatus:', newStatus);
+      console.log('Before update - users:', users);
+      
+      const updatedUsers = users.map(user => 
+        user.id === userToChangeStatus.id 
+          ? { ...user, status: newStatus }
+          : user
+      );
+      
+      console.log('After update - updatedUsers:', updatedUsers);
+      
+      setUsers(updatedUsers);
+      localStorage.setItem('createdUsers', JSON.stringify(updatedUsers));
+      setStatusChangeDialogOpen(false);
+      setUserToChangeStatus(null);
+    }
   };
 
   const handleSelectAllClick = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -302,8 +361,18 @@ export function UserManagementPage() {
                       </TableCell>
                       <TableCell component="th" id={labelId} scope="row">
                         <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-                          <Avatar sx={{ bgcolor: 'primary.main', width: 40, height: 40 }}>
-                            {user.name.charAt(0).toUpperCase()}
+                          <Avatar 
+                            sx={{ 
+                              bgcolor: user.avatar ? 'transparent' : 'primary.main', 
+                              width: 40, 
+                              height: 40,
+                              backgroundImage: user.avatar ? `url(${user.avatar})` : 'none',
+                              backgroundSize: 'cover',
+                              backgroundPosition: 'center',
+                              backgroundRepeat: 'no-repeat'
+                            }}
+                          >
+                            {!user.avatar && user.name.charAt(0).toUpperCase()}
                           </Avatar>
                           <Box>
                             <Typography variant="body2" sx={{ fontWeight: 500 }}>
@@ -352,11 +421,20 @@ export function UserManagementPage() {
                         />
                       </TableCell>
                       <TableCell>
-                        <Chip
-                          label={getStatusLabel(user.role)}
-                          color={getStatusColor(user.role) as any}
-                          size="small"
-                        />
+                        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                          <Chip
+                            label={getStatusLabel(user.status)}
+                            color={getStatusColor(user.status) as any}
+                            size="small"
+                          />
+                          <IconButton
+                            size="small"
+                            onClick={(e) => handleStatusMenuOpen(e, user)}
+                            sx={{ ml: 1 }}
+                          >
+                            <ChevronDown size={14} />
+                          </IconButton>
+                        </Box>
                       </TableCell>
                       <TableCell align="right">
                         <Box sx={{ display: 'flex', gap: 1, justifyContent: 'flex-end' }}>
@@ -390,15 +468,7 @@ export function UserManagementPage() {
                           >
                             <Trash2 size={16} />
                           </IconButton>
-                          <IconButton
-                            size="small"
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              // More options would go here
-                            }}
-                          >
-                            <MoreHorizontal size={16} />
-                          </IconButton>
+                       
                         </Box>
                       </TableCell>
                     </TableRow>
@@ -478,6 +548,55 @@ export function UserManagementPage() {
           <Button onClick={handleCloseDialog}>Cancel</Button>
           <Button onClick={confirmDelete} color="error" variant="contained">
             Delete
+          </Button>
+        </DialogActions>
+      </Dialog>
+
+      {/* Status Dropdown Menu */}
+      <Menu
+        anchorEl={statusMenuAnchor}
+        open={Boolean(statusMenuAnchor)}
+        onClose={handleStatusMenuClose}
+        anchorOrigin={{
+          vertical: 'bottom',
+          horizontal: 'left',
+        }}
+        transformOrigin={{
+          vertical: 'top',
+          horizontal: 'left',
+        }}
+      >
+        <MenuItem onClick={() => handleStatusSelect('active')}>
+          <Chip label="Active" color="success" size="small" sx={{ mr: 1 }} />
+          Active
+        </MenuItem>
+        <MenuItem onClick={() => handleStatusSelect('inactive')}>
+          <Chip label="Inactive" color="warning" size="small" sx={{ mr: 1 }} />
+          Inactive
+        </MenuItem>
+        <MenuItem onClick={() => handleStatusSelect('suspended')}>
+          <Chip label="Suspended" color="error" size="small" sx={{ mr: 1 }} />
+          Suspended
+        </MenuItem>
+      </Menu>
+
+      {/* Status Change Confirmation Dialog */}
+      <Dialog open={statusChangeDialogOpen} onClose={handleCloseDialog}>
+        <DialogTitle>Confirm Status Change</DialogTitle>
+        <DialogContent>
+          <Typography>
+            Are you sure you want to change {userToChangeStatus?.name}&apos;s status to{' '}
+            <Chip 
+              label={getStatusLabel(newStatus)} 
+              color={getStatusColor(newStatus) as any} 
+              size="small" 
+            />?
+          </Typography>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleCloseDialog}>Cancel</Button>
+          <Button onClick={confirmStatusChange} color="primary" variant="contained">
+            Confirm
           </Button>
         </DialogActions>
       </Dialog>

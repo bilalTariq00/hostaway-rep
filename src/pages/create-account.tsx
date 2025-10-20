@@ -66,6 +66,7 @@ export function CreateAccountPage({ userToEdit, viewMode = false, onClose }: Cre
     password: '',
     confirmPassword: '',
     role: (userToEdit?.role || '') as UserRole | '',
+    status: userToEdit?.status || 'active' as 'active' | 'inactive' | 'suspended',
     assignedClients: userToEdit?.assignedClients || [],
     assignedProperties: userToEdit?.assignedProperties || [],
     assignedUsers: userToEdit?.assignedUsers || [],
@@ -216,6 +217,7 @@ export function CreateAccountPage({ userToEdit, viewMode = false, onClose }: Cre
           name: formData.name,
           email: formData.email,
           role: formData.role as UserRole,
+          status: formData.status,
           assignedClients: formData.assignedClients,
           assignedProperties: formData.assignedProperties,
           assignedUsers: formData.assignedUsers,
@@ -227,6 +229,7 @@ export function CreateAccountPage({ userToEdit, viewMode = false, onClose }: Cre
           name: formData.name,
           email: formData.email,
           role: formData.role as UserRole,
+          status: formData.status,
           assignedClients: formData.assignedClients,
           assignedProperties: formData.assignedProperties,
           assignedUsers: formData.assignedUsers,
@@ -560,6 +563,19 @@ export function CreateAccountPage({ userToEdit, viewMode = false, onClose }: Cre
                       <MenuItem value="associate">Associate</MenuItem>
                       <MenuItem value="supervisor">Supervisor</MenuItem>
                       <MenuItem value="manager">Manager</MenuItem>
+                    </Select>
+                  </FormControl>
+                  <FormControl fullWidth>
+                    <InputLabel>Status</InputLabel>
+                    <Select
+                      disabled={viewMode}
+                      value={formData.status}
+                      onChange={(e) => handleInputChange('status', e.target.value)}
+                      label="Status"
+                    >
+                      <MenuItem value="active">Active</MenuItem>
+                      <MenuItem value="inactive">Inactive</MenuItem>
+                      <MenuItem value="suspended">Suspended</MenuItem>
                     </Select>
                   </FormControl>
                 </Box>

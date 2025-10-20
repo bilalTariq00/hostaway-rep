@@ -13,6 +13,7 @@ export interface User {
   name: string;
   role: UserRole;
   avatar?: string;
+  status?: 'active' | 'inactive' | 'suspended';
   assignedClients?: string[];
   assignedProperties?: string[];
   assignedUsers?: string[]; // For supervisors and managers to manage associates
