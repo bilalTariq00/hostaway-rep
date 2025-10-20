@@ -294,6 +294,26 @@ export const navData = [
     icon: icon('ic-user'),
   },
   {
+    title: 'Client Management',
+    path: '/client-management',
+    icon: icon('ic-user'),
+  },
+  {
+    title: 'Supervisor Dashboard',
+    path: '/supervisor-dashboard',
+    icon: icon('ic-user'),
+  },
+  {
+    title: 'Manager Dashboard',
+    path: '/manager-dashboard',
+    icon: icon('ic-user'),
+  },
+  {
+    title: 'Associate Dashboard',
+    path: '/associate-dashboard',
+    icon: icon('ic-user'),
+  },
+  {
     title: 'Channel Manager',
     path: '/channel-manager',
     icon: icon('ic-message'),

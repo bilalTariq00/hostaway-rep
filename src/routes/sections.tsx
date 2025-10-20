@@ -94,6 +94,10 @@ export const AutomationEditPage = lazy(() => import('src/sections/inbox/view/aut
 export const MessageEditPage = lazy(() => import('src/sections/inbox/view/message-edit-view').then(module => ({ default: module.MessageEditView })));
 export const CreateAccountPage = lazy(() => import('src/pages/create-account').then(module => ({ default: module.CreateAccountPage })));
 export const UserManagementPage = lazy(() => import('src/pages/user-management').then(module => ({ default: module.UserManagementPage })));
+export const ClientManagementPage = lazy(() => import('src/pages/client-management').then(module => ({ default: module.ClientManagementPage })));
+export const SupervisorDashboardPage = lazy(() => import('src/pages/supervisor-dashboard').then(module => ({ default: module.SupervisorDashboardPage })));
+export const ManagerDashboardPage = lazy(() => import('src/pages/manager-dashboard').then(module => ({ default: module.ManagerDashboardPage })));
+export const AssociateDashboardPage = lazy(() => import('src/pages/associate-dashboard').then(module => ({ default: module.AssociateDashboardPage })));
 export const Page404 = lazy(() => import('src/pages/page-not-found'));
 
 const renderFallback = () => (
@@ -223,6 +227,10 @@ export const routesSection: RouteObject[] = [
         { path: 'inbox/message-edit/:id', element: <MessageEditPage /> },
         { path: 'create-account', element: <CreateAccountPage /> },
         { path: 'user-management', element: <UserManagementPage /> },
+        { path: 'client-management', element: <ClientManagementPage /> },
+        { path: 'supervisor-dashboard', element: <SupervisorDashboardPage /> },
+        { path: 'manager-dashboard', element: <ManagerDashboardPage /> },
+        { path: 'associate-dashboard', element: <AssociateDashboardPage /> },
     ],
   },
   {

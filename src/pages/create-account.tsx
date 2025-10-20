@@ -25,13 +25,32 @@ import FormControlLabel from '@mui/material/FormControlLabel';
 
 import { useAuth, type User, type UserRole } from 'src/contexts/auth-context';
 
-// Mock clients data (in a real app, this would come from an API)
-const mockClients = [
-  { id: 'client1', name: 'Luxury Rentals LLC', email: 'contact@luxuryrentals.com' },
-  { id: 'client2', name: 'Vacation Homes Inc', email: 'info@vacationhomes.com' },
-  { id: 'client3', name: 'Premium Properties', email: 'hello@premiumprops.com' },
-  { id: 'client4', name: 'Elite Stays', email: 'support@elitestays.com' },
-];
+// Client interface
+interface Client {
+  id: string;
+  name: string;
+  email: string;
+  status?: 'active' | 'inactive' | 'suspended';
+  createdAt: string;
+  updatedAt: string;
+}
+
+// Get clients from localStorage (in a real app, this would come from an API)
+const getClients = (): Client[] => {
+  const savedClients = JSON.parse(localStorage.getItem('clients') || '[]');
+  // If no clients exist, create some default ones
+  if (savedClients.length === 0) {
+    const defaultClients: Client[] = [
+      { id: 'client1', name: 'Luxury Rentals LLC', email: 'contact@luxuryrentals.com', status: 'active', createdAt: new Date().toISOString(), updatedAt: new Date().toISOString() },
+      { id: 'client2', name: 'Vacation Homes Inc', email: 'info@vacationhomes.com', status: 'active', createdAt: new Date().toISOString(), updatedAt: new Date().toISOString() },
+      { id: 'client3', name: 'Premium Properties', email: 'hello@premiumprops.com', status: 'active', createdAt: new Date().toISOString(), updatedAt: new Date().toISOString() },
+      { id: 'client4', name: 'Elite Stays', email: 'support@elitestays.com', status: 'active', createdAt: new Date().toISOString(), updatedAt: new Date().toISOString() },
+    ];
+    localStorage.setItem('clients', JSON.stringify(defaultClients));
+    return defaultClients;
+  }
+  return savedClients;
+};
 
 // Mock properties data with client assignments (in a real app, this would come from an API)
 const mockProperties = [
@@ -666,7 +685,7 @@ export function CreateAccountPage({ userToEdit, viewMode = false, onClose }: Cre
                         </Typography>
                         <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
                           {formData.assignedClients.map((clientId) => {
-                            const client = mockClients.find(c => c.id === clientId);
+                            const client = getClients().find(c => c.id === clientId);
                             return (
                               <Chip
                                 key={clientId}
@@ -685,9 +704,9 @@ export function CreateAccountPage({ userToEdit, viewMode = false, onClose }: Cre
                     <Autocomplete
                       multiple
                       disabled={viewMode}
-                      options={mockClients}
+                      options={getClients()}
                       getOptionLabel={(option) => `${option.name} (${option.email})`}
-                      value={mockClients.filter(client => formData.assignedClients.includes(client.id))}
+                      value={getClients().filter(client => formData.assignedClients.includes(client.id))}
                       onChange={(event, newValue) => {
                         const selectedIds = newValue.map(client => client.id);
                         setFormData(prev => ({
