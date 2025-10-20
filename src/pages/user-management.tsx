@@ -28,13 +28,25 @@ import FormControlLabel from '@mui/material/FormControlLabel';
 
 import { DashboardContent } from 'src/layouts/dashboard';
 
-// Mock properties data (same as in create-account page)
+import { CreateAccountPage } from './create-account';
+
+// Mock clients data (same as in create-account page)
+const mockClients = [
+  { id: 'client1', name: 'Luxury Rentals LLC', email: 'contact@luxuryrentals.com' },
+  { id: 'client2', name: 'Vacation Homes Inc', email: 'info@vacationhomes.com' },
+  { id: 'client3', name: 'Premium Properties', email: 'hello@premiumprops.com' },
+  { id: 'client4', name: 'Elite Stays', email: 'support@elitestays.com' },
+];
+
+// Mock properties data with client assignments (same as in create-account page)
 const mockProperties = [
-  { id: '305034', name: 'La Dimora Del Cavaliere', location: 'Anguillara Sabazia, Italy' },
-  { id: '305035', name: 'Navigli', location: 'Milano, Italy' },
-  { id: '305225', name: 'Polacchi42', location: 'Roma, Italy' },
-  { id: '305421', name: 'Superattico - Via Del Corso 43', location: 'Roma, Italy' },
-  { id: '306532', name: 'Montecatini Terme', location: 'Montecatini Terme, Italy' },
+  { id: '305034', name: 'La Dimora Del Cavaliere', location: 'Anguillara Sabazia, Italy', clientId: 'client1' },
+  { id: '305035', name: 'Navigli', location: 'Milano, Italy', clientId: 'client1' },
+  { id: '305225', name: 'Polacchi42', location: 'Roma, Italy', clientId: 'client2' },
+  { id: '305421', name: 'Superattico - Via Del Corso 43', location: 'Roma, Italy', clientId: 'client2' },
+  { id: '306532', name: 'Montecatini Terme', location: 'Montecatini Terme, Italy', clientId: 'client3' },
+  { id: '306533', name: 'Tuscany Villa', location: 'Florence, Italy', clientId: 'client3' },
+  { id: '306534', name: 'Coastal Retreat', location: 'Amalfi, Italy', clientId: 'client4' },
 ];
 
 const getRoleColor = (role: string) => {
@@ -58,6 +70,12 @@ const getRoleLabel = (role: string) => {
     default: return role;
   }
 };
+
+const getClientNames = (clientIds: string[] = []) =>
+  clientIds.map(id => mockClients.find(c => c.id === id)?.name || `Client ${id}`).join(', ');
+
+const getPropertyNames = (propertyIds: string[] = []) =>
+  propertyIds.map(id => mockProperties.find(p => p.id === id)?.name || `Property ${id}`).join(', ');
 
 const getStatusColor = (role: string) => {
   // For demo purposes, assign status based on role
@@ -83,10 +101,13 @@ export function UserManagementPage() {
   const [users, setUsers] = useState<UserType[]>([]);
   const [selectedUser, setSelectedUser] = useState<UserType | null>(null);
   const [viewDialogOpen, setViewDialogOpen] = useState(false);
+  const [editDialogOpen, setEditDialogOpen] = useState(false);
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [selectedUsers, setSelectedUsers] = useState<string[]>([]);
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const [dense, setDense] = useState(false);
+  const [userToDelete, setUserToDelete] = useState<string | null>(null);
 
   useEffect(() => {
     // Load created users from localStorage
@@ -99,15 +120,32 @@ export function UserManagementPage() {
     setViewDialogOpen(true);
   };
 
+  const handleEditUser = (user: UserType) => {
+    setSelectedUser(user);
+    setEditDialogOpen(true);
+  };
+
   const handleDeleteUser = (userId: string) => {
-    const updatedUsers = users.filter(user => user.id !== userId);
-    setUsers(updatedUsers);
-    localStorage.setItem('createdUsers', JSON.stringify(updatedUsers));
+    setUserToDelete(userId);
+    setDeleteDialogOpen(true);
+  };
+
+  const confirmDelete = () => {
+    if (userToDelete) {
+      const updatedUsers = users.filter(user => user.id !== userToDelete);
+      setUsers(updatedUsers);
+      localStorage.setItem('createdUsers', JSON.stringify(updatedUsers));
+      setDeleteDialogOpen(false);
+      setUserToDelete(null);
+    }
   };
 
   const handleCloseDialog = () => {
     setViewDialogOpen(false);
+    setEditDialogOpen(false);
+    setDeleteDialogOpen(false);
     setSelectedUser(null);
+    setUserToDelete(null);
   };
 
   const handleSelectAllClick = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -207,6 +245,16 @@ export function UserManagementPage() {
                 </TableCell>
                 <TableCell>
                   <Typography variant="subtitle2" sx={{ fontWeight: 600 }}>
+                    Clients
+                  </Typography>
+                </TableCell>
+                <TableCell>
+                  <Typography variant="subtitle2" sx={{ fontWeight: 600 }}>
+                    Properties
+                  </Typography>
+                </TableCell>
+                <TableCell>
+                  <Typography variant="subtitle2" sx={{ fontWeight: 600 }}>
                     Role
                   </Typography>
                 </TableCell>
@@ -225,7 +273,7 @@ export function UserManagementPage() {
             <TableBody>
               {paginatedUsers.length === 0 ? (
                 <TableRow>
-                  <TableCell colSpan={8} align="center" sx={{ py: 8 }}>
+                  <TableCell colSpan={10} align="center" sx={{ py: 8 }}>
                     <Typography variant="body2" color="text.secondary">
                       No users created yet. Create your first user account to get started.
                     </Typography>
@@ -280,6 +328,22 @@ export function UserManagementPage() {
                         </Typography>
                       </TableCell>
                       <TableCell>
+                        <Typography variant="body2" color="text.secondary" sx={{ maxWidth: 150 }}>
+                          {user.assignedClients && user.assignedClients.length > 0 
+                            ? getClientNames(user.assignedClients)
+                            : 'No clients assigned'
+                          }
+                        </Typography>
+                      </TableCell>
+                      <TableCell>
+                        <Typography variant="body2" color="text.secondary" sx={{ maxWidth: 150 }}>
+                          {user.assignedProperties && user.assignedProperties.length > 0 
+                            ? getPropertyNames(user.assignedProperties)
+                            : 'No properties assigned'
+                          }
+                        </Typography>
+                      </TableCell>
+                      <TableCell>
                         <Chip
                           label={getRoleLabel(user.role)}
                           color={getRoleColor(user.role) as any}
@@ -310,7 +374,7 @@ export function UserManagementPage() {
                             size="small"
                             onClick={(e) => {
                               e.stopPropagation();
-                              // Edit functionality would go here
+                              handleEditUser(user);
                             }}
                             color="primary"
                           >
@@ -370,66 +434,51 @@ export function UserManagementPage() {
       </Card>
 
       {/* User Details Dialog */}
-      <Dialog open={viewDialogOpen} onClose={handleCloseDialog} maxWidth="md" fullWidth>
-        <DialogTitle>
-          <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-            <Avatar sx={{ bgcolor: 'primary.main' }}>
-              {selectedUser?.name.charAt(0).toUpperCase()}
-            </Avatar>
-            <Box>
-              <Typography variant="h6">{selectedUser?.name}</Typography>
-              <Typography variant="body2" color="text.secondary">
-                {selectedUser?.email}
-              </Typography>
-            </Box>
-          </Box>
-        </DialogTitle>
-        <DialogContent>
-          <Box sx={{ mt: 2 }}>
-            <Typography variant="subtitle2" gutterBottom>
-              Role Information
-            </Typography>
-            <Box sx={{ mb: 3 }}>
-              <Chip
-                label={selectedUser ? getRoleLabel(selectedUser.role) : ''}
-                color={selectedUser ? getRoleColor(selectedUser.role) as any : 'default'}
-                sx={{ mb: 1 }}
-              />
-              <Typography variant="body2" color="text.secondary">
-                {selectedUser?.role === 'associate' && 'Lowest level workers with basic access to assigned properties'}
-                {selectedUser?.role === 'supervisor' && 'Manages Associates and has elevated access to assigned properties'}
-                {selectedUser?.role === 'manager' && 'Super admins with full access to all properties and system management'}
-              </Typography>
-            </Box>
+      {/* View User Dialog */}
+      <Dialog 
+        open={viewDialogOpen} 
+        onClose={handleCloseDialog}
+        maxWidth="lg"
+        fullWidth
+      >
+        <DialogContent sx={{ p: 0 }}>
+          <CreateAccountPage 
+            userToEdit={selectedUser || undefined} 
+            viewMode
+            onClose={handleCloseDialog}
+          />
+        </DialogContent>
+      </Dialog>
 
-            <Typography variant="subtitle2" gutterBottom>
-              Assigned Properties
-            </Typography>
-            {selectedUser?.assignedProperties && selectedUser.assignedProperties.length > 0 ? (
-              <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
-                {selectedUser.assignedProperties.map((propertyId) => {
-                  const property = mockProperties.find(p => p.id === propertyId);
-                  return (
-                    <Card key={propertyId} variant="outlined" sx={{ p: 2 }}>
-                      <Typography variant="body2" sx={{ fontWeight: 500 }}>
-                        {property ? property.name : `Property ${propertyId}`}
-                      </Typography>
-                      <Typography variant="caption" color="text.secondary">
-                        {property ? property.location : ''} (ID: {propertyId})
-                      </Typography>
-                    </Card>
-                  );
-                })}
-              </Box>
-            ) : (
-              <Typography variant="body2" color="text.secondary">
-                No properties assigned
-              </Typography>
-            )}
-          </Box>
+      {/* Edit User Dialog */}
+      <Dialog 
+        open={editDialogOpen} 
+        onClose={handleCloseDialog}
+        maxWidth="lg"
+        fullWidth
+      >
+        <DialogContent sx={{ p: 0 }}>
+          <CreateAccountPage 
+            userToEdit={selectedUser || undefined} 
+            viewMode={false}
+            onClose={handleCloseDialog}
+          />
+        </DialogContent>
+      </Dialog>
+
+      {/* Delete Confirmation Dialog */}
+      <Dialog open={deleteDialogOpen} onClose={handleCloseDialog}>
+        <DialogTitle>Confirm Delete</DialogTitle>
+        <DialogContent>
+          <Typography>
+            Are you sure you want to delete this user? This action cannot be undone.
+          </Typography>
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleCloseDialog}>Close</Button>
+          <Button onClick={handleCloseDialog}>Cancel</Button>
+          <Button onClick={confirmDelete} color="error" variant="contained">
+            Delete
+          </Button>
         </DialogActions>
       </Dialog>
     </DashboardContent>

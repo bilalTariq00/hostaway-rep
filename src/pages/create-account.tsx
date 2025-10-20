@@ -23,15 +23,25 @@ import Autocomplete from '@mui/material/Autocomplete';
 import InputAdornment from '@mui/material/InputAdornment';
 import FormControlLabel from '@mui/material/FormControlLabel';
 
-import { useAuth, type UserRole } from 'src/contexts/auth-context';
+import { useAuth, type User, type UserRole } from 'src/contexts/auth-context';
 
-// Mock properties data (in a real app, this would come from an API)
+// Mock clients data (in a real app, this would come from an API)
+const mockClients = [
+  { id: 'client1', name: 'Luxury Rentals LLC', email: 'contact@luxuryrentals.com' },
+  { id: 'client2', name: 'Vacation Homes Inc', email: 'info@vacationhomes.com' },
+  { id: 'client3', name: 'Premium Properties', email: 'hello@premiumprops.com' },
+  { id: 'client4', name: 'Elite Stays', email: 'support@elitestays.com' },
+];
+
+// Mock properties data with client assignments (in a real app, this would come from an API)
 const mockProperties = [
-  { id: '305034', name: 'La Dimora Del Cavaliere', location: 'Anguillara Sabazia, Italy' },
-  { id: '305035', name: 'Navigli', location: 'Milano, Italy' },
-  { id: '305225', name: 'Polacchi42', location: 'Roma, Italy' },
-  { id: '305421', name: 'Superattico - Via Del Corso 43', location: 'Roma, Italy' },
-  { id: '306532', name: 'Montecatini Terme', location: 'Montecatini Terme, Italy' },
+  { id: '305034', name: 'La Dimora Del Cavaliere', location: 'Anguillara Sabazia, Italy', clientId: 'client1' },
+  { id: '305035', name: 'Navigli', location: 'Milano, Italy', clientId: 'client1' },
+  { id: '305225', name: 'Polacchi42', location: 'Roma, Italy', clientId: 'client2' },
+  { id: '305421', name: 'Superattico - Via Del Corso 43', location: 'Roma, Italy', clientId: 'client2' },
+  { id: '306532', name: 'Montecatini Terme', location: 'Montecatini Terme, Italy', clientId: 'client3' },
+  { id: '306533', name: 'Tuscany Villa', location: 'Florence, Italy', clientId: 'client3' },
+  { id: '306534', name: 'Coastal Retreat', location: 'Amalfi, Italy', clientId: 'client4' },
 ];
 
 const roleDescriptions = {
@@ -40,17 +50,25 @@ const roleDescriptions = {
   manager: 'Super admins with full access to all properties and system management',
 };
 
-export function CreateAccountPage() {
+interface CreateAccountPageProps {
+  userToEdit?: User;
+  viewMode?: boolean;
+  onClose?: () => void;
+}
+
+export function CreateAccountPage({ userToEdit, viewMode = false, onClose }: CreateAccountPageProps = {}) {
   const navigate = useNavigate();
-  const { createUser, isLoading } = useAuth();
+  const { createUser, updateUser, isLoading } = useAuth();
   
   const [formData, setFormData] = useState({
-    name: '',
-    email: '',
+    name: userToEdit?.name || '',
+    email: userToEdit?.email || '',
     password: '',
     confirmPassword: '',
-    role: '' as UserRole | '',
-    assignedProperties: [] as string[],
+    role: (userToEdit?.role || '') as UserRole | '',
+    assignedClients: userToEdit?.assignedClients || [],
+    assignedProperties: userToEdit?.assignedProperties || [],
+    assignedUsers: userToEdit?.assignedUsers || [],
     phone: '',
     company: 'Hostaway Inc',
     country: 'United States',
@@ -65,12 +83,43 @@ export function CreateAccountPage() {
   const [error, setError] = useState('');
   const [success, setSuccess] = useState(false);
   const [emailVerified, setEmailVerified] = useState(true);
-  const [uploadedImage, setUploadedImage] = useState<string | null>(null);
+  const [uploadedImage, setUploadedImage] = useState<string | null>(userToEdit?.avatar || null);
   const fileInputRef = useRef<HTMLInputElement>(null);
+
+  // Get available users for assignment (only associates for supervisors and managers)
+  const getAvailableUsers = () => {
+    const createdUsers = JSON.parse(localStorage.getItem('createdUsers') || '[]');
+    return createdUsers.filter((user: User) => user.role === 'associate');
+  };
+
+  // Get available properties based on selected clients
+  const getAvailableProperties = () => {
+    if (formData.assignedClients.length === 0) {
+      return [];
+    }
+    return mockProperties.filter(property => 
+      formData.assignedClients.includes(property.clientId)
+    );
+  };
 
   const handleInputChange = (field: string, value: any) => {
     setFormData(prev => ({ ...prev, [field]: value }));
     setError('');
+  };
+
+  const handleClientToggle = (clientId: string) => {
+    setFormData(prev => {
+      const newClients = prev.assignedClients.includes(clientId)
+        ? prev.assignedClients.filter(id => id !== clientId)
+        : [...prev.assignedClients, clientId];
+      
+      // Clear properties when clients change
+      return {
+        ...prev,
+        assignedClients: newClients,
+        assignedProperties: []
+      };
+    });
   };
 
   const handlePropertyToggle = (propertyId: string) => {
@@ -79,6 +128,15 @@ export function CreateAccountPage() {
       assignedProperties: prev.assignedProperties.includes(propertyId)
         ? prev.assignedProperties.filter(id => id !== propertyId)
         : [...prev.assignedProperties, propertyId]
+    }));
+  };
+
+  const handleUserToggle = (userId: string) => {
+    setFormData(prev => ({
+      ...prev,
+      assignedUsers: prev.assignedUsers.includes(userId)
+        ? prev.assignedUsers.filter(id => id !== userId)
+        : [...prev.assignedUsers, userId]
     }));
   };
 
@@ -150,20 +208,43 @@ export function CreateAccountPage() {
     if (!validateForm()) return;
 
     try {
-      const createSuccess = await createUser({
-        name: formData.name,
-        email: formData.email,
-        role: formData.role as UserRole,
-        assignedProperties: formData.assignedProperties,
-      });
+      let updateSuccess = false;
+      
+      if (userToEdit) {
+        // Update existing user
+        updateSuccess = await updateUser(userToEdit.id, {
+          name: formData.name,
+          email: formData.email,
+          role: formData.role as UserRole,
+          assignedClients: formData.assignedClients,
+          assignedProperties: formData.assignedProperties,
+          assignedUsers: formData.assignedUsers,
+          avatar: uploadedImage || undefined,
+        });
+      } else {
+        // Create new user
+        updateSuccess = await createUser({
+          name: formData.name,
+          email: formData.email,
+          role: formData.role as UserRole,
+          assignedClients: formData.assignedClients,
+          assignedProperties: formData.assignedProperties,
+          assignedUsers: formData.assignedUsers,
+          avatar: uploadedImage || undefined,
+        });
+      }
 
-      if (createSuccess) {
+      if (updateSuccess) {
         setSuccess(true);
         setTimeout(() => {
-          navigate('/user-management');
+          if (onClose) {
+            onClose();
+          } else {
+            navigate('/user-management');
+          }
         }, 2000);
       } else {
-        setError('Failed to create account. Please try again.');
+        setError(`Failed to ${userToEdit ? 'update' : 'create'} account. Please try again.`);
       }
     } catch {
       setError('An error occurred. Please try again.');
@@ -187,10 +268,13 @@ export function CreateAccountPage() {
               <UserPlus size={32} />
             </Avatar>
             <Typography variant="h5" gutterBottom>
-              Account Created Successfully!
+              {userToEdit ? 'Account Updated Successfully!' : 'Account Created Successfully!'}
             </Typography>
             <Typography variant="body2" color="text.secondary">
-              The new user account has been created and can now log in with their assigned role.
+              {userToEdit 
+                ? 'The user account has been updated successfully.'
+                : 'The new user account has been created and can now log in with their assigned role.'
+              }
             </Typography>
           </CardContent>
         </Card>
@@ -209,7 +293,9 @@ export function CreateAccountPage() {
           <Link color="inherit" href="/user-management" onClick={(e) => { e.preventDefault(); navigate('/user-management'); }}>
             User Management
           </Link>
-          <Typography color="text.primary">Create Account</Typography>
+          <Typography color="text.primary">
+            {viewMode ? 'View Account' : userToEdit ? 'Edit Account' : 'Create Account'}
+          </Typography>
         </Breadcrumbs>
 
         <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', lg: '300px 1fr' }, gap: 3 }}>
@@ -387,6 +473,7 @@ export function CreateAccountPage() {
                 <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', md: '1fr 1fr' }, gap: 2, mb: 2 }}>
                   <TextField
                     fullWidth
+                    disabled={viewMode}
                     label="Full name"
                     value={formData.name}
                     onChange={(e) => handleInputChange('name', e.target.value)}
@@ -394,6 +481,7 @@ export function CreateAccountPage() {
                   />
                   <TextField
                     fullWidth
+                    disabled={viewMode}
                     label="Email address"
                     type="email"
                     value={formData.email}
@@ -405,12 +493,14 @@ export function CreateAccountPage() {
                 <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', md: '1fr 1fr' }, gap: 2, mb: 2 }}>
                   <TextField
                     fullWidth
+                    disabled={viewMode}
                     label="Phone number"
                     value={formData.phone}
                     onChange={(e) => handleInputChange('phone', e.target.value)}
                   />
                   <TextField
                     fullWidth
+                    disabled={viewMode}
                     label="Company"
                     value={formData.company}
                     onChange={(e) => handleInputChange('company', e.target.value)}
@@ -420,12 +510,14 @@ export function CreateAccountPage() {
                 <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', md: '1fr 1fr' }, gap: 2, mb: 2 }}>
                   <TextField
                     fullWidth
+                    disabled={viewMode}
                     label="Country"
                     value={formData.country}
                     onChange={(e) => handleInputChange('country', e.target.value)}
                   />
                   <TextField
                     fullWidth
+                    disabled={viewMode}
                     label="State/Region"
                     value={formData.state}
                     onChange={(e) => handleInputChange('state', e.target.value)}
@@ -435,12 +527,14 @@ export function CreateAccountPage() {
                 <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', md: '1fr 1fr' }, gap: 2, mb: 2 }}>
                   <TextField
                     fullWidth
+                    disabled={viewMode}
                     label="City"
                     value={formData.city}
                     onChange={(e) => handleInputChange('city', e.target.value)}
                   />
                   <TextField
                     fullWidth
+                    disabled={viewMode}
                     label="Address"
                     value={formData.address}
                     onChange={(e) => handleInputChange('address', e.target.value)}
@@ -450,6 +544,7 @@ export function CreateAccountPage() {
                 <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', md: '1fr 1fr' }, gap: 2, mb: 2 }}>
                   <TextField
                     fullWidth
+                    disabled={viewMode}
                     label="Zip/Code"
                     value={formData.zipCode}
                     onChange={(e) => handleInputChange('zipCode', e.target.value)}
@@ -457,6 +552,7 @@ export function CreateAccountPage() {
                   <FormControl fullWidth>
                     <InputLabel>Role</InputLabel>
                     <Select
+                      disabled={viewMode}
                       value={formData.role}
                       onChange={(e) => handleInputChange('role', e.target.value)}
                       label="Role"
@@ -471,6 +567,7 @@ export function CreateAccountPage() {
                 <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', md: '1fr 1fr' }, gap: 2, mb: 3 }}>
                   <TextField
                     fullWidth
+                    disabled={viewMode}
                     label="Password"
                     type={showPassword ? 'text' : 'password'}
                     value={formData.password}
@@ -488,6 +585,7 @@ export function CreateAccountPage() {
                   />
                   <TextField
                     fullWidth
+                    disabled={viewMode}
                     label="Confirm Password"
                     type={showConfirmPassword ? 'text' : 'password'}
                     value={formData.confirmPassword}
@@ -516,99 +614,281 @@ export function CreateAccountPage() {
                   </Box>
                 )}
 
-                <Typography variant="subtitle2" gutterBottom>
-                  Assign Properties
-                </Typography>
-                <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
-                  Select which properties this user will have access to:
-                </Typography>
-
-                {/* Selected Properties Badges */}
-                {formData.assignedProperties.length > 0 && (
-                  <Box sx={{ mb: 2 }}>
-                    <Typography variant="caption" color="text.secondary" sx={{ mb: 1, display: 'block' }}>
-                      Selected Properties ({formData.assignedProperties.length}):
+                {/* Client and Property Assignment - Only for Associates */}
+                {formData.role === 'associate' && (
+                  <>
+                    <Typography variant="subtitle2" gutterBottom>
+                      Assign Clients
                     </Typography>
-                    <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
-                      {formData.assignedProperties.map((propertyId) => {
-                        const property = mockProperties.find(p => p.id === propertyId);
-                        return (
-                          <Chip
-                            key={propertyId}
-                            label={property ? property.name : `Property ${propertyId}`}
-                            onDelete={() => handlePropertyToggle(propertyId)}
-                            color="primary"
-                            variant="outlined"
-                            size="small"
-                          />
-                        );
-                      })}
-                    </Box>
-                  </Box>
+                    <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
+                      First, select which clients this user will work with:
+                    </Typography>
+
+                    {/* Selected Clients Badges */}
+                    {formData.assignedClients.length > 0 && (
+                      <Box sx={{ mb: 2 }}>
+                        <Typography variant="caption" color="text.secondary" sx={{ mb: 1, display: 'block' }}>
+                          Selected Clients ({formData.assignedClients.length}):
+                        </Typography>
+                        <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
+                          {formData.assignedClients.map((clientId) => {
+                            const client = mockClients.find(c => c.id === clientId);
+                            return (
+                              <Chip
+                                key={clientId}
+                                label={client ? client.name : `Client ${clientId}`}
+                                onDelete={() => handleClientToggle(clientId)}
+                                color="secondary"
+                                variant="outlined"
+                                size="small"
+                              />
+                            );
+                          })}
+                        </Box>
+                      </Box>
+                    )}
+
+                    <Autocomplete
+                      multiple
+                      disabled={viewMode}
+                      options={mockClients}
+                      getOptionLabel={(option) => `${option.name} (${option.email})`}
+                      value={mockClients.filter(client => formData.assignedClients.includes(client.id))}
+                      onChange={(event, newValue) => {
+                        const selectedIds = newValue.map(client => client.id);
+                        setFormData(prev => ({
+                          ...prev,
+                          assignedClients: selectedIds,
+                          assignedProperties: [] // Clear properties when clients change
+                        }));
+                      }}
+                      filterOptions={(options, { inputValue }) =>
+                        options.filter(option =>
+                          option.name.toLowerCase().includes(inputValue.toLowerCase()) ||
+                          option.email.toLowerCase().includes(inputValue.toLowerCase()) ||
+                          option.id.includes(inputValue)
+                        )
+                      }
+                      renderInput={(params) => (
+                        <TextField
+                          {...params}
+                          placeholder="Search and select clients..."
+                          InputProps={{
+                            ...params.InputProps,
+                            startAdornment: (
+                              <InputAdornment position="start">
+                                <Search size={20} />
+                              </InputAdornment>
+                            ),
+                          }}
+                        />
+                      )}
+                      renderOption={(props, option) => (
+                        <Box component="li" {...props}>
+                          <Box>
+                            <Typography variant="body2" sx={{ fontWeight: 500 }}>
+                              {option.name}
+                            </Typography>
+                            <Typography variant="caption" color="text.secondary">
+                              {option.email}
+                            </Typography>
+                          </Box>
+                        </Box>
+                      )}
+                      renderTags={() => null} // Hide tags since we show them above
+                      sx={{ mb: 3 }}
+                    />
+
+                    <Typography variant="subtitle2" gutterBottom>
+                      Assign Properties
+                    </Typography>
+                    <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
+                      Then, select which properties from the assigned clients this user will have access to:
+                    </Typography>
+
+                    {formData.assignedClients.length === 0 && (
+                      <Alert severity="info" sx={{ mb: 2 }}>
+                        Please select clients first to see their available properties.
+                      </Alert>
+                    )}
+
+                    {/* Selected Properties Badges */}
+                    {formData.assignedProperties.length > 0 && (
+                      <Box sx={{ mb: 2 }}>
+                        <Typography variant="caption" color="text.secondary" sx={{ mb: 1, display: 'block' }}>
+                          Selected Properties ({formData.assignedProperties.length}):
+                        </Typography>
+                        <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
+                          {formData.assignedProperties.map((propertyId) => {
+                            const property = mockProperties.find(p => p.id === propertyId);
+                            return (
+                              <Chip
+                                key={propertyId}
+                                label={property ? property.name : `Property ${propertyId}`}
+                                onDelete={() => handlePropertyToggle(propertyId)}
+                                color="primary"
+                                variant="outlined"
+                                size="small"
+                              />
+                            );
+                          })}
+                        </Box>
+                      </Box>
+                    )}
+
+                    {/* Property Search Dropdown */}
+                    <Autocomplete
+                      multiple
+                      disabled={formData.assignedClients.length === 0 || viewMode}
+                      options={getAvailableProperties()}
+                      getOptionLabel={(option) => `${option.name} (${option.location})`}
+                      value={getAvailableProperties().filter(prop => formData.assignedProperties.includes(prop.id))}
+                      onChange={(event, newValue) => {
+                        const selectedIds = newValue.map(prop => prop.id);
+                        setFormData(prev => ({ ...prev, assignedProperties: selectedIds }));
+                      }}
+                      filterOptions={(options, { inputValue }) =>
+                        options.filter(option =>
+                          option.name.toLowerCase().includes(inputValue.toLowerCase()) ||
+                          option.location.toLowerCase().includes(inputValue.toLowerCase()) ||
+                          option.id.includes(inputValue)
+                        )
+                      }
+                      renderInput={(params) => (
+                        <TextField
+                          {...params}
+                          placeholder="Search and select properties..."
+                          InputProps={{
+                            ...params.InputProps,
+                            startAdornment: (
+                              <InputAdornment position="start">
+                                <Search size={20} />
+                              </InputAdornment>
+                            ),
+                          }}
+                        />
+                      )}
+                      renderOption={(props, option) => (
+                        <Box component="li" {...props}>
+                          <Box>
+                            <Typography variant="body2" sx={{ fontWeight: 500 }}>
+                              {option.name}
+                            </Typography>
+                            <Typography variant="caption" color="text.secondary">
+                              {option.location} (ID: {option.id})
+                            </Typography>
+                          </Box>
+                        </Box>
+                      )}
+                      renderTags={() => null} // Hide tags since we show them above
+                      sx={{ mb: 2 }}
+                    />
+                  </>
                 )}
 
-                {/* Property Search Dropdown */}
-                <Autocomplete
-                  multiple
-                  options={mockProperties}
-                  getOptionLabel={(option) => `${option.name} (${option.location})`}
-                  value={mockProperties.filter(prop => formData.assignedProperties.includes(prop.id))}
-                  onChange={(event, newValue) => {
-                    const selectedIds = newValue.map(prop => prop.id);
-                    setFormData(prev => ({ ...prev, assignedProperties: selectedIds }));
-                  }}
-                  filterOptions={(options, { inputValue }) =>
-                    options.filter(option =>
-                      option.name.toLowerCase().includes(inputValue.toLowerCase()) ||
-                      option.location.toLowerCase().includes(inputValue.toLowerCase()) ||
-                      option.id.includes(inputValue)
-                    )
-                  }
-                  renderInput={(params) => (
-                    <TextField
-                      {...params}
-                      placeholder="Search and select properties..."
-                      InputProps={{
-                        ...params.InputProps,
-                        startAdornment: (
-                          <InputAdornment position="start">
-                            <Search size={20} />
-                          </InputAdornment>
-                        ),
-                      }}
-                    />
-                  )}
-                  renderOption={(props, option) => (
-                    <Box component="li" {...props}>
-                      <Box>
-                        <Typography variant="body2" sx={{ fontWeight: 500 }}>
-                          {option.name}
+                {/* User Assignment for Supervisors and Managers */}
+                {(formData.role === 'supervisor' || formData.role === 'manager') && (
+                  <>
+                    <Typography variant="subtitle2" gutterBottom>
+                      Assign Users
+                    </Typography>
+                    <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
+                      Select which Associates this {formData.role} will manage:
+                    </Typography>
+
+                    {/* Selected Users Badges */}
+                    {formData.assignedUsers.length > 0 && (
+                      <Box sx={{ mb: 2 }}>
+                        <Typography variant="caption" color="text.secondary" sx={{ mb: 1, display: 'block' }}>
+                          Selected Users ({formData.assignedUsers.length}):
                         </Typography>
-                        <Typography variant="caption" color="text.secondary">
-                          {option.location} (ID: {option.id})
-                        </Typography>
+                        <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
+                          {formData.assignedUsers.map((userId) => {
+                            const user = getAvailableUsers().find((u: User) => u.id === userId);
+                            return (
+                              <Chip
+                                key={userId}
+                                label={user ? user.name : `User ${userId}`}
+                                onDelete={() => handleUserToggle(userId)}
+                                color="info"
+                                variant="outlined"
+                                size="small"
+                              />
+                            );
+                          })}
+                        </Box>
                       </Box>
-                    </Box>
-                  )}
-                  renderTags={() => null} // Hide tags since we show them above
-                  sx={{ mb: 2 }}
-                />
+                    )}
+
+                    <Autocomplete
+                      multiple
+                      disabled={viewMode}
+                      options={getAvailableUsers()}
+                      getOptionLabel={(option) => `${option.name} (${option.email})`}
+                      value={getAvailableUsers().filter((user: User) => formData.assignedUsers.includes(user.id))}
+                      onChange={(event, newValue) => {
+                        const selectedIds = newValue.map(user => user.id);
+                        setFormData(prev => ({ ...prev, assignedUsers: selectedIds }));
+                      }}
+                      filterOptions={(options, { inputValue }) =>
+                        options.filter(option =>
+                          option.name.toLowerCase().includes(inputValue.toLowerCase()) ||
+                          option.email.toLowerCase().includes(inputValue.toLowerCase()) ||
+                          option.id.includes(inputValue)
+                        )
+                      }
+                      renderInput={(params) => (
+                        <TextField
+                          {...params}
+                          placeholder="Search and select users to manage..."
+                          InputProps={{
+                            ...params.InputProps,
+                            startAdornment: (
+                              <InputAdornment position="start">
+                                <Search size={20} />
+                              </InputAdornment>
+                            ),
+                          }}
+                        />
+                      )}
+                      renderOption={(props, option) => (
+                        <Box component="li" {...props}>
+                          <Box>
+                            <Typography variant="body2" sx={{ fontWeight: 500 }}>
+                              {option.name}
+                            </Typography>
+                            <Typography variant="caption" color="text.secondary">
+                              {option.email}
+                            </Typography>
+                          </Box>
+                        </Box>
+                      )}
+                      renderTags={() => null} // Hide tags since we show them above
+                      sx={{ mb: 2 }}
+                    />
+                  </>
+                )}
 
                 <Box sx={{ display: 'flex', gap: 2, justifyContent: 'flex-end' }}>
                   <Button
                     variant="outlined"
-                    onClick={() => navigate('/user-management')}
+                    onClick={() => onClose ? onClose() : navigate('/user-management')}
                     disabled={isLoading}
                   >
-                    Cancel
+                    {viewMode ? 'Close' : 'Cancel'}
                   </Button>
-                  <Button
-                    type="submit"
-                    variant="contained"
-                    disabled={isLoading}
-                  >
-                    {isLoading ? 'Creating Account...' : 'Save Changes'}
-                  </Button>
+                  {!viewMode && (
+                    <Button
+                      type="submit"
+                      variant="contained"
+                      disabled={isLoading}
+                    >
+                      {isLoading 
+                        ? (userToEdit ? 'Updating Account...' : 'Creating Account...') 
+                        : (userToEdit ? 'Update Account' : 'Create Account')
+                      }
+                    </Button>
+                  )}
                 </Box>
               </Box>
             </CardContent>

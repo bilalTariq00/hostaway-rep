@@ -13,7 +13,9 @@ export interface User {
   name: string;
   role: UserRole;
   avatar?: string;
+  assignedClients?: string[];
   assignedProperties?: string[];
+  assignedUsers?: string[]; // For supervisors and managers to manage associates
 }
 
 export interface AuthContextType {
@@ -22,6 +24,7 @@ export interface AuthContextType {
   logout: () => void;
   isLoading: boolean;
   createUser: (userData: Omit<User, 'id'>) => Promise<boolean>;
+  updateUser: (userId: string, userData: Partial<User>) => Promise<boolean>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -146,12 +149,39 @@ export function AuthProvider({ children }: AuthProviderProps) {
     }
   };
 
+  const updateUser = async (userId: string, userData: Partial<User>): Promise<boolean> => {
+    setIsLoading(true);
+    
+    try {
+      // Simulate API call
+      await new Promise(resolve => setTimeout(resolve, 1000));
+
+      // Update user in localStorage (in a real app, this would be sent to the server)
+      const existingUsers = JSON.parse(localStorage.getItem('createdUsers') || '[]');
+      const userIndex = existingUsers.findIndex((existingUser: User) => existingUser.id === userId);
+      
+      if (userIndex !== -1) {
+        existingUsers[userIndex] = { ...existingUsers[userIndex], ...userData };
+        localStorage.setItem('createdUsers', JSON.stringify(existingUsers));
+        return true;
+      }
+
+      return false;
+    } catch (error) {
+      console.error('Update user error:', error);
+      return false;
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   const value: AuthContextType = {
     user,
     login,
     logout,
     isLoading,
     createUser,
+    updateUser,
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
