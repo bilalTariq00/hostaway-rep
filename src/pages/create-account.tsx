@@ -70,6 +70,8 @@ export function CreateAccountPage({ userToEdit, viewMode = false, onClose }: Cre
     assignedClients: userToEdit?.assignedClients || [],
     assignedProperties: userToEdit?.assignedProperties || [],
     assignedUsers: userToEdit?.assignedUsers || [],
+    assignedManager: userToEdit?.assignedManager || '',
+    assignedSupervisor: userToEdit?.assignedSupervisor || '',
     phone: '',
     company: 'Hostaway Inc',
     country: 'United States',
@@ -91,6 +93,18 @@ export function CreateAccountPage({ userToEdit, viewMode = false, onClose }: Cre
   const getAvailableUsers = () => {
     const createdUsers = JSON.parse(localStorage.getItem('createdUsers') || '[]');
     return createdUsers.filter((user: User) => user.role === 'associate');
+  };
+
+  // Get available managers for associates to select
+  const getAvailableManagers = () => {
+    const createdUsers = JSON.parse(localStorage.getItem('createdUsers') || '[]');
+    return createdUsers.filter((user: User) => user.role === 'manager');
+  };
+
+  // Get available supervisors for associates to select
+  const getAvailableSupervisors = () => {
+    const createdUsers = JSON.parse(localStorage.getItem('createdUsers') || '[]');
+    return createdUsers.filter((user: User) => user.role === 'supervisor');
   };
 
   // Get available properties based on selected clients
@@ -221,6 +235,8 @@ export function CreateAccountPage({ userToEdit, viewMode = false, onClose }: Cre
           assignedClients: formData.assignedClients,
           assignedProperties: formData.assignedProperties,
           assignedUsers: formData.assignedUsers,
+          assignedManager: formData.assignedManager,
+          assignedSupervisor: formData.assignedSupervisor,
           avatar: uploadedImage || undefined,
         });
       } else {
@@ -233,6 +249,8 @@ export function CreateAccountPage({ userToEdit, viewMode = false, onClose }: Cre
           assignedClients: formData.assignedClients,
           assignedProperties: formData.assignedProperties,
           assignedUsers: formData.assignedUsers,
+          assignedManager: formData.assignedManager,
+          assignedSupervisor: formData.assignedSupervisor,
           avatar: uploadedImage || undefined,
         });
       }
@@ -714,6 +732,53 @@ export function CreateAccountPage({ userToEdit, viewMode = false, onClose }: Cre
                       renderTags={() => null} // Hide tags since we show them above
                       sx={{ mb: 3 }}
                     />
+
+                    <Typography variant="subtitle2" gutterBottom>
+                      Assign Manager & Supervisor
+                    </Typography>
+                    <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
+                      Select which Manager and Supervisor will oversee this Associate:
+                    </Typography>
+
+                    <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', md: '1fr 1fr' }, gap: 2, mb: 3 }}>
+                      <FormControl fullWidth>
+                        <InputLabel>Manager</InputLabel>
+                        <Select
+                          disabled={viewMode}
+                          value={formData.assignedManager}
+                          onChange={(e) => handleInputChange('assignedManager', e.target.value)}
+                          label="Manager"
+                        >
+                          <MenuItem value="">
+                            <em>No Manager Assigned</em>
+                          </MenuItem>
+                          {getAvailableManagers().map((manager: User) => (
+                            <MenuItem key={manager.id} value={manager.id}>
+                              {manager.name} ({manager.email})
+                            </MenuItem>
+                          ))}
+                        </Select>
+                      </FormControl>
+
+                      <FormControl fullWidth>
+                        <InputLabel>Supervisor</InputLabel>
+                        <Select
+                          disabled={viewMode}
+                          value={formData.assignedSupervisor}
+                          onChange={(e) => handleInputChange('assignedSupervisor', e.target.value)}
+                          label="Supervisor"
+                        >
+                          <MenuItem value="">
+                            <em>No Supervisor Assigned</em>
+                          </MenuItem>
+                          {getAvailableSupervisors().map((supervisor: User) => (
+                            <MenuItem key={supervisor.id} value={supervisor.id}>
+                              {supervisor.name} ({supervisor.email})
+                            </MenuItem>
+                          ))}
+                        </Select>
+                      </FormControl>
+                    </Box>
 
                     <Typography variant="subtitle2" gutterBottom>
                       Assign Properties

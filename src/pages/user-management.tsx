@@ -79,6 +79,25 @@ const getClientNames = (clientIds: string[] = []) =>
 const getPropertyNames = (propertyIds: string[] = []) =>
   propertyIds.map(id => mockProperties.find(p => p.id === id)?.name || `Property ${id}`).join(', ');
 
+const getManagedUserNames = (userIds: string[] = []) => {
+  const createdUsers = JSON.parse(localStorage.getItem('createdUsers') || '[]');
+  return userIds.map(id => createdUsers.find((u: UserType) => u.id === id)?.name || `User ${id}`).join(', ');
+};
+
+const getManagerName = (managerId?: string) => {
+  if (!managerId) return 'No manager assigned';
+  const createdUsers = JSON.parse(localStorage.getItem('createdUsers') || '[]');
+  const manager = createdUsers.find((u: UserType) => u.id === managerId);
+  return manager ? manager.name : `Manager ${managerId}`;
+};
+
+const getSupervisorName = (supervisorId?: string) => {
+  if (!supervisorId) return 'No supervisor assigned';
+  const createdUsers = JSON.parse(localStorage.getItem('createdUsers') || '[]');
+  const supervisor = createdUsers.find((u: UserType) => u.id === supervisorId);
+  return supervisor ? supervisor.name : `Supervisor ${supervisorId}`;
+};
+
 const getStatusColor = (status?: string) => {
   switch (status) {
     case 'active': return 'success';
@@ -125,10 +144,6 @@ export function UserManagementPage() {
     setUsers(usersWithStatus);
   }, []);
 
-  // Debug: Log when users state changes
-  useEffect(() => {
-    console.log('Users state updated:', users);
-  }, [users]);
 
   const handleViewUser = (user: UserType) => {
     setSelectedUser(user);
@@ -179,7 +194,6 @@ export function UserManagementPage() {
 
   const handleStatusSelect = (status: 'active' | 'inactive' | 'suspended') => {
     if (userToChangeStatus) {
-      console.log('Status selected:', status, 'for user:', userToChangeStatus.name);
       setNewStatus(status);
       setStatusChangeDialogOpen(true);
       handleStatusMenuClose();
@@ -188,18 +202,11 @@ export function UserManagementPage() {
 
   const confirmStatusChange = () => {
     if (userToChangeStatus) {
-      console.log('Before update - userToChangeStatus:', userToChangeStatus);
-      console.log('Before update - newStatus:', newStatus);
-      console.log('Before update - users:', users);
-      
       const updatedUsers = users.map(user => 
         user.id === userToChangeStatus.id 
           ? { ...user, status: newStatus }
           : user
       );
-      
-      console.log('After update - updatedUsers:', updatedUsers);
-      
       setUsers(updatedUsers);
       localStorage.setItem('createdUsers', JSON.stringify(updatedUsers));
       setStatusChangeDialogOpen(false);
@@ -314,6 +321,21 @@ export function UserManagementPage() {
                 </TableCell>
                 <TableCell>
                   <Typography variant="subtitle2" sx={{ fontWeight: 600 }}>
+                    Managed Users
+                  </Typography>
+                </TableCell>
+                <TableCell>
+                  <Typography variant="subtitle2" sx={{ fontWeight: 600 }}>
+                    Manager
+                  </Typography>
+                </TableCell>
+                <TableCell>
+                  <Typography variant="subtitle2" sx={{ fontWeight: 600 }}>
+                    Supervisor
+                  </Typography>
+                </TableCell>
+                <TableCell>
+                  <Typography variant="subtitle2" sx={{ fontWeight: 600 }}>
                     Role
                   </Typography>
                 </TableCell>
@@ -332,7 +354,7 @@ export function UserManagementPage() {
             <TableBody>
               {paginatedUsers.length === 0 ? (
                 <TableRow>
-                  <TableCell colSpan={10} align="center" sx={{ py: 8 }}>
+                  <TableCell colSpan={13} align="center" sx={{ py: 8 }}>
                     <Typography variant="body2" color="text.secondary">
                       No users created yet. Create your first user account to get started.
                     </Typography>
@@ -410,6 +432,24 @@ export function UserManagementPage() {
                             ? getPropertyNames(user.assignedProperties)
                             : 'No properties assigned'
                           }
+                        </Typography>
+                      </TableCell>
+                      <TableCell>
+                        <Typography variant="body2" color="text.secondary" sx={{ maxWidth: 150 }}>
+                          {user.assignedUsers && user.assignedUsers.length > 0 
+                            ? getManagedUserNames(user.assignedUsers)
+                            : 'No users managed'
+                          }
+                        </Typography>
+                      </TableCell>
+                      <TableCell>
+                        <Typography variant="body2" color="text.secondary" sx={{ maxWidth: 150 }}>
+                          {getManagerName(user.assignedManager)}
+                        </Typography>
+                      </TableCell>
+                      <TableCell>
+                        <Typography variant="body2" color="text.secondary" sx={{ maxWidth: 150 }}>
+                          {getSupervisorName(user.assignedSupervisor)}
                         </Typography>
                       </TableCell>
                       <TableCell>

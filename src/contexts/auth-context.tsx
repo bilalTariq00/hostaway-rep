@@ -17,6 +17,8 @@ export interface User {
   assignedClients?: string[];
   assignedProperties?: string[];
   assignedUsers?: string[]; // For supervisors and managers to manage associates
+  assignedManager?: string; // For associates to specify their manager
+  assignedSupervisor?: string; // For associates to specify their supervisor
 }
 
 export interface AuthContextType {
