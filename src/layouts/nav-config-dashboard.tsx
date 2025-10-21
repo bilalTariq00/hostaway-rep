@@ -2,6 +2,24 @@ import { SvgColor } from 'src/components/svg-color';
 
 // ----------------------------------------------------------------------
 
+// Function to filter navigation items based on user role
+export const filterNavItemsByRole = (items: NavItem[], userRole: string): NavItem[] => items.filter(item => {
+    // If no roles specified, item is visible to all
+    if (!item.roles || item.roles.length === 0) {
+      return true;
+    }
+    
+    // Check if user role is in the allowed roles
+    const hasAccess = item.roles.includes(userRole);
+    
+    // If item has children, filter them too
+    if (hasAccess && item.children) {
+      item.children = filterNavItemsByRole(item.children, userRole);
+    }
+    
+    return hasAccess;
+  });
+
 const icon = (name: string) => <SvgColor src={`/assets/icons/navbar/${name}.svg`} />;
 
 export type NavItem = {
@@ -14,6 +32,7 @@ export type NavItem = {
     color: string;
   };
   children?: NavItem[];
+  roles?: string[]; // Array of roles that can access this item
 };
 
 export const navData = [
@@ -283,6 +302,7 @@ export const navData = [
     title: 'Create Account',
     path: '/create-account',
     icon: icon('ic-user'),
+    roles: ['user'], // Only super admin (user role) can see this
     badge: {
       text: 'New',
       color: '#FF8537',
@@ -292,26 +312,31 @@ export const navData = [
     title: 'User Management',
     path: '/user-management',
     icon: icon('ic-user'),
+    roles: ['user'], // Only super admin (user role) can see this
   },
   {
     title: 'Client Management',
     path: '/client-management',
     icon: icon('ic-user'),
+    roles: ['user'], // Only super admin (user role) can see this
   },
   {
     title: 'Supervisor Dashboard',
     path: '/supervisor-dashboard',
     icon: icon('ic-user'),
+    roles: ['supervisor'], // Only Supervisors can see this
   },
   {
     title: 'Manager Dashboard',
     path: '/manager-dashboard',
     icon: icon('ic-user'),
+    roles: ['manager'], // Only Managers can see this
   },
   {
     title: 'Associate Dashboard',
     path: '/associate-dashboard',
     icon: icon('ic-user'),
+    roles: ['associate'], // Only Associates can see this
   },
   {
     title: 'Channel Manager',

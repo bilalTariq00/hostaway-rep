@@ -400,7 +400,7 @@ export function UserManagementPage() {
                             <Typography variant="body2" sx={{ fontWeight: 500 }}>
                               {user.name}
                             </Typography>
-                          </Box>
+                          </Box>Login as Super Admin → You'll see all three role-specific dashboards
                         </Box>
                       </TableCell>
                       <TableCell>

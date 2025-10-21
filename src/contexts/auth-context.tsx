@@ -71,12 +71,12 @@ export function AuthProvider({ children }: AuthProviderProps) {
 
       let userData: User | null = null;
 
-      // Demo user (regular dashboard)
-      if (email === 'demo@hostaway.com' && password === 'password123') {
+      // Super Admin (can see all pages)
+      if (email === 'admin@hostaway.com' && password === 'admin123') {
         userData = {
           id: '1',
-          email: 'demo@hostaway.com',
-          name: 'Demo User',
+          email: 'admin@hostaway.com',
+          name: 'Super Admin',
           role: 'user',
           avatar: undefined,
         };
@@ -89,6 +89,43 @@ export function AuthProvider({ children }: AuthProviderProps) {
           name: 'Team Member',
           role: 'team',
           avatar: undefined,
+        };
+      }
+      // Manager (can see manager dashboard + main dashboard)
+      else if (email === 'manager@hostaway.com' && password === 'manager123') {
+        userData = {
+          id: '3',
+          email: 'manager@hostaway.com',
+          name: 'Manager User',
+          role: 'manager',
+          avatar: undefined,
+          assignedUsers: ['4', '5'], // Can manage associates
+        };
+      }
+      // Supervisor (can see supervisor dashboard + main dashboard)
+      else if (email === 'supervisor@hostaway.com' && password === 'supervisor123') {
+        userData = {
+          id: '4',
+          email: 'supervisor@hostaway.com',
+          name: 'Supervisor User',
+          role: 'supervisor',
+          avatar: undefined,
+          assignedUsers: ['5'], // Can manage associates
+          assignedManager: '3', // Reports to manager
+        };
+      }
+      // Associate (can see associate dashboard + main dashboard)
+      else if (email === 'associate@hostaway.com' && password === 'associate123') {
+        userData = {
+          id: '5',
+          email: 'associate@hostaway.com',
+          name: 'Associate User',
+          role: 'associate',
+          avatar: undefined,
+          assignedManager: '3', // Reports to manager
+          assignedSupervisor: '4', // Reports to supervisor
+          assignedClients: ['client1', 'client2'],
+          assignedProperties: ['property1', 'property2'],
         };
       }
       // Check created users

@@ -4,11 +4,15 @@ import { Eye, EyeOff } from 'lucide-react';
 
 import Box from '@mui/material/Box';
 import Link from '@mui/material/Link';
+import Card from '@mui/material/Card';
+import Chip from '@mui/material/Chip';
 import Alert from '@mui/material/Alert';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 import IconButton from '@mui/material/IconButton';
+import CardHeader from '@mui/material/CardHeader';
+import CardContent from '@mui/material/CardContent';
 import InputAdornment from '@mui/material/InputAdornment';
 
 import { useAuth } from 'src/contexts/auth-context';
@@ -147,34 +151,48 @@ export function HostawayLogin() {
                 </Typography>
           </Box>
 
-          {/* Demo Info */}
-          <Alert 
-            severity="info" 
-            sx={{ 
-              mb: 3, 
-              borderRadius: 2,
-              bgcolor: '#E3F2FD',
-              border: '1px solid #BBDEFB',
-              '& .MuiAlert-icon': {
-                color: '#1976D2',
-              }
-            }}
-          >
-            <Box>
-              <Typography variant="body2" sx={{ fontWeight: 600, mb: 1 }}>
-                Demo Credentials:
-              </Typography>
-              <Typography variant="body2" sx={{ mb: 0.5 }}>
-                <strong>User:</strong> demo@hostaway.com / password123
-              </Typography>
-              <Typography variant="body2" sx={{ mb: 0.5 }}>
-                <strong>Team:</strong> team@hostaway.com / team123
-              </Typography>
-              <Typography variant="body2">
-                <strong>Created users:</strong> Any password works
-              </Typography>
-            </Box>
-          </Alert>
+          {/* Demo Credentials Section */}
+          <Card sx={{ mb: 3 }}>
+            <CardHeader 
+              title="Demo Credentials" 
+              subheader="Use these credentials to test different user roles"
+              sx={{ pb: 1 }}
+            />
+            <CardContent sx={{ pt: 0 }}>
+              <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+                <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                  <Chip label="Super Admin" color="error" size="small" />
+                  <Typography variant="body2" sx={{ fontFamily: 'monospace' }}>
+                    admin@hostaway.com / admin123
+                  </Typography>
+                </Box>
+                <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                  <Chip label="Manager" color="warning" size="small" />
+                  <Typography variant="body2" sx={{ fontFamily: 'monospace' }}>
+                    manager@hostaway.com / manager123
+                  </Typography>
+                </Box>
+                <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                  <Chip label="Supervisor" color="info" size="small" />
+                  <Typography variant="body2" sx={{ fontFamily: 'monospace' }}>
+                    supervisor@hostaway.com / supervisor123
+                  </Typography>
+                </Box>
+                <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                  <Chip label="Associate" color="success" size="small" />
+                  <Typography variant="body2" sx={{ fontFamily: 'monospace' }}>
+                    associate@hostaway.com / associate123
+                  </Typography>
+                </Box>
+                <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                  <Chip label="Team" color="primary" size="small" />
+                  <Typography variant="body2" sx={{ fontFamily: 'monospace' }}>
+                    team@hostaway.com / team123
+                  </Typography>
+                </Box>
+              </Box>
+            </CardContent>
+          </Card>
 
           {error && (
             <Alert severity="error" sx={{ mb: 3, borderRadius: 2 }}>

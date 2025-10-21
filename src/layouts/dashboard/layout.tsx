@@ -8,13 +8,13 @@ import Alert from '@mui/material/Alert';
 import { useTheme } from '@mui/material/styles';
 
 import { _langs, _notifications } from 'src/_mock';
+import { useAuth } from 'src/contexts/auth-context';
 import { useSidebar, SidebarProvider } from 'src/contexts/sidebar-context';
 
 import { NavMobile, NavDesktop } from './nav';
 import { layoutClasses } from '../core/classes';
 import { _account } from '../nav-config-account';
 import { dashboardLayoutVars } from './css-vars';
-import { navData } from '../nav-config-dashboard';
 import { MainSection } from '../core/main-section';
 import { Searchbar } from '../components/searchbar';
 import { _workspaces } from '../nav-config-workspace';
@@ -24,6 +24,7 @@ import { LayoutSection } from '../core/layout-section';
 import { SidebarToggle } from '../components/sidebar-toggle';
 import { AccountPopover } from '../components/account-popover';
 import { LanguagePopover } from '../components/language-popover';
+import { navData, filterNavItemsByRole } from '../nav-config-dashboard';
 import { NotificationsPopover } from '../components/notifications-popover';
 
 import type { MainSectionProps } from '../core/main-section';
@@ -50,6 +51,10 @@ function DashboardLayoutContent({
   layoutQuery = 'lg',
 }: DashboardLayoutProps) {
   const theme = useTheme();
+  const { user } = useAuth();
+  
+  // Filter navigation data based on user role
+  const filteredNavData = user ? filterNavItemsByRole(navData, user.role) : navData;
   const { collapsed } = useSidebar();
 
   const { value: open, onFalse: onClose, onTrue: onOpen } = useBoolean();
@@ -89,7 +94,7 @@ function DashboardLayoutContent({
           >
             <SidebarToggle />
           </Box>
-          <NavMobile data={navData} open={open} onClose={onClose} workspaces={_workspaces} />
+          <NavMobile data={filteredNavData} open={open} onClose={onClose} workspaces={_workspaces} />
         </>
       ),
       rightArea: (
@@ -135,7 +140,7 @@ function DashboardLayoutContent({
        * @Sidebar
        *************************************** */
       sidebarSection={
-        <NavDesktop data={navData} layoutQuery={layoutQuery} workspaces={_workspaces} />
+        <NavDesktop data={filteredNavData} layoutQuery={layoutQuery} workspaces={_workspaces} />
       }
       /** **************************************
        * @Footer

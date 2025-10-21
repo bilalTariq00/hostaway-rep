@@ -2,11 +2,15 @@ import { useState, useCallback } from 'react';
 
 import Box from '@mui/material/Box';
 import Link from '@mui/material/Link';
+import Card from '@mui/material/Card';
+import Chip from '@mui/material/Chip';
 import Button from '@mui/material/Button';
 import Divider from '@mui/material/Divider';
 import TextField from '@mui/material/TextField';
 import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
+import CardHeader from '@mui/material/CardHeader';
+import CardContent from '@mui/material/CardContent';
 import InputAdornment from '@mui/material/InputAdornment';
 
 import { useRouter } from 'src/routes/hooks';
@@ -106,6 +110,50 @@ export function SignInView() {
         </Typography>
       </Box>
       {renderForm}
+      
+      {/* Demo Credentials Section */}
+      <Card sx={{ mt: 3, mb: 3 }}>
+        <CardHeader 
+          title="Demo Credentials" 
+          subheader="Use these credentials to test different user roles"
+          sx={{ pb: 1 }}
+        />
+        <CardContent sx={{ pt: 0 }}>
+          <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+              <Chip label="Super Admin" color="error" size="small" />
+              <Typography variant="body2" sx={{ fontFamily: 'monospace' }}>
+                admin@hostaway.com / admin123
+              </Typography>
+            </Box>
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+              <Chip label="Manager" color="warning" size="small" />
+              <Typography variant="body2" sx={{ fontFamily: 'monospace' }}>
+                manager@hostaway.com / manager123
+              </Typography>
+            </Box>
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+              <Chip label="Supervisor" color="info" size="small" />
+              <Typography variant="body2" sx={{ fontFamily: 'monospace' }}>
+                supervisor@hostaway.com / supervisor123
+              </Typography>
+            </Box>
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+              <Chip label="Associate" color="success" size="small" />
+              <Typography variant="body2" sx={{ fontFamily: 'monospace' }}>
+                associate@hostaway.com / associate123
+              </Typography>
+            </Box>
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+              <Chip label="Team" color="primary" size="small" />
+              <Typography variant="body2" sx={{ fontFamily: 'monospace' }}>
+                team@hostaway.com / team123
+              </Typography>
+            </Box>
+          </Box>
+        </CardContent>
+      </Card>
+
       <Divider sx={{ my: 3, '&::before, &::after': { borderTopStyle: 'dashed' } }}>
         <Typography
           variant="overline"

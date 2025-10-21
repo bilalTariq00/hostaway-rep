@@ -21,7 +21,8 @@ export function ProtectedRoute({ children, requiredRole }: ProtectedRouteProps) 
         return;
       }
 
-      if (requiredRole && user.role !== requiredRole) {
+      if (requiredRole && user.role !== requiredRole && user.role !== 'user') {
+        // Super admin (user role) can access all pages
         // Redirect to appropriate dashboard based on user role
         if (user.role === 'team') {
           navigate('/team-dashboard');
@@ -52,7 +53,7 @@ export function ProtectedRoute({ children, requiredRole }: ProtectedRouteProps) 
     return null;
   }
 
-  if (requiredRole && user.role !== requiredRole) {
+  if (requiredRole && user.role !== requiredRole && user.role !== 'user') {
     return null;
   }
 

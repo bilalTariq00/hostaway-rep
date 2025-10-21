@@ -123,7 +123,7 @@ const renderFallback = () => (
 export const routesSection: RouteObject[] = [
   {
     element: (
-      <ProtectedRoute requiredRole="user">
+      <ProtectedRoute>
         <DashboardLayout>
           <Suspense fallback={renderFallback()}>
             <Outlet />
@@ -225,12 +225,54 @@ export const routesSection: RouteObject[] = [
         { path: 'inbox/automation-create', element: <AutomationCreatePage /> },
         { path: 'inbox/automation-edit/:id', element: <AutomationEditPage /> },
         { path: 'inbox/message-edit/:id', element: <MessageEditPage /> },
-        { path: 'create-account', element: <CreateAccountPage /> },
-        { path: 'user-management', element: <UserManagementPage /> },
-        { path: 'client-management', element: <ClientManagementPage /> },
-        { path: 'supervisor-dashboard', element: <SupervisorDashboardPage /> },
-        { path: 'manager-dashboard', element: <ManagerDashboardPage /> },
-        { path: 'associate-dashboard', element: <AssociateDashboardPage /> },
+        { 
+          path: 'create-account', 
+          element: (
+            <ProtectedRoute requiredRole="user">
+              <CreateAccountPage />
+            </ProtectedRoute>
+          )
+        },
+        { 
+          path: 'user-management', 
+          element: (
+            <ProtectedRoute requiredRole="user">
+              <UserManagementPage />
+            </ProtectedRoute>
+          )
+        },
+        { 
+          path: 'client-management', 
+          element: (
+            <ProtectedRoute requiredRole="user">
+              <ClientManagementPage />
+            </ProtectedRoute>
+          )
+        },
+        { 
+          path: 'supervisor-dashboard', 
+          element: (
+            <ProtectedRoute requiredRole="supervisor">
+              <SupervisorDashboardPage />
+            </ProtectedRoute>
+          )
+        },
+        { 
+          path: 'manager-dashboard', 
+          element: (
+            <ProtectedRoute requiredRole="manager">
+              <ManagerDashboardPage />
+            </ProtectedRoute>
+          )
+        },
+        { 
+          path: 'associate-dashboard', 
+          element: (
+            <ProtectedRoute requiredRole="associate">
+              <AssociateDashboardPage />
+            </ProtectedRoute>
+          )
+        },
     ],
   },
   {
