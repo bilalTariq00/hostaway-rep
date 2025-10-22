@@ -9,8 +9,8 @@ import {
   WifiOff,
   Paperclip,
   MoreVertical,
-  ChevronRight,
   ChevronLeft,
+  ChevronRight,
 } from 'lucide-react';
 
 import Box from '@mui/material/Box';
