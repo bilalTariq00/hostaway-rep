@@ -13,6 +13,8 @@ import {
   CircularProgress,
 } from '@mui/material';
 
+import { API_URL } from '../../config/environment';
+
 interface ResponseStats {
   totalSent: number;
   totalResponses: number;
@@ -35,9 +37,9 @@ export function ResponseRateDisplay({ conversationId, sx }: ResponseRateDisplayP
     setLoading(true);
     setError(null);
     
-    try {
-      const response = await fetch(`http://localhost:3001/api/response-stats/${conversationId}`);
-      const data = await response.json();
+        try {
+          const response = await fetch(`${API_URL}/api/response-stats/${conversationId}`);
+          const data = await response.json();
       
       if (data.success) {
         setStats(data.data);

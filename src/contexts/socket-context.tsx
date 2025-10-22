@@ -1,6 +1,8 @@
 import { io, type Socket } from 'socket.io-client';
 import React, { useState, useEffect, useContext, createContext } from 'react';
 
+import { SOCKET_URL } from '../config/environment';
+
 interface SocketContextType {
   socket: Socket | null;
   isConnected: boolean;
@@ -21,7 +23,7 @@ export function SocketProvider({ children }: SocketProviderProps) {
 
   useEffect(() => {
     // Initialize socket connection
-    const newSocket = io(import.meta.env.VITE_SOCKET_URL || 'http://localhost:3001', {
+    const newSocket = io(SOCKET_URL, {
       transports: ['websocket', 'polling'],
       autoConnect: true,
     });

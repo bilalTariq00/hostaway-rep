@@ -8,14 +8,24 @@ const server = createServer(app);
 
 // Enable CORS for all origins
 app.use(cors({
-  origin: "*",
-  methods: ["GET", "POST"]
+  origin: [
+    "http://localhost:3039",
+    "https://material-kit-react-main.vercel.app", // Your Vercel URL (update after deployment)
+    /\.vercel\.app$/ // Allow all Vercel preview deployments
+  ],
+  methods: ["GET", "POST"],
+  credentials: true
 }));
 
 const io = new Server(server, {
   cors: {
-    origin: "*",
-    methods: ["GET", "POST"]
+    origin: [
+      "http://localhost:3039",
+      "https://material-kit-react-main.vercel.app", // Your Vercel URL (update after deployment)
+      /\.vercel\.app$/ // Allow all Vercel preview deployments
+    ],
+    methods: ["GET", "POST"],
+    credentials: true
   }
 });
 
@@ -324,6 +334,11 @@ app.get('/api/response-stats/:conversationId', (req, res) => {
     },
     timestamp: new Date().toISOString()
   });
+});
+
+// Health check endpoint for Railway
+app.get('/health', (req, res) => {
+  res.json({ status: 'ok', timestamp: new Date().toISOString() });
 });
 
 const PORT = process.env.PORT || 3001;

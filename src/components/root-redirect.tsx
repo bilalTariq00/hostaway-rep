@@ -1,6 +1,9 @@
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router';
 
+import Box from '@mui/material/Box';
+import CircularProgress from '@mui/material/CircularProgress';
+
 import { useAuth } from 'src/contexts/auth-context';
 
 // ----------------------------------------------------------------------
@@ -26,6 +29,23 @@ export function RootRedirect() {
     }
   }, [user, isLoading, navigate]);
 
-  // Return null while redirecting
+  // Show loading spinner while checking authentication
+  if (isLoading) {
+    return (
+      <Box
+        sx={{
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          height: '100vh',
+          backgroundColor: 'background.default',
+        }}
+      >
+        <CircularProgress size={60} />
+      </Box>
+    );
+  }
+
+  // Return null while redirecting (this should be very brief)
   return null;
 }
