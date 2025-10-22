@@ -31,6 +31,7 @@ export const SettingsPage = lazy(() => import('src/pages/settings'));
 export const ReportsPage = lazy(() => import('src/pages/reports'));
 export const AnalyticsPage = lazy(() => import('src/pages/analytics'));
 export const MessagesPage = lazy(() => import('src/pages/messages'));
+export const ChatDemoPage = lazy(() => import('src/pages/chat-demo').then((module) => ({ default: module.ChatDemoView })));
 export const TeamDashboardPage = lazy(() =>
   import('src/sections/team-dashboard/view/team-dashboard-view').then((module) => ({
     default: module.TeamDashboardPage,
@@ -403,6 +404,7 @@ export const routesSection: RouteObject[] = [
       { path: 'user', element: <UserPage /> },
       { path: 'products', element: <ProductsPage /> },
       { path: 'messages', element: <MessagesPage /> },
+      { path: 'chat-demo', element: <ChatDemoPage /> },
       { path: 'reports', element: <ReportsPage /> },
       { path: 'blog', element: <BlogPage /> },
       { path: 'settings', element: <SettingsPage /> },
