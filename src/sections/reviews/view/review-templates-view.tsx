@@ -194,7 +194,7 @@ export function ReviewTemplatesView() {
 
   const handleDeleteConfirm = () => {
     if (selectedTemplate) {
-      const updatedTemplates = reviewTemplates.filter(t => t.id !== selectedTemplate.id);
+      const updatedTemplates = reviewTemplates.filter((t) => t.id !== selectedTemplate.id);
       saveReviewTemplates(updatedTemplates);
     }
     setDeleteDialogOpen(false);
@@ -211,10 +211,11 @@ export function ReviewTemplatesView() {
     setSelectedTemplate(null);
   };
 
-  const filteredTemplates = reviewTemplates.filter(template =>
-    template.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    template.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    template.category.toLowerCase().includes(searchTerm.toLowerCase())
+  const filteredTemplates = reviewTemplates.filter(
+    (template) =>
+      template.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      template.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      template.category.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   return (
@@ -260,7 +261,7 @@ export function ReviewTemplatesView() {
           InputProps={{
             startAdornment: (
               <InputAdornment position="start">
-                <Iconify icon={"eva:search-fill" as any} />
+                <Iconify icon={'eva:search-fill' as any} />
               </InputAdornment>
             ),
           }}
@@ -271,8 +272,8 @@ export function ReviewTemplatesView() {
       <Grid container spacing={3}>
         {filteredTemplates.map((template) => (
           <Grid key={template.id} size={{ xs: 12, sm: 6, md: 4 }}>
-            <Card 
-              sx={{ 
+            <Card
+              sx={{
                 height: '100%',
                 display: 'flex',
                 flexDirection: 'column',
@@ -284,7 +285,14 @@ export function ReviewTemplatesView() {
             >
               <CardContent sx={{ flex: 1, display: 'flex', flexDirection: 'column', p: 3 }}>
                 {/* Header with Name and Status */}
-                <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', mb: 2 }}>
+                <Box
+                  sx={{
+                    display: 'flex',
+                    justifyContent: 'space-between',
+                    alignItems: 'flex-start',
+                    mb: 2,
+                  }}
+                >
                   <Typography variant="h6" sx={{ fontWeight: 600, flex: 1, color: 'text.primary' }}>
                     {template.name}
                   </Typography>
@@ -293,10 +301,18 @@ export function ReviewTemplatesView() {
                       px: 1.5,
                       py: 0.5,
                       borderRadius: 1,
-                      bgcolor: template.status === 'Active' ? 'success.lighter' : 
-                              template.status === 'Draft' ? 'warning.lighter' : 'error.lighter',
-                      color: template.status === 'Active' ? 'success.darker' : 
-                             template.status === 'Draft' ? 'warning.darker' : 'error.darker',
+                      bgcolor:
+                        template.status === 'Active'
+                          ? 'success.lighter'
+                          : template.status === 'Draft'
+                            ? 'warning.lighter'
+                            : 'error.lighter',
+                      color:
+                        template.status === 'Active'
+                          ? 'success.darker'
+                          : template.status === 'Draft'
+                            ? 'warning.darker'
+                            : 'error.darker',
                       fontSize: '0.75rem',
                       fontWeight: 500,
                     }}
@@ -311,7 +327,14 @@ export function ReviewTemplatesView() {
                 </Typography>
 
                 {/* Category and Usage */}
-                <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
+                <Box
+                  sx={{
+                    display: 'flex',
+                    justifyContent: 'space-between',
+                    alignItems: 'center',
+                    mb: 2,
+                  }}
+                >
                   <Typography variant="body2" sx={{ fontWeight: 500 }}>
                     Category: {template.category}
                   </Typography>
@@ -327,7 +350,11 @@ export function ReviewTemplatesView() {
                   </Typography>
                   <Box sx={{ maxHeight: 120, overflow: 'auto' }}>
                     {template.questions.slice(0, 3).map((question: string, index: number) => (
-                      <Typography key={index} variant="body2" sx={{ mb: 0.5, fontSize: '0.875rem' }}>
+                      <Typography
+                        key={index}
+                        variant="body2"
+                        sx={{ mb: 0.5, fontSize: '0.875rem' }}
+                      >
                         • {question}
                       </Typography>
                     ))}
@@ -346,37 +373,37 @@ export function ReviewTemplatesView() {
 
                 {/* Action Buttons */}
                 <Box sx={{ display: 'flex', justifyContent: 'flex-end', gap: 1, mt: 'auto' }}>
-                  <Button 
-                    size="small" 
+                  <Button
+                    size="small"
                     variant="outlined"
                     onClick={() => handleViewTemplate(template)}
                   >
-                    <Iconify icon={"eva:eye-fill" as any} sx={{ mr: 0.5 }} />
+                    <Iconify icon={'eva:eye-fill' as any} sx={{ mr: 0.5 }} />
                     View
                   </Button>
-                  <Button 
-                    size="small" 
+                  <Button
+                    size="small"
                     variant="outlined"
                     onClick={() => handleEditTemplate(template)}
                   >
-                    <Iconify icon={"eva:edit-fill" as any} sx={{ mr: 0.5 }} />
+                    <Iconify icon={'eva:edit-fill' as any} sx={{ mr: 0.5 }} />
                     Edit
                   </Button>
-                  <Button 
-                    size="small" 
+                  <Button
+                    size="small"
                     variant="outlined"
                     onClick={() => handleDuplicateTemplate(template)}
                   >
-                    <Iconify icon={"eva:copy-fill" as any} sx={{ mr: 0.5 }} />
+                    <Iconify icon={'eva:copy-fill' as any} sx={{ mr: 0.5 }} />
                     Copy
                   </Button>
-                  <Button 
-                    size="small" 
-                    variant="outlined" 
+                  <Button
+                    size="small"
+                    variant="outlined"
                     color="error"
                     onClick={() => handleDeleteTemplate(template)}
                   >
-                    <Iconify icon={"eva:trash-2-fill" as any} sx={{ mr: 0.5 }} />
+                    <Iconify icon={'eva:trash-2-fill' as any} sx={{ mr: 0.5 }} />
                     Delete
                   </Button>
                 </Box>
@@ -393,7 +420,9 @@ export function ReviewTemplatesView() {
             No review templates found
           </Typography>
           <Typography variant="body2" sx={{ mb: 3, color: 'text.secondary' }}>
-            {searchTerm ? 'Try adjusting your search terms' : 'Create your first review template to get started'}
+            {searchTerm
+              ? 'Try adjusting your search terms'
+              : 'Create your first review template to get started'}
           </Typography>
           <Button variant="contained" onClick={handleAddTemplate}>
             Create Review Template
@@ -406,8 +435,8 @@ export function ReviewTemplatesView() {
         <DialogTitle>Duplicate Template</DialogTitle>
         <DialogContent>
           <Typography>
-            Are you sure you want to duplicate &quot;{selectedTemplate?.name}&quot;? 
-            This will create a copy with &quot;(Copy)&quot; added to the name.
+            Are you sure you want to duplicate &quot;{selectedTemplate?.name}&quot;? This will
+            create a copy with &quot;(Copy)&quot; added to the name.
           </Typography>
         </DialogContent>
         <DialogActions>
@@ -423,8 +452,8 @@ export function ReviewTemplatesView() {
         <DialogTitle>Delete Template</DialogTitle>
         <DialogContent>
           <Typography>
-            Are you sure you want to delete &quot;{selectedTemplate?.name}&quot;? 
-            This action cannot be undone.
+            Are you sure you want to delete &quot;{selectedTemplate?.name}&quot;? This action cannot
+            be undone.
           </Typography>
         </DialogContent>
         <DialogActions>

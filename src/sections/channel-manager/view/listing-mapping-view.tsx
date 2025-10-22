@@ -1,5 +1,18 @@
 import { useState } from 'react';
-import { Copy, Edit, Link, Filter, Search, XCircle, Calendar, Download, FileText, Settings, RefreshCw, MoreHorizontal } from 'lucide-react';
+import {
+  Copy,
+  Edit,
+  Link,
+  Filter,
+  Search,
+  XCircle,
+  Calendar,
+  Download,
+  FileText,
+  Settings,
+  RefreshCw,
+  MoreHorizontal,
+} from 'lucide-react';
 
 import Box from '@mui/material/Box';
 import Tab from '@mui/material/Tab';
@@ -32,14 +45,14 @@ import { useRouter } from 'src/routes/hooks';
 
 import { DashboardContent } from 'src/layouts/dashboard';
 
-
 // Mock data for listings
 const mockListings = [
   {
     id: 1,
     title: 'La Dimora Del Cavaliere',
     propertyId: '305034',
-    image: 'https://images.unsplash.com/photo-1566073771259-6a8506099945?ixlib=rb-4.0.3&auto=format&fit=crop&w=100&q=80',
+    image:
+      'https://images.unsplash.com/photo-1566073771259-6a8506099945?ixlib=rb-4.0.3&auto=format&fit=crop&w=100&q=80',
     airbnb: true,
     booking: true,
     vrbo: true,
@@ -52,7 +65,8 @@ const mockListings = [
     id: 2,
     title: 'Navigli',
     propertyId: '305035',
-    image: 'https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?ixlib=rb-4.0.3&auto=format&fit=crop&w=100&q=80',
+    image:
+      'https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?ixlib=rb-4.0.3&auto=format&fit=crop&w=100&q=80',
     airbnb: true,
     booking: true,
     vrbo: true,
@@ -65,7 +79,8 @@ const mockListings = [
     id: 3,
     title: 'Polacchi42',
     propertyId: '305225',
-    image: 'https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?ixlib=rb-4.0.3&auto=format&fit=crop&w=100&q=80',
+    image:
+      'https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?ixlib=rb-4.0.3&auto=format&fit=crop&w=100&q=80',
     airbnb: true,
     booking: true,
     vrbo: true,
@@ -78,7 +93,8 @@ const mockListings = [
     id: 4,
     title: 'Superattico - Via Del Corso 43',
     propertyId: '305421',
-    image: 'https://images.unsplash.com/photo-1571896349842-33c89424de2d?ixlib=rb-4.0.3&auto=format&fit=crop&w=100&q=80',
+    image:
+      'https://images.unsplash.com/photo-1571896349842-33c89424de2d?ixlib=rb-4.0.3&auto=format&fit=crop&w=100&q=80',
     airbnb: true,
     booking: true,
     vrbo: true,
@@ -91,7 +107,8 @@ const mockListings = [
     id: 5,
     title: 'Montecatini Terme',
     propertyId: '306532',
-    image: 'https://images.unsplash.com/photo-1582268611958-ebfd161ef9cf?ixlib=rb-4.0.3&auto=format&fit=crop&w=100&q=80',
+    image:
+      'https://images.unsplash.com/photo-1582268611958-ebfd161ef9cf?ixlib=rb-4.0.3&auto=format&fit=crop&w=100&q=80',
     airbnb: true,
     booking: true,
     vrbo: true,
@@ -104,7 +121,8 @@ const mockListings = [
     id: 6,
     title: 'Monteverde - Quattroventi',
     propertyId: '308582',
-    image: 'https://images.unsplash.com/photo-1560448204-603b3fc33ddc?ixlib=rb-4.0.3&auto=format&fit=crop&w=100&q=80',
+    image:
+      'https://images.unsplash.com/photo-1560448204-603b3fc33ddc?ixlib=rb-4.0.3&auto=format&fit=crop&w=100&q=80',
     airbnb: true,
     booking: true,
     vrbo: true,
@@ -117,7 +135,8 @@ const mockListings = [
     id: 7,
     title: 'La Storta',
     propertyId: '310867',
-    image: 'https://images.unsplash.com/photo-1564013799919-ab600027ffc6?ixlib=rb-4.0.3&auto=format&fit=crop&w=100&q=80',
+    image:
+      'https://images.unsplash.com/photo-1564013799919-ab600027ffc6?ixlib=rb-4.0.3&auto=format&fit=crop&w=100&q=80',
     airbnb: true,
     booking: true,
     vrbo: false,
@@ -131,7 +150,8 @@ const mockListings = [
     id: 8,
     title: '[5 Min From Trastevere] Chic Apt',
     propertyId: '317154',
-    image: 'https://images.unsplash.com/photo-1578683010236-d716f9a3f461?ixlib=rb-4.0.3&auto=format&fit=crop&w=100&q=80',
+    image:
+      'https://images.unsplash.com/photo-1578683010236-d716f9a3f461?ixlib=rb-4.0.3&auto=format&fit=crop&w=100&q=80',
     airbnb: true,
     booking: true,
     vrbo: true,
@@ -144,7 +164,8 @@ const mockListings = [
     id: 9,
     title: 'Via Poggio Tulliano',
     propertyId: '332386',
-    image: 'https://images.unsplash.com/photo-1560448204-5e9c5a5b5b5b?ixlib=rb-4.0.3&auto=format&fit=crop&w=100&q=80',
+    image:
+      'https://images.unsplash.com/photo-1560448204-5e9c5a5b5b5b?ixlib=rb-4.0.3&auto=format&fit=crop&w=100&q=80',
     airbnb: true,
     booking: true,
     vrbo: true,
@@ -157,7 +178,8 @@ const mockListings = [
     id: 10,
     title: 'Via Dei Marruccini | San Lorenzo',
     propertyId: '345603',
-    image: 'https://images.unsplash.com/photo-1560448204-603b3fc33ddc?ixlib=rb-4.0.3&auto=format&fit=crop&w=100&q=80',
+    image:
+      'https://images.unsplash.com/photo-1560448204-603b3fc33ddc?ixlib=rb-4.0.3&auto=format&fit=crop&w=100&q=80',
     airbnb: true,
     booking: true,
     vrbo: true,
@@ -170,7 +192,8 @@ const mockListings = [
     id: 11,
     title: 'Via di Acqua Bullicante 113',
     propertyId: '363365',
-    image: 'https://images.unsplash.com/photo-1560448204-603b3fc33ddc?ixlib=rb-4.0.3&auto=format&fit=crop&w=100&q=80',
+    image:
+      'https://images.unsplash.com/photo-1560448204-603b3fc33ddc?ixlib=rb-4.0.3&auto=format&fit=crop&w=100&q=80',
     airbnb: true,
     booking: true,
     vrbo: false,
@@ -182,54 +205,54 @@ const mockListings = [
 ];
 
 const channels = [
-  { 
-    key: 'airbnb', 
-    name: 'Airbnb', 
+  {
+    key: 'airbnb',
+    name: 'Airbnb',
     logo: 'https://upload.wikimedia.org/wikipedia/commons/6/69/Airbnb_Logo_B%C3%A9lo.svg',
     color: '#FF5A5F',
-    letter: 'A'
+    letter: 'A',
   },
-  { 
-    key: 'booking', 
-    name: 'Booking.com', 
+  {
+    key: 'booking',
+    name: 'Booking.com',
     logo: 'https://upload.wikimedia.org/wikipedia/commons/3/36/Booking.com_logo.svg',
     color: '#003580',
-    letter: 'B'
+    letter: 'B',
   },
-  { 
-    key: 'vrbo', 
-    name: 'Vrbo', 
+  {
+    key: 'vrbo',
+    name: 'Vrbo',
     logo: 'https://upload.wikimedia.org/wikipedia/commons/8/8a/Vrbo_logo.svg',
     color: '#00A699',
-    letter: 'W'
+    letter: 'W',
   },
-  { 
-    key: 'expedia', 
-    name: 'Expedia', 
+  {
+    key: 'expedia',
+    name: 'Expedia',
     logo: 'https://upload.wikimedia.org/wikipedia/commons/8/8a/Expedia_logo.svg',
     color: '#000000',
-    letter: '→'
+    letter: '→',
   },
-  { 
-    key: 'partners', 
-    name: 'Partners', 
+  {
+    key: 'partners',
+    name: 'Partners',
     logo: 'https://via.placeholder.com/24x24/8B5CF6/FFFFFF?text=V',
     color: '#8B5CF6',
-    letter: 'V'
+    letter: 'V',
   },
-  { 
-    key: 'ical', 
-    name: 'iCAL', 
+  {
+    key: 'ical',
+    name: 'iCAL',
     logo: 'https://via.placeholder.com/24x24/3B82F6/FFFFFF?text=📅',
     color: '#3B82F6',
-    letter: '📅'
+    letter: '📅',
   },
-  { 
-    key: 'customIcal', 
-    name: 'Custom iCAL', 
+  {
+    key: 'customIcal',
+    name: 'Custom iCAL',
     logo: 'https://via.placeholder.com/24x24/8B5CF6/FFFFFF?text=📅',
     color: '#8B5CF6',
-    letter: '📅'
+    letter: '📅',
   },
 ];
 
@@ -244,9 +267,10 @@ export function ListingMappingView() {
   const itemsPerPage = 10;
 
   // Filter listings based on search term
-  const filteredListings = mockListings.filter(listing =>
-    listing.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    listing.propertyId.includes(searchTerm)
+  const filteredListings = mockListings.filter(
+    (listing) =>
+      listing.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      listing.propertyId.includes(searchTerm)
   );
 
   // Get current page listings
@@ -291,7 +315,7 @@ export function ListingMappingView() {
   };
 
   const handleMenuAction = (action: string) => {
-    const listing = mockListings.find(l => l.id === selectedListingId);
+    const listing = mockListings.find((l) => l.id === selectedListingId);
     if (listing) {
       switch (action) {
         case 'edit':
@@ -328,7 +352,7 @@ export function ListingMappingView() {
         <Typography variant="h4" sx={{ fontWeight: 600, mb: 2 }}>
           Channel Manager
         </Typography>
-        
+
         {/* Tabs */}
         <Tabs value="listing-mapping" onChange={handleTabChange} sx={{ mb: 3 }}>
           <Tab label="Listing Mapping" value="listing-mapping" />
@@ -354,7 +378,12 @@ export function ListingMappingView() {
           <Button
             variant="outlined"
             startIcon={<Filter size={16} />}
-            sx={{ textTransform: 'none', bgcolor: '#E3F2FD', borderColor: '#2196F3', color: '#1976D2' }}
+            sx={{
+              textTransform: 'none',
+              bgcolor: '#E3F2FD',
+              borderColor: '#2196F3',
+              color: '#1976D2',
+            }}
           >
             Filters
           </Button>
@@ -383,8 +412,18 @@ export function ListingMappingView() {
               <TableRow sx={{ bgcolor: 'grey.50' }}>
                 <TableCell sx={{ fontWeight: 600, fontSize: '0.9rem' }}>Title</TableCell>
                 {channels.map((channel) => (
-                  <TableCell key={channel.key} sx={{ fontWeight: 600, fontSize: '0.9rem', textAlign: 'center' }}>
-                    <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 0.5 }}>
+                  <TableCell
+                    key={channel.key}
+                    sx={{ fontWeight: 600, fontSize: '0.9rem', textAlign: 'center' }}
+                  >
+                    <Box
+                      sx={{
+                        display: 'flex',
+                        flexDirection: 'column',
+                        alignItems: 'center',
+                        gap: 0.5,
+                      }}
+                    >
                       <Box
                         sx={{
                           width: 24,
@@ -401,14 +440,14 @@ export function ListingMappingView() {
                         }}
                       >
                         {channel.logo && !channel.logo.includes('placeholder') ? (
-                          <img 
-                            src={channel.logo} 
+                          <img
+                            src={channel.logo}
                             alt={channel.name}
-                            style={{ 
-                              width: '100%', 
-                              height: '100%', 
+                            style={{
+                              width: '100%',
+                              height: '100%',
                               objectFit: 'contain',
-                              filter: 'brightness(0) invert(1)'
+                              filter: 'brightness(0) invert(1)',
                             }}
                             onError={(e) => {
                               e.currentTarget.style.display = 'none';
@@ -419,14 +458,23 @@ export function ListingMappingView() {
                             }}
                           />
                         ) : null}
-                        <Box sx={{ display: channel.logo && !channel.logo.includes('placeholder') ? 'none' : 'flex' }}>
+                        <Box
+                          sx={{
+                            display:
+                              channel.logo && !channel.logo.includes('placeholder')
+                                ? 'none'
+                                : 'flex',
+                          }}
+                        >
                           {channel.letter}
                         </Box>
                       </Box>
                     </Box>
                   </TableCell>
                 ))}
-                <TableCell sx={{ fontWeight: 600, fontSize: '0.9rem', textAlign: 'center' }}>Actions</TableCell>
+                <TableCell sx={{ fontWeight: 600, fontSize: '0.9rem', textAlign: 'center' }}>
+                  Actions
+                </TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
@@ -440,8 +488,8 @@ export function ListingMappingView() {
                         sx={{ width: 40, height: 40 }}
                       />
                       <Box>
-                        <Typography 
-                          variant="body2" 
+                        <Typography
+                          variant="body2"
                           sx={{
                             fontWeight: 500,
                             cursor: 'pointer',
@@ -449,7 +497,7 @@ export function ListingMappingView() {
                             '&:hover': {
                               textDecoration: 'underline',
                               color: 'primary.dark',
-                            }
+                            },
                           }}
                           onClick={() => handleTitleClick(listing)}
                         >
@@ -457,13 +505,13 @@ export function ListingMappingView() {
                         </Typography>
                         <Typography variant="caption" color="text.secondary">
                           ({listing.propertyId})
-                          </Typography>
+                        </Typography>
                         {listing.hasCalendarIssue && (
                           <Box sx={{ display: 'inline-flex', alignItems: 'center', ml: 1 }}>
                             <Calendar size={12} color="red" />
                           </Box>
                         )}
-                        </Box>
+                      </Box>
                     </Box>
                   </TableCell>
                   {channels.map((channel) => (
@@ -472,14 +520,14 @@ export function ListingMappingView() {
                         label={listing[channel.key as keyof typeof listing] ? 'ON' : 'OFF'}
                         size="small"
                         color={listing[channel.key as keyof typeof listing] ? 'success' : 'error'}
-                        sx={{ 
+                        sx={{
                           fontSize: '0.7rem',
                           height: 24,
                           minWidth: 40,
                           cursor: 'pointer',
                           '&:hover': {
                             opacity: 0.8,
-                          }
+                          },
                         }}
                         onClick={() => handleChannelToggle(listing, channel.key)}
                       />
@@ -536,10 +584,12 @@ export function ListingMappingView() {
       >
         {selectedProperty && (
           <>
-            <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
+            <Box
+              sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}
+            >
               <Typography variant="h6" sx={{ fontWeight: 600 }}>
                 Property Settings
-            </Typography>
+              </Typography>
               <IconButton onClick={() => setSettingsOpen(false)}>
                 <XCircle size={20} />
               </IconButton>
@@ -561,7 +611,7 @@ export function ListingMappingView() {
               />
               <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
                 Property ID: {selectedProperty.propertyId}
-                    </Typography>
+              </Typography>
             </Box>
 
             {/* Booking Window */}
@@ -569,11 +619,7 @@ export function ListingMappingView() {
               <Typography variant="subtitle1" sx={{ fontWeight: 600, mb: 2 }}>
                 Booking window
               </Typography>
-              <FormControlLabel
-                control={<Switch disabled />}
-                label="Activate"
-                sx={{ mb: 2 }}
-              />
+              <FormControlLabel control={<Switch disabled />} label="Activate" sx={{ mb: 2 }} />
               <FormControl fullWidth sx={{ mb: 2 }}>
                 <InputLabel>Number of months</InputLabel>
                 <Select value="" label="Number of months">
@@ -608,14 +654,14 @@ export function ListingMappingView() {
                     }}
                   >
                     {channel.logo && !channel.logo.includes('placeholder') ? (
-                      <img 
-                        src={channel.logo} 
+                      <img
+                        src={channel.logo}
                         alt={channel.name}
-                        style={{ 
-                          width: '100%', 
-                          height: '100%', 
+                        style={{
+                          width: '100%',
+                          height: '100%',
                           objectFit: 'contain',
-                          filter: 'brightness(0) invert(1)'
+                          filter: 'brightness(0) invert(1)',
                         }}
                         onError={(e) => {
                           e.currentTarget.style.display = 'none';
@@ -626,7 +672,12 @@ export function ListingMappingView() {
                         }}
                       />
                     ) : null}
-                    <Box sx={{ display: channel.logo && !channel.logo.includes('placeholder') ? 'none' : 'flex' }}>
+                    <Box
+                      sx={{
+                        display:
+                          channel.logo && !channel.logo.includes('placeholder') ? 'none' : 'flex',
+                      }}
+                    >
                       {channel.letter}
                     </Box>
                   </Box>
@@ -634,10 +685,10 @@ export function ListingMappingView() {
                     {channel.name}
                   </Typography>
                 </Box>
-                
+
                 <FormControlLabel
                   control={
-                    <Switch 
+                    <Switch
                       checked={selectedProperty[channel.key as keyof typeof selectedProperty]}
                       onChange={() => handleChannelToggle(selectedProperty, channel.key)}
                       color="success"
@@ -646,26 +697,32 @@ export function ListingMappingView() {
                   label={`Is listed in ${channel.name}?`}
                   sx={{ mb: 2 }}
                 />
-                
+
                 {channel.key !== 'ical' && channel.key !== 'customIcal' && (
                   <TextField
                     fullWidth
                     label="Markup"
                     value={
-                      channel.key === 'airbnb' ? '15' : 
-                      channel.key === 'booking' ? '10' : 
-                      channel.key === 'vrbo' ? '30' : 
-                      channel.key === 'expedia' ? '20' : 
-                      channel.key === 'partners' ? '25' : '0'
+                      channel.key === 'airbnb'
+                        ? '15'
+                        : channel.key === 'booking'
+                          ? '10'
+                          : channel.key === 'vrbo'
+                            ? '30'
+                            : channel.key === 'expedia'
+                              ? '20'
+                              : channel.key === 'partners'
+                                ? '25'
+                                : '0'
                     }
                     sx={{ mb: 2 }}
                   />
                 )}
-                
+
                 {channel.key === 'booking' && (
                   <Box sx={{ mb: 2 }}>
-                    <Button 
-                      variant="outlined" 
+                    <Button
+                      variant="outlined"
                       startIcon={<RefreshCw size={16} />}
                       sx={{ textTransform: 'none', mb: 2 }}
                     >
@@ -679,10 +736,10 @@ export function ListingMappingView() {
                     />
                   </Box>
                 )}
-                
-                <Button 
-                  variant="contained" 
-                  fullWidth 
+
+                <Button
+                  variant="contained"
+                  fullWidth
                   sx={{ textTransform: 'none', bgcolor: '#00A699' }}
                 >
                   Save

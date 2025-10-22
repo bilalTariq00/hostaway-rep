@@ -24,8 +24,8 @@ export default function ReportsPage() {
         }}
       >
         <Card>
-          <CardHeader 
-            title="Sales Report" 
+          <CardHeader
+            title="Sales Report"
             action={
               <Button variant="contained" size="small">
                 Generate
@@ -40,8 +40,8 @@ export default function ReportsPage() {
         </Card>
 
         <Card>
-          <CardHeader 
-            title="User Activity Report" 
+          <CardHeader
+            title="User Activity Report"
             action={
               <Button variant="contained" size="small">
                 Generate
@@ -56,8 +56,8 @@ export default function ReportsPage() {
         </Card>
 
         <Card>
-          <CardHeader 
-            title="Financial Report" 
+          <CardHeader
+            title="Financial Report"
             action={
               <Button variant="contained" size="small">
                 Generate

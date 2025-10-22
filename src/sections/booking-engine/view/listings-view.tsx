@@ -79,9 +79,11 @@ export function ListingsView() {
   };
 
   const handleListingToggle = (id: number) => {
-    setListings(prev => prev.map(listing => 
-      listing.id === id ? { ...listing, selected: !listing.selected } : listing
-    ));
+    setListings((prev) =>
+      prev.map((listing) =>
+        listing.id === id ? { ...listing, selected: !listing.selected } : listing
+      )
+    );
   };
 
   const handlePageChange = (page: number) => {
@@ -98,7 +100,7 @@ export function ListingsView() {
         <Typography variant="h4" sx={{ fontWeight: 600, mb: 2 }}>
           Booking Engine
         </Typography>
-        
+
         <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 3 }}>
           <Typography variant="body1" color="text.secondary">
             Your Webpage is published on Domusferiae.holdayfuture.com
@@ -127,7 +129,7 @@ export function ListingsView() {
         <Typography variant="h6" sx={{ fontWeight: 600, mb: 2 }}>
           Search listings for your website
         </Typography>
-        
+
         <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 3 }}>
           <FormControlLabel
             control={
@@ -175,7 +177,13 @@ export function ListingsView() {
 
       {/* Listings Grid */}
       <Box sx={{ mb: 4 }}>
-        <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: 3 }}>
+        <Box
+          sx={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))',
+            gap: 3,
+          }}
+        >
           {listings.map((listing) => (
             <Card key={listing.id} sx={{ position: 'relative', overflow: 'hidden' }}>
               <Box

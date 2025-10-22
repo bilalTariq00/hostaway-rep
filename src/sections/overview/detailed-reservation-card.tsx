@@ -80,22 +80,21 @@ export function DetailedReservationCard({
               }
               secondary={
                 <Typography variant="caption" color="text.secondary">
-                  {item.checkIn && item.checkOut 
+                  {item.checkIn && item.checkOut
                     ? `${item.checkIn} - ${item.checkOut}`
-                    : item.status || 'Active'
-                  }
+                    : item.status || 'Active'}
                 </Typography>
               }
             />
             <Box sx={{ display: 'flex', gap: 0.5 }}>
               <IconButton size="small" sx={{ p: 0.5 }}>
-                  <Iconify icon={"eva:calendar-outline" as any} width={16} />
+                <Iconify icon={'eva:calendar-outline' as any} width={16} />
               </IconButton>
               <IconButton size="small" sx={{ p: 0.5 }}>
-                  <Iconify icon={"eva:message-circle-outline" as any} width={16} />
+                <Iconify icon={'eva:message-circle-outline' as any} width={16} />
               </IconButton>
               <IconButton size="small" sx={{ p: 0.5 }}>
-                  <Iconify icon={"eva:more-vertical-fill" as any} width={16} />
+                <Iconify icon={'eva:more-vertical-fill' as any} width={16} />
               </IconButton>
             </Box>
           </ListItem>
@@ -121,7 +120,8 @@ export function DetailedReservationCard({
             fontWeight: 600,
           }}
         >
-          {profitLoss.isPositive ? '+' : ''}{profitLoss.value}%
+          {profitLoss.isPositive ? '+' : ''}
+          {profitLoss.value}%
         </Typography>
       </Box>
     );
@@ -153,7 +153,7 @@ export function DetailedReservationCard({
           </Typography>
           <Tooltip title={`Information about ${title}`}>
             <IconButton size="small" sx={{ p: 0.5 }}>
-              <Iconify icon={"eva:info-outline" as any} width={16} />
+              <Iconify icon={'eva:info-outline' as any} width={16} />
             </IconButton>
           </Tooltip>
         </Box>

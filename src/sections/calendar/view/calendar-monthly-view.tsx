@@ -74,7 +74,6 @@ export function CalendarMonthlyView() {
     if (newValue === 2) router.push('/calendar/yearly');
   };
 
-
   const handlePropertyClose = () => {
     setPropertyAnchor(null);
   };
@@ -95,22 +94,22 @@ export function CalendarMonthlyView() {
     const firstDay = new Date(year, month, 1);
     const startDate = new Date(firstDay);
     startDate.setDate(startDate.getDate() - firstDay.getDay());
-    
+
     const days = [];
     const currentDate = new Date(startDate);
-    
+
     for (let i = 0; i < 42; i++) {
       days.push(new Date(currentDate));
       currentDate.setDate(currentDate.getDate() + 1);
     }
-    
+
     return days;
   };
 
   const calendarDays = generateCalendarDays();
   const weekDays = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 
-  const getBookingForDate = (date: string) => mockMonthlyBookings.find(b => b.date === date);
+  const getBookingForDate = (date: string) => mockMonthlyBookings.find((b) => b.date === date);
 
   const formatDate = (date: Date) => date.toISOString().split('T')[0];
 
@@ -148,7 +147,7 @@ export function CalendarMonthlyView() {
           <Typography variant="h4" sx={{ fontWeight: 600 }}>
             Calendar
           </Typography>
-          
+
           <Box sx={{ display: 'flex', gap: 1 }}>
             <Button variant="outlined" sx={{ mr: 1 }}>
               Available Properties
@@ -156,12 +155,10 @@ export function CalendarMonthlyView() {
             <Button variant="contained" sx={{ mr: 1 }}>
               Listing
             </Button>
-            <Button variant="contained">
-              Direct Booking
-            </Button>
+            <Button variant="contained">Direct Booking</Button>
           </Box>
         </Box>
-        
+
         <Tabs
           value={activeTab}
           onChange={handleTabChange}
@@ -214,16 +211,16 @@ export function CalendarMonthlyView() {
             <Button variant="outlined" size="small">
               Today
             </Button>
-            
+
             <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
               <IconButton onClick={() => navigateMonth('prev')} size="small">
-                <Iconify icon={"eva:arrow-left-fill" as any} width={16} />
+                <Iconify icon={'eva:arrow-left-fill' as any} width={16} />
               </IconButton>
               <Typography variant="h6" sx={{ minWidth: 120, textAlign: 'center' }}>
                 {currentMonth.toLocaleDateString('en-US', { month: 'long', year: 'numeric' })}
               </Typography>
               <IconButton onClick={() => navigateMonth('next')} size="small">
-                <Iconify icon={"eva:arrow-right-fill" as any} width={16} />
+                <Iconify icon={'eva:arrow-right-fill' as any} width={16} />
               </IconButton>
             </Box>
           </Box>
@@ -241,7 +238,7 @@ export function CalendarMonthlyView() {
           {filters.map((filter) => (
             <Chip key={filter} label={filter} variant="outlined" size="small" />
           ))}
-          <Button size="small" startIcon={<Iconify icon={"eva:plus-fill" as any} width={16} />}>
+          <Button size="small" startIcon={<Iconify icon={'eva:plus-fill' as any} width={16} />}>
             Add Filter
           </Button>
         </Box>
@@ -268,8 +265,8 @@ export function CalendarMonthlyView() {
           <Grid container spacing={2}>
             {Array.from({ length: 4 }, (_, i) => {
               const weekStart = new Date();
-              weekStart.setDate(weekStart.getDate() + (i * 7));
-              
+              weekStart.setDate(weekStart.getDate() + i * 7);
+
               return (
                 <Grid size={{ xs: 12, sm: 6, md: 3 }} key={i}>
                   <Paper sx={{ p: 2, border: 1, borderColor: 'divider' }}>
@@ -277,8 +274,11 @@ export function CalendarMonthlyView() {
                       Week {i + 1}
                     </Typography>
                     <Typography variant="caption" color="text.secondary">
-                      {weekStart.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })} - {' '}
-                      {new Date(weekStart.getTime() + 6 * 24 * 60 * 60 * 1000).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
+                      {weekStart.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })} -{' '}
+                      {new Date(weekStart.getTime() + 6 * 24 * 60 * 60 * 1000).toLocaleDateString(
+                        'en-US',
+                        { month: 'short', day: 'numeric' }
+                      )}
                     </Typography>
                     <Box sx={{ mt: 1 }}>
                       <Chip
@@ -300,7 +300,7 @@ export function CalendarMonthlyView() {
           <Typography variant="h6" sx={{ mb: 2 }}>
             Monthly Calendar
           </Typography>
-          
+
           {/* Calendar Grid */}
           <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(7, 1fr)', gap: 1, mb: 1 }}>
             {weekDays.map((day) => (
@@ -317,7 +317,7 @@ export function CalendarMonthlyView() {
               const dateStr = formatDate(day);
               const booking = getBookingForDate(dateStr);
               const isToday = dateStr === formatDate(new Date());
-              
+
               return (
                 <Box
                   key={dateStr}
@@ -328,30 +328,28 @@ export function CalendarMonthlyView() {
                     borderColor: 'divider',
                     borderRadius: 1,
                     cursor: 'pointer',
-                    bgcolor: booking 
-                      ? getBookingColor(booking.status) 
-                      : isToday 
-                        ? 'action.selected' 
+                    bgcolor: booking
+                      ? getBookingColor(booking.status)
+                      : isToday
+                        ? 'action.selected'
                         : 'transparent',
                     color: booking ? 'white' : 'text.primary',
                     opacity: isCurrentMonth(day) ? 1 : 0.3,
                     '&:hover': {
-                      bgcolor: booking 
-                        ? getBookingColor(booking.status) 
-                        : 'action.hover',
+                      bgcolor: booking ? getBookingColor(booking.status) : 'action.hover',
                     },
                   }}
                 >
-                  <Typography 
-                    variant="body2" 
-                    sx={{ 
+                  <Typography
+                    variant="body2"
+                    sx={{
                       fontSize: '0.75rem',
                       fontWeight: isToday ? 600 : 400,
                     }}
                   >
                     {day.getDate()}
                   </Typography>
-                  
+
                   {booking ? (
                     <Box sx={{ mt: 0.5 }}>
                       <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5, mb: 0.5 }}>
@@ -378,10 +376,7 @@ export function CalendarMonthlyView() {
                         {booking.guests} guests
                       </Typography>
                       <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
-                        <Iconify
-                          icon={getSourceIcon(booking.source) as any}
-                          width={10}
-                        />
+                        <Iconify icon={getSourceIcon(booking.source) as any} width={10} />
                         <Typography variant="caption" sx={{ fontSize: '0.7rem' }}>
                           €{booking.price}
                         </Typography>
@@ -390,15 +385,28 @@ export function CalendarMonthlyView() {
                   ) : isCurrentMonth(day) ? (
                     <Box sx={{ mt: 0.5 }}>
                       <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5, mb: 0.5 }}>
-                        <Iconify icon={"eva:checkmark-circle-fill" as any} width={12} sx={{ color: 'success.main' }} />
-                        <Typography variant="caption" sx={{ fontSize: '0.7rem', color: 'success.main' }}>
+                        <Iconify
+                          icon={'eva:checkmark-circle-fill' as any}
+                          width={12}
+                          sx={{ color: 'success.main' }}
+                        />
+                        <Typography
+                          variant="caption"
+                          sx={{ fontSize: '0.7rem', color: 'success.main' }}
+                        >
                           Available
                         </Typography>
                       </Box>
-                      <Typography variant="caption" sx={{ fontSize: '0.7rem', color: 'text.secondary' }}>
+                      <Typography
+                        variant="caption"
+                        sx={{ fontSize: '0.7rem', color: 'text.secondary' }}
+                      >
                         €{Math.floor(Math.random() * 200) + 100}
                       </Typography>
-                      <Typography variant="caption" sx={{ fontSize: '0.7rem', color: 'text.secondary', display: 'block' }}>
+                      <Typography
+                        variant="caption"
+                        sx={{ fontSize: '0.7rem', color: 'text.secondary', display: 'block' }}
+                      >
                         2 nights min
                       </Typography>
                     </Box>

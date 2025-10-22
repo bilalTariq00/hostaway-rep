@@ -41,10 +41,38 @@ const getClients = (): Client[] => {
   // If no clients exist, create some default ones
   if (savedClients.length === 0) {
     const defaultClients: Client[] = [
-      { id: 'client1', name: 'Luxury Rentals LLC', email: 'contact@luxuryrentals.com', status: 'active', createdAt: new Date().toISOString(), updatedAt: new Date().toISOString() },
-      { id: 'client2', name: 'Vacation Homes Inc', email: 'info@vacationhomes.com', status: 'active', createdAt: new Date().toISOString(), updatedAt: new Date().toISOString() },
-      { id: 'client3', name: 'Premium Properties', email: 'hello@premiumprops.com', status: 'active', createdAt: new Date().toISOString(), updatedAt: new Date().toISOString() },
-      { id: 'client4', name: 'Elite Stays', email: 'support@elitestays.com', status: 'active', createdAt: new Date().toISOString(), updatedAt: new Date().toISOString() },
+      {
+        id: 'client1',
+        name: 'Luxury Rentals LLC',
+        email: 'contact@luxuryrentals.com',
+        status: 'active',
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
+      },
+      {
+        id: 'client2',
+        name: 'Vacation Homes Inc',
+        email: 'info@vacationhomes.com',
+        status: 'active',
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
+      },
+      {
+        id: 'client3',
+        name: 'Premium Properties',
+        email: 'hello@premiumprops.com',
+        status: 'active',
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
+      },
+      {
+        id: 'client4',
+        name: 'Elite Stays',
+        email: 'support@elitestays.com',
+        status: 'active',
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
+      },
     ];
     localStorage.setItem('clients', JSON.stringify(defaultClients));
     return defaultClients;
@@ -54,11 +82,26 @@ const getClients = (): Client[] => {
 
 // Mock properties data with client assignments (in a real app, this would come from an API)
 const mockProperties = [
-  { id: '305034', name: 'La Dimora Del Cavaliere', location: 'Anguillara Sabazia, Italy', clientId: 'client1' },
+  {
+    id: '305034',
+    name: 'La Dimora Del Cavaliere',
+    location: 'Anguillara Sabazia, Italy',
+    clientId: 'client1',
+  },
   { id: '305035', name: 'Navigli', location: 'Milano, Italy', clientId: 'client1' },
   { id: '305225', name: 'Polacchi42', location: 'Roma, Italy', clientId: 'client2' },
-  { id: '305421', name: 'Superattico - Via Del Corso 43', location: 'Roma, Italy', clientId: 'client2' },
-  { id: '306532', name: 'Montecatini Terme', location: 'Montecatini Terme, Italy', clientId: 'client3' },
+  {
+    id: '305421',
+    name: 'Superattico - Via Del Corso 43',
+    location: 'Roma, Italy',
+    clientId: 'client2',
+  },
+  {
+    id: '306532',
+    name: 'Montecatini Terme',
+    location: 'Montecatini Terme, Italy',
+    clientId: 'client3',
+  },
   { id: '306533', name: 'Tuscany Villa', location: 'Florence, Italy', clientId: 'client3' },
   { id: '306534', name: 'Coastal Retreat', location: 'Amalfi, Italy', clientId: 'client4' },
 ];
@@ -75,17 +118,21 @@ interface CreateAccountPageProps {
   onClose?: () => void;
 }
 
-export function CreateAccountPage({ userToEdit, viewMode = false, onClose }: CreateAccountPageProps = {}) {
+export function CreateAccountPage({
+  userToEdit,
+  viewMode = false,
+  onClose,
+}: CreateAccountPageProps = {}) {
   const navigate = useNavigate();
   const { createUser, updateUser, isLoading } = useAuth();
-  
+
   const [formData, setFormData] = useState({
     name: userToEdit?.name || '',
     email: userToEdit?.email || '',
     password: '',
     confirmPassword: '',
     role: (userToEdit?.role || '') as UserRole | '',
-    status: userToEdit?.status || 'active' as 'active' | 'inactive' | 'suspended',
+    status: userToEdit?.status || ('active' as 'active' | 'inactive' | 'suspended'),
     assignedClients: userToEdit?.assignedClients || [],
     assignedProperties: userToEdit?.assignedProperties || [],
     assignedUsers: userToEdit?.assignedUsers || [],
@@ -99,7 +146,7 @@ export function CreateAccountPage({ userToEdit, viewMode = false, onClose }: Cre
     address: '',
     zipCode: '',
   });
-  
+
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [error, setError] = useState('');
@@ -131,46 +178,46 @@ export function CreateAccountPage({ userToEdit, viewMode = false, onClose }: Cre
     if (formData.assignedClients.length === 0) {
       return [];
     }
-    return mockProperties.filter(property => 
+    return mockProperties.filter((property) =>
       formData.assignedClients.includes(property.clientId)
     );
   };
 
   const handleInputChange = (field: string, value: any) => {
-    setFormData(prev => ({ ...prev, [field]: value }));
+    setFormData((prev) => ({ ...prev, [field]: value }));
     setError('');
   };
 
   const handleClientToggle = (clientId: string) => {
-    setFormData(prev => {
+    setFormData((prev) => {
       const newClients = prev.assignedClients.includes(clientId)
-        ? prev.assignedClients.filter(id => id !== clientId)
+        ? prev.assignedClients.filter((id) => id !== clientId)
         : [...prev.assignedClients, clientId];
-      
+
       // Clear properties when clients change
       return {
         ...prev,
         assignedClients: newClients,
-        assignedProperties: []
+        assignedProperties: [],
       };
     });
   };
 
   const handlePropertyToggle = (propertyId: string) => {
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
       assignedProperties: prev.assignedProperties.includes(propertyId)
-        ? prev.assignedProperties.filter(id => id !== propertyId)
-        : [...prev.assignedProperties, propertyId]
+        ? prev.assignedProperties.filter((id) => id !== propertyId)
+        : [...prev.assignedProperties, propertyId],
     }));
   };
 
   const handleUserToggle = (userId: string) => {
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
       assignedUsers: prev.assignedUsers.includes(userId)
-        ? prev.assignedUsers.filter(id => id !== userId)
-        : [...prev.assignedUsers, userId]
+        ? prev.assignedUsers.filter((id) => id !== userId)
+        : [...prev.assignedUsers, userId],
     }));
   };
 
@@ -183,13 +230,13 @@ export function CreateAccountPage({ userToEdit, viewMode = false, onClose }: Cre
         setError('Please select a valid image file (JPEG, JPG, PNG, or GIF)');
         return;
       }
-      
+
       // Validate file size (3MB)
       if (file.size > 3 * 1024 * 1024) {
         setError('File size must be less than 3MB');
         return;
       }
-      
+
       // Create preview URL
       const reader = new FileReader();
       reader.onload = (e) => {
@@ -238,12 +285,12 @@ export function CreateAccountPage({ userToEdit, viewMode = false, onClose }: Cre
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (!validateForm()) return;
 
     try {
       let updateSuccess = false;
-      
+
       if (userToEdit) {
         // Update existing user
         updateSuccess = await updateUser(userToEdit.id, {
@@ -311,10 +358,9 @@ export function CreateAccountPage({ userToEdit, viewMode = false, onClose }: Cre
               {userToEdit ? 'Account Updated Successfully!' : 'Account Created Successfully!'}
             </Typography>
             <Typography variant="body2" color="text.secondary">
-              {userToEdit 
+              {userToEdit
                 ? 'The user account has been updated successfully.'
-                : 'The new user account has been created and can now log in with their assigned role.'
-              }
+                : 'The new user account has been created and can now log in with their assigned role.'}
             </Typography>
           </CardContent>
         </Card>
@@ -327,10 +373,24 @@ export function CreateAccountPage({ userToEdit, viewMode = false, onClose }: Cre
       <Box sx={{ maxWidth: 1200, mx: 'auto' }}>
         {/* Breadcrumbs */}
         <Breadcrumbs sx={{ mb: 3 }}>
-          <Link color="inherit" href="/" onClick={(e) => { e.preventDefault(); navigate('/'); }}>
+          <Link
+            color="inherit"
+            href="/"
+            onClick={(e) => {
+              e.preventDefault();
+              navigate('/');
+            }}
+          >
             Dashboard
           </Link>
-          <Link color="inherit" href="/user-management" onClick={(e) => { e.preventDefault(); navigate('/user-management'); }}>
+          <Link
+            color="inherit"
+            href="/user-management"
+            onClick={(e) => {
+              e.preventDefault();
+              navigate('/user-management');
+            }}
+          >
             User Management
           </Link>
           <Typography color="text.primary">
@@ -348,15 +408,17 @@ export function CreateAccountPage({ userToEdit, viewMode = false, onClose }: Cre
                   Status
                 </Typography>
                 <Box sx={{ display: 'flex', gap: 1 }}>
-                  <Box sx={{ 
-                    px: 2, 
-                    py: 0.5, 
-                    borderRadius: 1, 
-                    backgroundColor: '#fff3e0',
-                    color: '#ef6c00',
-                    fontSize: '0.75rem',
-                    fontWeight: 600
-                  }}>
+                  <Box
+                    sx={{
+                      px: 2,
+                      py: 0.5,
+                      borderRadius: 1,
+                      backgroundColor: '#fff3e0',
+                      color: '#ef6c00',
+                      fontSize: '0.75rem',
+                      fontWeight: 600,
+                    }}
+                  >
                     Pending
                   </Box>
                 </Box>
@@ -379,17 +441,17 @@ export function CreateAccountPage({ userToEdit, viewMode = false, onClose }: Cre
                     '&:hover .avatar-circle': {
                       borderColor: 'primary.main',
                       borderWidth: 2,
-                    }
+                    },
                   }}
                   onClick={handleImageClick}
                 >
                   <Box
                     className="avatar-circle"
-                    sx={{ 
-                      width: 120, 
-                      height: 120, 
-                      mx: 'auto', 
-                      mb: 2, 
+                    sx={{
+                      width: 120,
+                      height: 120,
+                      mx: 'auto',
+                      mb: 2,
                       borderRadius: '50%',
                       border: '2px dashed',
                       borderColor: uploadedImage ? 'transparent' : 'grey.400',
@@ -402,19 +464,22 @@ export function CreateAccountPage({ userToEdit, viewMode = false, onClose }: Cre
                       backgroundSize: 'cover',
                       backgroundPosition: 'center',
                       backgroundRepeat: 'no-repeat',
-                      overflow: 'hidden'
+                      overflow: 'hidden',
                     }}
                   >
                     {!uploadedImage && (
                       <Box sx={{ textAlign: 'center', color: 'grey.500' }}>
                         <Camera size={32} />
-                        <Typography variant="caption" sx={{ display: 'block', mt: 0.5, fontSize: '0.7rem' }}>
+                        <Typography
+                          variant="caption"
+                          sx={{ display: 'block', mt: 0.5, fontSize: '0.7rem' }}
+                        >
                           Upload photo
                         </Typography>
                       </Box>
                     )}
                   </Box>
-                  
+
                   {/* Upload Overlay */}
                   <Box
                     className="upload-overlay"
@@ -432,7 +497,7 @@ export function CreateAccountPage({ userToEdit, viewMode = false, onClose }: Cre
                       opacity: 0,
                       transition: 'opacity 0.3s ease',
                       cursor: 'pointer',
-                      zIndex: 1
+                      zIndex: 1,
                     }}
                   >
                     <Box sx={{ textAlign: 'center', color: 'white' }}>
@@ -443,14 +508,22 @@ export function CreateAccountPage({ userToEdit, viewMode = false, onClose }: Cre
                     </Box>
                   </Box>
                 </Box>
-                
-                <Typography variant="caption" color="text.secondary" sx={{ display: 'block', mb: 1 }}>
+
+                <Typography
+                  variant="caption"
+                  color="text.secondary"
+                  sx={{ display: 'block', mb: 1 }}
+                >
                   Allowed *.jpeg, *.jpg, *.png, *.gif
                 </Typography>
-                <Typography variant="caption" color="text.secondary" sx={{ display: 'block', mb: 2 }}>
+                <Typography
+                  variant="caption"
+                  color="text.secondary"
+                  sx={{ display: 'block', mb: 2 }}
+                >
                   max size of 3 Mb
                 </Typography>
-                
+
                 {/* Hidden file input */}
                 <input
                   ref={fileInputRef}
@@ -484,13 +557,7 @@ export function CreateAccountPage({ userToEdit, viewMode = false, onClose }: Cre
                 />
               </Box>
 
-              <Button
-                variant="contained"
-                color="error"
-                fullWidth
-                disabled
-                sx={{ mb: 2 }}
-              >
+              <Button variant="contained" color="error" fullWidth disabled sx={{ mb: 2 }}>
                 Delete user
               </Button>
             </CardContent>
@@ -510,7 +577,14 @@ export function CreateAccountPage({ userToEdit, viewMode = false, onClose }: Cre
               )}
 
               <Box component="form" onSubmit={handleSubmit}>
-                <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', md: '1fr 1fr' }, gap: 2, mb: 2 }}>
+                <Box
+                  sx={{
+                    display: 'grid',
+                    gridTemplateColumns: { xs: '1fr', md: '1fr 1fr' },
+                    gap: 2,
+                    mb: 2,
+                  }}
+                >
                   <TextField
                     fullWidth
                     disabled={viewMode}
@@ -530,7 +604,14 @@ export function CreateAccountPage({ userToEdit, viewMode = false, onClose }: Cre
                   />
                 </Box>
 
-                <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', md: '1fr 1fr' }, gap: 2, mb: 2 }}>
+                <Box
+                  sx={{
+                    display: 'grid',
+                    gridTemplateColumns: { xs: '1fr', md: '1fr 1fr' },
+                    gap: 2,
+                    mb: 2,
+                  }}
+                >
                   <TextField
                     fullWidth
                     disabled={viewMode}
@@ -547,7 +628,14 @@ export function CreateAccountPage({ userToEdit, viewMode = false, onClose }: Cre
                   />
                 </Box>
 
-                <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', md: '1fr 1fr' }, gap: 2, mb: 2 }}>
+                <Box
+                  sx={{
+                    display: 'grid',
+                    gridTemplateColumns: { xs: '1fr', md: '1fr 1fr' },
+                    gap: 2,
+                    mb: 2,
+                  }}
+                >
                   <TextField
                     fullWidth
                     disabled={viewMode}
@@ -564,7 +652,14 @@ export function CreateAccountPage({ userToEdit, viewMode = false, onClose }: Cre
                   />
                 </Box>
 
-                <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', md: '1fr 1fr' }, gap: 2, mb: 2 }}>
+                <Box
+                  sx={{
+                    display: 'grid',
+                    gridTemplateColumns: { xs: '1fr', md: '1fr 1fr' },
+                    gap: 2,
+                    mb: 2,
+                  }}
+                >
                   <TextField
                     fullWidth
                     disabled={viewMode}
@@ -581,7 +676,14 @@ export function CreateAccountPage({ userToEdit, viewMode = false, onClose }: Cre
                   />
                 </Box>
 
-                <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', md: '1fr 1fr' }, gap: 2, mb: 2 }}>
+                <Box
+                  sx={{
+                    display: 'grid',
+                    gridTemplateColumns: { xs: '1fr', md: '1fr 1fr' },
+                    gap: 2,
+                    mb: 2,
+                  }}
+                >
                   <TextField
                     fullWidth
                     disabled={viewMode}
@@ -617,7 +719,14 @@ export function CreateAccountPage({ userToEdit, viewMode = false, onClose }: Cre
                   </FormControl>
                 </Box>
 
-                <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', md: '1fr 1fr' }, gap: 2, mb: 3 }}>
+                <Box
+                  sx={{
+                    display: 'grid',
+                    gridTemplateColumns: { xs: '1fr', md: '1fr 1fr' },
+                    gap: 2,
+                    mb: 3,
+                  }}
+                >
                   <TextField
                     fullWidth
                     disabled={viewMode}
@@ -647,7 +756,10 @@ export function CreateAccountPage({ userToEdit, viewMode = false, onClose }: Cre
                     InputProps={{
                       endAdornment: (
                         <InputAdornment position="end">
-                          <IconButton onClick={() => setShowConfirmPassword(!showConfirmPassword)} edge="end">
+                          <IconButton
+                            onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                            edge="end"
+                          >
                             {showConfirmPassword ? <EyeOff size={20} /> : <Eye size={20} />}
                           </IconButton>
                         </InputAdornment>
@@ -680,12 +792,16 @@ export function CreateAccountPage({ userToEdit, viewMode = false, onClose }: Cre
                     {/* Selected Clients Badges */}
                     {formData.assignedClients.length > 0 && (
                       <Box sx={{ mb: 2 }}>
-                        <Typography variant="caption" color="text.secondary" sx={{ mb: 1, display: 'block' }}>
+                        <Typography
+                          variant="caption"
+                          color="text.secondary"
+                          sx={{ mb: 1, display: 'block' }}
+                        >
                           Selected Clients ({formData.assignedClients.length}):
                         </Typography>
                         <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
                           {formData.assignedClients.map((clientId) => {
-                            const client = getClients().find(c => c.id === clientId);
+                            const client = getClients().find((c) => c.id === clientId);
                             return (
                               <Chip
                                 key={clientId}
@@ -706,20 +822,23 @@ export function CreateAccountPage({ userToEdit, viewMode = false, onClose }: Cre
                       disabled={viewMode}
                       options={getClients()}
                       getOptionLabel={(option) => `${option.name} (${option.email})`}
-                      value={getClients().filter(client => formData.assignedClients.includes(client.id))}
+                      value={getClients().filter((client) =>
+                        formData.assignedClients.includes(client.id)
+                      )}
                       onChange={(event, newValue) => {
-                        const selectedIds = newValue.map(client => client.id);
-                        setFormData(prev => ({
+                        const selectedIds = newValue.map((client) => client.id);
+                        setFormData((prev) => ({
                           ...prev,
                           assignedClients: selectedIds,
-                          assignedProperties: [] // Clear properties when clients change
+                          assignedProperties: [], // Clear properties when clients change
                         }));
                       }}
                       filterOptions={(options, { inputValue }) =>
-                        options.filter(option =>
-                          option.name.toLowerCase().includes(inputValue.toLowerCase()) ||
-                          option.email.toLowerCase().includes(inputValue.toLowerCase()) ||
-                          option.id.includes(inputValue)
+                        options.filter(
+                          (option) =>
+                            option.name.toLowerCase().includes(inputValue.toLowerCase()) ||
+                            option.email.toLowerCase().includes(inputValue.toLowerCase()) ||
+                            option.id.includes(inputValue)
                         )
                       }
                       renderInput={(params) => (
@@ -759,7 +878,14 @@ export function CreateAccountPage({ userToEdit, viewMode = false, onClose }: Cre
                       Select which Manager and Supervisor will oversee this Associate:
                     </Typography>
 
-                    <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', md: '1fr 1fr' }, gap: 2, mb: 3 }}>
+                    <Box
+                      sx={{
+                        display: 'grid',
+                        gridTemplateColumns: { xs: '1fr', md: '1fr 1fr' },
+                        gap: 2,
+                        mb: 3,
+                      }}
+                    >
                       <FormControl fullWidth>
                         <InputLabel>Manager</InputLabel>
                         <Select
@@ -803,7 +929,8 @@ export function CreateAccountPage({ userToEdit, viewMode = false, onClose }: Cre
                       Assign Properties
                     </Typography>
                     <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
-                      Then, select which properties from the assigned clients this user will have access to:
+                      Then, select which properties from the assigned clients this user will have
+                      access to:
                     </Typography>
 
                     {formData.assignedClients.length === 0 && (
@@ -815,12 +942,16 @@ export function CreateAccountPage({ userToEdit, viewMode = false, onClose }: Cre
                     {/* Selected Properties Badges */}
                     {formData.assignedProperties.length > 0 && (
                       <Box sx={{ mb: 2 }}>
-                        <Typography variant="caption" color="text.secondary" sx={{ mb: 1, display: 'block' }}>
+                        <Typography
+                          variant="caption"
+                          color="text.secondary"
+                          sx={{ mb: 1, display: 'block' }}
+                        >
                           Selected Properties ({formData.assignedProperties.length}):
                         </Typography>
                         <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
                           {formData.assignedProperties.map((propertyId) => {
-                            const property = mockProperties.find(p => p.id === propertyId);
+                            const property = mockProperties.find((p) => p.id === propertyId);
                             return (
                               <Chip
                                 key={propertyId}
@@ -842,16 +973,19 @@ export function CreateAccountPage({ userToEdit, viewMode = false, onClose }: Cre
                       disabled={formData.assignedClients.length === 0 || viewMode}
                       options={getAvailableProperties()}
                       getOptionLabel={(option) => `${option.name} (${option.location})`}
-                      value={getAvailableProperties().filter(prop => formData.assignedProperties.includes(prop.id))}
+                      value={getAvailableProperties().filter((prop) =>
+                        formData.assignedProperties.includes(prop.id)
+                      )}
                       onChange={(event, newValue) => {
-                        const selectedIds = newValue.map(prop => prop.id);
-                        setFormData(prev => ({ ...prev, assignedProperties: selectedIds }));
+                        const selectedIds = newValue.map((prop) => prop.id);
+                        setFormData((prev) => ({ ...prev, assignedProperties: selectedIds }));
                       }}
                       filterOptions={(options, { inputValue }) =>
-                        options.filter(option =>
-                          option.name.toLowerCase().includes(inputValue.toLowerCase()) ||
-                          option.location.toLowerCase().includes(inputValue.toLowerCase()) ||
-                          option.id.includes(inputValue)
+                        options.filter(
+                          (option) =>
+                            option.name.toLowerCase().includes(inputValue.toLowerCase()) ||
+                            option.location.toLowerCase().includes(inputValue.toLowerCase()) ||
+                            option.id.includes(inputValue)
                         )
                       }
                       renderInput={(params) => (
@@ -899,7 +1033,11 @@ export function CreateAccountPage({ userToEdit, viewMode = false, onClose }: Cre
                     {/* Selected Users Badges */}
                     {formData.assignedUsers.length > 0 && (
                       <Box sx={{ mb: 2 }}>
-                        <Typography variant="caption" color="text.secondary" sx={{ mb: 1, display: 'block' }}>
+                        <Typography
+                          variant="caption"
+                          color="text.secondary"
+                          sx={{ mb: 1, display: 'block' }}
+                        >
                           Selected Users ({formData.assignedUsers.length}):
                         </Typography>
                         <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
@@ -925,16 +1063,19 @@ export function CreateAccountPage({ userToEdit, viewMode = false, onClose }: Cre
                       disabled={viewMode}
                       options={getAvailableUsers()}
                       getOptionLabel={(option) => `${option.name} (${option.email})`}
-                      value={getAvailableUsers().filter((user: User) => formData.assignedUsers.includes(user.id))}
+                      value={getAvailableUsers().filter((user: User) =>
+                        formData.assignedUsers.includes(user.id)
+                      )}
                       onChange={(event, newValue) => {
-                        const selectedIds = newValue.map(user => user.id);
-                        setFormData(prev => ({ ...prev, assignedUsers: selectedIds }));
+                        const selectedIds = newValue.map((user) => user.id);
+                        setFormData((prev) => ({ ...prev, assignedUsers: selectedIds }));
                       }}
                       filterOptions={(options, { inputValue }) =>
-                        options.filter(option =>
-                          option.name.toLowerCase().includes(inputValue.toLowerCase()) ||
-                          option.email.toLowerCase().includes(inputValue.toLowerCase()) ||
-                          option.id.includes(inputValue)
+                        options.filter(
+                          (option) =>
+                            option.name.toLowerCase().includes(inputValue.toLowerCase()) ||
+                            option.email.toLowerCase().includes(inputValue.toLowerCase()) ||
+                            option.id.includes(inputValue)
                         )
                       }
                       renderInput={(params) => (
@@ -972,21 +1113,20 @@ export function CreateAccountPage({ userToEdit, viewMode = false, onClose }: Cre
                 <Box sx={{ display: 'flex', gap: 2, justifyContent: 'flex-end' }}>
                   <Button
                     variant="outlined"
-                    onClick={() => onClose ? onClose() : navigate('/user-management')}
+                    onClick={() => (onClose ? onClose() : navigate('/user-management'))}
                     disabled={isLoading}
                   >
                     {viewMode ? 'Close' : 'Cancel'}
                   </Button>
                   {!viewMode && (
-                    <Button
-                      type="submit"
-                      variant="contained"
-                      disabled={isLoading}
-                    >
-                      {isLoading 
-                        ? (userToEdit ? 'Updating Account...' : 'Creating Account...') 
-                        : (userToEdit ? 'Update Account' : 'Create Account')
-                      }
+                    <Button type="submit" variant="contained" disabled={isLoading}>
+                      {isLoading
+                        ? userToEdit
+                          ? 'Updating Account...'
+                          : 'Creating Account...'
+                        : userToEdit
+                          ? 'Update Account'
+                          : 'Create Account'}
                     </Button>
                   )}
                 </Box>

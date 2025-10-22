@@ -185,7 +185,7 @@ export function Logo({
       ]}
       {...other}
     >
-      {(isSingle || collapsed) ? singleLogo : fullLogo}
+      {isSingle || collapsed ? singleLogo : fullLogo}
     </LogoRoot>
   );
 }

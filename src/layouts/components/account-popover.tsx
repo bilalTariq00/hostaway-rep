@@ -71,7 +71,11 @@ export function AccountPopover({ data = [], sx, ...other }: AccountPopoverProps)
         }}
         {...other}
       >
-        <Avatar src={_myAccount.photoURL} alt={user?.name || _myAccount.displayName} sx={{ width: 1, height: 1 }}>
+        <Avatar
+          src={_myAccount.photoURL}
+          alt={user?.name || _myAccount.displayName}
+          sx={{ width: 1, height: 1 }}
+        >
           {(user?.name || _myAccount.displayName).charAt(0).toUpperCase()}
         </Avatar>
       </IconButton>
@@ -136,13 +140,7 @@ export function AccountPopover({ data = [], sx, ...other }: AccountPopoverProps)
         <Divider sx={{ borderStyle: 'dashed' }} />
 
         <Box sx={{ p: 1 }}>
-          <Button 
-            fullWidth 
-            color="error" 
-            size="medium" 
-            variant="text"
-            onClick={handleLogout}
-          >
+          <Button fullWidth color="error" size="medium" variant="text" onClick={handleLogout}>
             Logout
           </Button>
         </Box>

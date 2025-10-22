@@ -110,11 +110,11 @@ export function SignInView() {
         </Typography>
       </Box>
       {renderForm}
-      
+
       {/* Demo Credentials Section */}
       <Card sx={{ mt: 3, mb: 3 }}>
-        <CardHeader 
-          title="Demo Credentials" 
+        <CardHeader
+          title="Demo Credentials"
           subheader="Use these credentials to test different user roles"
           sx={{ pb: 1 }}
         />

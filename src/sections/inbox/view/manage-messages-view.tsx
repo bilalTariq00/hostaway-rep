@@ -123,7 +123,7 @@ export function ManageMessagesView() {
     };
 
     window.addEventListener('storage', handleStorageChange);
-    
+
     // Also check on focus (when returning from another tab/page)
     window.addEventListener('focus', loadMessages);
 
@@ -185,11 +185,9 @@ export function ManageMessagesView() {
 
   const confirmPause = () => {
     if (selectedMessage) {
-      setMessages(prev => prev.map(msg => 
-        msg.id === selectedMessage.id 
-          ? { ...msg, status: 'Paused' }
-          : msg
-      ));
+      setMessages((prev) =>
+        prev.map((msg) => (msg.id === selectedMessage.id ? { ...msg, status: 'Paused' } : msg))
+      );
     }
     setPauseDialogOpen(false);
     setSelectedMessage(null);
@@ -197,11 +195,9 @@ export function ManageMessagesView() {
 
   const confirmResume = () => {
     if (selectedMessage) {
-      setMessages(prev => prev.map(msg => 
-        msg.id === selectedMessage.id 
-          ? { ...msg, status: 'Scheduled' }
-          : msg
-      ));
+      setMessages((prev) =>
+        prev.map((msg) => (msg.id === selectedMessage.id ? { ...msg, status: 'Scheduled' } : msg))
+      );
     }
     setResumeDialogOpen(false);
     setSelectedMessage(null);
@@ -209,7 +205,7 @@ export function ManageMessagesView() {
 
   const confirmCancel = () => {
     if (selectedMessage) {
-      setMessages(prev => prev.filter(msg => msg.id !== selectedMessage.id));
+      setMessages((prev) => prev.filter((msg) => msg.id !== selectedMessage.id));
     }
     setCancelDialogOpen(false);
     setSelectedMessage(null);
@@ -225,11 +221,9 @@ export function ManageMessagesView() {
 
   const confirmSend = () => {
     if (selectedMessage) {
-      setMessages(prev => prev.map(msg => 
-        msg.id === selectedMessage.id 
-          ? { ...msg, status: 'Sent' }
-          : msg
-      ));
+      setMessages((prev) =>
+        prev.map((msg) => (msg.id === selectedMessage.id ? { ...msg, status: 'Sent' } : msg))
+      );
     }
     setSendDialogOpen(false);
     setMessageSentDialogOpen(true);
@@ -256,7 +250,7 @@ export function ManageMessagesView() {
   };
 
   const itemsPerPage = 10;
-  const filteredMessages = messages.filter(msg => msg.status !== 'Cancelled');
+  const filteredMessages = messages.filter((msg) => msg.status !== 'Cancelled');
   const totalPages = Math.ceil(filteredMessages.length / itemsPerPage);
 
   return (
@@ -397,19 +391,13 @@ export function ManageMessagesView() {
                     />
                   </TableCell>
                   <TableCell>
-                    <Typography variant="body2">
-                      {message.listing}
-                    </Typography>
+                    <Typography variant="body2">{message.listing}</Typography>
                   </TableCell>
                   <TableCell>
-                    <Typography variant="body2">
-                      {message.schedule}
-                    </Typography>
+                    <Typography variant="body2">{message.schedule}</Typography>
                   </TableCell>
                   <TableCell>
-                    <Typography variant="body2">
-                      {message.trigger}
-                    </Typography>
+                    <Typography variant="body2">{message.trigger}</Typography>
                   </TableCell>
                   <TableCell>
                     <Box
@@ -428,26 +416,20 @@ export function ManageMessagesView() {
                     </Box>
                   </TableCell>
                   <TableCell>
-                    <Typography variant="body2">
-                      {message.checkIn}
-                    </Typography>
+                    <Typography variant="body2">{message.checkIn}</Typography>
                   </TableCell>
                   <TableCell>
-                    <Typography variant="body2">
-                      {message.checkOut}
-                    </Typography>
+                    <Typography variant="body2">{message.checkOut}</Typography>
                   </TableCell>
                   <TableCell>
-                    <Typography variant="body2">
-                      {message.guest}
-                    </Typography>
+                    <Typography variant="body2">{message.guest}</Typography>
                   </TableCell>
                   <TableCell>
                     {hoveredRow === message.id ? (
                       <Box sx={{ display: 'flex', gap: 0.5 }}>
-                        <IconButton 
-                          size="small" 
-                          color="primary" 
+                        <IconButton
+                          size="small"
+                          color="primary"
                           title="Send"
                           onClick={() => handleSend(message)}
                           disabled={message.status === 'Cancelled'}
@@ -455,18 +437,18 @@ export function ManageMessagesView() {
                           <Send size={16} />
                         </IconButton>
                         {message.status === 'Paused' ? (
-                          <IconButton 
-                            size="small" 
-                            color="success" 
+                          <IconButton
+                            size="small"
+                            color="success"
                             title="Resume"
                             onClick={() => handleResume(message)}
                           >
                             <Play size={16} />
                           </IconButton>
                         ) : (
-                          <IconButton 
-                            size="small" 
-                            color="warning" 
+                          <IconButton
+                            size="small"
+                            color="warning"
                             title="Pause"
                             onClick={() => handlePause(message)}
                             disabled={message.status === 'Cancelled'}
@@ -474,18 +456,18 @@ export function ManageMessagesView() {
                             <Pause size={16} />
                           </IconButton>
                         )}
-                        <IconButton 
-                          size="small" 
-                          color="error" 
+                        <IconButton
+                          size="small"
+                          color="error"
                           title="Cancel"
                           onClick={() => handleCancel(message)}
                           disabled={message.status === 'Cancelled'}
                         >
                           <X size={16} />
                         </IconButton>
-                        <IconButton 
-                          size="small" 
-                          color="default" 
+                        <IconButton
+                          size="small"
+                          color="default"
                           title="Edit"
                           onClick={() => handleEdit(message)}
                         >
@@ -518,11 +500,17 @@ export function ManageMessagesView() {
       </Box>
 
       {/* Pause Confirmation Dialog */}
-      <Dialog open={pauseDialogOpen} onClose={() => setPauseDialogOpen(false)} maxWidth="sm" fullWidth>
+      <Dialog
+        open={pauseDialogOpen}
+        onClose={() => setPauseDialogOpen(false)}
+        maxWidth="sm"
+        fullWidth
+      >
         <DialogTitle>Pause Message</DialogTitle>
         <DialogContent>
           <Typography>
-            Are you sure you want to pause this message? The message will not be sent at the scheduled time.
+            Are you sure you want to pause this message? The message will not be sent at the
+            scheduled time.
           </Typography>
           {selectedMessage && (
             <Box sx={{ mt: 2, p: 2, bgcolor: 'grey.50', borderRadius: 1 }}>
@@ -546,11 +534,17 @@ export function ManageMessagesView() {
       </Dialog>
 
       {/* Send Now Confirmation Dialog */}
-      <Dialog open={sendDialogOpen} onClose={() => setSendDialogOpen(false)} maxWidth="sm" fullWidth>
+      <Dialog
+        open={sendDialogOpen}
+        onClose={() => setSendDialogOpen(false)}
+        maxWidth="sm"
+        fullWidth
+      >
         <DialogTitle>Send Message Now</DialogTitle>
         <DialogContent>
           <Typography>
-            Are you sure you want to send this message now? This message will be sent immediately instead of at the scheduled time.
+            Are you sure you want to send this message now? This message will be sent immediately
+            instead of at the scheduled time.
           </Typography>
           {selectedMessage && (
             <Box sx={{ mt: 2, p: 2, bgcolor: 'grey.50', borderRadius: 1 }}>
@@ -577,11 +571,17 @@ export function ManageMessagesView() {
       </Dialog>
 
       {/* Resume Confirmation Dialog */}
-      <Dialog open={resumeDialogOpen} onClose={() => setResumeDialogOpen(false)} maxWidth="sm" fullWidth>
+      <Dialog
+        open={resumeDialogOpen}
+        onClose={() => setResumeDialogOpen(false)}
+        maxWidth="sm"
+        fullWidth
+      >
         <DialogTitle>Resume Message</DialogTitle>
         <DialogContent>
           <Typography>
-            Are you sure you want to resume this message? The message will be scheduled to send at the original time.
+            Are you sure you want to resume this message? The message will be scheduled to send at
+            the original time.
           </Typography>
           {selectedMessage && (
             <Box sx={{ mt: 2, p: 2, bgcolor: 'grey.50', borderRadius: 1 }}>
@@ -605,11 +605,17 @@ export function ManageMessagesView() {
       </Dialog>
 
       {/* Cancel Confirmation Dialog */}
-      <Dialog open={cancelDialogOpen} onClose={() => setCancelDialogOpen(false)} maxWidth="sm" fullWidth>
+      <Dialog
+        open={cancelDialogOpen}
+        onClose={() => setCancelDialogOpen(false)}
+        maxWidth="sm"
+        fullWidth
+      >
         <DialogTitle>Cancel Message</DialogTitle>
         <DialogContent>
           <Typography>
-            Are you sure you want to cancel this message? This action cannot be undone and the message will be removed from the table.
+            Are you sure you want to cancel this message? This action cannot be undone and the
+            message will be removed from the table.
           </Typography>
           {selectedMessage && (
             <Box sx={{ mt: 2, p: 2, bgcolor: 'grey.50', borderRadius: 1 }}>
@@ -633,7 +639,12 @@ export function ManageMessagesView() {
       </Dialog>
 
       {/* Edit Confirmation Dialog */}
-      <Dialog open={editDialogOpen} onClose={() => setEditDialogOpen(false)} maxWidth="sm" fullWidth>
+      <Dialog
+        open={editDialogOpen}
+        onClose={() => setEditDialogOpen(false)}
+        maxWidth="sm"
+        fullWidth
+      >
         <DialogTitle>Edit Message</DialogTitle>
         <DialogContent>
           <Typography>
@@ -667,9 +678,7 @@ export function ManageMessagesView() {
           Message Sent
         </DialogTitle>
         <DialogContent>
-          <Typography>
-            Your message has been sent successfully!
-          </Typography>
+          <Typography>Your message has been sent successfully!</Typography>
         </DialogContent>
         <DialogActions>
           <Button onClick={closeMessageSentDialog} color="primary" variant="contained">

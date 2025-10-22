@@ -51,7 +51,8 @@ Best regards.`,
     scheduledTime: '10:00',
     guest: {
       name: 'Lynda Leclerc',
-      avatar: 'https://images.unsplash.com/photo-1494790108755-2616b612b786?w=40&h=40&fit=crop&crop=face',
+      avatar:
+        'https://images.unsplash.com/photo-1494790108755-2616b612b786?w=40&h=40&fit=crop&crop=face',
     },
     checkIn: '05 Oct',
     checkOut: '08 Oct',
@@ -82,7 +83,8 @@ Best regards.`,
     scheduledTime: '14:00',
     guest: {
       name: 'Sarah Johnson',
-      avatar: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=40&h=40&fit=crop&crop=face',
+      avatar:
+        'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=40&h=40&fit=crop&crop=face',
     },
     checkIn: '20 Dec',
     checkOut: '25 Dec',
@@ -174,7 +176,7 @@ export function MessageEditView() {
 
     // Update localStorage
     const existingMessages = JSON.parse(localStorage.getItem('manageMessages') || '[]');
-    const updatedMessages = existingMessages.map((msg: any) => 
+    const updatedMessages = existingMessages.map((msg: any) =>
       msg.id === messageId ? updatedMessage : msg
     );
     localStorage.setItem('manageMessages', JSON.stringify(updatedMessages));
@@ -253,7 +255,9 @@ export function MessageEditView() {
         {/* Left Side - Message Content */}
         <Box sx={{ flex: 2, minWidth: 0 }}>
           <Card sx={{ p: 3, mb: 3 }}>
-            <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
+            <Box
+              sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}
+            >
               <Typography variant="h6">Content</Typography>
               <FormControlLabel
                 control={
@@ -282,7 +286,9 @@ export function MessageEditView() {
                     size="small"
                   />
                   <IconButton size="small" sx={{ border: '1px solid #e0e0e0' }}>
-                    <Typography variant="body2" sx={{ fontFamily: 'monospace' }}>{}</Typography>
+                    <Typography variant="body2" sx={{ fontFamily: 'monospace' }}>
+                      {}
+                    </Typography>
                   </IconButton>
                 </Box>
                 <FormControl size="small" sx={{ mt: 1, minWidth: 200 }}>
@@ -309,7 +315,9 @@ export function MessageEditView() {
                     size="small"
                   />
                   <IconButton size="small" sx={{ border: '1px solid #e0e0e0', mt: 1 }}>
-                    <Typography variant="body2" sx={{ fontFamily: 'monospace' }}>{}</Typography>
+                    <Typography variant="body2" sx={{ fontFamily: 'monospace' }}>
+                      {}
+                    </Typography>
                   </IconButton>
                 </Box>
                 <FormControl size="small" sx={{ mt: 1, minWidth: 200 }}>
@@ -408,9 +416,7 @@ export function MessageEditView() {
               {/* Attachments Section */}
               <Box>
                 <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 2 }}>
-                  <Typography variant="h6">
-                    Attachments (up to 10 files)
-                  </Typography>
+                  <Typography variant="h6">Attachments (up to 10 files)</Typography>
                   <Tooltip title="Upload files to attach to your message">
                     <IconButton size="small">
                       <Info size={16} />
@@ -457,8 +463,10 @@ export function MessageEditView() {
         {/* Right Side - Reservation Info */}
         <Box sx={{ flex: 1, minWidth: 300 }}>
           <Card sx={{ p: 3 }}>
-            <Typography variant="h6" sx={{ mb: 3 }}>Reservation info</Typography>
-            
+            <Typography variant="h6" sx={{ mb: 3 }}>
+              Reservation info
+            </Typography>
+
             <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
               <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
                 <Box
@@ -492,27 +500,21 @@ export function MessageEditView() {
                 <Typography variant="body2" color="text.secondary" sx={{ mb: 0.5 }}>
                   Listing
                 </Typography>
-                <Typography variant="body2">
-                  {messageData.listing}
-                </Typography>
+                <Typography variant="body2">{messageData.listing}</Typography>
               </Box>
 
               <Box>
                 <Typography variant="body2" color="text.secondary" sx={{ mb: 0.5 }}>
                   Channel
                 </Typography>
-                <Typography variant="body2">
-                  {messageData.channel}
-                </Typography>
+                <Typography variant="body2">{messageData.channel}</Typography>
               </Box>
 
               <Box>
                 <Typography variant="body2" color="text.secondary" sx={{ mb: 0.5 }}>
                   Scheduled by
                 </Typography>
-                <Typography variant="body2">
-                  {messageData.scheduledBy}
-                </Typography>
+                <Typography variant="body2">{messageData.scheduledBy}</Typography>
               </Box>
             </Box>
           </Card>
@@ -520,11 +522,17 @@ export function MessageEditView() {
       </Box>
 
       {/* Send Now Confirmation Dialog */}
-      <Dialog open={sendDialogOpen} onClose={() => setSendDialogOpen(false)} maxWidth="sm" fullWidth>
+      <Dialog
+        open={sendDialogOpen}
+        onClose={() => setSendDialogOpen(false)}
+        maxWidth="sm"
+        fullWidth
+      >
         <DialogTitle>Send Message Now</DialogTitle>
         <DialogContent>
           <Typography>
-            Are you sure you want to send this message now? This message will be sent immediately instead of at the scheduled time.
+            Are you sure you want to send this message now? This message will be sent immediately
+            instead of at the scheduled time.
           </Typography>
         </DialogContent>
         <DialogActions>
@@ -538,12 +546,15 @@ export function MessageEditView() {
       </Dialog>
 
       {/* Save Confirmation Dialog */}
-      <Dialog open={saveDialogOpen} onClose={() => setSaveDialogOpen(false)} maxWidth="sm" fullWidth>
+      <Dialog
+        open={saveDialogOpen}
+        onClose={() => setSaveDialogOpen(false)}
+        maxWidth="sm"
+        fullWidth
+      >
         <DialogTitle>Save Changes</DialogTitle>
         <DialogContent>
-          <Typography>
-            Are you sure you want to save the changes to this message?
-          </Typography>
+          <Typography>Are you sure you want to save the changes to this message?</Typography>
         </DialogContent>
         <DialogActions>
           <Button onClick={() => setSaveDialogOpen(false)} color="inherit">
@@ -556,11 +567,17 @@ export function MessageEditView() {
       </Dialog>
 
       {/* Pause Confirmation Dialog */}
-      <Dialog open={pauseDialogOpen} onClose={() => setPauseDialogOpen(false)} maxWidth="sm" fullWidth>
+      <Dialog
+        open={pauseDialogOpen}
+        onClose={() => setPauseDialogOpen(false)}
+        maxWidth="sm"
+        fullWidth
+      >
         <DialogTitle>Pause Message</DialogTitle>
         <DialogContent>
           <Typography>
-            Are you sure you want to pause this message? The message will not be sent at the scheduled time.
+            Are you sure you want to pause this message? The message will not be sent at the
+            scheduled time.
           </Typography>
         </DialogContent>
         <DialogActions>
@@ -574,7 +591,12 @@ export function MessageEditView() {
       </Dialog>
 
       {/* Cancel Confirmation Dialog */}
-      <Dialog open={cancelDialogOpen} onClose={() => setCancelDialogOpen(false)} maxWidth="sm" fullWidth>
+      <Dialog
+        open={cancelDialogOpen}
+        onClose={() => setCancelDialogOpen(false)}
+        maxWidth="sm"
+        fullWidth
+      >
         <DialogTitle>Cancel Message</DialogTitle>
         <DialogContent>
           <Typography>

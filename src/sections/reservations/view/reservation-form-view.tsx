@@ -43,7 +43,7 @@ import {
   TableContainer,
   AccordionDetails,
   AccordionSummary,
-  FormControlLabel
+  FormControlLabel,
 } from '@mui/material';
 
 import { useRouter } from 'src/routes/hooks';
@@ -59,33 +59,37 @@ export default function ReservationFormView() {
 
   // Check if we're in edit mode
   const isEditMode = !!reservationId;
-  const existingReservation = isEditMode ? reservations.find(r => r.id.toString() === reservationId) : null;
+  const existingReservation = isEditMode
+    ? reservations.find((r) => r.id.toString() === reservationId)
+    : null;
 
   const [formData, setFormData] = useState({
     // Guest Information
-    name: isEditMode ? (existingReservation?.guestName || '') : '',
-    guestFirstName: isEditMode ? (existingReservation?.guestName?.split(' ')[0] || '') : '',
-    guestLastName: isEditMode ? (existingReservation?.guestName?.split(' ').slice(1).join(' ') || '') : '',
-    email: isEditMode ? (existingReservation?.email || '') : '',
-    phone: isEditMode ? (existingReservation?.phone || '') : '',
+    name: isEditMode ? existingReservation?.guestName || '' : '',
+    guestFirstName: isEditMode ? existingReservation?.guestName?.split(' ')[0] || '' : '',
+    guestLastName: isEditMode
+      ? existingReservation?.guestName?.split(' ').slice(1).join(' ') || ''
+      : '',
+    email: isEditMode ? existingReservation?.email || '' : '',
+    phone: isEditMode ? existingReservation?.phone || '' : '',
     phoneCountry: '+1',
     guestCountry: '',
     guestCity: '',
     guestLanguage: 'en',
     currency: 'eur',
-    channel: isEditMode ? (existingReservation?.channel || '') : '',
+    channel: isEditMode ? existingReservation?.channel || '' : '',
     hostawayReservationId: '',
     channelReservationId: '',
-    listing: isEditMode ? (existingReservation?.property || '') : '',
+    listing: isEditMode ? existingReservation?.property || '' : '',
     guestPhoto: null as File | null,
 
     // Reservation Details
-    checkInDate: isEditMode ? (existingReservation?.checkInDate || '') : '',
+    checkInDate: isEditMode ? existingReservation?.checkInDate || '' : '',
     checkInTime: '15:00',
-    checkOutDate: isEditMode ? (existingReservation?.checkOutDate || '') : '',
+    checkOutDate: isEditMode ? existingReservation?.checkOutDate || '' : '',
     checkOutTime: '10:00',
-    numberOfNights: isEditMode ? (existingReservation?.nights || 0) : 0,
-    numberOfGuests: isEditMode ? (existingReservation?.guests || 1) : 1,
+    numberOfNights: isEditMode ? existingReservation?.nights || 0 : 0,
+    numberOfGuests: isEditMode ? existingReservation?.guests || 1 : 1,
     children: 0,
     infants: 0,
     pets: 0,
@@ -102,7 +106,7 @@ export default function ReservationFormView() {
     synced: 'yes',
     instantBooked: 'no',
     channelActive: 'yes',
-    status: isEditMode ? (existingReservation?.status || 'inquiry') : 'inquiry',
+    status: isEditMode ? existingReservation?.status || 'inquiry' : 'inquiry',
     commissionBooking: '0',
     importMethod: 'threadsImport',
 
@@ -131,7 +135,7 @@ export default function ReservationFormView() {
     manuallyChecked: false,
     doorCode: '',
     doorCodeVendor: '',
-    doorCodeInstructions: ''
+    doorCodeInstructions: '',
   });
 
   const [expandedSections, setExpandedSections] = useState<Record<string, boolean>>({
@@ -148,13 +152,13 @@ export default function ReservationFormView() {
     attachment: false,
     tasks: false,
     alterationLogs: false,
-    reviews: false
+    reviews: false,
   });
 
   const handleInputChange = (field: string, value: any) => {
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
-      [field]: value
+      [field]: value,
     }));
   };
 
@@ -169,17 +173,17 @@ export default function ReservationFormView() {
         alert('File size must be less than 5MB');
         return;
       }
-      setFormData(prev => ({
+      setFormData((prev) => ({
         ...prev,
-        guestPhoto: file
+        guestPhoto: file,
       }));
     }
   };
 
   const handleSectionToggle = (section: string) => {
-    setExpandedSections(prev => ({
+    setExpandedSections((prev) => ({
       ...prev,
-      [section]: !prev[section]
+      [section]: !prev[section],
     }));
   };
 
@@ -205,7 +209,7 @@ export default function ReservationFormView() {
       totalAmount,
       email: formData.email,
       phone: formData.phone,
-      channel: formData.channel
+      channel: formData.channel,
     };
 
     if (isEditMode && existingReservation) {
@@ -228,60 +232,64 @@ export default function ReservationFormView() {
     <DashboardContent>
       <Box sx={{ p: 2 }}>
         {/* Header */}
-        <Box sx={{ 
-          p: 2, 
-          mb: 2, 
-          bgcolor: 'background.paper', 
-          borderRadius: 1, 
-          border: '1px solid',
-          borderColor: 'divider'
-        }}>
-          <Box sx={{ 
-            display: 'flex', 
-            alignItems: 'center', 
-            justifyContent: 'space-between',
-            mb: 1
-          }}>
+        <Box
+          sx={{
+            p: 2,
+            mb: 2,
+            bgcolor: 'background.paper',
+            borderRadius: 1,
+            border: '1px solid',
+            borderColor: 'divider',
+          }}
+        >
+          <Box
+            sx={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              mb: 1,
+            }}
+          >
             <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
               <Button
                 variant="text"
                 startIcon={<ArrowLeft size={16} />}
                 onClick={handleCancel}
-                sx={{ 
+                sx={{
                   color: 'text.secondary',
                   px: 1,
                   py: 0.5,
                   '&:hover': {
                     bgcolor: 'grey.100',
-                    color: 'text.primary'
-                  }
+                    color: 'text.primary',
+                  },
                 }}
               >
                 Reservations
               </Button>
               <Divider orientation="vertical" flexItem />
               <Typography variant="h5" sx={{ fontWeight: 600, color: 'text.primary' }}>
-                {isEditMode ? (
-                  formData.name ? `${formData.name} / ${formData.checkInDate?.split('-')[1]} ${formData.checkInDate?.split('-')[2]} - ${formData.checkOutDate?.split('-')[1]} ${formData.checkOutDate?.split('-')[2]} / ${formData.numberOfGuests} guests` : 'Edit Reservation'
-                ) : (
-                  'New Reservation'
-                )}
+                {isEditMode
+                  ? formData.name
+                    ? `${formData.name} / ${formData.checkInDate?.split('-')[1]} ${formData.checkInDate?.split('-')[2]} - ${formData.checkOutDate?.split('-')[1]} ${formData.checkOutDate?.split('-')[2]} / ${formData.numberOfGuests} guests`
+                    : 'Edit Reservation'
+                  : 'New Reservation'}
               </Typography>
-              </Box>
+            </Box>
             <Box sx={{ display: 'flex', gap: 1 }}>
               <Button
                 variant="outlined"
                 onClick={handleCancel}
                 startIcon={<X size={16} />}
-                sx={{ 
+                sx={{
                   borderColor: 'grey.300',
                   color: 'text.secondary',
                   px: 2,
                   py: 0.5,
                   '&:hover': {
                     borderColor: 'grey.400',
-                    bgcolor: 'grey.50'
-                  }
+                    bgcolor: 'grey.50',
+                  },
                 }}
               >
                 Cancel
@@ -290,35 +298,37 @@ export default function ReservationFormView() {
                 variant="contained"
                 onClick={handleSave}
                 startIcon={<Save size={16} />}
-                sx={{ 
+                sx={{
                   bgcolor: 'primary.main',
                   px: 2,
                   py: 0.5,
                   '&:hover': {
                     bgcolor: 'primary.dark',
-                    boxShadow: 2
-                  }
+                    boxShadow: 2,
+                  },
                 }}
               >
                 Save
               </Button>
             </Box>
           </Box>
-          
+
           {/* Reservation Summary */}
-          <Box sx={{ 
-            display: 'flex', 
-            alignItems: 'center', 
-            gap: 2,
-            flexWrap: 'wrap'
-          }}>
-            <Chip 
-              label={formData.status.toUpperCase()} 
-              sx={{ 
+          <Box
+            sx={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: 2,
+              flexWrap: 'wrap',
+            }}
+          >
+            <Chip
+              label={formData.status.toUpperCase()}
+              sx={{
                 bgcolor: 'primary.light',
                 color: 'primary.darker',
                 fontWeight: 600,
-                fontSize: '0.75rem'
+                fontSize: '0.75rem',
               }}
             />
             {formData.channel && (
@@ -345,23 +355,23 @@ export default function ReservationFormView() {
         </Box>
 
         {/* Guest Information Section */}
-        <Accordion 
-          expanded={expandedSections.basicInfo} 
+        <Accordion
+          expanded={expandedSections.basicInfo}
           onChange={() => handleSectionToggle('basicInfo')}
-          sx={{ 
-            mb: 2, 
+          sx={{
+            mb: 2,
             borderRadius: 1,
             border: '1px solid',
             borderColor: 'divider',
             '&:before': { display: 'none' },
             '&.Mui-expanded': {
               margin: '0 0 16px 0',
-            }
+            },
           }}
         >
           <AccordionSummary
             expandIcon={<ChevronDown size={16} />}
-            sx={{ 
+            sx={{
               bgcolor: 'grey.50',
               color: 'text.primary',
               borderRadius: '4px 4px 0 0',
@@ -375,7 +385,7 @@ export default function ReservationFormView() {
               },
               '&:hover': {
                 bgcolor: 'grey.100',
-              }
+              },
             }}
           >
             <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
@@ -391,38 +401,48 @@ export default function ReservationFormView() {
           </AccordionSummary>
           <AccordionDetails sx={{ p: 2 }}>
             {/* Guest Photo */}
-            <Box sx={{ 
-              display: 'flex', 
-              alignItems: 'center', 
-              gap: 1.5, 
-              mb: 2,
-              p: 1.5,
-              bgcolor: 'grey.50',
-              borderRadius: 1,
-              width: 'fit-content',
-              cursor: 'pointer',
-              '&:hover': {
-                bgcolor: 'grey.100'
-              }
-            }}
-            onClick={() => document.getElementById('photo-upload')?.click()}
+            <Box
+              sx={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: 1.5,
+                mb: 2,
+                p: 1.5,
+                bgcolor: 'grey.50',
+                borderRadius: 1,
+                width: 'fit-content',
+                cursor: 'pointer',
+                '&:hover': {
+                  bgcolor: 'grey.100',
+                },
+              }}
+              onClick={() => document.getElementById('photo-upload')?.click()}
             >
-              <Avatar sx={{ 
-                width: 40, 
-                height: 40, 
-                bgcolor: 'primary.main',
-                color: 'white',
-                fontWeight: 'bold',
-                fontSize: '1rem'
-              }}>
+              <Avatar
+                sx={{
+                  width: 40,
+                  height: 40,
+                  bgcolor: 'primary.main',
+                  color: 'white',
+                  fontWeight: 'bold',
+                  fontSize: '1rem',
+                }}
+              >
                 {formData.guestPhoto ? (
-                  <img 
-                    src={URL.createObjectURL(formData.guestPhoto)} 
-                    alt="Guest" 
-                    style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '50%' }}
+                  <img
+                    src={URL.createObjectURL(formData.guestPhoto)}
+                    alt="Guest"
+                    style={{
+                      width: '100%',
+                      height: '100%',
+                      objectFit: 'cover',
+                      borderRadius: '50%',
+                    }}
                   />
+                ) : formData.name ? (
+                  formData.name.charAt(0).toUpperCase()
                 ) : (
-                  formData.name ? formData.name.charAt(0).toUpperCase() : '?'
+                  '?'
                 )}
               </Avatar>
               <Box sx={{ flex: 1 }}>
@@ -438,11 +458,11 @@ export default function ReservationFormView() {
                   size="small"
                   onClick={(e) => {
                     e.stopPropagation();
-                    setFormData(prev => ({ ...prev, guestPhoto: null }));
+                    setFormData((prev) => ({ ...prev, guestPhoto: null }));
                   }}
                   sx={{
                     color: 'error.main',
-                    '&:hover': { bgcolor: 'error.light' }
+                    '&:hover': { bgcolor: 'error.light' },
                   }}
                 >
                   <Trash2 size={16} />
@@ -458,11 +478,13 @@ export default function ReservationFormView() {
             </Box>
 
             {/* Guest Information Fields */}
-            <Box sx={{ 
-              display: 'grid', 
-              gridTemplateColumns: { xs: '1fr', sm: '1fr 1fr', md: '1fr 1fr 1fr 1fr' },
-              gap: 2 
-            }}>
+            <Box
+              sx={{
+                display: 'grid',
+                gridTemplateColumns: { xs: '1fr', sm: '1fr 1fr', md: '1fr 1fr 1fr 1fr' },
+                gap: 2,
+              }}
+            >
               <TextField
                 fullWidth
                 size="small"
@@ -470,7 +492,7 @@ export default function ReservationFormView() {
                 placeholder="Enter guest full name"
                 value={formData.name}
                 onChange={(e) => handleInputChange('name', e.target.value)}
-                sx={{ 
+                sx={{
                   '& .MuiOutlinedInput-root': {
                     borderRadius: 1,
                     '&:hover .MuiOutlinedInput-notchedOutline': {
@@ -500,7 +522,7 @@ export default function ReservationFormView() {
                 placeholder="Enter first name"
                 value={formData.guestFirstName}
                 onChange={(e) => handleInputChange('guestFirstName', e.target.value)}
-                sx={{ 
+                sx={{
                   '& .MuiOutlinedInput-root': {
                     borderRadius: 1,
                     '&:hover .MuiOutlinedInput-notchedOutline': {
@@ -523,7 +545,7 @@ export default function ReservationFormView() {
                 placeholder="Enter last name"
                 value={formData.guestLastName}
                 onChange={(e) => handleInputChange('guestLastName', e.target.value)}
-                sx={{ 
+                sx={{
                   '& .MuiOutlinedInput-root': {
                     borderRadius: 1,
                     '&:hover .MuiOutlinedInput-notchedOutline': {
@@ -547,7 +569,7 @@ export default function ReservationFormView() {
                 value={formData.email}
                 onChange={(e) => handleInputChange('email', e.target.value)}
                 type="email"
-                sx={{ 
+                sx={{
                   '& .MuiOutlinedInput-root': {
                     borderRadius: 1,
                     '&:hover .MuiOutlinedInput-notchedOutline': {
@@ -588,28 +610,28 @@ export default function ReservationFormView() {
                     <MenuItem value="+34">🇪🇸 +34</MenuItem>
                   </Select>
                 </FormControl>
-              <TextField
-                fullWidth
-                size="small"
-                label="Phone"
-                placeholder="Enter phone number"
-                value={formData.phone}
-                onChange={(e) => handleInputChange('phone', e.target.value)}
-                sx={{ 
-                  '& .MuiOutlinedInput-root': {
+                <TextField
+                  fullWidth
+                  size="small"
+                  label="Phone"
+                  placeholder="Enter phone number"
+                  value={formData.phone}
+                  onChange={(e) => handleInputChange('phone', e.target.value)}
+                  sx={{
+                    '& .MuiOutlinedInput-root': {
                       borderRadius: 1,
-                    '&:hover .MuiOutlinedInput-notchedOutline': {
-                      borderColor: 'primary.main',
+                      '&:hover .MuiOutlinedInput-notchedOutline': {
+                        borderColor: 'primary.main',
+                      },
+                      '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
+                        borderColor: 'primary.main',
+                        borderWidth: 2,
+                      },
                     },
-                    '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
-                      borderColor: 'primary.main',
-                      borderWidth: 2,
+                    '& .MuiInputLabel-root.Mui-focused': {
+                      color: 'primary.main',
                     },
-                  },
-                  '& .MuiInputLabel-root.Mui-focused': {
-                    color: 'primary.main',
-                  },
-                }}
+                  }}
                 />
               </Box>
               <FormControl fullWidth size="small">
@@ -638,7 +660,7 @@ export default function ReservationFormView() {
                 placeholder="Enter city"
                 value={formData.guestCity}
                 onChange={(e) => handleInputChange('guestCity', e.target.value)}
-                sx={{ 
+                sx={{
                   '& .MuiOutlinedInput-root': {
                     borderRadius: 1,
                     '&:hover .MuiOutlinedInput-notchedOutline': {
@@ -717,7 +739,7 @@ export default function ReservationFormView() {
                 placeholder="Enter Hostaway reservation ID"
                 value={formData.hostawayReservationId}
                 onChange={(e) => handleInputChange('hostawayReservationId', e.target.value)}
-                sx={{ 
+                sx={{
                   '& .MuiOutlinedInput-root': {
                     borderRadius: 1,
                     '&:hover .MuiOutlinedInput-notchedOutline': {
@@ -740,7 +762,7 @@ export default function ReservationFormView() {
                 placeholder="Enter channel reservation ID"
                 value={formData.channelReservationId}
                 onChange={(e) => handleInputChange('channelReservationId', e.target.value)}
-                sx={{ 
+                sx={{
                   '& .MuiOutlinedInput-root': {
                     borderRadius: 1,
                     '&:hover .MuiOutlinedInput-notchedOutline': {
@@ -761,23 +783,23 @@ export default function ReservationFormView() {
         </Accordion>
 
         {/* Reservation Details Section */}
-        <Accordion 
-          expanded={expandedSections.reservationDetails} 
+        <Accordion
+          expanded={expandedSections.reservationDetails}
           onChange={() => handleSectionToggle('reservationDetails')}
-          sx={{ 
-            mb: 2, 
+          sx={{
+            mb: 2,
             borderRadius: 1,
             border: '1px solid',
             borderColor: 'divider',
             '&:before': { display: 'none' },
             '&.Mui-expanded': {
               margin: '0 0 16px 0',
-            }
+            },
           }}
         >
           <AccordionSummary
             expandIcon={<ChevronDown size={16} />}
-            sx={{ 
+            sx={{
               bgcolor: 'grey.50',
               color: 'text.primary',
               borderRadius: '4px 4px 0 0',
@@ -791,7 +813,7 @@ export default function ReservationFormView() {
               },
               '&:hover': {
                 bgcolor: 'grey.100',
-              }
+              },
             }}
           >
             <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
@@ -807,12 +829,14 @@ export default function ReservationFormView() {
           </AccordionSummary>
           <AccordionDetails sx={{ p: 2 }}>
             {/* Date and Time Fields */}
-            <Box sx={{ 
-              display: 'grid', 
-              gridTemplateColumns: { xs: '1fr', sm: '1fr 1fr', md: '1fr 1fr 1fr' },
-              gap: 2,
-              mb: 2
-            }}>
+            <Box
+              sx={{
+                display: 'grid',
+                gridTemplateColumns: { xs: '1fr', sm: '1fr 1fr', md: '1fr 1fr 1fr' },
+                gap: 2,
+                mb: 2,
+              }}
+            >
               <TextField
                 fullWidth
                 size="small"
@@ -821,7 +845,7 @@ export default function ReservationFormView() {
                 value={formData.checkInDate}
                 onChange={(e) => handleInputChange('checkInDate', e.target.value)}
                 InputLabelProps={{ shrink: true }}
-                sx={{ 
+                sx={{
                   '& .MuiOutlinedInput-root': {
                     borderRadius: 1,
                     '&:hover .MuiOutlinedInput-notchedOutline': {
@@ -852,7 +876,7 @@ export default function ReservationFormView() {
                 value={formData.checkOutDate}
                 onChange={(e) => handleInputChange('checkOutDate', e.target.value)}
                 InputLabelProps={{ shrink: true }}
-                sx={{ 
+                sx={{
                   '& .MuiOutlinedInput-root': {
                     borderRadius: 1,
                     '&:hover .MuiOutlinedInput-notchedOutline': {
@@ -882,7 +906,7 @@ export default function ReservationFormView() {
                 type="number"
                 value={formData.numberOfGuests}
                 onChange={(e) => handleInputChange('numberOfGuests', e.target.value)}
-                sx={{ 
+                sx={{
                   '& .MuiOutlinedInput-root': {
                     borderRadius: 1,
                     '&:hover .MuiOutlinedInput-notchedOutline': {
@@ -908,12 +932,14 @@ export default function ReservationFormView() {
             </Box>
 
             {/* Guest Count Fields */}
-            <Box sx={{ 
-              display: 'grid', 
-              gridTemplateColumns: { xs: '1fr', sm: '1fr 1fr', md: '1fr 1fr 1fr 1fr' },
-              gap: 2,
-              mb: 2
-            }}>
+            <Box
+              sx={{
+                display: 'grid',
+                gridTemplateColumns: { xs: '1fr', sm: '1fr 1fr', md: '1fr 1fr 1fr 1fr' },
+                gap: 2,
+                mb: 2,
+              }}
+            >
               <TextField
                 fullWidth
                 size="small"
@@ -921,7 +947,7 @@ export default function ReservationFormView() {
                 type="number"
                 value={formData.children}
                 onChange={(e) => handleInputChange('children', e.target.value)}
-                sx={{ 
+                sx={{
                   '& .MuiOutlinedInput-root': {
                     borderRadius: 1,
                     '&:hover .MuiOutlinedInput-notchedOutline': {
@@ -944,7 +970,7 @@ export default function ReservationFormView() {
                 type="number"
                 value={formData.infants}
                 onChange={(e) => handleInputChange('infants', e.target.value)}
-                sx={{ 
+                sx={{
                   '& .MuiOutlinedInput-root': {
                     borderRadius: 1,
                     '&:hover .MuiOutlinedInput-notchedOutline': {
@@ -967,7 +993,7 @@ export default function ReservationFormView() {
                 type="number"
                 value={formData.pets}
                 onChange={(e) => handleInputChange('pets', e.target.value)}
-                sx={{ 
+                sx={{
                   '& .MuiOutlinedInput-root': {
                     borderRadius: 1,
                     '&:hover .MuiOutlinedInput-notchedOutline': {
@@ -986,11 +1012,13 @@ export default function ReservationFormView() {
             </Box>
 
             {/* Additional Fields */}
-            <Box sx={{ 
-              display: 'grid', 
-              gridTemplateColumns: { xs: '1fr', sm: '1fr 1fr', md: '1fr 1fr 1fr 1fr' },
-              gap: 2
-            }}>
+            <Box
+              sx={{
+                display: 'grid',
+                gridTemplateColumns: { xs: '1fr', sm: '1fr 1fr', md: '1fr 1fr 1fr 1fr' },
+                gap: 2,
+              }}
+            >
               <TextField
                 fullWidth
                 size="small"
@@ -998,7 +1026,7 @@ export default function ReservationFormView() {
                 placeholder="Enter property name"
                 value={formData.listing}
                 onChange={(e) => handleInputChange('listing', e.target.value)}
-                sx={{ 
+                sx={{
                   '& .MuiOutlinedInput-root': {
                     borderRadius: 1,
                     '&:hover .MuiOutlinedInput-notchedOutline': {
@@ -1054,7 +1082,7 @@ export default function ReservationFormView() {
                 type="number"
                 value={formData.numberOfNights}
                 onChange={(e) => handleInputChange('numberOfNights', e.target.value)}
-                sx={{ 
+                sx={{
                   '& .MuiOutlinedInput-root': {
                     borderRadius: 1,
                     '&:hover .MuiOutlinedInput-notchedOutline': {
@@ -1075,23 +1103,23 @@ export default function ReservationFormView() {
         </Accordion>
 
         {/* Notes Section */}
-        <Accordion 
-          expanded={expandedSections.notes} 
+        <Accordion
+          expanded={expandedSections.notes}
           onChange={() => handleSectionToggle('notes')}
-          sx={{ 
-            mb: 2, 
+          sx={{
+            mb: 2,
             borderRadius: 1,
             border: '1px solid',
             borderColor: 'divider',
             '&:before': { display: 'none' },
             '&.Mui-expanded': {
               margin: '0 0 16px 0',
-            }
+            },
           }}
         >
           <AccordionSummary
             expandIcon={<ChevronDown size={16} />}
-            sx={{ 
+            sx={{
               bgcolor: 'grey.50',
               color: 'text.primary',
               borderRadius: '4px 4px 0 0',
@@ -1105,7 +1133,7 @@ export default function ReservationFormView() {
               },
               '&:hover': {
                 bgcolor: 'grey.100',
-              }
+              },
             }}
           >
             <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
@@ -1120,11 +1148,13 @@ export default function ReservationFormView() {
             </Box>
           </AccordionSummary>
           <AccordionDetails sx={{ p: 2 }}>
-            <Box sx={{ 
-              display: 'grid', 
-              gridTemplateColumns: { xs: '1fr', md: '1fr 1fr' },
-              gap: 2
-            }}>
+            <Box
+              sx={{
+                display: 'grid',
+                gridTemplateColumns: { xs: '1fr', md: '1fr 1fr' },
+                gap: 2,
+              }}
+            >
               <TextField
                 fullWidth
                 multiline
@@ -1134,7 +1164,7 @@ export default function ReservationFormView() {
                 placeholder="Enter any special guest requests or notes"
                 value={formData.guestNote}
                 onChange={(e) => handleInputChange('guestNote', e.target.value)}
-                sx={{ 
+                sx={{
                   '& .MuiOutlinedInput-root': {
                     borderRadius: 1,
                     '&:hover .MuiOutlinedInput-notchedOutline': {
@@ -1159,7 +1189,7 @@ export default function ReservationFormView() {
                 placeholder="Enter internal host notes or instructions"
                 value={formData.hostNote}
                 onChange={(e) => handleInputChange('hostNote', e.target.value)}
-                sx={{ 
+                sx={{
                   '& .MuiOutlinedInput-root': {
                     borderRadius: 1,
                     '&:hover .MuiOutlinedInput-notchedOutline': {
@@ -1180,23 +1210,23 @@ export default function ReservationFormView() {
         </Accordion>
 
         {/* Policy and Status Section */}
-        <Accordion 
-          expanded={expandedSections.policy} 
+        <Accordion
+          expanded={expandedSections.policy}
           onChange={() => handleSectionToggle('policy')}
-          sx={{ 
-            mb: 2, 
+          sx={{
+            mb: 2,
             borderRadius: 1,
             border: '1px solid',
             borderColor: 'divider',
             '&:before': { display: 'none' },
             '&.Mui-expanded': {
               margin: '0 0 16px 0',
-            }
+            },
           }}
         >
           <AccordionSummary
             expandIcon={<ChevronDown size={16} />}
-            sx={{ 
+            sx={{
               bgcolor: 'grey.50',
               color: 'text.primary',
               borderRadius: '4px 4px 0 0',
@@ -1210,11 +1240,10 @@ export default function ReservationFormView() {
               },
               '&:hover': {
                 bgcolor: 'grey.100',
-              }
+              },
             }}
           >
             <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
-            
               <Box>
                 <Typography variant="subtitle1" sx={{ fontWeight: 600, color: 'text.primary' }}>
                   Policy & Status
@@ -1226,11 +1255,13 @@ export default function ReservationFormView() {
             </Box>
           </AccordionSummary>
           <AccordionDetails sx={{ p: 2 }}>
-            <Box sx={{ 
-              display: 'grid', 
-              gridTemplateColumns: { xs: '1fr', sm: '1fr 1fr', md: '1fr 1fr 1fr 1fr' },
-              gap: 2
-            }}>
+            <Box
+              sx={{
+                display: 'grid',
+                gridTemplateColumns: { xs: '1fr', sm: '1fr 1fr', md: '1fr 1fr 1fr 1fr' },
+                gap: 2,
+              }}
+            >
               <TextField
                 fullWidth
                 size="small"
@@ -1239,12 +1270,12 @@ export default function ReservationFormView() {
                 InputProps={{
                   readOnly: true,
                 }}
-                sx={{ 
+                sx={{
                   '& .MuiOutlinedInput-root': {
                     borderRadius: 1,
                     '& .MuiOutlinedInput-input': {
-                      color: 'text.secondary'
-                    }
+                      color: 'text.secondary',
+                    },
                   },
                 }}
               />
@@ -1256,7 +1287,7 @@ export default function ReservationFormView() {
                 value={formData.reservationDate}
                 onChange={(e) => handleInputChange('reservationDate', e.target.value)}
                 InputLabelProps={{ shrink: true }}
-                sx={{ 
+                sx={{
                   '& .MuiOutlinedInput-root': {
                     borderRadius: 1,
                     '&:hover .MuiOutlinedInput-notchedOutline': {
@@ -1332,12 +1363,12 @@ export default function ReservationFormView() {
                 InputProps={{
                   readOnly: true,
                 }}
-                sx={{ 
+                sx={{
                   '& .MuiOutlinedInput-root': {
                     borderRadius: 1,
                     '& .MuiOutlinedInput-input': {
-                      color: 'text.secondary'
-                    }
+                      color: 'text.secondary',
+                    },
                   },
                 }}
               />
@@ -1348,7 +1379,7 @@ export default function ReservationFormView() {
                 placeholder="Enter commission amount"
                 value={formData.commissionBooking}
                 onChange={(e) => handleInputChange('commissionBooking', e.target.value)}
-                sx={{ 
+                sx={{
                   '& .MuiOutlinedInput-root': {
                     borderRadius: 1,
                     '&:hover .MuiOutlinedInput-notchedOutline': {
@@ -1380,23 +1411,23 @@ export default function ReservationFormView() {
         </Accordion>
 
         {/* Fees and Discounts Section */}
-        <Accordion 
-          expanded={expandedSections.fees} 
+        <Accordion
+          expanded={expandedSections.fees}
           onChange={() => handleSectionToggle('fees')}
-          sx={{ 
-            mb: 2, 
+          sx={{
+            mb: 2,
             borderRadius: 1,
             border: '1px solid',
             borderColor: 'divider',
             '&:before': { display: 'none' },
             '&.Mui-expanded': {
               margin: '0 0 16px 0',
-            }
+            },
           }}
         >
           <AccordionSummary
             expandIcon={<ChevronDown size={16} />}
-            sx={{ 
+            sx={{
               bgcolor: 'grey.50',
               color: 'text.primary',
               borderRadius: '4px 4px 0 0',
@@ -1410,11 +1441,10 @@ export default function ReservationFormView() {
               },
               '&:hover': {
                 bgcolor: 'grey.100',
-              }
+              },
             }}
           >
             <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
-             
               <Box>
                 <Typography variant="subtitle1" sx={{ fontWeight: 600, color: 'text.primary' }}>
                   Fees & Discounts
@@ -1426,11 +1456,13 @@ export default function ReservationFormView() {
             </Box>
           </AccordionSummary>
           <AccordionDetails sx={{ p: 2 }}>
-            <Box sx={{ 
-              display: 'grid', 
-              gridTemplateColumns: { xs: '1fr', sm: '1fr 1fr', md: '1fr 1fr 1fr 1fr' },
-              gap: 2
-            }}>
+            <Box
+              sx={{
+                display: 'grid',
+                gridTemplateColumns: { xs: '1fr', sm: '1fr 1fr', md: '1fr 1fr 1fr 1fr' },
+                gap: 2,
+              }}
+            >
               <FormControl fullWidth size="small">
                 <InputLabel>Extra Fees</InputLabel>
                 <Select
@@ -1470,7 +1502,7 @@ export default function ReservationFormView() {
                 placeholder="Enter coupon code or name"
                 value={formData.couponName}
                 onChange={(e) => handleInputChange('couponName', e.target.value)}
-                sx={{ 
+                sx={{
                   '& .MuiOutlinedInput-root': {
                     borderRadius: 1,
                     '&:hover .MuiOutlinedInput-notchedOutline': {
@@ -1489,21 +1521,21 @@ export default function ReservationFormView() {
               <Button
                 variant="outlined"
                 size="small"
-                sx={{ 
+                sx={{
                   alignSelf: 'center',
                   borderRadius: 1,
                   borderColor: 'primary.main',
                   color: 'primary.main',
                   '&:hover': {
                     borderColor: 'primary.dark',
-                    bgcolor: 'primary.50'
-                  }
+                    bgcolor: 'primary.50',
+                  },
                 }}
               >
                 Apply
               </Button>
             </Box>
-            
+
             {/* Financial Summary */}
             <Box sx={{ mt: 2, p: 2, bgcolor: 'grey.50', borderRadius: 1 }}>
               <Typography variant="subtitle2" sx={{ mb: 2, fontWeight: 600 }}>
@@ -1533,7 +1565,9 @@ export default function ReservationFormView() {
                     </TableRow>
                     <TableRow>
                       <TableCell sx={{ fontWeight: 600 }}>TOTAL PRICE</TableCell>
-                      <TableCell align="right" sx={{ fontWeight: 600 }}>€{formData.totalPrice}</TableCell>
+                      <TableCell align="right" sx={{ fontWeight: 600 }}>
+                        €{formData.totalPrice}
+                      </TableCell>
                       <TableCell align="center">
                         <IconButton size="small" sx={{ mr: 1 }}>
                           <Edit size={16} />
@@ -1546,32 +1580,43 @@ export default function ReservationFormView() {
                   </TableBody>
                 </Table>
               </TableContainer>
-              <Box sx={{ mt: 2, display: 'flex', justifyContent: 'space-between', fontSize: '0.875rem', color: 'text.secondary' }}>
+              <Box
+                sx={{
+                  mt: 2,
+                  display: 'flex',
+                  justifyContent: 'space-between',
+                  fontSize: '0.875rem',
+                  color: 'text.secondary',
+                }}
+              >
                 <span>Last updated on: {formData.lastUpdated || 'Not available'}</span>
-                <span>Original total price: {formData.originalTotalPrice ? `€${formData.originalTotalPrice}` : 'Not set'}</span>
+                <span>
+                  Original total price:{' '}
+                  {formData.originalTotalPrice ? `€${formData.originalTotalPrice}` : 'Not set'}
+                </span>
               </Box>
             </Box>
           </AccordionDetails>
         </Accordion>
 
         {/* Payment Section */}
-        <Accordion 
-          expanded={expandedSections.payment} 
+        <Accordion
+          expanded={expandedSections.payment}
           onChange={() => handleSectionToggle('payment')}
-          sx={{ 
-            mb: 2, 
+          sx={{
+            mb: 2,
             borderRadius: 1,
             border: '1px solid',
             borderColor: 'divider',
             '&:before': { display: 'none' },
             '&.Mui-expanded': {
               margin: '0 0 16px 0',
-            }
+            },
           }}
         >
           <AccordionSummary
             expandIcon={<ChevronDown size={16} />}
-            sx={{ 
+            sx={{
               bgcolor: 'grey.50',
               color: 'text.primary',
               borderRadius: '4px 4px 0 0',
@@ -1585,7 +1630,7 @@ export default function ReservationFormView() {
               },
               '&:hover': {
                 bgcolor: 'grey.100',
-              }
+              },
             }}
           >
             <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
@@ -1600,7 +1645,9 @@ export default function ReservationFormView() {
             </Box>
           </AccordionSummary>
           <AccordionDetails sx={{ p: 2 }}>
-            <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 2 }}>
+            <Box
+              sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 2 }}
+            >
               <Typography variant="subtitle2" sx={{ fontWeight: 600 }}>
                 Payment methods
               </Typography>
@@ -1613,9 +1660,9 @@ export default function ReservationFormView() {
                   variant="contained"
                   size="small"
                   startIcon={<Plus size={16} />}
-                  sx={{ 
+                  sx={{
                     bgcolor: 'primary.main',
-                    '&:hover': { bgcolor: 'primary.dark' }
+                    '&:hover': { bgcolor: 'primary.dark' },
                   }}
                 >
                   + Add payment method
@@ -1646,23 +1693,23 @@ export default function ReservationFormView() {
         </Accordion>
 
         {/* Financial Fields and Formulas Section */}
-        <Accordion 
-          expanded={expandedSections.financialFields} 
+        <Accordion
+          expanded={expandedSections.financialFields}
           onChange={() => handleSectionToggle('financialFields')}
-          sx={{ 
-            mb: 2, 
+          sx={{
+            mb: 2,
             borderRadius: 1,
             border: '1px solid',
             borderColor: 'divider',
             '&:before': { display: 'none' },
             '&.Mui-expanded': {
               margin: '0 0 16px 0',
-            }
+            },
           }}
         >
           <AccordionSummary
             expandIcon={<ChevronDown size={16} />}
-            sx={{ 
+            sx={{
               bgcolor: 'grey.50',
               color: 'text.primary',
               borderRadius: '4px 4px 0 0',
@@ -1676,7 +1723,7 @@ export default function ReservationFormView() {
               },
               '&:hover': {
                 bgcolor: 'grey.100',
-              }
+              },
             }}
           >
             <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
@@ -1691,7 +1738,9 @@ export default function ReservationFormView() {
             </Box>
           </AccordionSummary>
           <AccordionDetails sx={{ p: 2 }}>
-            <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 2 }}>
+            <Box
+              sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 2 }}
+            >
               <Typography variant="subtitle2" sx={{ fontWeight: 600 }}>
                 Financial fields
               </Typography>
@@ -1699,13 +1748,13 @@ export default function ReservationFormView() {
                 variant="outlined"
                 size="small"
                 startIcon={<Plus size={16} />}
-                sx={{ 
+                sx={{
                   borderColor: 'primary.main',
                   color: 'primary.main',
-                  '&:hover': { 
+                  '&:hover': {
                     borderColor: 'primary.dark',
-                    bgcolor: 'primary.50'
-                  }
+                    bgcolor: 'primary.50',
+                  },
                 }}
               >
                 + Add field
@@ -1723,7 +1772,9 @@ export default function ReservationFormView() {
                 <TableBody>
                   <TableRow>
                     <TableCell>Base rate</TableCell>
-                    <TableCell align="right">{formData.baseRate ? `€${formData.baseRate}` : '-'}</TableCell>
+                    <TableCell align="right">
+                      {formData.baseRate ? `€${formData.baseRate}` : '-'}
+                    </TableCell>
                     <TableCell align="center">
                       <IconButton size="small" sx={{ mr: 1 }}>
                         <Edit size={16} />
@@ -1735,7 +1786,9 @@ export default function ReservationFormView() {
                   </TableRow>
                   <TableRow>
                     <TableCell>Total price from channel</TableCell>
-                    <TableCell align="right">{formData.totalPrice ? `€${formData.totalPrice}` : '-'}</TableCell>
+                    <TableCell align="right">
+                      {formData.totalPrice ? `€${formData.totalPrice}` : '-'}
+                    </TableCell>
                     <TableCell align="center">
                       <IconButton size="small" sx={{ mr: 1 }}>
                         <Edit size={16} />
@@ -1747,7 +1800,9 @@ export default function ReservationFormView() {
                   </TableRow>
                   <TableRow>
                     <TableCell>Airbnb payout sum</TableCell>
-                    <TableCell align="right">{formData.airbnbPayoutSum ? `€${formData.airbnbPayoutSum}` : '-'}</TableCell>
+                    <TableCell align="right">
+                      {formData.airbnbPayoutSum ? `€${formData.airbnbPayoutSum}` : '-'}
+                    </TableCell>
                     <TableCell align="center">
                       <IconButton size="small" sx={{ mr: 1 }}>
                         <Edit size={16} />
@@ -1767,23 +1822,23 @@ export default function ReservationFormView() {
         </Accordion>
 
         {/* Expenses and Extras Section */}
-        <Accordion 
-          expanded={expandedSections.expenses} 
+        <Accordion
+          expanded={expandedSections.expenses}
           onChange={() => handleSectionToggle('expenses')}
-          sx={{ 
-            mb: 2, 
+          sx={{
+            mb: 2,
             borderRadius: 1,
             border: '1px solid',
             borderColor: 'divider',
             '&:before': { display: 'none' },
             '&.Mui-expanded': {
               margin: '0 0 16px 0',
-            }
+            },
           }}
         >
           <AccordionSummary
             expandIcon={<ChevronDown size={16} />}
-            sx={{ 
+            sx={{
               bgcolor: 'grey.50',
               color: 'text.primary',
               borderRadius: '4px 4px 0 0',
@@ -1797,7 +1852,7 @@ export default function ReservationFormView() {
               },
               '&:hover': {
                 bgcolor: 'grey.100',
-              }
+              },
             }}
           >
             <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
@@ -1812,24 +1867,28 @@ export default function ReservationFormView() {
             </Box>
           </AccordionSummary>
           <AccordionDetails sx={{ p: 2 }}>
-            <Box sx={{ 
-              textAlign: 'center', 
-              py: 6,
-              display: 'flex',
-              flexDirection: 'column',
-              alignItems: 'center',
-              gap: 2
-            }}>
-              <Box sx={{ 
-                width: 120, 
-                height: 120, 
-                bgcolor: 'grey.100', 
-                borderRadius: 2,
+            <Box
+              sx={{
+                textAlign: 'center',
+                py: 6,
                 display: 'flex',
+                flexDirection: 'column',
                 alignItems: 'center',
-                justifyContent: 'center',
-                mb: 2
-              }}>
+                gap: 2,
+              }}
+            >
+              <Box
+                sx={{
+                  width: 120,
+                  height: 120,
+                  bgcolor: 'grey.100',
+                  borderRadius: 2,
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  mb: 2,
+                }}
+              >
                 <ShoppingCart size={48} color="#666" />
               </Box>
               <Typography variant="h6" sx={{ fontWeight: 600, color: 'text.primary' }}>
@@ -1840,9 +1899,9 @@ export default function ReservationFormView() {
                   variant="contained"
                   size="small"
                   startIcon={<Plus size={16} />}
-                  sx={{ 
+                  sx={{
                     bgcolor: 'primary.main',
-                    '&:hover': { bgcolor: 'primary.dark' }
+                    '&:hover': { bgcolor: 'primary.dark' },
                   }}
                 >
                   + Add expense
@@ -1851,9 +1910,9 @@ export default function ReservationFormView() {
                   variant="contained"
                   size="small"
                   startIcon={<Plus size={16} />}
-                  sx={{ 
+                  sx={{
                     bgcolor: 'primary.main',
-                    '&:hover': { bgcolor: 'primary.dark' }
+                    '&:hover': { bgcolor: 'primary.dark' },
                   }}
                 >
                   + Add extra
@@ -1864,23 +1923,23 @@ export default function ReservationFormView() {
         </Accordion>
 
         {/* Custom Fields Section */}
-        <Accordion 
-          expanded={expandedSections.customFields} 
+        <Accordion
+          expanded={expandedSections.customFields}
           onChange={() => handleSectionToggle('customFields')}
-          sx={{ 
-            mb: 2, 
+          sx={{
+            mb: 2,
             borderRadius: 1,
             border: '1px solid',
             borderColor: 'divider',
             '&:before': { display: 'none' },
             '&.Mui-expanded': {
               margin: '0 0 16px 0',
-            }
+            },
           }}
         >
           <AccordionSummary
             expandIcon={<ChevronDown size={16} />}
-            sx={{ 
+            sx={{
               bgcolor: 'grey.50',
               color: 'text.primary',
               borderRadius: '4px 4px 0 0',
@@ -1894,7 +1953,7 @@ export default function ReservationFormView() {
               },
               '&:hover': {
                 bgcolor: 'grey.100',
-              }
+              },
             }}
           >
             <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
@@ -1909,18 +1968,20 @@ export default function ReservationFormView() {
             </Box>
           </AccordionSummary>
           <AccordionDetails sx={{ p: 2 }}>
-            <Box sx={{ 
-              display: 'grid', 
-              gridTemplateColumns: { xs: '1fr', sm: '1fr 1fr' },
-              gap: 2
-            }}>
+            <Box
+              sx={{
+                display: 'grid',
+                gridTemplateColumns: { xs: '1fr', sm: '1fr 1fr' },
+                gap: 2,
+              }}
+            >
               <TextField
                 fullWidth
                 size="small"
                 label="Check-in Online Status - {{reservation_checkin_online_status}}"
                 value={formData.checkinOnlineStatus}
                 onChange={(e) => handleInputChange('checkinOnlineStatus', e.target.value)}
-                sx={{ 
+                sx={{
                   '& .MuiOutlinedInput-root': {
                     borderRadius: 1,
                     '&:hover .MuiOutlinedInput-notchedOutline': {
@@ -1942,7 +2003,7 @@ export default function ReservationFormView() {
                 label="Check-in Online URL - {{reservation_checkin_online_url}}"
                 value={formData.checkinOnlineUrl}
                 onChange={(e) => handleInputChange('checkinOnlineUrl', e.target.value)}
-                sx={{ 
+                sx={{
                   '& .MuiOutlinedInput-root': {
                     borderRadius: 1,
                     '&:hover .MuiOutlinedInput-notchedOutline': {
@@ -1964,7 +2025,7 @@ export default function ReservationFormView() {
                 label="Check-in Reservation URL - {{reservation_checkin_reservation_url}}"
                 value={formData.checkinReservationUrl}
                 onChange={(e) => handleInputChange('checkinReservationUrl', e.target.value)}
-                sx={{ 
+                sx={{
                   '& .MuiOutlinedInput-root': {
                     borderRadius: 1,
                     '&:hover .MuiOutlinedInput-notchedOutline': {
@@ -1987,7 +2048,7 @@ export default function ReservationFormView() {
                 placeholder="city tax"
                 value={formData.cityTax}
                 onChange={(e) => handleInputChange('cityTax', e.target.value)}
-                sx={{ 
+                sx={{
                   '& .MuiOutlinedInput-root': {
                     borderRadius: 1,
                     '&:hover .MuiOutlinedInput-notchedOutline': {
@@ -2009,7 +2070,7 @@ export default function ReservationFormView() {
                 label="Identity Verification Status - {{reservation_identity_verification_status}}"
                 value={formData.identityVerificationStatus}
                 onChange={(e) => handleInputChange('identityVerificationStatus', e.target.value)}
-                sx={{ 
+                sx={{
                   '& .MuiOutlinedInput-root': {
                     borderRadius: 1,
                     '&:hover .MuiOutlinedInput-notchedOutline': {
@@ -2031,7 +2092,7 @@ export default function ReservationFormView() {
                 label="Remote Access Link - {{reservation_remote_access_link}}"
                 value={formData.remoteAccessLink}
                 onChange={(e) => handleInputChange('remoteAccessLink', e.target.value)}
-                sx={{ 
+                sx={{
                   '& .MuiOutlinedInput-root': {
                     borderRadius: 1,
                     '&:hover .MuiOutlinedInput-notchedOutline': {
@@ -2053,7 +2114,7 @@ export default function ReservationFormView() {
                 label="Upselling Link - {{reservation_upselling_link}}"
                 value={formData.upsellingLink}
                 onChange={(e) => handleInputChange('upsellingLink', e.target.value)}
-                sx={{ 
+                sx={{
                   '& .MuiOutlinedInput-root': {
                     borderRadius: 1,
                     '&:hover .MuiOutlinedInput-notchedOutline': {
@@ -2074,23 +2135,23 @@ export default function ReservationFormView() {
         </Accordion>
 
         {/* Door Code Section */}
-        <Accordion 
-          expanded={expandedSections.doorCode} 
+        <Accordion
+          expanded={expandedSections.doorCode}
           onChange={() => handleSectionToggle('doorCode')}
-          sx={{ 
-            mb: 2, 
+          sx={{
+            mb: 2,
             borderRadius: 1,
             border: '1px solid',
             borderColor: 'divider',
             '&:before': { display: 'none' },
             '&.Mui-expanded': {
               margin: '0 0 16px 0',
-            }
+            },
           }}
         >
           <AccordionSummary
             expandIcon={<ChevronDown size={16} />}
-            sx={{ 
+            sx={{
               bgcolor: 'grey.50',
               color: 'text.primary',
               borderRadius: '4px 4px 0 0',
@@ -2104,7 +2165,7 @@ export default function ReservationFormView() {
               },
               '&:hover': {
                 bgcolor: 'grey.100',
-              }
+              },
             }}
           >
             <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
@@ -2119,11 +2180,13 @@ export default function ReservationFormView() {
             </Box>
           </AccordionSummary>
           <AccordionDetails sx={{ p: 2 }}>
-            <Box sx={{ 
-              display: 'grid', 
-              gridTemplateColumns: { xs: '1fr', sm: '1fr 1fr', md: '1fr 1fr 1fr' },
-              gap: 2
-            }}>
+            <Box
+              sx={{
+                display: 'grid',
+                gridTemplateColumns: { xs: '1fr', sm: '1fr 1fr', md: '1fr 1fr 1fr' },
+                gap: 2,
+              }}
+            >
               <TextField
                 fullWidth
                 size="small"
@@ -2131,7 +2194,7 @@ export default function ReservationFormView() {
                 placeholder="Enter door access code"
                 value={formData.doorCode}
                 onChange={(e) => handleInputChange('doorCode', e.target.value)}
-                sx={{ 
+                sx={{
                   '& .MuiOutlinedInput-root': {
                     borderRadius: 1,
                     '&:hover .MuiOutlinedInput-notchedOutline': {
@@ -2154,7 +2217,7 @@ export default function ReservationFormView() {
                 placeholder="Enter door code provider"
                 value={formData.doorCodeVendor}
                 onChange={(e) => handleInputChange('doorCodeVendor', e.target.value)}
-                sx={{ 
+                sx={{
                   '& .MuiOutlinedInput-root': {
                     borderRadius: 1,
                     '&:hover .MuiOutlinedInput-notchedOutline': {
@@ -2177,7 +2240,7 @@ export default function ReservationFormView() {
                 placeholder="Enter access instructions"
                 value={formData.doorCodeInstructions}
                 onChange={(e) => handleInputChange('doorCodeInstructions', e.target.value)}
-                sx={{ 
+                sx={{
                   '& .MuiOutlinedInput-root': {
                     borderRadius: 1,
                     '&:hover .MuiOutlinedInput-notchedOutline': {
@@ -2198,23 +2261,23 @@ export default function ReservationFormView() {
         </Accordion>
 
         {/* Attachment Section */}
-        <Accordion 
-          expanded={expandedSections.attachment} 
+        <Accordion
+          expanded={expandedSections.attachment}
           onChange={() => handleSectionToggle('attachment')}
-          sx={{ 
-            mb: 2, 
+          sx={{
+            mb: 2,
             borderRadius: 1,
             border: '1px solid',
             borderColor: 'divider',
             '&:before': { display: 'none' },
             '&.Mui-expanded': {
               margin: '0 0 16px 0',
-            }
+            },
           }}
         >
           <AccordionSummary
             expandIcon={<ChevronDown size={16} />}
-            sx={{ 
+            sx={{
               bgcolor: 'grey.50',
               color: 'text.primary',
               borderRadius: '4px 4px 0 0',
@@ -2228,7 +2291,7 @@ export default function ReservationFormView() {
               },
               '&:hover': {
                 bgcolor: 'grey.100',
-              }
+              },
             }}
           >
             <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
@@ -2243,19 +2306,20 @@ export default function ReservationFormView() {
             </Box>
           </AccordionSummary>
           <AccordionDetails sx={{ p: 2 }}>
-            <Box sx={{ 
-              border: '2px dashed',
-              borderColor: 'primary.main',
-              borderRadius: 1,
-              p: 4,
-              textAlign: 'center',
-              cursor: 'pointer',
-              '&:hover': {
-                borderColor: 'primary.dark',
-                bgcolor: 'primary.50'
-              }
-            }}
-            onClick={() => document.getElementById('file-upload')?.click()}
+            <Box
+              sx={{
+                border: '2px dashed',
+                borderColor: 'primary.main',
+                borderRadius: 1,
+                p: 4,
+                textAlign: 'center',
+                cursor: 'pointer',
+                '&:hover': {
+                  borderColor: 'primary.dark',
+                  bgcolor: 'primary.50',
+                },
+              }}
+              onClick={() => document.getElementById('file-upload')?.click()}
             >
               <Box sx={{ mb: 2 }}>
                 <Upload size={48} color="#00A76F" />
@@ -2263,23 +2327,18 @@ export default function ReservationFormView() {
               <Typography variant="body1" sx={{ mb: 1, fontWeight: 500 }}>
                 Drop files to upload or
               </Typography>
-              <Typography 
-                component="span" 
-                sx={{ 
-                  color: 'primary.main', 
+              <Typography
+                component="span"
+                sx={{
+                  color: 'primary.main',
                   textDecoration: 'underline',
                   cursor: 'pointer',
-                  '&:hover': { color: 'primary.dark' }
+                  '&:hover': { color: 'primary.dark' },
                 }}
               >
                 Browse
               </Typography>
-              <input
-                id="file-upload"
-                type="file"
-                multiple
-                style={{ display: 'none' }}
-              />
+              <input id="file-upload" type="file" multiple style={{ display: 'none' }} />
             </Box>
             <Typography variant="body2" color="text.secondary" sx={{ mt: 2, textAlign: 'center' }}>
               No attached files
@@ -2288,23 +2347,23 @@ export default function ReservationFormView() {
         </Accordion>
 
         {/* Tasks Section */}
-        <Accordion 
-          expanded={expandedSections.tasks} 
+        <Accordion
+          expanded={expandedSections.tasks}
           onChange={() => handleSectionToggle('tasks')}
-          sx={{ 
-            mb: 2, 
+          sx={{
+            mb: 2,
             borderRadius: 1,
             border: '1px solid',
             borderColor: 'divider',
             '&:before': { display: 'none' },
             '&.Mui-expanded': {
               margin: '0 0 16px 0',
-            }
+            },
           }}
         >
           <AccordionSummary
             expandIcon={<ChevronDown size={16} />}
-            sx={{ 
+            sx={{
               bgcolor: 'grey.50',
               color: 'text.primary',
               borderRadius: '4px 4px 0 0',
@@ -2318,7 +2377,7 @@ export default function ReservationFormView() {
               },
               '&:hover': {
                 bgcolor: 'grey.100',
-              }
+              },
             }}
           >
             <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
@@ -2333,14 +2392,16 @@ export default function ReservationFormView() {
             </Box>
           </AccordionSummary>
           <AccordionDetails sx={{ p: 2 }}>
-            <Box sx={{ 
-              textAlign: 'center', 
-              py: 4,
-              display: 'flex',
-              flexDirection: 'column',
-              alignItems: 'center',
-              gap: 2
-            }}>
+            <Box
+              sx={{
+                textAlign: 'center',
+                py: 4,
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                gap: 2,
+              }}
+            >
               <Typography variant="body1" sx={{ color: 'text.secondary' }}>
                 There are no tasks
               </Typography>
@@ -2348,9 +2409,9 @@ export default function ReservationFormView() {
                 variant="contained"
                 size="small"
                 startIcon={<Plus size={16} />}
-                sx={{ 
+                sx={{
                   bgcolor: 'primary.main',
-                  '&:hover': { bgcolor: 'primary.dark' }
+                  '&:hover': { bgcolor: 'primary.dark' },
                 }}
               >
                 Add task
@@ -2360,23 +2421,23 @@ export default function ReservationFormView() {
         </Accordion>
 
         {/* Alteration Logs Section */}
-        <Accordion 
-          expanded={expandedSections.alterationLogs} 
+        <Accordion
+          expanded={expandedSections.alterationLogs}
           onChange={() => handleSectionToggle('alterationLogs')}
-          sx={{ 
-            mb: 2, 
+          sx={{
+            mb: 2,
             borderRadius: 1,
             border: '1px solid',
             borderColor: 'divider',
             '&:before': { display: 'none' },
             '&.Mui-expanded': {
               margin: '0 0 16px 0',
-            }
+            },
           }}
         >
           <AccordionSummary
             expandIcon={<ChevronDown size={16} />}
-            sx={{ 
+            sx={{
               bgcolor: 'grey.50',
               color: 'text.primary',
               borderRadius: '4px 4px 0 0',
@@ -2390,7 +2451,7 @@ export default function ReservationFormView() {
               },
               '&:hover': {
                 bgcolor: 'grey.100',
-              }
+              },
             }}
           >
             <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
@@ -2405,34 +2466,36 @@ export default function ReservationFormView() {
             </Box>
           </AccordionSummary>
           <AccordionDetails sx={{ p: 2 }}>
-            <Box sx={{ 
-              textAlign: 'center', 
-              py: 4,
-              color: 'text.secondary'
-            }}>
+            <Box
+              sx={{
+                textAlign: 'center',
+                py: 4,
+                color: 'text.secondary',
+              }}
+            >
               No alteration logs found
             </Box>
           </AccordionDetails>
         </Accordion>
 
         {/* Reviews Section */}
-        <Accordion 
-          expanded={expandedSections.reviews} 
+        <Accordion
+          expanded={expandedSections.reviews}
           onChange={() => handleSectionToggle('reviews')}
-          sx={{ 
-            mb: 2, 
+          sx={{
+            mb: 2,
             borderRadius: 1,
             border: '1px solid',
             borderColor: 'divider',
             '&:before': { display: 'none' },
             '&.Mui-expanded': {
               margin: '0 0 16px 0',
-            }
+            },
           }}
         >
           <AccordionSummary
             expandIcon={<ChevronDown size={16} />}
-            sx={{ 
+            sx={{
               bgcolor: 'grey.50',
               color: 'text.primary',
               borderRadius: '4px 4px 0 0',
@@ -2446,7 +2509,7 @@ export default function ReservationFormView() {
               },
               '&:hover': {
                 bgcolor: 'grey.100',
-              }
+              },
             }}
           >
             <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
@@ -2461,11 +2524,13 @@ export default function ReservationFormView() {
             </Box>
           </AccordionSummary>
           <AccordionDetails sx={{ p: 2 }}>
-            <Box sx={{ 
-              textAlign: 'center', 
-              py: 4,
-              color: 'text.secondary'
-            }}>
+            <Box
+              sx={{
+                textAlign: 'center',
+                py: 4,
+                color: 'text.secondary',
+              }}
+            >
               No results.
             </Box>
           </AccordionDetails>
@@ -2478,11 +2543,7 @@ export default function ReservationFormView() {
           onClose={() => setSnackbarOpen(false)}
           anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
         >
-          <Alert
-            onClose={() => setSnackbarOpen(false)}
-            severity="success"
-            sx={{ width: '100%' }}
-          >
+          <Alert onClose={() => setSnackbarOpen(false)} severity="success" sx={{ width: '100%' }}>
             Reservation {isEditMode ? 'updated' : 'saved'} successfully!
           </Alert>
         </Snackbar>

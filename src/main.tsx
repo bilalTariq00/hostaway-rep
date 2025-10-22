@@ -19,9 +19,7 @@ const router = createBrowserRouter([
       </AuthProvider>
     ),
     errorElement: <ErrorBoundary />,
-    children: [
-      ...routesSection,
-    ],
+    children: [...routesSection],
   },
 ]);
 

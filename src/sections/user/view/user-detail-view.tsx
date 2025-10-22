@@ -1,15 +1,6 @@
 import { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { 
-  Edit,
-  Mail,
-  Star,
-  Phone,
-  MapPin,
-  Trash2,
-  Calendar,
-  ArrowLeft,
-} from 'lucide-react';
+import { Edit, Mail, Star, Phone, MapPin, Trash2, Calendar, ArrowLeft } from 'lucide-react';
 
 import {
   Box,
@@ -48,20 +39,38 @@ const mockUserDetail = {
     city: 'New York',
     state: 'NY',
     zipCode: '10001',
-    country: 'United States'
+    country: 'United States',
   },
   preferences: {
     language: 'English',
     currency: 'USD',
     notifications: true,
-    marketing: false
+    marketing: false,
   },
   recentBookings: [
-    { id: 1, property: 'Luxury Apartment Downtown', date: '2024-01-15', amount: '$250.00', status: 'Completed' },
-    { id: 2, property: 'Beach House Villa', date: '2024-01-10', amount: '$450.00', status: 'Completed' },
-    { id: 3, property: 'Mountain Cabin Retreat', date: '2024-01-05', amount: '$180.00', status: 'Upcoming' }
+    {
+      id: 1,
+      property: 'Luxury Apartment Downtown',
+      date: '2024-01-15',
+      amount: '$250.00',
+      status: 'Completed',
+    },
+    {
+      id: 2,
+      property: 'Beach House Villa',
+      date: '2024-01-10',
+      amount: '$450.00',
+      status: 'Completed',
+    },
+    {
+      id: 3,
+      property: 'Mountain Cabin Retreat',
+      date: '2024-01-05',
+      amount: '$180.00',
+      status: 'Upcoming',
+    },
   ],
-  notes: 'VIP customer with excellent payment history. Prefers properties with parking and WiFi.'
+  notes: 'VIP customer with excellent payment history. Prefers properties with parking and WiFi.',
 };
 
 export default function UserDetailView() {
@@ -101,8 +110,8 @@ export default function UserDetailView() {
       {/* Header */}
       <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 3 }}>
         <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-          <Button 
-            variant="text" 
+          <Button
+            variant="text"
             startIcon={<ArrowLeft size={20} />}
             onClick={handleBack}
             sx={{ color: 'text.secondary' }}
@@ -114,17 +123,10 @@ export default function UserDetailView() {
           </Typography>
         </Box>
         <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-          <Button 
-            variant="outlined" 
-            startIcon={<Edit size={16} />}
-            onClick={handleEdit}
-          >
+          <Button variant="outlined" startIcon={<Edit size={16} />} onClick={handleEdit}>
             Edit Guest
           </Button>
-          <IconButton 
-            color="error" 
-            onClick={handleDelete}
-          >
+          <IconButton color="error" onClick={handleDelete}>
             <Trash2 size={20} />
           </IconButton>
         </Box>
@@ -136,25 +138,22 @@ export default function UserDetailView() {
           <Box sx={{ flex: '0 0 300px' }}>
             <Card>
               <CardContent>
-                <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center' }}>
-                  <Avatar
-                    src={mockUserDetail.avatar}
-                    sx={{ width: 80, height: 80, mb: 2 }}
-                  />
+                <Box
+                  sx={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                    alignItems: 'center',
+                    textAlign: 'center',
+                  }}
+                >
+                  <Avatar src={mockUserDetail.avatar} sx={{ width: 80, height: 80, mb: 2 }} />
                   <Typography variant="h5" sx={{ fontWeight: 600, mb: 1 }}>
                     {mockUserDetail.name}
                   </Typography>
-                  <Chip 
-                    label={mockUserDetail.status} 
-                    color="success" 
-                    size="small" 
-                    sx={{ mb: 2 }}
-                  />
+                  <Chip label={mockUserDetail.status} color="success" size="small" sx={{ mb: 2 }} />
                   <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1 }}>
                     <Star size={16} color="#ffc107" />
-                    <Typography variant="body2">
-                      {mockUserDetail.rating}/5.0
-                    </Typography>
+                    <Typography variant="body2">{mockUserDetail.rating}/5.0</Typography>
                   </Box>
                   <Typography variant="body2" color="text.secondary">
                     Member since {new Date(mockUserDetail.joinDate).toLocaleDateString()}
@@ -176,26 +175,20 @@ export default function UserDetailView() {
                     <ListItemIcon>
                       <Mail size={20} />
                     </ListItemIcon>
-                    <ListItemText 
-                      primary="Email" 
-                      secondary={mockUserDetail.email}
-                    />
+                    <ListItemText primary="Email" secondary={mockUserDetail.email} />
                   </ListItem>
                   <ListItem>
                     <ListItemIcon>
                       <Phone size={20} />
                     </ListItemIcon>
-                    <ListItemText 
-                      primary="Phone" 
-                      secondary={mockUserDetail.phone}
-                    />
+                    <ListItemText primary="Phone" secondary={mockUserDetail.phone} />
                   </ListItem>
                   <ListItem>
                     <ListItemIcon>
                       <MapPin size={20} />
                     </ListItemIcon>
-                    <ListItemText 
-                      primary="Address" 
+                    <ListItemText
+                      primary="Address"
                       secondary={`${mockUserDetail.address.street}, ${mockUserDetail.address.city}, ${mockUserDetail.address.state} ${mockUserDetail.address.zipCode}`}
                     />
                   </ListItem>
@@ -256,11 +249,14 @@ export default function UserDetailView() {
             </Typography>
             <List>
               {mockUserDetail.recentBookings.map((booking, index) => (
-                <ListItem key={booking.id} divider={index < mockUserDetail.recentBookings.length - 1}>
+                <ListItem
+                  key={booking.id}
+                  divider={index < mockUserDetail.recentBookings.length - 1}
+                >
                   <ListItemIcon>
                     <Calendar size={20} />
                   </ListItemIcon>
-                  <ListItemText 
+                  <ListItemText
                     primary={booking.property}
                     secondary={`${booking.date} • ${booking.amount} • ${booking.status}`}
                   />
@@ -276,9 +272,7 @@ export default function UserDetailView() {
             <Typography variant="h6" sx={{ fontWeight: 600, mb: 2 }}>
               Notes
             </Typography>
-            <Typography variant="body1">
-              {mockUserDetail.notes}
-            </Typography>
+            <Typography variant="body1">{mockUserDetail.notes}</Typography>
           </CardContent>
         </Card>
       </Box>
@@ -293,7 +287,9 @@ export default function UserDetailView() {
         </DialogContent>
         <DialogActions>
           <Button onClick={handleEditClose}>Cancel</Button>
-          <Button variant="contained" onClick={handleEditClose}>Save Changes</Button>
+          <Button variant="contained" onClick={handleEditClose}>
+            Save Changes
+          </Button>
         </DialogActions>
       </Dialog>
 

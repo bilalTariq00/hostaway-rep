@@ -1,5 +1,17 @@
 import React, { useState } from 'react';
-import { Plus, Link2, Trash2, Upload, Monitor, Calendar, Download, ArrowLeft, Building2, FileCheck, DollarSign } from 'lucide-react';
+import {
+  Plus,
+  Link2,
+  Trash2,
+  Upload,
+  Monitor,
+  Calendar,
+  Download,
+  ArrowLeft,
+  Building2,
+  FileCheck,
+  DollarSign,
+} from 'lucide-react';
 
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
@@ -29,49 +41,56 @@ const mockUsers = [
     name: 'Manuel Sciarria',
     email: 'manuelsciarria@gmail.com',
     propertyId: '203040869',
-    avatar: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-4.0.3&auto=format&fit=crop&w=100&q=80',
+    avatar:
+      'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-4.0.3&auto=format&fit=crop&w=100&q=80',
   },
   {
     id: 2,
     name: 'Franca Albertini',
     email: 'franca.albertini@example.com',
     propertyId: '203040870',
-    avatar: 'https://images.unsplash.com/photo-1494790108755-2616b612b786?ixlib=rb-4.0.3&auto=format&fit=crop&w=100&q=80',
+    avatar:
+      'https://images.unsplash.com/photo-1494790108755-2616b612b786?ixlib=rb-4.0.3&auto=format&fit=crop&w=100&q=80',
   },
   {
     id: 3,
     name: 'Christian Mariani',
     email: 'christian.mariani@example.com',
     propertyId: '203040871',
-    avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&auto=format&fit=crop&w=100&q=80',
+    avatar:
+      'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&auto=format&fit=crop&w=100&q=80',
   },
   {
     id: 4,
     name: 'Roni Efrati',
     email: 'roni.efrati@example.com',
     propertyId: '203040872',
-    avatar: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?ixlib=rb-4.0.3&auto=format&fit=crop&w=100&q=80',
+    avatar:
+      'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?ixlib=rb-4.0.3&auto=format&fit=crop&w=100&q=80',
   },
   {
     id: 5,
     name: 'Andrea Baldi',
     email: 'andrea.baldi@example.com',
     propertyId: '203040873',
-    avatar: 'https://images.unsplash.com/photo-1519345182560-3f2917c472ef?ixlib=rb-4.0.3&auto=format&fit=crop&w=100&q=80',
+    avatar:
+      'https://images.unsplash.com/photo-1519345182560-3f2917c472ef?ixlib=rb-4.0.3&auto=format&fit=crop&w=100&q=80',
   },
   {
     id: 6,
     name: 'Micol Misano',
     email: 'micol.misano@example.com',
     propertyId: '203040874',
-    avatar: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?ixlib=rb-4.0.3&auto=format&fit=crop&w=100&q=80',
+    avatar:
+      'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?ixlib=rb-4.0.3&auto=format&fit=crop&w=100&q=80',
   },
   {
     id: 7,
     name: 'Addy Ferro',
     email: 'addy.ferro@example.com',
     propertyId: '203040875',
-    avatar: 'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?ixlib=rb-4.0.3&auto=format&fit=crop&w=100&q=80',
+    avatar:
+      'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?ixlib=rb-4.0.3&auto=format&fit=crop&w=100&q=80',
   },
 ];
 
@@ -132,14 +151,14 @@ export function AirbnbView() {
                 overflow: 'hidden',
               }}
             >
-              <img 
+              <img
                 src="https://upload.wikimedia.org/wikipedia/commons/6/69/Airbnb_Logo_B%C3%A9lo.svg"
                 alt="Airbnb"
-                style={{ 
-                  width: '100%', 
-                  height: '100%', 
+                style={{
+                  width: '100%',
+                  height: '100%',
                   objectFit: 'contain',
-                  filter: 'brightness(0) invert(1)'
+                  filter: 'brightness(0) invert(1)',
                 }}
               />
             </Box>
@@ -147,7 +166,7 @@ export function AirbnbView() {
               Airbnb accounts
             </Typography>
           </Box>
-          
+
           <Box sx={{ display: 'flex', gap: 2 }}>
             <Button
               variant="contained"
@@ -160,11 +179,11 @@ export function AirbnbView() {
             <Button
               variant="outlined"
               disabled
-              sx={{ 
-                textTransform: 'none', 
-                borderColor: '#E0E0E0', 
+              sx={{
+                textTransform: 'none',
+                borderColor: '#E0E0E0',
                 color: '#BDBDBD',
-                cursor: 'not-allowed'
+                cursor: 'not-allowed',
               }}
             >
               Create new Airbnb account
@@ -176,15 +195,14 @@ export function AirbnbView() {
       {/* Accounts List */}
       <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
         {mockUsers.map((user) => (
-          <Card key={user.id} sx={{ p: 3, boxShadow: 'none', border: '1px solid', borderColor: 'grey.200' }}>
+          <Card
+            key={user.id}
+            sx={{ p: 3, boxShadow: 'none', border: '1px solid', borderColor: 'grey.200' }}
+          >
             <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
               <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
                 <Box sx={{ position: 'relative' }}>
-                  <Avatar
-                    src={user.avatar}
-                    alt={user.name}
-                    sx={{ width: 48, height: 48 }}
-                  />
+                  <Avatar src={user.avatar} alt={user.name} sx={{ width: 48, height: 48 }} />
                   <Box
                     sx={{
                       position: 'absolute',
@@ -210,40 +228,45 @@ export function AirbnbView() {
                   </Typography>
                 </Box>
               </Box>
-              
+
               <Box sx={{ display: 'flex', gap: 1, flexWrap: 'wrap' }}>
-                <Button 
-                  size="small" 
-                  variant="contained" 
-                  startIcon={<Plus size={14} />} 
+                <Button
+                  size="small"
+                  variant="contained"
+                  startIcon={<Plus size={14} />}
                   sx={{ textTransform: 'none', bgcolor: '#00A699', fontSize: '0.75rem' }}
                   onClick={() => handleAction('Create new listing', user)}
                 >
                   Create new listing (beta)
                 </Button>
-                <Button 
-                  size="small" 
-                  variant="contained" 
-                  startIcon={<Download size={14} />} 
+                <Button
+                  size="small"
+                  variant="contained"
+                  startIcon={<Download size={14} />}
                   sx={{ textTransform: 'none', bgcolor: '#00A699', fontSize: '0.75rem' }}
                   onClick={() => handleAction('Export listings', user)}
                 >
                   Export listings
                 </Button>
-                <Button 
-                  size="small" 
-                  variant="contained" 
-                  startIcon={<Upload size={14} />} 
+                <Button
+                  size="small"
+                  variant="contained"
+                  startIcon={<Upload size={14} />}
                   sx={{ textTransform: 'none', bgcolor: '#00A699', fontSize: '0.75rem' }}
                   onClick={() => handleAction('Import & mapping', user)}
                 >
                   Import & mapping
                 </Button>
-                <Button 
-                  size="small" 
-                  variant="outlined" 
-                  startIcon={<Trash2 size={14} />} 
-                  sx={{ textTransform: 'none', borderColor: '#9E9E9E', color: '#424242', fontSize: '0.75rem' }}
+                <Button
+                  size="small"
+                  variant="outlined"
+                  startIcon={<Trash2 size={14} />}
+                  sx={{
+                    textTransform: 'none',
+                    borderColor: '#9E9E9E',
+                    color: '#424242',
+                    fontSize: '0.75rem',
+                  }}
                   onClick={() => handleAction('Remove', user)}
                 >
                   Remove
@@ -269,27 +292,37 @@ export function AirbnbView() {
         }}
       >
         <DialogTitle sx={{ pb: 1 }}>
-          <Typography variant="h4" sx={{ fontWeight: 700, textAlign: 'center', mb: 2, color: '#333' }}>
+          <Typography
+            variant="h4"
+            sx={{ fontWeight: 700, textAlign: 'center', mb: 2, color: '#333' }}
+          >
             Please confirm the next statements to continue
           </Typography>
-          <Typography variant="body2" color="text.secondary" sx={{ textAlign: 'center', lineHeight: 1.6 }}>
-            The following Hostaway terms of services apply to the use of the Hostaway software including all channel connections and 3rd party connections.
+          <Typography
+            variant="body2"
+            color="text.secondary"
+            sx={{ textAlign: 'center', lineHeight: 1.6 }}
+          >
+            The following Hostaway terms of services apply to the use of the Hostaway software
+            including all channel connections and 3rd party connections.
           </Typography>
         </DialogTitle>
         <DialogContent sx={{ px: 4, py: 2 }}>
           <Box sx={{ mt: 2 }}>
             <Box sx={{ display: 'flex', alignItems: 'flex-start', gap: 2, mb: 3 }}>
-              <Box sx={{ 
-                width: 20, 
-                height: 20, 
-                borderRadius: '50%', 
-                bgcolor: '#E0E0E0', 
-                display: 'flex', 
-                alignItems: 'center', 
-                justifyContent: 'center',
-                flexShrink: 0,
-                mt: 0.5
-              }}>
+              <Box
+                sx={{
+                  width: 20,
+                  height: 20,
+                  borderRadius: '50%',
+                  bgcolor: '#E0E0E0',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  flexShrink: 0,
+                  mt: 0.5,
+                }}
+              >
                 <Monitor size={12} color="#666" />
               </Box>
               <Typography variant="body2" sx={{ lineHeight: 1.5 }}>
@@ -297,100 +330,117 @@ export function AirbnbView() {
               </Typography>
             </Box>
             <Box sx={{ display: 'flex', alignItems: 'flex-start', gap: 2, mb: 3 }}>
-              <Box sx={{ 
-                width: 20, 
-                height: 20, 
-                borderRadius: '50%', 
-                bgcolor: '#E0E0E0', 
-                display: 'flex', 
-                alignItems: 'center', 
-                justifyContent: 'center',
-                flexShrink: 0,
-                mt: 0.5
-              }}>
+              <Box
+                sx={{
+                  width: 20,
+                  height: 20,
+                  borderRadius: '50%',
+                  bgcolor: '#E0E0E0',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  flexShrink: 0,
+                  mt: 0.5,
+                }}
+              >
                 <FileCheck size={12} color="#666" />
               </Box>
               <Typography variant="body2" sx={{ lineHeight: 1.5 }}>
-                After importing my listings, I will check that the Hostaway calendar matches my Airbnb calendar.
+                After importing my listings, I will check that the Hostaway calendar matches my
+                Airbnb calendar.
               </Typography>
             </Box>
             <Box sx={{ display: 'flex', alignItems: 'flex-start', gap: 2, mb: 3 }}>
-              <Box sx={{ 
-                width: 20, 
-                height: 20, 
-                borderRadius: '50%', 
-                bgcolor: '#E0E0E0', 
-                display: 'flex', 
-                alignItems: 'center', 
-                justifyContent: 'center',
-                flexShrink: 0,
-                mt: 0.5
-              }}>
+              <Box
+                sx={{
+                  width: 20,
+                  height: 20,
+                  borderRadius: '50%',
+                  bgcolor: '#E0E0E0',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  flexShrink: 0,
+                  mt: 0.5,
+                }}
+              >
                 <Building2 size={12} color="#666" />
               </Box>
               <Typography variant="body2" sx={{ lineHeight: 1.5 }}>
-                Only fully owned listings can be imported. Co-hosted listings will not show in the import menu.
+                Only fully owned listings can be imported. Co-hosted listings will not show in the
+                import menu.
               </Typography>
             </Box>
             <Box sx={{ display: 'flex', alignItems: 'flex-start', gap: 2, mb: 3 }}>
-              <Box sx={{ 
-                width: 20, 
-                height: 20, 
-                borderRadius: '50%', 
-                bgcolor: '#E0E0E0', 
-                display: 'flex', 
-                alignItems: 'center', 
-                justifyContent: 'center',
-                flexShrink: 0,
-                mt: 0.5
-              }}>
+              <Box
+                sx={{
+                  width: 20,
+                  height: 20,
+                  borderRadius: '50%',
+                  bgcolor: '#E0E0E0',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  flexShrink: 0,
+                  mt: 0.5,
+                }}
+              >
                 <Calendar size={12} color="#666" />
               </Box>
               <Typography variant="body2" sx={{ lineHeight: 1.5 }}>
-                The Airbnb connection allows a maximum of 2 years of future updates to be set and synchronized.
+                The Airbnb connection allows a maximum of 2 years of future updates to be set and
+                synchronized.
               </Typography>
             </Box>
             <Box sx={{ display: 'flex', alignItems: 'flex-start', gap: 2, mb: 3 }}>
-              <Box sx={{ 
-                width: 20, 
-                height: 20, 
-                borderRadius: '50%', 
-                bgcolor: '#E0E0E0', 
-                display: 'flex', 
-                alignItems: 'center', 
-                justifyContent: 'center',
-                flexShrink: 0,
-                mt: 0.5
-              }}>
+              <Box
+                sx={{
+                  width: 20,
+                  height: 20,
+                  borderRadius: '50%',
+                  bgcolor: '#E0E0E0',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  flexShrink: 0,
+                  mt: 0.5,
+                }}
+              >
                 <Link2 size={12} color="#666" />
               </Box>
               <Typography variant="body2" sx={{ lineHeight: 1.5 }}>
-                Internally in Airbnb linked listings will unlink during connection. I can use the Hostaway Cross Listings feature to link them in Hostaway after import.
+                Internally in Airbnb linked listings will unlink during connection. I can use the
+                Hostaway Cross Listings feature to link them in Hostaway after import.
               </Typography>
             </Box>
             <Box sx={{ display: 'flex', alignItems: 'flex-start', gap: 2, mb: 3 }}>
-              <Box sx={{ 
-                width: 20, 
-                height: 20, 
-                borderRadius: '50%', 
-                bgcolor: '#E0E0E0', 
-                display: 'flex', 
-                alignItems: 'center', 
-                justifyContent: 'center',
-                flexShrink: 0,
-                mt: 0.5
-              }}>
+              <Box
+                sx={{
+                  width: 20,
+                  height: 20,
+                  borderRadius: '50%',
+                  bgcolor: '#E0E0E0',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  flexShrink: 0,
+                  mt: 0.5,
+                }}
+              >
                 <DollarSign size={12} color="#666" />
               </Box>
               <Typography variant="body2" sx={{ lineHeight: 1.5 }}>
-                Airbnb recommends the hosts to use the Host full commission fee model in the Airbnb accounts. After connection my account will be switched to this model. If I do not wish to be on this commission model, I will change this setting back in Airbnb under Account - payment - service fee settings.
+                Airbnb recommends the hosts to use the Host full commission fee model in the Airbnb
+                accounts. After connection my account will be switched to this model. If I do not
+                wish to be on this commission model, I will change this setting back in Airbnb under
+                Account - payment - service fee settings.
               </Typography>
             </Box>
           </Box>
-          
+
           <FormControlLabel
             control={
-              <Checkbox 
+              <Checkbox
                 checked={agreedToTerms}
                 onChange={(e) => setAgreedToTerms(e.target.checked)}
                 sx={{
@@ -403,7 +453,15 @@ export function AirbnbView() {
             label={
               <Typography variant="body2" sx={{ fontSize: '0.9rem' }}>
                 I agree to Hostaway{' '}
-                <Typography component="span" sx={{ color: '#00A699', textDecoration: 'underline', cursor: 'pointer', fontWeight: 500 }}>
+                <Typography
+                  component="span"
+                  sx={{
+                    color: '#00A699',
+                    textDecoration: 'underline',
+                    cursor: 'pointer',
+                    fontWeight: 500,
+                  }}
+                >
                   terms & conditions
                 </Typography>
               </Typography>
@@ -412,10 +470,10 @@ export function AirbnbView() {
           />
         </DialogContent>
         <DialogActions sx={{ p: 4, gap: 2, justifyContent: 'center' }}>
-          <Button 
+          <Button
             onClick={() => setTermsModalOpen(false)}
-            sx={{ 
-              textTransform: 'none', 
+            sx={{
+              textTransform: 'none',
               color: '#666',
               bgcolor: '#E0E0E0',
               px: 3,
@@ -423,17 +481,17 @@ export function AirbnbView() {
               borderRadius: 2,
               '&:hover': {
                 bgcolor: '#D0D0D0',
-              }
+              },
             }}
           >
             Close
           </Button>
-          <Button 
+          <Button
             variant="contained"
             disabled={!agreedToTerms}
             onClick={() => setTermsModalOpen(false)}
-            sx={{ 
-              textTransform: 'none', 
+            sx={{
+              textTransform: 'none',
               bgcolor: agreedToTerms ? '#FF5A5F' : '#E0E0E0',
               color: agreedToTerms ? 'white' : '#999',
               px: 3,
@@ -441,7 +499,7 @@ export function AirbnbView() {
               borderRadius: 2,
               '&:hover': {
                 bgcolor: agreedToTerms ? '#E53E3E' : '#E0E0E0',
-              }
+              },
             }}
           >
             Connect with Airbnb
@@ -476,7 +534,7 @@ export function AirbnbView() {
                 value={selectedListing}
                 label="Select listing or type to search"
                 onChange={(e) => setSelectedListing(e.target.value)}
-                sx={{ 
+                sx={{
                   '& .MuiOutlinedInput-notchedOutline': {
                     borderColor: '#E0E0E0',
                   },
@@ -497,10 +555,10 @@ export function AirbnbView() {
           </Box>
         </DialogContent>
         <DialogActions sx={{ p: 3, gap: 2, justifyContent: 'flex-end' }}>
-          <Button 
+          <Button
             onClick={() => setCreateListingModalOpen(false)}
-            sx={{ 
-              textTransform: 'none', 
+            sx={{
+              textTransform: 'none',
               color: '#00A699',
               bgcolor: '#F0F9F8',
               px: 3,
@@ -508,23 +566,23 @@ export function AirbnbView() {
               borderRadius: 2,
               '&:hover': {
                 bgcolor: '#E0F2F1',
-              }
+              },
             }}
           >
             Cancel
           </Button>
-          <Button 
+          <Button
             variant="contained"
             onClick={() => setCreateListingModalOpen(false)}
-            sx={{ 
-              textTransform: 'none', 
+            sx={{
+              textTransform: 'none',
               bgcolor: '#FF5A5F',
               px: 3,
               py: 1,
               borderRadius: 2,
               '&:hover': {
                 bgcolor: '#E53E3E',
-              }
+              },
             }}
           >
             Create

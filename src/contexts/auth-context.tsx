@@ -64,10 +64,10 @@ export function AuthProvider({ children }: AuthProviderProps) {
 
   const login = async (email: string, password: string): Promise<boolean> => {
     setIsLoading(true);
-    
+
     try {
       // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 1000));
+      await new Promise((resolve) => setTimeout(resolve, 1000));
 
       let userData: User | null = null;
 
@@ -132,7 +132,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
       else {
         const createdUsers = JSON.parse(localStorage.getItem('createdUsers') || '[]');
         const foundUser = createdUsers.find((createdUser: User) => createdUser.email === email);
-        
+
         if (foundUser) {
           // For demo purposes, we'll accept any password for created users
           // In a real app, you'd verify the password hash
@@ -164,10 +164,10 @@ export function AuthProvider({ children }: AuthProviderProps) {
 
   const createUser = async (userData: Omit<User, 'id'>): Promise<boolean> => {
     setIsLoading(true);
-    
+
     try {
       // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 1000));
+      await new Promise((resolve) => setTimeout(resolve, 1000));
 
       // Generate a unique ID
       const newUser: User = {
@@ -191,15 +191,15 @@ export function AuthProvider({ children }: AuthProviderProps) {
 
   const updateUser = async (userId: string, userData: Partial<User>): Promise<boolean> => {
     setIsLoading(true);
-    
+
     try {
       // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 1000));
+      await new Promise((resolve) => setTimeout(resolve, 1000));
 
       // Update user in localStorage (in a real app, this would be sent to the server)
       const existingUsers = JSON.parse(localStorage.getItem('createdUsers') || '[]');
       const userIndex = existingUsers.findIndex((existingUser: User) => existingUser.id === userId);
-      
+
       if (userIndex !== -1) {
         existingUsers[userIndex] = { ...existingUsers[userIndex], ...userData };
         localStorage.setItem('createdUsers', JSON.stringify(existingUsers));

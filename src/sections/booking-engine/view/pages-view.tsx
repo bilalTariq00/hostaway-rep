@@ -1,5 +1,14 @@
 import React, { useState } from 'react';
-import { Eye, Home , Info, Globe, Contact, ChevronUp, ChevronDown, List as ListIcon } from 'lucide-react';
+import {
+  Eye,
+  Home,
+  Info,
+  Globe,
+  Contact,
+  ChevronUp,
+  ChevronDown,
+  List as ListIcon,
+} from 'lucide-react';
 
 import Box from '@mui/material/Box';
 import Tab from '@mui/material/Tab';
@@ -63,9 +72,9 @@ export function PagesView() {
   };
 
   const handlePageToggle = (pageId: string) => {
-    setPages(prev => prev.map(page => 
-      page.id === pageId ? { ...page, expanded: !page.expanded } : page
-    ));
+    setPages((prev) =>
+      prev.map((page) => (page.id === pageId ? { ...page, expanded: !page.expanded } : page))
+    );
   };
 
   const handlePageSelect = (pageId: string) => {
@@ -88,7 +97,7 @@ export function PagesView() {
         <Typography variant="h4" sx={{ fontWeight: 600, mb: 2 }}>
           Booking Engine
         </Typography>
-        
+
         <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 3 }}>
           <Typography variant="body1" color="text.secondary">
             Your Webpage is published on Domusferiae.holdayfuture.com
@@ -120,9 +129,7 @@ export function PagesView() {
                       onClick={() => handlePageToggle(page.id)}
                       sx={{ borderRadius: 1, mb: 0.5 }}
                     >
-                      <ListItemIcon>
-                        {getPageIcon(page.icon)}
-                      </ListItemIcon>
+                      <ListItemIcon>{getPageIcon(page.icon)}</ListItemIcon>
                       <ListItemText primary={page.name} />
                       {page.expanded ? <ChevronUp size={16} /> : <ChevronDown size={16} />}
                     </ListItemButton>
@@ -132,8 +139,8 @@ export function PagesView() {
                           sx={{ pl: 4, py: 0.5 }}
                           onClick={() => handlePageSelect(page.id)}
                         >
-                          <ListItemText 
-                            primary="Edit Page" 
+                          <ListItemText
+                            primary="Edit Page"
                             sx={{ '& .MuiListItemText-primary': { fontSize: '0.875rem' } }}
                           />
                         </ListItemButton>
@@ -141,8 +148,8 @@ export function PagesView() {
                           sx={{ pl: 4, py: 0.5 }}
                           onClick={() => handlePreview(page.id)}
                         >
-                          <ListItemText 
-                            primary="Preview Page" 
+                          <ListItemText
+                            primary="Preview Page"
                             sx={{ '& .MuiListItemText-primary': { fontSize: '0.875rem' } }}
                           />
                         </ListItemButton>
@@ -175,14 +182,14 @@ export function PagesView() {
                         sx={{ pl: 4, py: 0.5 }}
                         onClick={() => handlePageSelect(item.id)}
                       >
-                        <ListItemText 
+                        <ListItemText
                           primary={item.name}
-                          sx={{ 
-                            '& .MuiListItemText-primary': { 
+                          sx={{
+                            '& .MuiListItemText-primary': {
                               fontSize: '0.875rem',
                               fontWeight: item.active ? 600 : 400,
-                              color: item.active ? 'primary.main' : 'text.primary'
-                            }
+                              color: item.active ? 'primary.main' : 'text.primary',
+                            },
                           }}
                         />
                       </ListItemButton>
@@ -214,14 +221,14 @@ export function PagesView() {
                         sx={{ pl: 4, py: 0.5 }}
                         onClick={() => handlePageSelect(item.id)}
                       >
-                        <ListItemText 
+                        <ListItemText
                           primary={item.name}
-                          sx={{ 
-                            '& .MuiListItemText-primary': { 
+                          sx={{
+                            '& .MuiListItemText-primary': {
                               fontSize: '0.875rem',
                               fontWeight: item.active ? 600 : 400,
-                              color: item.active ? 'primary.main' : 'text.primary'
-                            }
+                              color: item.active ? 'primary.main' : 'text.primary',
+                            },
                           }}
                         />
                       </ListItemButton>
@@ -237,8 +244,18 @@ export function PagesView() {
         <Box sx={{ flex: 1 }}>
           <Card sx={{ height: 'fit-content', position: 'sticky', top: 20 }}>
             <CardContent>
-              <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
-                <Typography variant="h6" sx={{ fontWeight: 600, display: 'flex', alignItems: 'center', gap: 1 }}>
+              <Box
+                sx={{
+                  display: 'flex',
+                  justifyContent: 'space-between',
+                  alignItems: 'center',
+                  mb: 2,
+                }}
+              >
+                <Typography
+                  variant="h6"
+                  sx={{ fontWeight: 600, display: 'flex', alignItems: 'center', gap: 1 }}
+                >
                   <Eye size={20} />
                   {selectedPage.charAt(0).toUpperCase() + selectedPage.slice(1)} Page Preview
                 </Typography>
@@ -251,7 +268,7 @@ export function PagesView() {
                   Open in New Tab
                 </Button>
               </Box>
-              
+
               {/* Preview Content */}
               <Box
                 sx={{
@@ -269,7 +286,7 @@ export function PagesView() {
                   <Typography variant="h5" sx={{ fontWeight: 600, mb: 2, textAlign: 'center' }}>
                     {selectedPage.charAt(0).toUpperCase() + selectedPage.slice(1)} Page
                   </Typography>
-                  
+
                   {selectedPage === 'home' && (
                     <Box>
                       <Box sx={{ textAlign: 'center', mb: 3 }}>

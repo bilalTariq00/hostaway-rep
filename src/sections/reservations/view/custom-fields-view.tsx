@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 
 import Box from '@mui/material/Box';
@@ -123,26 +122,33 @@ export function CustomFieldsView() {
   const handleSave = () => {
     if (isEditMode && editingId) {
       // Update existing field
-      setCustomFields(prev => prev.map(field => 
-        field.id === editingId 
-          ? { ...field, name: formData.name, type: formData.type, publicVariable: formData.name.toLowerCase().replace(/\s+/g, '_') }
-          : field
-      ));
+      setCustomFields((prev) =>
+        prev.map((field) =>
+          field.id === editingId
+            ? {
+                ...field,
+                name: formData.name,
+                type: formData.type,
+                publicVariable: formData.name.toLowerCase().replace(/\s+/g, '_'),
+              }
+            : field
+        )
+      );
     } else {
       // Add new field
       const newField = {
-        id: Math.max(...customFields.map(f => f.id), 0) + 1,
+        id: Math.max(...customFields.map((f) => f.id), 0) + 1,
         name: formData.name,
         type: formData.type,
         publicVariable: formData.name.toLowerCase().replace(/\s+/g, '_'),
       };
-      setCustomFields(prev => [...prev, newField]);
+      setCustomFields((prev) => [...prev, newField]);
     }
     handleCloseDrawer();
   };
 
   const handleEdit = (id: number) => {
-    const field = customFields.find(f => f.id === id);
+    const field = customFields.find((f) => f.id === id);
     if (field) {
       setIsEditMode(true);
       setEditingId(id);
@@ -162,7 +168,7 @@ export function CustomFieldsView() {
 
   const handleConfirmDelete = () => {
     if (fieldToDelete) {
-      setCustomFields(prev => prev.filter(field => field.id !== fieldToDelete));
+      setCustomFields((prev) => prev.filter((field) => field.id !== fieldToDelete));
       setDeleteDialogOpen(false);
       setFieldToDelete(null);
     }
@@ -179,13 +185,13 @@ export function CustomFieldsView() {
       <Box sx={{ mb: 3 }}>
         <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
           <IconButton onClick={handleBackClick} sx={{ mr: 1 }}>
-            <Iconify icon={"eva:arrow-left-fill" as any} />
+            <Iconify icon={'eva:arrow-left-fill' as any} />
           </IconButton>
           <Typography variant="h6" sx={{ mr: 2 }}>
             Reservations
           </Typography>
         </Box>
-        
+
         <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
           <Typography variant="h4" sx={{ fontWeight: 600 }}>
             Custom Fields
@@ -217,22 +223,29 @@ export function CustomFieldsView() {
                     </Typography>
                   </TableCell>
                   <TableCell>
-                    <Typography variant="body2">
-                      {field.type}
-                    </Typography>
+                    <Typography variant="body2">{field.type}</Typography>
                   </TableCell>
                   <TableCell>
-                    <Typography variant="body2" sx={{ fontFamily: 'monospace', bgcolor: 'grey.100', px: 1, py: 0.5, borderRadius: 0.5 }}>
+                    <Typography
+                      variant="body2"
+                      sx={{
+                        fontFamily: 'monospace',
+                        bgcolor: 'grey.100',
+                        px: 1,
+                        py: 0.5,
+                        borderRadius: 0.5,
+                      }}
+                    >
                       {field.publicVariable}
                     </Typography>
                   </TableCell>
                   <TableCell align="center">
                     <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
                       <IconButton size="small" onClick={() => handleEdit(field.id)}>
-                        <Iconify icon={"eva:edit-fill" as any} width={16} />
+                        <Iconify icon={'eva:edit-fill' as any} width={16} />
                       </IconButton>
                       <IconButton size="small" onClick={() => handleDelete(field.id)}>
-                        <Iconify icon={"eva:close-fill" as any} width={16} />
+                        <Iconify icon={'eva:close-fill' as any} width={16} />
                       </IconButton>
                     </Box>
                   </TableCell>
@@ -257,7 +270,9 @@ export function CustomFieldsView() {
       >
         <Box sx={{ p: 3, height: '100%', display: 'flex', flexDirection: 'column' }}>
           {/* Header */}
-          <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 3 }}>
+          <Box
+            sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 3 }}
+          >
             <Typography variant="h6" sx={{ fontWeight: 600 }}>
               {isEditMode ? 'Edit custom field' : 'Add custom field'}
             </Typography>
@@ -301,11 +316,7 @@ export function CustomFieldsView() {
                 Type
               </Typography>
               <FormControl fullWidth size="small">
-                <Select
-                  value={formData.type}
-                  onChange={handleInputChange('type')}
-                  displayEmpty
-                >
+                <Select value={formData.type} onChange={handleInputChange('type')} displayEmpty>
                   <MenuItem value="Text">Text</MenuItem>
                   <MenuItem value="Text Area">Text Area</MenuItem>
                   <MenuItem value="Number">Number</MenuItem>
@@ -344,12 +355,10 @@ export function CustomFieldsView() {
           </Box>
 
           {/* Action Buttons */}
-          <Box sx={{ display: 'flex', gap: 2, pt: 2, borderTop: '1px solid', borderColor: 'divider' }}>
-            <Button
-              variant="outlined"
-              onClick={handleCloseDrawer}
-              sx={{ flex: 1 }}
-            >
+          <Box
+            sx={{ display: 'flex', gap: 2, pt: 2, borderTop: '1px solid', borderColor: 'divider' }}
+          >
+            <Button variant="outlined" onClick={handleCloseDrawer} sx={{ flex: 1 }}>
               Cancel
             </Button>
             <Button
@@ -365,12 +374,7 @@ export function CustomFieldsView() {
       </Drawer>
 
       {/* Delete Confirmation Dialog */}
-      <Dialog
-        open={deleteDialogOpen}
-        onClose={handleCancelDelete}
-        maxWidth="sm"
-        fullWidth
-      >
+      <Dialog open={deleteDialogOpen} onClose={handleCancelDelete} maxWidth="sm" fullWidth>
         <DialogTitle>
           <Typography variant="h6" sx={{ fontWeight: 600 }}>
             Delete Custom Field

@@ -42,46 +42,77 @@ const mockClients = [
 
 // Mock properties data with client assignments (same as in create-account page)
 const mockProperties = [
-  { id: '305034', name: 'La Dimora Del Cavaliere', location: 'Anguillara Sabazia, Italy', clientId: 'client1' },
+  {
+    id: '305034',
+    name: 'La Dimora Del Cavaliere',
+    location: 'Anguillara Sabazia, Italy',
+    clientId: 'client1',
+  },
   { id: '305035', name: 'Navigli', location: 'Milano, Italy', clientId: 'client1' },
   { id: '305225', name: 'Polacchi42', location: 'Roma, Italy', clientId: 'client2' },
-  { id: '305421', name: 'Superattico - Via Del Corso 43', location: 'Roma, Italy', clientId: 'client2' },
-  { id: '306532', name: 'Montecatini Terme', location: 'Montecatini Terme, Italy', clientId: 'client3' },
+  {
+    id: '305421',
+    name: 'Superattico - Via Del Corso 43',
+    location: 'Roma, Italy',
+    clientId: 'client2',
+  },
+  {
+    id: '306532',
+    name: 'Montecatini Terme',
+    location: 'Montecatini Terme, Italy',
+    clientId: 'client3',
+  },
   { id: '306533', name: 'Tuscany Villa', location: 'Florence, Italy', clientId: 'client3' },
   { id: '306534', name: 'Coastal Retreat', location: 'Amalfi, Italy', clientId: 'client4' },
 ];
 
 const getRoleColor = (role: string) => {
   switch (role) {
-    case 'associate': return 'primary';
-    case 'supervisor': return 'warning';
-    case 'manager': return 'success';
-    case 'user': return 'default';
-    case 'team': return 'secondary';
-    default: return 'default';
+    case 'associate':
+      return 'primary';
+    case 'supervisor':
+      return 'warning';
+    case 'manager':
+      return 'success';
+    case 'user':
+      return 'default';
+    case 'team':
+      return 'secondary';
+    default:
+      return 'default';
   }
 };
 
 const getRoleLabel = (role: string) => {
   switch (role) {
-    case 'associate': return 'Associate';
-    case 'supervisor': return 'Supervisor';
-    case 'manager': return 'Manager';
-    case 'user': return 'User';
-    case 'team': return 'Team';
-    default: return role;
+    case 'associate':
+      return 'Associate';
+    case 'supervisor':
+      return 'Supervisor';
+    case 'manager':
+      return 'Manager';
+    case 'user':
+      return 'User';
+    case 'team':
+      return 'Team';
+    default:
+      return role;
   }
 };
 
 const getClientNames = (clientIds: string[] = []) =>
-  clientIds.map(id => mockClients.find(c => c.id === id)?.name || `Client ${id}`).join(', ');
+  clientIds.map((id) => mockClients.find((c) => c.id === id)?.name || `Client ${id}`).join(', ');
 
 const getPropertyNames = (propertyIds: string[] = []) =>
-  propertyIds.map(id => mockProperties.find(p => p.id === id)?.name || `Property ${id}`).join(', ');
+  propertyIds
+    .map((id) => mockProperties.find((p) => p.id === id)?.name || `Property ${id}`)
+    .join(', ');
 
 const getManagedUserNames = (userIds: string[] = []) => {
   const createdUsers = JSON.parse(localStorage.getItem('createdUsers') || '[]');
-  return userIds.map(id => createdUsers.find((u: UserType) => u.id === id)?.name || `User ${id}`).join(', ');
+  return userIds
+    .map((id) => createdUsers.find((u: UserType) => u.id === id)?.name || `User ${id}`)
+    .join(', ');
 };
 
 const getManagerName = (managerId?: string) => {
@@ -100,19 +131,27 @@ const getSupervisorName = (supervisorId?: string) => {
 
 const getStatusColor = (status?: string) => {
   switch (status) {
-    case 'active': return 'success';
-    case 'inactive': return 'warning';
-    case 'suspended': return 'error';
-    default: return 'default';
+    case 'active':
+      return 'success';
+    case 'inactive':
+      return 'warning';
+    case 'suspended':
+      return 'error';
+    default:
+      return 'default';
   }
 };
 
 const getStatusLabel = (status?: string) => {
   switch (status) {
-    case 'active': return 'Active';
-    case 'inactive': return 'Inactive';
-    case 'suspended': return 'Suspended';
-    default: return 'Active';
+    case 'active':
+      return 'Active';
+    case 'inactive':
+      return 'Inactive';
+    case 'suspended':
+      return 'Suspended';
+    default:
+      return 'Active';
   }
 };
 
@@ -139,11 +178,10 @@ export function UserManagementPage() {
     // Ensure all users have a status field
     const usersWithStatus = createdUsers.map((user: UserType) => ({
       ...user,
-      status: user.status || 'active'
+      status: user.status || 'active',
     }));
     setUsers(usersWithStatus);
   }, []);
-
 
   const handleViewUser = (user: UserType) => {
     setSelectedUser(user);
@@ -162,7 +200,7 @@ export function UserManagementPage() {
 
   const confirmDelete = () => {
     if (userToDelete) {
-      const updatedUsers = users.filter(user => user.id !== userToDelete);
+      const updatedUsers = users.filter((user) => user.id !== userToDelete);
       setUsers(updatedUsers);
       localStorage.setItem('createdUsers', JSON.stringify(updatedUsers));
       setDeleteDialogOpen(false);
@@ -202,10 +240,8 @@ export function UserManagementPage() {
 
   const confirmStatusChange = () => {
     if (userToChangeStatus) {
-      const updatedUsers = users.map(user => 
-        user.id === userToChangeStatus.id 
-          ? { ...user, status: newStatus }
-          : user
+      const updatedUsers = users.map((user) =>
+        user.id === userToChangeStatus.id ? { ...user, status: newStatus } : user
       );
       setUsers(updatedUsers);
       localStorage.setItem('createdUsers', JSON.stringify(updatedUsers));
@@ -236,7 +272,7 @@ export function UserManagementPage() {
     } else if (selectedIndex > 0) {
       newSelected = newSelected.concat(
         selectedUsers.slice(0, selectedIndex),
-        selectedUsers.slice(selectedIndex + 1),
+        selectedUsers.slice(selectedIndex + 1)
       );
     }
 
@@ -383,15 +419,15 @@ export function UserManagementPage() {
                       </TableCell>
                       <TableCell component="th" id={labelId} scope="row">
                         <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-                          <Avatar 
-                            sx={{ 
-                              bgcolor: user.avatar ? 'transparent' : 'primary.main', 
-                              width: 40, 
+                          <Avatar
+                            sx={{
+                              bgcolor: user.avatar ? 'transparent' : 'primary.main',
+                              width: 40,
                               height: 40,
                               backgroundImage: user.avatar ? `url(${user.avatar})` : 'none',
                               backgroundSize: 'cover',
                               backgroundPosition: 'center',
-                              backgroundRepeat: 'no-repeat'
+                              backgroundRepeat: 'no-repeat',
                             }}
                           >
                             {!user.avatar && user.name.charAt(0).toUpperCase()}
@@ -404,9 +440,7 @@ export function UserManagementPage() {
                         </Box>
                       </TableCell>
                       <TableCell>
-                        <Typography variant="body2">
-                          {user.email}
-                        </Typography>
+                        <Typography variant="body2">{user.email}</Typography>
                       </TableCell>
                       <TableCell>
                         <Typography variant="body2" color="text.secondary">
@@ -420,26 +454,23 @@ export function UserManagementPage() {
                       </TableCell>
                       <TableCell>
                         <Typography variant="body2" color="text.secondary" sx={{ maxWidth: 150 }}>
-                          {user.assignedClients && user.assignedClients.length > 0 
+                          {user.assignedClients && user.assignedClients.length > 0
                             ? getClientNames(user.assignedClients)
-                            : 'No clients assigned'
-                          }
+                            : 'No clients assigned'}
                         </Typography>
                       </TableCell>
                       <TableCell>
                         <Typography variant="body2" color="text.secondary" sx={{ maxWidth: 150 }}>
-                          {user.assignedProperties && user.assignedProperties.length > 0 
+                          {user.assignedProperties && user.assignedProperties.length > 0
                             ? getPropertyNames(user.assignedProperties)
-                            : 'No properties assigned'
-                          }
+                            : 'No properties assigned'}
                         </Typography>
                       </TableCell>
                       <TableCell>
                         <Typography variant="body2" color="text.secondary" sx={{ maxWidth: 150 }}>
-                          {user.assignedUsers && user.assignedUsers.length > 0 
+                          {user.assignedUsers && user.assignedUsers.length > 0
                             ? getManagedUserNames(user.assignedUsers)
-                            : 'No users managed'
-                          }
+                            : 'No users managed'}
                         </Typography>
                       </TableCell>
                       <TableCell>
@@ -508,7 +539,6 @@ export function UserManagementPage() {
                           >
                             <Trash2 size={16} />
                           </IconButton>
-                       
                         </Box>
                       </TableCell>
                     </TableRow>
@@ -518,14 +548,11 @@ export function UserManagementPage() {
             </TableBody>
           </Table>
         </TableContainer>
-        
+
         <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', p: 2 }}>
           <FormControlLabel
             control={
-              <Checkbox
-                checked={dense}
-                onChange={(event) => setDense(event.target.checked)}
-              />
+              <Checkbox checked={dense} onChange={(event) => setDense(event.target.checked)} />
             }
             label="Dense"
           />
@@ -545,15 +572,10 @@ export function UserManagementPage() {
 
       {/* User Details Dialog */}
       {/* View User Dialog */}
-      <Dialog 
-        open={viewDialogOpen} 
-        onClose={handleCloseDialog}
-        maxWidth="lg"
-        fullWidth
-      >
+      <Dialog open={viewDialogOpen} onClose={handleCloseDialog} maxWidth="lg" fullWidth>
         <DialogContent sx={{ p: 0 }}>
-          <CreateAccountPage 
-            userToEdit={selectedUser || undefined} 
+          <CreateAccountPage
+            userToEdit={selectedUser || undefined}
             viewMode
             onClose={handleCloseDialog}
           />
@@ -561,15 +583,10 @@ export function UserManagementPage() {
       </Dialog>
 
       {/* Edit User Dialog */}
-      <Dialog 
-        open={editDialogOpen} 
-        onClose={handleCloseDialog}
-        maxWidth="lg"
-        fullWidth
-      >
+      <Dialog open={editDialogOpen} onClose={handleCloseDialog} maxWidth="lg" fullWidth>
         <DialogContent sx={{ p: 0 }}>
-          <CreateAccountPage 
-            userToEdit={selectedUser || undefined} 
+          <CreateAccountPage
+            userToEdit={selectedUser || undefined}
             viewMode={false}
             onClose={handleCloseDialog}
           />
@@ -626,11 +643,12 @@ export function UserManagementPage() {
         <DialogContent>
           <Typography>
             Are you sure you want to change {userToChangeStatus?.name}&apos;s status to{' '}
-            <Chip 
-              label={getStatusLabel(newStatus)} 
-              color={getStatusColor(newStatus) as any} 
-              size="small" 
-            />?
+            <Chip
+              label={getStatusLabel(newStatus)}
+              color={getStatusColor(newStatus) as any}
+              size="small"
+            />
+            ?
           </Typography>
         </DialogContent>
         <DialogActions>

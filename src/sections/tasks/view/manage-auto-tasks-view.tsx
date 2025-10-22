@@ -75,7 +75,7 @@ export function ManageAutoTasksView() {
   const [selectedAutoTask, setSelectedAutoTask] = useState<any>(null);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [autoTaskToDelete, setAutoTaskToDelete] = useState<any>(null);
-  
+
   // Load auto-tasks from localStorage or use mock data
   const loadAutoTasks = () => {
     const savedAutoTasks = localStorage.getItem('autoTasks');
@@ -84,7 +84,7 @@ export function ManageAutoTasksView() {
     }
     return mockAutoTasks;
   };
-  
+
   const [autoTasks, setAutoTasks] = useState(loadAutoTasks());
 
   // Refresh auto-tasks when component mounts (when returning from form)
@@ -143,8 +143,8 @@ export function ManageAutoTasksView() {
   };
 
   const handleStatusToggle = (autoTaskId: number) => {
-    const updatedAutoTasks = autoTasks.map((task: any) => 
-      task.id === autoTaskId 
+    const updatedAutoTasks = autoTasks.map((task: any) =>
+      task.id === autoTaskId
         ? { ...task, status: task.status === 'Active' ? 'Inactive' : 'Active' }
         : task
     );
@@ -195,8 +195,8 @@ export function ManageAutoTasksView() {
       <Grid container spacing={3}>
         {autoTasks.map((autoTask: any) => (
           <Grid key={autoTask.id} size={{ xs: 12, sm: 6, md: 4 }}>
-            <Card 
-              sx={{ 
+            <Card
+              sx={{
                 height: '100%',
                 bgcolor: autoTask.status === 'Active' ? 'grey.50' : 'background.paper',
                 border: 1,
@@ -207,7 +207,14 @@ export function ManageAutoTasksView() {
               }}
             >
               <CardContent>
-                <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', mb: 2 }}>
+                <Box
+                  sx={{
+                    display: 'flex',
+                    justifyContent: 'space-between',
+                    alignItems: 'flex-start',
+                    mb: 2,
+                  }}
+                >
                   <Typography variant="h6" sx={{ fontWeight: 600, flex: 1 }}>
                     {autoTask.name}
                   </Typography>
@@ -217,11 +224,8 @@ export function ManageAutoTasksView() {
                       onChange={() => handleStatusToggle(autoTask.id)}
                       size="small"
                     />
-                    <IconButton 
-                      size="small" 
-                      onClick={(e) => handleActionMenuOpen(e, autoTask)}
-                    >
-                      <Iconify icon={"eva:more-vertical-fill" as any} width={16} />
+                    <IconButton size="small" onClick={(e) => handleActionMenuOpen(e, autoTask)}>
+                      <Iconify icon={'eva:more-vertical-fill' as any} width={16} />
                     </IconButton>
                   </Box>
                 </Box>
@@ -239,7 +243,7 @@ export function ManageAutoTasksView() {
                       {autoTask.startingEvent}
                     </Typography>
                   </Box>
-                  
+
                   <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
                     <Typography variant="caption" color="text.secondary">
                       Due Before:
@@ -248,18 +252,14 @@ export function ManageAutoTasksView() {
                       {autoTask.dueBefore}
                     </Typography>
                   </Box>
-                  
+
                   <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
                     <Typography variant="caption" color="text.secondary">
                       Linked Channel:
                     </Typography>
-                    <Chip
-                      label={autoTask.linkedChannel}
-                      size="small"
-                      color="primary"
-                    />
+                    <Chip label={autoTask.linkedChannel} size="small" color="primary" />
                   </Box>
-                  
+
                   <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
                     <Typography variant="caption" color="text.secondary">
                       Linked Listing:
@@ -272,13 +272,17 @@ export function ManageAutoTasksView() {
 
                 <Box sx={{ display: 'flex', justifyContent: 'flex-end', gap: 1, mt: 2 }}>
                   <IconButton size="small" onClick={() => handleEditAutoTask(autoTask)}>
-                    <Iconify icon={"eva:edit-fill" as any} width={16} />
+                    <Iconify icon={'eva:edit-fill' as any} width={16} />
                   </IconButton>
                   <IconButton size="small" onClick={() => handleDuplicateAutoTask(autoTask)}>
-                    <Iconify icon={"eva:copy-fill" as any} width={16} />
+                    <Iconify icon={'eva:copy-fill' as any} width={16} />
                   </IconButton>
-                  <IconButton size="small" sx={{ color: 'error.main' }} onClick={() => handleDeleteAutoTask(autoTask)}>
-                    <Iconify icon={"eva:trash-2-fill" as any} width={16} />
+                  <IconButton
+                    size="small"
+                    sx={{ color: 'error.main' }}
+                    onClick={() => handleDeleteAutoTask(autoTask)}
+                  >
+                    <Iconify icon={'eva:trash-2-fill' as any} width={16} />
                   </IconButton>
                 </Box>
               </CardContent>
@@ -287,7 +291,6 @@ export function ManageAutoTasksView() {
         ))}
       </Grid>
 
-
       {/* Action Menu */}
       <Menu
         anchorEl={actionMenuAnchor}
@@ -295,19 +298,22 @@ export function ManageAutoTasksView() {
         onClose={handleActionMenuClose}
       >
         <MenuItem onClick={() => handleEditAutoTask(selectedAutoTask)}>
-          <Iconify icon={"eva:edit-fill" as any} sx={{ mr: 1 }} />
+          <Iconify icon={'eva:edit-fill' as any} sx={{ mr: 1 }} />
           Edit
         </MenuItem>
         <MenuItem onClick={() => handleDuplicateAutoTask(selectedAutoTask)}>
-          <Iconify icon={"eva:copy-fill" as any} sx={{ mr: 1 }} />
+          <Iconify icon={'eva:copy-fill' as any} sx={{ mr: 1 }} />
           Duplicate
         </MenuItem>
         <MenuItem onClick={handleActionMenuClose}>
-          <Iconify icon={"eva:play-circle-fill" as any} sx={{ mr: 1 }} />
+          <Iconify icon={'eva:play-circle-fill' as any} sx={{ mr: 1 }} />
           Run Now
         </MenuItem>
-        <MenuItem onClick={() => handleDeleteAutoTask(selectedAutoTask)} sx={{ color: 'error.main' }}>
-          <Iconify icon={"eva:trash-2-fill" as any} sx={{ mr: 1 }} />
+        <MenuItem
+          onClick={() => handleDeleteAutoTask(selectedAutoTask)}
+          sx={{ color: 'error.main' }}
+        >
+          <Iconify icon={'eva:trash-2-fill' as any} sx={{ mr: 1 }} />
           Delete
         </MenuItem>
       </Menu>
@@ -317,7 +323,8 @@ export function ManageAutoTasksView() {
         <DialogTitle>Delete Auto-task</DialogTitle>
         <DialogContent>
           <Typography>
-            Are you sure you want to delete &quot;{autoTaskToDelete?.name}&quot;? This action cannot be undone.
+            Are you sure you want to delete &quot;{autoTaskToDelete?.name}&quot;? This action cannot
+            be undone.
           </Typography>
         </DialogContent>
         <DialogActions>
@@ -330,4 +337,3 @@ export function ManageAutoTasksView() {
     </DashboardContent>
   );
 }
-

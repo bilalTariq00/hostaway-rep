@@ -58,7 +58,7 @@ const mockExpenses = [
     reservation: '',
     owner: '',
     ownerStatement: 'Via Acqua Bulicante - DF Method September [Da Pagare]',
-    amount: 900.00,
+    amount: 900.0,
     hasAttachment: false,
   },
   {
@@ -82,7 +82,7 @@ const mockExpenses = [
     reservation: '',
     owner: '',
     ownerStatement: 'Via Nicolo V - DF Method September [Pagata]',
-    amount: 50.00,
+    amount: 50.0,
     hasAttachment: false,
   },
   {
@@ -94,7 +94,7 @@ const mockExpenses = [
     reservation: '',
     owner: '',
     ownerStatement: 'Via Nicolo V - DF Method September [Pagata]',
-    amount: 65.00,
+    amount: 65.0,
     hasAttachment: false,
   },
   {
@@ -106,7 +106,7 @@ const mockExpenses = [
     reservation: '',
     owner: '',
     ownerStatement: 'Roman Method [Da Pagare]',
-    amount: 200.00,
+    amount: 200.0,
     hasAttachment: false,
   },
 ];
@@ -139,18 +139,25 @@ export function ExpensesView() {
   // State for expenses list
   const [expenses, setExpenses] = useState(mockExpenses);
   const [editingExpense, setEditingExpense] = useState<any>(null);
-  
+
   // Column visibility state
   const [columnSettingsAnchor, setColumnSettingsAnchor] = useState<null | HTMLElement>(null);
   const [columnSearchTerm, setColumnSearchTerm] = useState('');
   const [visibleColumns, setVisibleColumns] = useState([
-    'name', 'date', 'categories', 'listing', 'reservation', 'owner', 'ownerStatement', 'amount'
+    'name',
+    'date',
+    'categories',
+    'listing',
+    'reservation',
+    'owner',
+    'ownerStatement',
+    'amount',
   ]);
-  
+
   // Delete confirmation state
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [expenseToDelete, setExpenseToDelete] = useState<any>(null);
-  
+
   // Attachment dropdown state
   const [attachmentAnchor, setAttachmentAnchor] = useState<null | HTMLElement>(null);
 
@@ -163,17 +170,15 @@ export function ExpensesView() {
 
   const handleSelectAll = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.checked) {
-      setSelectedExpenses(expenses.map(expense => expense.id));
+      setSelectedExpenses(expenses.map((expense) => expense.id));
     } else {
       setSelectedExpenses([]);
     }
   };
 
   const handleSelectExpense = (expenseId: number) => {
-    setSelectedExpenses(prev => 
-      prev.includes(expenseId) 
-        ? prev.filter(id => id !== expenseId)
-        : [...prev, expenseId]
+    setSelectedExpenses((prev) =>
+      prev.includes(expenseId) ? prev.filter((id) => id !== expenseId) : [...prev, expenseId]
     );
   };
 
@@ -223,14 +228,14 @@ export function ExpensesView() {
   };
 
   const handleInputChange = (field: string, value: any) => {
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
       [field]: value,
     }));
   };
 
   const handleAmountChange = (operation: 'increment' | 'decrement') => {
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
       amount: operation === 'increment' ? prev.amount + 1 : Math.max(0, prev.amount - 1),
     }));
@@ -239,7 +244,7 @@ export function ExpensesView() {
   const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     const files = event.target.files;
     if (files) {
-      setFormData(prev => ({
+      setFormData((prev) => ({
         ...prev,
         attachments: files,
       }));
@@ -251,7 +256,7 @@ export function ExpensesView() {
       if (editingExpense.isDuplicating) {
         // Create new duplicate expense
         const duplicatedExpense = {
-          id: Math.max(...expenses.map(e => e.id)) + 1, // Generate new ID
+          id: Math.max(...expenses.map((e) => e.id)) + 1, // Generate new ID
           name: formData.expenseName || 'New Expense',
           date: formData.date,
           category: formData.categories,
@@ -264,7 +269,7 @@ export function ExpensesView() {
         };
 
         // Add to expenses list
-        setExpenses(prev => [duplicatedExpense, ...prev]);
+        setExpenses((prev) => [duplicatedExpense, ...prev]);
       } else {
         // Update existing expense
         const updatedExpense = {
@@ -280,14 +285,14 @@ export function ExpensesView() {
           hasAttachment: Boolean(formData.attachments && formData.attachments.length > 0),
         };
 
-        setExpenses(prev => prev.map(expense => 
-          expense.id === editingExpense.id ? updatedExpense : expense
-        ));
+        setExpenses((prev) =>
+          prev.map((expense) => (expense.id === editingExpense.id ? updatedExpense : expense))
+        );
       }
     } else {
       // Create new expense object
       const newExpense = {
-        id: Math.max(...expenses.map(e => e.id)) + 1, // Generate new ID
+        id: Math.max(...expenses.map((e) => e.id)) + 1, // Generate new ID
         name: formData.expenseName || 'New Expense',
         date: formData.date,
         category: formData.categories,
@@ -300,9 +305,9 @@ export function ExpensesView() {
       };
 
       // Add to expenses list
-      setExpenses(prev => [newExpense, ...prev]);
+      setExpenses((prev) => [newExpense, ...prev]);
     }
-    
+
     // Reset form and close sidebar
     handleSidebarClose();
   };
@@ -333,10 +338,8 @@ export function ExpensesView() {
   };
 
   const handleColumnToggle = (columnKey: string) => {
-    setVisibleColumns(prev => 
-      prev.includes(columnKey) 
-        ? prev.filter(col => col !== columnKey)
-        : [...prev, columnKey]
+    setVisibleColumns((prev) =>
+      prev.includes(columnKey) ? prev.filter((col) => col !== columnKey) : [...prev, columnKey]
     );
   };
 
@@ -348,7 +351,7 @@ export function ExpensesView() {
 
   const handleDeleteConfirm = () => {
     if (expenseToDelete) {
-      setExpenses(prev => prev.filter(expense => expense.id !== expenseToDelete.id));
+      setExpenses((prev) => prev.filter((expense) => expense.id !== expenseToDelete.id));
       setDeleteDialogOpen(false);
       setExpenseToDelete(null);
     }
@@ -393,7 +396,7 @@ export function ExpensesView() {
       owner: expense.owner,
       attachments: null as FileList | null,
     });
-    
+
     // Open sidebar for duplication
     setSidebarOpen(true);
   };
@@ -417,7 +420,7 @@ export function ExpensesView() {
     { key: 'updatedAt', label: 'Updated At', mandatory: false },
   ];
 
-  const filteredExpenses = expenses.filter(expense =>
+  const filteredExpenses = expenses.filter((expense) =>
     expense.name.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
@@ -425,15 +428,15 @@ export function ExpensesView() {
   const startIndex = (currentPage - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
   const currentExpenses = filteredExpenses.slice(startIndex, endIndex);
-  
+
   // Pagination calculations
   const totalPages = Math.ceil(filteredExpenses.length / itemsPerPage);
-  
+
   // Responsive pagination logic
   const getPaginationItems = () => {
     const items = [];
     const maxVisiblePages = 3; // Show max 3 page numbers
-    
+
     if (totalPages <= maxVisiblePages + 2) {
       // Show all pages if total is small
       for (let i = 1; i <= totalPages; i++) {
@@ -442,31 +445,31 @@ export function ExpensesView() {
     } else {
       // Always show first page
       items.push(1);
-      
+
       if (currentPage > 3) {
         items.push('...');
       }
-      
+
       // Show pages around current page
       const start = Math.max(2, currentPage - 1);
       const end = Math.min(totalPages - 1, currentPage + 1);
-      
+
       for (let i = start; i <= end; i++) {
         if (i !== 1 && i !== totalPages) {
           items.push(i);
         }
       }
-      
+
       if (currentPage < totalPages - 2) {
         items.push('...');
       }
-      
+
       // Always show last page
       if (totalPages > 1) {
         items.push(totalPages);
       }
     }
-    
+
     return items;
   };
 
@@ -571,22 +574,48 @@ export function ExpensesView() {
           <Table sx={{ minWidth: 1200 }}>
             <TableHead sx={{ bgcolor: 'grey.50' }}>
               <TableRow>
-                <TableCell padding="checkbox" sx={{ bgcolor: 'grey.50', borderBottom: '1px solid', borderColor: 'divider' }}>
+                <TableCell
+                  padding="checkbox"
+                  sx={{ bgcolor: 'grey.50', borderBottom: '1px solid', borderColor: 'divider' }}
+                >
                   <Checkbox
-                    indeterminate={selectedExpenses.length > 0 && selectedExpenses.length < expenses.length}
+                    indeterminate={
+                      selectedExpenses.length > 0 && selectedExpenses.length < expenses.length
+                    }
                     checked={selectedExpenses.length === expenses.length}
                     onChange={handleSelectAll}
                     sx={{ color: 'text.secondary' }}
                   />
                 </TableCell>
-                {allColumns.map((column) => (
-                  visibleColumns.includes(column.key) && (
-                    <TableCell key={column.key} sx={{ bgcolor: 'grey.50', borderBottom: '1px solid', borderColor: 'divider', fontWeight: 600, color: 'text.primary' }}>
-                      {column.label}
-                    </TableCell>
-                  )
-                ))}
-                <TableCell align="center" sx={{ position: 'sticky', right: 0, bgcolor: 'grey.50', borderLeft: '1px solid', borderBottom: '1px solid', borderColor: 'divider', zIndex: 1 }}>
+                {allColumns.map(
+                  (column) =>
+                    visibleColumns.includes(column.key) && (
+                      <TableCell
+                        key={column.key}
+                        sx={{
+                          bgcolor: 'grey.50',
+                          borderBottom: '1px solid',
+                          borderColor: 'divider',
+                          fontWeight: 600,
+                          color: 'text.primary',
+                        }}
+                      >
+                        {column.label}
+                      </TableCell>
+                    )
+                )}
+                <TableCell
+                  align="center"
+                  sx={{
+                    position: 'sticky',
+                    right: 0,
+                    bgcolor: 'grey.50',
+                    borderLeft: '1px solid',
+                    borderBottom: '1px solid',
+                    borderColor: 'divider',
+                    zIndex: 1,
+                  }}
+                >
                   <IconButton
                     size="small"
                     onClick={handleColumnSettingsClick}
@@ -600,123 +629,175 @@ export function ExpensesView() {
             <TableBody>
               {currentExpenses.map((expense, index) => (
                 <TableRow key={expense.id} sx={{ '&:hover': { bgcolor: 'grey.50' } }}>
-                  <TableCell padding="checkbox" sx={{ borderBottom: '1px solid', borderColor: 'divider' }}>
+                  <TableCell
+                    padding="checkbox"
+                    sx={{ borderBottom: '1px solid', borderColor: 'divider' }}
+                  >
                     <Checkbox
                       checked={selectedExpenses.includes(expense.id)}
                       onChange={() => handleSelectExpense(expense.id)}
                       sx={{ color: 'text.secondary' }}
                     />
                   </TableCell>
-                  {allColumns.map((column) => (
-                    visibleColumns.includes(column.key) && (
-                      <TableCell key={column.key} sx={{ borderBottom: '1px solid', borderColor: 'divider', minWidth: 120 }}>
-                        {column.key === 'name' && (
-                          <Typography 
-                            variant="body2" 
-                            sx={{ 
-                              fontWeight: 500, 
-                              color: 'primary.main', 
-                              cursor: 'pointer', 
-                              '&:hover': { color: 'primary.dark' } 
-                            }}
-                            onClick={() => handleEditExpense(expense)}
-                          >
-                      {expense.name}
-                    </Typography>
-                        )}
-                        {column.key === 'date' && (
-                          <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-                      {expense.date}
-                    </Typography>
-                        )}
-                        {column.key === 'description' && (
-                          <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-                            —
-                          </Typography>
-                        )}
-                        {column.key === 'categories' && (
-                          <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-                            —
-                          </Typography>
-                        )}
-                        {column.key === 'listing' && (
-                          <Typography 
-                            variant="body2" 
-                            sx={{ 
-                              color: 'primary.main', 
-                              cursor: 'pointer', 
-                              '&:hover': { textDecoration: 'underline' } 
-                            }}
-                            onClick={() => router.push('/listings/1')}
-                          >
-                      {expense.listing}
-                    </Typography>
-                        )}
-                        {column.key === 'listingId' && (
-                          <Typography variant="body2" sx={{ color: 'text.secondary', fontFamily: 'monospace' }}>
-                            —
-                    </Typography>
-                        )}
-                        {column.key === 'reservation' && (
-                          <Typography variant="body2" sx={{ color: 'text.secondary', textAlign: 'center' }}>
-                            —
-                    </Typography>
-                        )}
-                        {column.key === 'reservationId' && (
-                          <Typography variant="body2" sx={{ color: 'text.secondary', fontFamily: 'monospace' }}>
-                            —
-                    </Typography>
-                        )}
-                        {column.key === 'owner' && (
-                          <Typography variant="body2" sx={{ color: 'text.secondary', textAlign: 'center' }}>
-                            —
-                    </Typography>
-                        )}
-                        {column.key === 'ownerStatement' && (
-                          <Typography variant="body2" sx={{ color: 'text.primary', lineHeight: 1.4 }}>
-                      {expense.ownerStatement}
-                    </Typography>
-                        )}
-                        {column.key === 'amount' && (
-                          <Typography variant="body2" sx={{ fontWeight: 600, color: 'error.main', textAlign: 'right' }}>
-                            -€{expense.amount.toFixed(2)}
-                    </Typography>
-                        )}
-                        {column.key === 'currency' && (
-                          <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-                            EUR
-                          </Typography>
-                        )}
-                        {column.key === 'status' && (
-                          <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-                            —
-                          </Typography>
-                        )}
-                        {column.key === 'createdAt' && (
-                          <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-                            —
-                          </Typography>
-                        )}
-                        {column.key === 'updatedAt' && (
-                          <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-                            —
-                    </Typography>
-                        )}
-                  </TableCell>
-                    )
-                  ))}
-                  <TableCell align="center" sx={{ position: 'sticky', right: 0, bgcolor: index % 2 === 0 ? 'white' : 'grey.50', borderLeft: '1px solid', borderBottom: '1px solid', borderColor: 'divider', zIndex: 1 }}>
+                  {allColumns.map(
+                    (column) =>
+                      visibleColumns.includes(column.key) && (
+                        <TableCell
+                          key={column.key}
+                          sx={{ borderBottom: '1px solid', borderColor: 'divider', minWidth: 120 }}
+                        >
+                          {column.key === 'name' && (
+                            <Typography
+                              variant="body2"
+                              sx={{
+                                fontWeight: 500,
+                                color: 'primary.main',
+                                cursor: 'pointer',
+                                '&:hover': { color: 'primary.dark' },
+                              }}
+                              onClick={() => handleEditExpense(expense)}
+                            >
+                              {expense.name}
+                            </Typography>
+                          )}
+                          {column.key === 'date' && (
+                            <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+                              {expense.date}
+                            </Typography>
+                          )}
+                          {column.key === 'description' && (
+                            <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+                              —
+                            </Typography>
+                          )}
+                          {column.key === 'categories' && (
+                            <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+                              —
+                            </Typography>
+                          )}
+                          {column.key === 'listing' && (
+                            <Typography
+                              variant="body2"
+                              sx={{
+                                color: 'primary.main',
+                                cursor: 'pointer',
+                                '&:hover': { textDecoration: 'underline' },
+                              }}
+                              onClick={() => router.push('/listings/1')}
+                            >
+                              {expense.listing}
+                            </Typography>
+                          )}
+                          {column.key === 'listingId' && (
+                            <Typography
+                              variant="body2"
+                              sx={{ color: 'text.secondary', fontFamily: 'monospace' }}
+                            >
+                              —
+                            </Typography>
+                          )}
+                          {column.key === 'reservation' && (
+                            <Typography
+                              variant="body2"
+                              sx={{ color: 'text.secondary', textAlign: 'center' }}
+                            >
+                              —
+                            </Typography>
+                          )}
+                          {column.key === 'reservationId' && (
+                            <Typography
+                              variant="body2"
+                              sx={{ color: 'text.secondary', fontFamily: 'monospace' }}
+                            >
+                              —
+                            </Typography>
+                          )}
+                          {column.key === 'owner' && (
+                            <Typography
+                              variant="body2"
+                              sx={{ color: 'text.secondary', textAlign: 'center' }}
+                            >
+                              —
+                            </Typography>
+                          )}
+                          {column.key === 'ownerStatement' && (
+                            <Typography
+                              variant="body2"
+                              sx={{ color: 'text.primary', lineHeight: 1.4 }}
+                            >
+                              {expense.ownerStatement}
+                            </Typography>
+                          )}
+                          {column.key === 'amount' && (
+                            <Typography
+                              variant="body2"
+                              sx={{ fontWeight: 600, color: 'error.main', textAlign: 'right' }}
+                            >
+                              -€{expense.amount.toFixed(2)}
+                            </Typography>
+                          )}
+                          {column.key === 'currency' && (
+                            <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+                              EUR
+                            </Typography>
+                          )}
+                          {column.key === 'status' && (
+                            <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+                              —
+                            </Typography>
+                          )}
+                          {column.key === 'createdAt' && (
+                            <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+                              —
+                            </Typography>
+                          )}
+                          {column.key === 'updatedAt' && (
+                            <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+                              —
+                            </Typography>
+                          )}
+                        </TableCell>
+                      )
+                  )}
+                  <TableCell
+                    align="center"
+                    sx={{
+                      position: 'sticky',
+                      right: 0,
+                      bgcolor: index % 2 === 0 ? 'white' : 'grey.50',
+                      borderLeft: '1px solid',
+                      borderBottom: '1px solid',
+                      borderColor: 'divider',
+                      zIndex: 1,
+                    }}
+                  >
                     <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
-                      <IconButton size="small" onClick={() => handleEditExpense(expense)} sx={{ '&:hover': { bgcolor: 'primary.lighter' } }}>
+                      <IconButton
+                        size="small"
+                        onClick={() => handleEditExpense(expense)}
+                        sx={{ '&:hover': { bgcolor: 'primary.lighter' } }}
+                      >
                         <Pencil size={16} />
                       </IconButton>
-                      <IconButton size="small" onClick={(e) => handleAttachmentClick(e, expense)} sx={{ '&:hover': { bgcolor: 'primary.lighter' } }}>
+                      <IconButton
+                        size="small"
+                        onClick={(e) => handleAttachmentClick(e, expense)}
+                        sx={{ '&:hover': { bgcolor: 'primary.lighter' } }}
+                      >
                         <Paperclip size={16} />
                       </IconButton>
-                      <IconButton size="small" onClick={() => handleDuplicateExpense(expense)} sx={{ '&:hover': { bgcolor: 'primary.lighter' } }}>
+                      <IconButton
+                        size="small"
+                        onClick={() => handleDuplicateExpense(expense)}
+                        sx={{ '&:hover': { bgcolor: 'primary.lighter' } }}
+                      >
                         <Copy size={16} />
                       </IconButton>
-                      <IconButton size="small" onClick={() => handleDeleteClick(expense)} sx={{ '&:hover': { bgcolor: 'error.lighter' } }}>
+                      <IconButton
+                        size="small"
+                        onClick={() => handleDeleteClick(expense)}
+                        sx={{ '&:hover': { bgcolor: 'error.lighter' } }}
+                      >
                         <X size={16} color="#ef4444" />
                       </IconButton>
                     </Box>
@@ -729,7 +810,9 @@ export function ExpensesView() {
       </Paper>
 
       {/* Total Amount - Sticky */}
-      <Paper sx={{ p: 2, mb: 2, position: 'sticky', bottom: 0, bgcolor: 'background.paper', zIndex: 1 }}>
+      <Paper
+        sx={{ p: 2, mb: 2, position: 'sticky', bottom: 0, bgcolor: 'background.paper', zIndex: 1 }}
+      >
         <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
           <Typography variant="h6" sx={{ fontWeight: 600 }}>
             TOTAL
@@ -742,65 +825,73 @@ export function ExpensesView() {
 
       {/* Pagination */}
       <Paper sx={{ p: 2 }}>
-        <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 2 }}>
+        <Box
+          sx={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            flexWrap: 'wrap',
+            gap: 2,
+          }}
+        >
           <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, flexWrap: 'wrap' }}>
             <Typography variant="body2" sx={{ fontWeight: 600 }}>
               TOTAL
-          </Typography>
-            <Select
-              value={itemsPerPage}
-              size="small"
-              sx={{ minWidth: 120 }}
-            >
+            </Typography>
+            <Select value={itemsPerPage} size="small" sx={{ minWidth: 120 }}>
               <MenuItem value={25}>Show 25 per page</MenuItem>
               <MenuItem value={50}>Show 50 per page</MenuItem>
               <MenuItem value={100}>Show 100 per page</MenuItem>
             </Select>
           </Box>
           <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, flexWrap: 'wrap' }}>
-            <Button 
-              size="small" 
+            <Button
+              size="small"
               variant="outlined"
               disabled={currentPage === 1}
               onClick={() => setCurrentPage(1)}
             >
               FIRST
             </Button>
-            <Button 
-              size="small" 
+            <Button
+              size="small"
               variant="outlined"
               disabled={currentPage === 1}
               onClick={() => setCurrentPage(Math.max(1, currentPage - 1))}
             >
               &lt;
             </Button>
-            {getPaginationItems().map((item, index) => (
+            {getPaginationItems().map((item, index) =>
               item === '...' ? (
-                <Typography key={`ellipsis-${index}`} variant="body2" sx={{ px: 1, color: 'text.secondary' }}>
+                <Typography
+                  key={`ellipsis-${index}`}
+                  variant="body2"
+                  sx={{ px: 1, color: 'text.secondary' }}
+                >
                   ...
-          </Typography>
+                </Typography>
               ) : (
                 <Button
                   key={item}
                   size="small"
-                  variant={item === currentPage ? "contained" : "outlined"}
+                  variant={item === currentPage ? 'contained' : 'outlined'}
                   onClick={() => setCurrentPage(item as number)}
                   sx={{ minWidth: 32 }}
                 >
                   {item}
                 </Button>
               )
-            ))}
-            <Button 
-              size="small" 
+            )}
+            <Button
+              size="small"
               variant="outlined"
               disabled={currentPage === totalPages}
               onClick={() => setCurrentPage(Math.min(totalPages, currentPage + 1))}
             >
               &gt;
             </Button>
-            <Button 
-              size="small" 
+            <Button
+              size="small"
               variant="outlined"
               disabled={currentPage === totalPages}
               onClick={() => setCurrentPage(totalPages)}
@@ -825,7 +916,11 @@ export function ExpensesView() {
       >
         <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 3 }}>
           <Typography variant="h6" sx={{ fontWeight: 600 }}>
-            {editingExpense?.isDuplicating ? 'Duplicate expense' : editingExpense ? 'Edit expense' : 'Add new expense'}
+            {editingExpense?.isDuplicating
+              ? 'Duplicate expense'
+              : editingExpense
+                ? 'Edit expense'
+                : 'Add new expense'}
           </Typography>
           <IconButton onClick={handleSidebarClose}>
             <X size={20} />
@@ -1006,7 +1101,9 @@ export function ExpensesView() {
                 id="file-upload"
               />
               <label htmlFor="file-upload">
-                <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 1 }}>
+                <Box
+                  sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 1 }}
+                >
                   <Upload size={24} color="#666" />
                   <Typography variant="body2" color="text.secondary">
                     Drop files to upload or Browse
@@ -1018,20 +1115,10 @@ export function ExpensesView() {
 
           {/* Action Buttons */}
           <Box sx={{ display: 'flex', gap: 2, mt: 4 }}>
-            <Button
-              fullWidth
-              variant="outlined"
-              onClick={handleSidebarClose}
-              sx={{ py: 1.5 }}
-            >
+            <Button fullWidth variant="outlined" onClick={handleSidebarClose} sx={{ py: 1.5 }}>
               Cancel
             </Button>
-            <Button
-              fullWidth
-              variant="contained"
-              onClick={handleCreateExpense}
-              sx={{ py: 1.5 }}
-            >
+            <Button fullWidth variant="contained" onClick={handleCreateExpense} sx={{ py: 1.5 }}>
               {editingExpense?.isDuplicating ? 'Duplicate' : editingExpense ? 'Update' : 'Create'}
             </Button>
           </Box>
@@ -1064,12 +1151,7 @@ export function ExpensesView() {
       <Dialog open={customViewModalOpen} onClose={handleCustomViewClose} maxWidth="sm" fullWidth>
         <DialogTitle>New Custom View</DialogTitle>
         <DialogContent>
-          <TextField
-            fullWidth
-            label="View Name"
-            placeholder="Enter view name..."
-            sx={{ mt: 2 }}
-          />
+          <TextField fullWidth label="View Name" placeholder="Enter view name..." sx={{ mt: 2 }} />
         </DialogContent>
         <DialogActions>
           <Button onClick={handleCustomViewClose}>Cancel</Button>
@@ -1111,9 +1193,7 @@ export function ExpensesView() {
             sx={{ mb: 2 }}
           />
           {allColumns
-            .filter(column => 
-              column.label.toLowerCase().includes(columnSearchTerm.toLowerCase())
-            )
+            .filter((column) => column.label.toLowerCase().includes(columnSearchTerm.toLowerCase()))
             .map((column) => (
               <FormControlLabel
                 key={column.key}
@@ -1126,10 +1206,13 @@ export function ExpensesView() {
                   />
                 }
                 label={
-                  <Typography variant="body2" sx={{ 
-                    color: column.mandatory ? 'text.disabled' : 'text.primary',
-                    fontSize: '0.875rem'
-                  }}>
+                  <Typography
+                    variant="body2"
+                    sx={{
+                      color: column.mandatory ? 'text.disabled' : 'text.primary',
+                      fontSize: '0.875rem',
+                    }}
+                  >
                     {column.label}
                     {column.mandatory && ' (Required)'}
                   </Typography>
@@ -1173,7 +1256,8 @@ export function ExpensesView() {
         <DialogTitle>Delete Expense</DialogTitle>
         <DialogContent>
           <Typography>
-            Are you sure you want to delete &quot;{expenseToDelete?.name}&quot;? This action cannot be undone.
+            Are you sure you want to delete &quot;{expenseToDelete?.name}&quot;? This action cannot
+            be undone.
           </Typography>
         </DialogContent>
         <DialogActions>

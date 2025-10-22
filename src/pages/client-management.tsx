@@ -62,13 +62,13 @@ function ClientForm({ client, viewMode = false, onClose, onSave }: ClientFormPro
     state: client?.state || '',
     country: client?.country || 'United States',
     zipCode: client?.zipCode || '',
-    status: client?.status || 'active' as 'active' | 'inactive' | 'suspended',
+    status: client?.status || ('active' as 'active' | 'inactive' | 'suspended'),
   });
 
   const [error, setError] = useState('');
 
   const handleInputChange = (field: string, value: any) => {
-    setFormData(prev => ({ ...prev, [field]: value }));
+    setFormData((prev) => ({ ...prev, [field]: value }));
     setError('');
   };
 
@@ -109,7 +109,9 @@ function ClientForm({ client, viewMode = false, onClose, onSave }: ClientFormPro
         </Box>
       )}
 
-      <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', md: '1fr 1fr' }, gap: 2, mb: 3 }}>
+      <Box
+        sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', md: '1fr 1fr' }, gap: 2, mb: 3 }}
+      >
         <TextField
           fullWidth
           disabled={viewMode}
@@ -143,7 +145,9 @@ function ClientForm({ client, viewMode = false, onClose, onSave }: ClientFormPro
         />
       </Box>
 
-      <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', md: '1fr 1fr' }, gap: 2, mb: 3 }}>
+      <Box
+        sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', md: '1fr 1fr' }, gap: 2, mb: 3 }}
+      >
         <TextField
           fullWidth
           disabled={viewMode}
@@ -240,7 +244,7 @@ export function ClientManagementPage() {
 
   const confirmDelete = () => {
     if (clientToDelete) {
-      const updatedClients = clients.filter(client => client.id !== clientToDelete);
+      const updatedClients = clients.filter((client) => client.id !== clientToDelete);
       setClients(updatedClients);
       localStorage.setItem('clients', JSON.stringify(updatedClients));
       setDeleteDialogOpen(false);
@@ -250,13 +254,11 @@ export function ClientManagementPage() {
 
   const handleSaveClient = (clientData: Omit<Client, 'id' | 'createdAt' | 'updatedAt'>) => {
     const now = new Date().toISOString();
-    
+
     if (selectedClient) {
       // Update existing client
-      const updatedClients = clients.map(client => 
-        client.id === selectedClient.id 
-          ? { ...client, ...clientData, updatedAt: now }
-          : client
+      const updatedClients = clients.map((client) =>
+        client.id === selectedClient.id ? { ...client, ...clientData, updatedAt: now } : client
       );
       setClients(updatedClients);
       localStorage.setItem('clients', JSON.stringify(updatedClients));
@@ -308,7 +310,7 @@ export function ClientManagementPage() {
     } else if (selectedIndex > 0) {
       newSelected = newSelected.concat(
         selectedClients.slice(0, selectedIndex),
-        selectedClients.slice(selectedIndex + 1),
+        selectedClients.slice(selectedIndex + 1)
       );
     }
 
@@ -328,32 +330,44 @@ export function ClientManagementPage() {
 
   const getStatusColor = (status?: string) => {
     switch (status) {
-      case 'active': return 'success';
-      case 'inactive': return 'warning';
-      case 'suspended': return 'error';
-      default: return 'default';
+      case 'active':
+        return 'success';
+      case 'inactive':
+        return 'warning';
+      case 'suspended':
+        return 'error';
+      default:
+        return 'default';
     }
   };
 
   const getStatusLabel = (status?: string) => {
     switch (status) {
-      case 'active': return 'Active';
-      case 'inactive': return 'Inactive';
-      case 'suspended': return 'Suspended';
-      default: return 'Active';
+      case 'active':
+        return 'Active';
+      case 'inactive':
+        return 'Inactive';
+      case 'suspended':
+        return 'Suspended';
+      default:
+        return 'Active';
     }
   };
 
   // Filter clients based on search term
-  const filteredClients = clients.filter(client =>
-    client.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    client.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    client.company?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    client.phone?.includes(searchTerm)
+  const filteredClients = clients.filter(
+    (client) =>
+      client.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      client.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      client.company?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      client.phone?.includes(searchTerm)
   );
 
   // Pagination
-  const paginatedClients = filteredClients.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage);
+  const paginatedClients = filteredClients.slice(
+    page * rowsPerPage,
+    page * rowsPerPage + rowsPerPage
+  );
 
   return (
     <DashboardContent maxWidth="xl">
@@ -400,8 +414,13 @@ export function ClientManagementPage() {
               <TableRow>
                 <TableCell padding="checkbox">
                   <Checkbox
-                    indeterminate={selectedClients.length > 0 && selectedClients.length < filteredClients.length}
-                    checked={filteredClients.length > 0 && selectedClients.length === filteredClients.length}
+                    indeterminate={
+                      selectedClients.length > 0 && selectedClients.length < filteredClients.length
+                    }
+                    checked={
+                      filteredClients.length > 0 &&
+                      selectedClients.length === filteredClients.length
+                    }
                     onChange={handleSelectAllClick}
                   />
                 </TableCell>
@@ -447,7 +466,9 @@ export function ClientManagementPage() {
                 <TableRow>
                   <TableCell colSpan={8} align="center" sx={{ py: 8 }}>
                     <Typography variant="body2" color="text.secondary">
-                      {searchTerm ? 'No clients found matching your search.' : 'No clients created yet. Create your first client to get started.'}
+                      {searchTerm
+                        ? 'No clients found matching your search.'
+                        : 'No clients created yet. Create your first client to get started.'}
                     </Typography>
                   </TableCell>
                 </TableRow>
@@ -478,9 +499,7 @@ export function ClientManagementPage() {
                         </Typography>
                       </TableCell>
                       <TableCell>
-                        <Typography variant="body2">
-                          {client.email}
-                        </Typography>
+                        <Typography variant="body2">{client.email}</Typography>
                       </TableCell>
                       <TableCell>
                         <Typography variant="body2" color="text.secondary">
@@ -494,7 +513,8 @@ export function ClientManagementPage() {
                       </TableCell>
                       <TableCell>
                         <Typography variant="body2" color="text.secondary">
-                          {[client.city, client.state, client.country].filter(Boolean).join(', ') || 'No location'}
+                          {[client.city, client.state, client.country].filter(Boolean).join(', ') ||
+                            'No location'}
                         </Typography>
                       </TableCell>
                       <TableCell>
@@ -545,14 +565,11 @@ export function ClientManagementPage() {
             </TableBody>
           </Table>
         </TableContainer>
-        
+
         <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', p: 2 }}>
           <FormControlLabel
             control={
-              <Checkbox
-                checked={dense}
-                onChange={(event) => setDense(event.target.checked)}
-              />
+              <Checkbox checked={dense} onChange={(event) => setDense(event.target.checked)} />
             }
             label="Dense"
           />
@@ -571,15 +588,10 @@ export function ClientManagementPage() {
       </Card>
 
       {/* View Client Dialog */}
-      <Dialog 
-        open={viewDialogOpen} 
-        onClose={handleCloseDialog}
-        maxWidth="md"
-        fullWidth
-      >
+      <Dialog open={viewDialogOpen} onClose={handleCloseDialog} maxWidth="md" fullWidth>
         <DialogContent sx={{ p: 0 }}>
-          <ClientForm 
-            client={selectedClient || undefined} 
+          <ClientForm
+            client={selectedClient || undefined}
             viewMode
             onClose={handleCloseDialog}
             onSave={() => {}}
@@ -588,15 +600,10 @@ export function ClientManagementPage() {
       </Dialog>
 
       {/* Edit Client Dialog */}
-      <Dialog 
-        open={editDialogOpen} 
-        onClose={handleCloseDialog}
-        maxWidth="md"
-        fullWidth
-      >
+      <Dialog open={editDialogOpen} onClose={handleCloseDialog} maxWidth="md" fullWidth>
         <DialogContent sx={{ p: 0 }}>
-          <ClientForm 
-            client={selectedClient || undefined} 
+          <ClientForm
+            client={selectedClient || undefined}
             viewMode={false}
             onClose={handleCloseDialog}
             onSave={handleSaveClient}
@@ -605,17 +612,9 @@ export function ClientManagementPage() {
       </Dialog>
 
       {/* Create Client Dialog */}
-      <Dialog 
-        open={createDialogOpen} 
-        onClose={handleCloseDialog}
-        maxWidth="md"
-        fullWidth
-      >
+      <Dialog open={createDialogOpen} onClose={handleCloseDialog} maxWidth="md" fullWidth>
         <DialogContent sx={{ p: 0 }}>
-          <ClientForm 
-            onClose={handleCloseDialog}
-            onSave={handleSaveClient}
-          />
+          <ClientForm onClose={handleCloseDialog} onSave={handleSaveClient} />
         </DialogContent>
       </Dialog>
 

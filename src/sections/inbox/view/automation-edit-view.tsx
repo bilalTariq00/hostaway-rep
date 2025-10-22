@@ -21,12 +21,48 @@ import { DashboardContent } from 'src/layouts/dashboard';
 
 // Mock data for listings
 const mockListings = [
-  { id: 1, name: 'Luxury Villa Rome', image: 'https://pub-c5e31b5cdafb419fb247a8ac2e78df7a.r2.dev/public/assets/images/mock/cover/cover-5.webp', selected: false },
-  { id: 2, name: 'Modern Apartment Milan', image: 'https://pub-c5e31b5cdafb419fb247a8ac2e78df7a.r2.dev/public/assets/images/mock/cover/cover-6.webp', selected: false },
-  { id: 3, name: 'Cozy Studio Florence', image: 'https://pub-c5e31b5cdafb419fb247a8ac2e78df7a.r2.dev/public/assets/images/mock/cover/cover-4.webp', selected: false },
-  { id: 4, name: 'Beach House Naples', image: 'https://pub-c5e31b5cdafb419fb247a8ac2e78df7a.r2.dev/public/assets/images/mock/cover/cover-5.webp', selected: false },
-  { id: 5, name: 'Mountain Cabin Turin', image: 'https://pub-c5e31b5cdafb419fb247a8ac2e78df7a.r2.dev/public/assets/images/mock/cover/cover-6.webp', selected: false },
-  { id: 6, name: 'City Loft Venice', image: 'https://pub-c5e31b5cdafb419fb247a8ac2e78df7a.r2.dev/public/assets/images/mock/cover/cover-4.webp', selected: false },
+  {
+    id: 1,
+    name: 'Luxury Villa Rome',
+    image:
+      'https://pub-c5e31b5cdafb419fb247a8ac2e78df7a.r2.dev/public/assets/images/mock/cover/cover-5.webp',
+    selected: false,
+  },
+  {
+    id: 2,
+    name: 'Modern Apartment Milan',
+    image:
+      'https://pub-c5e31b5cdafb419fb247a8ac2e78df7a.r2.dev/public/assets/images/mock/cover/cover-6.webp',
+    selected: false,
+  },
+  {
+    id: 3,
+    name: 'Cozy Studio Florence',
+    image:
+      'https://pub-c5e31b5cdafb419fb247a8ac2e78df7a.r2.dev/public/assets/images/mock/cover/cover-4.webp',
+    selected: false,
+  },
+  {
+    id: 4,
+    name: 'Beach House Naples',
+    image:
+      'https://pub-c5e31b5cdafb419fb247a8ac2e78df7a.r2.dev/public/assets/images/mock/cover/cover-5.webp',
+    selected: false,
+  },
+  {
+    id: 5,
+    name: 'Mountain Cabin Turin',
+    image:
+      'https://pub-c5e31b5cdafb419fb247a8ac2e78df7a.r2.dev/public/assets/images/mock/cover/cover-6.webp',
+    selected: false,
+  },
+  {
+    id: 6,
+    name: 'City Loft Venice',
+    image:
+      'https://pub-c5e31b5cdafb419fb247a8ac2e78df7a.r2.dev/public/assets/images/mock/cover/cover-4.webp',
+    selected: false,
+  },
 ];
 
 const channelOptions = [
@@ -68,12 +104,12 @@ export function AutomationEditView() {
     // First check localStorage for user-created automations
     const savedAutomations = localStorage.getItem('automations');
     let automation = null;
-    
+
     if (savedAutomations) {
       const parsedAutomations = JSON.parse(savedAutomations);
       automation = parsedAutomations.find((a: any) => a.id === id);
     }
-    
+
     // If not found in localStorage, check mock data (for demo purposes)
     if (!automation) {
       const mockAutomations = [
@@ -124,7 +160,7 @@ export function AutomationEditView() {
       ];
       automation = mockAutomations.find((a: any) => a.id === id);
     }
-    
+
     if (automation) {
       setAutomationName(automation.title || '');
       setCcEmail1(automation.ccEmail1 || '');
@@ -133,10 +169,12 @@ export function AutomationEditView() {
       setDefaultMessage(automation.defaultMessage || '');
       setEventTrigger(automation.eventTrigger || '');
       setSelectedChannels(automation.selectedChannels || []);
-      setListings(mockListings.map(l => ({
-        ...l,
-        selected: automation.selectedListings?.some((sl: any) => sl.id === l.id) || false
-      })));
+      setListings(
+        mockListings.map((l) => ({
+          ...l,
+          selected: automation.selectedListings?.some((sl: any) => sl.id === l.id) || false,
+        }))
+      );
     } else {
       router.push('/inbox/automations'); // Redirect if automation not found
     }
@@ -152,7 +190,7 @@ export function AutomationEditView() {
       defaultMessage,
       eventTrigger,
       selectedChannels,
-      selectedListings: listings.filter(l => l.selected),
+      selectedListings: listings.filter((l) => l.selected),
       isActive: true,
       creationDate: new Date().toISOString(),
       lastEdit: new Date().toLocaleString(),
@@ -160,7 +198,7 @@ export function AutomationEditView() {
     };
 
     const existingAutomations = JSON.parse(localStorage.getItem('automations') || '[]');
-    const updatedAutomationsList = existingAutomations.map((a: any) => 
+    const updatedAutomationsList = existingAutomations.map((a: any) =>
       a.id === automationId ? updatedAutomation : a
     );
     localStorage.setItem('automations', JSON.stringify(updatedAutomationsList));
@@ -172,33 +210,31 @@ export function AutomationEditView() {
   };
 
   const handleChannelToggle = (channel: string) => {
-    setSelectedChannels(prev => 
-      prev.includes(channel) 
-        ? prev.filter(c => c !== channel)
-        : [...prev, channel]
+    setSelectedChannels((prev) =>
+      prev.includes(channel) ? prev.filter((c) => c !== channel) : [...prev, channel]
     );
   };
 
   const handleListingToggle = (listingId: number) => {
-    setListings(prev => prev.map(listing => 
-      listing.id === listingId 
-        ? { ...listing, selected: !listing.selected }
-        : listing
-    ));
+    setListings((prev) =>
+      prev.map((listing) =>
+        listing.id === listingId ? { ...listing, selected: !listing.selected } : listing
+      )
+    );
   };
 
   const handleSelectAll = () => {
-    const allSelected = listings.every(l => l.selected);
-    setListings(prev => prev.map(l => ({ ...l, selected: !allSelected })));
+    const allSelected = listings.every((l) => l.selected);
+    setListings((prev) => prev.map((l) => ({ ...l, selected: !allSelected })));
   };
 
-  const filteredListings = listings.filter(listing => {
+  const filteredListings = listings.filter((listing) => {
     const matchesSearch = listing.name.toLowerCase().includes(searchQuery.toLowerCase());
     const matchesFilter = showSelectedOnly ? listing.selected : true;
     return matchesSearch && matchesFilter;
   });
 
-  const selectedCount = listings.filter(l => l.selected).length;
+  const selectedCount = listings.filter((l) => l.selected).length;
 
   return (
     <DashboardContent maxWidth="xl">
@@ -214,8 +250,8 @@ export function AutomationEditView() {
           <Button variant="outlined" onClick={handleBack}>
             Cancel
           </Button>
-          <Button 
-            variant="contained" 
+          <Button
+            variant="contained"
             onClick={handleSave}
             disabled={!automationName || !subject || !defaultMessage}
             startIcon={<Save size={20} />}
@@ -229,8 +265,10 @@ export function AutomationEditView() {
         {/* Left Side - Automation Form */}
         <Box sx={{ flex: 2, minWidth: 0 }}>
           <Card sx={{ p: 3, mb: 3 }}>
-            <Typography variant="h6" sx={{ mb: 3 }}>Automation Details</Typography>
-            
+            <Typography variant="h6" sx={{ mb: 3 }}>
+              Automation Details
+            </Typography>
+
             <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
               <TextField
                 label="Automation Name"
@@ -239,7 +277,7 @@ export function AutomationEditView() {
                 fullWidth
                 required
               />
-              
+
               <Box sx={{ display: 'flex', gap: 2 }}>
                 <TextField
                   label="CC Email 1"
@@ -308,11 +346,15 @@ export function AutomationEditView() {
 
           {/* Additional Conditions */}
           <Card sx={{ p: 3 }}>
-            <Typography variant="h6" sx={{ mb: 3 }}>Additional Conditions</Typography>
-            
+            <Typography variant="h6" sx={{ mb: 3 }}>
+              Additional Conditions
+            </Typography>
+
             <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
               <Box>
-                <Typography variant="subtitle2" sx={{ mb: 2 }}>Channels</Typography>
+                <Typography variant="subtitle2" sx={{ mb: 2 }}>
+                  Channels
+                </Typography>
                 <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
                   {channelOptions.map((channel) => (
                     <Box
@@ -326,11 +368,17 @@ export function AutomationEditView() {
                         py: 1,
                         borderRadius: 1,
                         border: '1px solid',
-                        borderColor: selectedChannels.includes(channel.value) ? channel.color : 'grey.300',
-                        bgcolor: selectedChannels.includes(channel.value) ? `${channel.color}20` : 'white',
+                        borderColor: selectedChannels.includes(channel.value)
+                          ? channel.color
+                          : 'grey.300',
+                        bgcolor: selectedChannels.includes(channel.value)
+                          ? `${channel.color}20`
+                          : 'white',
                         cursor: 'pointer',
                         '&:hover': {
-                          bgcolor: selectedChannels.includes(channel.value) ? `${channel.color}30` : 'grey.50',
+                          bgcolor: selectedChannels.includes(channel.value)
+                            ? `${channel.color}30`
+                            : 'grey.50',
                         },
                       }}
                     >
@@ -344,9 +392,7 @@ export function AutomationEditView() {
                       />
                       <Typography variant="body2">{channel.label}</Typography>
                       {selectedChannels.includes(channel.value) && (
-                        <Box sx={{ ml: 1, color: channel.color }}>
-                          ×
-                        </Box>
+                        <Box sx={{ ml: 1, color: channel.color }}>×</Box>
                       )}
                     </Box>
                   ))}
@@ -359,8 +405,10 @@ export function AutomationEditView() {
         {/* Right Side - Listings */}
         <Box sx={{ flex: 1, minWidth: 350, maxWidth: 400 }}>
           <Card sx={{ p: 3 }}>
-            <Typography variant="h6" sx={{ mb: 3 }}>Listings</Typography>
-            
+            <Typography variant="h6" sx={{ mb: 3 }}>
+              Listings
+            </Typography>
+
             <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
               <TextField
                 placeholder="Search listings..."
@@ -371,7 +419,7 @@ export function AutomationEditView() {
                   startAdornment: <Info size={16} style={{ marginRight: 8, color: '#666' }} />,
                 }}
               />
-              
+
               <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                 <FormControlLabel
                   control={
@@ -391,7 +439,15 @@ export function AutomationEditView() {
                 {selectedCount} of {listings.length} selected
               </Typography>
 
-              <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1, maxHeight: 400, overflowY: 'auto' }}>
+              <Box
+                sx={{
+                  display: 'flex',
+                  flexDirection: 'column',
+                  gap: 1,
+                  maxHeight: 400,
+                  overflowY: 'auto',
+                }}
+              >
                 {filteredListings.map((listing) => (
                   <Box
                     key={listing.id}

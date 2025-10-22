@@ -26,39 +26,45 @@ const mockListings = [
   {
     id: 305034,
     name: 'La Dimora Del Cavaliere',
-    image: 'https://pub-c5e31b5cdafb419fb247a8ac2e78df7a.r2.dev/public/assets/images/mock/cover/cover-1.webp',
-    selected: false
+    image:
+      'https://pub-c5e31b5cdafb419fb247a8ac2e78df7a.r2.dev/public/assets/images/mock/cover/cover-1.webp',
+    selected: false,
   },
   {
     id: 305035,
     name: 'Navigli',
-    image: 'https://pub-c5e31b5cdafb419fb247a8ac2e78df7a.r2.dev/public/assets/images/mock/cover/cover-2.webp',
-    selected: false
+    image:
+      'https://pub-c5e31b5cdafb419fb247a8ac2e78df7a.r2.dev/public/assets/images/mock/cover/cover-2.webp',
+    selected: false,
   },
   {
     id: 305225,
     name: 'Polacchi42',
-    image: 'https://pub-c5e31b5cdafb419fb247a8ac2e78df7a.r2.dev/public/assets/images/mock/cover/cover-3.webp',
-    selected: true
+    image:
+      'https://pub-c5e31b5cdafb419fb247a8ac2e78df7a.r2.dev/public/assets/images/mock/cover/cover-3.webp',
+    selected: true,
   },
   {
     id: 305421,
     name: 'Superattico - Via Del Corso 43',
-    image: 'https://pub-c5e31b5cdafb419fb247a8ac2e78df7a.r2.dev/public/assets/images/mock/cover/cover-4.webp',
-    selected: false
+    image:
+      'https://pub-c5e31b5cdafb419fb247a8ac2e78df7a.r2.dev/public/assets/images/mock/cover/cover-4.webp',
+    selected: false,
   },
   {
     id: 306532,
     name: 'Montecatini Terme',
-    image: 'https://pub-c5e31b5cdafb419fb247a8ac2e78df7a.r2.dev/public/assets/images/mock/cover/cover-5.webp',
-    selected: false
+    image:
+      'https://pub-c5e31b5cdafb419fb247a8ac2e78df7a.r2.dev/public/assets/images/mock/cover/cover-5.webp',
+    selected: false,
   },
   {
     id: 308582,
     name: 'Monteverde - Quattroventi',
-    image: 'https://pub-c5e31b5cdafb419fb247a8ac2e78df7a.r2.dev/public/assets/images/mock/cover/cover-6.webp',
-    selected: false
-  }
+    image:
+      'https://pub-c5e31b5cdafb419fb247a8ac2e78df7a.r2.dev/public/assets/images/mock/cover/cover-6.webp',
+    selected: false,
+  },
 ];
 
 const exampleTemplates = [
@@ -66,7 +72,7 @@ const exampleTemplates = [
   'Before you arrive',
   'Welcome message',
   'Before you leave',
-  'Leave a review'
+  'Leave a review',
 ];
 
 export function AutomationCreateView() {
@@ -94,11 +100,13 @@ export function AutomationCreateView() {
       setDefaultMessage(parsedAutomation.defaultMessage || '');
       setEventTrigger(parsedAutomation.eventTrigger || '');
       setSelectedChannels(parsedAutomation.selectedChannels || []);
-      setListings(mockListings.map(l => ({
-        ...l,
-        selected: parsedAutomation.selectedListings?.some((sl: any) => sl.id === l.id) || false
-      })));
-      
+      setListings(
+        mockListings.map((l) => ({
+          ...l,
+          selected: parsedAutomation.selectedListings?.some((sl: any) => sl.id === l.id) || false,
+        }))
+      );
+
       // Clear the copied data from localStorage
       localStorage.removeItem('automationToCopy');
     }
@@ -111,19 +119,19 @@ export function AutomationCreateView() {
       title: automationName,
       subject,
       event: eventTrigger,
-      channels: selectedChannels.map(name => ({
+      channels: selectedChannels.map((name) => ({
         name,
         color: name === 'Booking.com' ? '#003580' : '#FF5A5F',
-        icon: name === 'Booking.com' ? '🏨' : '🏠'
+        icon: name === 'Booking.com' ? '🏨' : '🏠',
       })),
-      listing: listings.find(l => l.selected)?.name || 'Multiple Listings',
+      listing: listings.find((l) => l.selected)?.name || 'Multiple Listings',
       creationDate: new Date().toLocaleDateString('en-GB', {
         day: 'numeric',
         month: 'long',
         year: 'numeric',
         hour: '2-digit',
         minute: '2-digit',
-        hour12: true
+        hour12: true,
       }),
       lastEdit: new Date().toLocaleDateString('en-GB', {
         day: 'numeric',
@@ -131,7 +139,7 @@ export function AutomationCreateView() {
         year: 'numeric',
         hour: '2-digit',
         minute: '2-digit',
-        hour12: true
+        hour12: true,
       }),
       automationId: Math.floor(Math.random() * 1000000).toString(),
       isActive: true,
@@ -151,29 +159,27 @@ export function AutomationCreateView() {
   };
 
   const handleListingSelect = (listingId: number) => {
-    setListings(prev => prev.map(listing => 
-      listing.id === listingId 
-        ? { ...listing, selected: !listing.selected }
-        : listing
-    ));
-  };
-
-  const handleSelectAll = () => {
-    const allSelected = listings.every(l => l.selected);
-    setListings(prev => prev.map(listing => ({ ...listing, selected: !allSelected })));
-  };
-
-  const handleChannelToggle = (channel: string) => {
-    setSelectedChannels(prev => 
-      prev.includes(channel) 
-        ? prev.filter(c => c !== channel)
-        : [...prev, channel]
+    setListings((prev) =>
+      prev.map((listing) =>
+        listing.id === listingId ? { ...listing, selected: !listing.selected } : listing
+      )
     );
   };
 
-  const filteredListings = listings.filter(listing => {
+  const handleSelectAll = () => {
+    const allSelected = listings.every((l) => l.selected);
+    setListings((prev) => prev.map((listing) => ({ ...listing, selected: !allSelected })));
+  };
+
+  const handleChannelToggle = (channel: string) => {
+    setSelectedChannels((prev) =>
+      prev.includes(channel) ? prev.filter((c) => c !== channel) : [...prev, channel]
+    );
+  };
+
+  const filteredListings = listings.filter((listing) => {
     const matchesSearch = listing.name.toLowerCase().includes(searchQuery.toLowerCase());
-    return showSelectedOnly ? (listing.selected && matchesSearch) : matchesSearch;
+    return showSelectedOnly ? listing.selected && matchesSearch : matchesSearch;
   });
 
   return (
@@ -197,7 +203,7 @@ export function AutomationCreateView() {
               color: '#666',
               px: 3,
               py: 1.5,
-              borderRadius: 2
+              borderRadius: 2,
             }}
           >
             Cancel
@@ -213,7 +219,7 @@ export function AutomationCreateView() {
               '&:disabled': { bgcolor: 'grey.300' },
               px: 3,
               py: 1.5,
-              borderRadius: 2
+              borderRadius: 2,
             }}
           >
             Save
@@ -228,7 +234,7 @@ export function AutomationCreateView() {
             <Typography variant="h6" sx={{ mb: 3, fontWeight: 600 }}>
               Automation Details
             </Typography>
-            
+
             {/* Automation Name */}
             <Box sx={{ mb: 3 }}>
               <Typography variant="body2" sx={{ mb: 1, fontWeight: 500 }}>
@@ -240,8 +246,8 @@ export function AutomationCreateView() {
                 onChange={(e) => setAutomationName(e.target.value)}
                 sx={{
                   '& .MuiOutlinedInput-root': {
-                    borderRadius: 2
-                  }
+                    borderRadius: 2,
+                  },
                 }}
               />
             </Box>
@@ -264,8 +270,8 @@ export function AutomationCreateView() {
                   onChange={(e) => setCcEmail1(e.target.value)}
                   sx={{
                     '& .MuiOutlinedInput-root': {
-                      borderRadius: 2
-                    }
+                      borderRadius: 2,
+                    },
                   }}
                 />
               </Box>
@@ -285,8 +291,8 @@ export function AutomationCreateView() {
                   onChange={(e) => setCcEmail2(e.target.value)}
                   sx={{
                     '& .MuiOutlinedInput-root': {
-                      borderRadius: 2
-                    }
+                      borderRadius: 2,
+                    },
                   }}
                 />
               </Box>
@@ -306,7 +312,7 @@ export function AutomationCreateView() {
                     color: '#666',
                     minWidth: 'auto',
                     px: 1,
-                    py: 0.5
+                    py: 0.5,
                   }}
                 >
                   {'{}'}
@@ -318,8 +324,8 @@ export function AutomationCreateView() {
                 onChange={(e) => setSubject(e.target.value)}
                 sx={{
                   '& .MuiOutlinedInput-root': {
-                    borderRadius: 2
-                  }
+                    borderRadius: 2,
+                  },
                 }}
               />
             </Box>
@@ -341,7 +347,7 @@ export function AutomationCreateView() {
                     color: '#666',
                     minWidth: 'auto',
                     px: 1,
-                    py: 0.5
+                    py: 0.5,
                   }}
                 >
                   {'{}'}
@@ -355,8 +361,8 @@ export function AutomationCreateView() {
                 onChange={(e) => setDefaultMessage(e.target.value)}
                 sx={{
                   '& .MuiOutlinedInput-root': {
-                    borderRadius: 2
-                  }
+                    borderRadius: 2,
+                  },
                 }}
               />
             </Box>
@@ -379,8 +385,8 @@ export function AutomationCreateView() {
                       displayEmpty
                       sx={{
                         '& .MuiOutlinedInput-notchedOutline': {
-                          borderColor: '#e0e0e0'
-                        }
+                          borderColor: '#e0e0e0',
+                        },
                       }}
                     >
                       <MenuItem value="At">At</MenuItem>
@@ -395,8 +401,8 @@ export function AutomationCreateView() {
                       displayEmpty
                       sx={{
                         '& .MuiOutlinedInput-notchedOutline': {
-                          borderColor: '#e0e0e0'
-                        }
+                          borderColor: '#e0e0e0',
+                        },
                       }}
                     >
                       <MenuItem value="Reservation">Reservation</MenuItem>
@@ -443,8 +449,8 @@ export function AutomationCreateView() {
                             cursor: 'pointer',
                             bgcolor: selectedChannels.includes(channel) ? '#f5f5f5' : 'white',
                             '&:hover': {
-                              bgcolor: selectedChannels.includes(channel) ? '#eeeeee' : '#f9f9f9'
-                            }
+                              bgcolor: selectedChannels.includes(channel) ? '#eeeeee' : '#f9f9f9',
+                            },
                           }}
                         >
                           <Box
@@ -452,9 +458,14 @@ export function AutomationCreateView() {
                               width: 8,
                               height: 8,
                               borderRadius: '50%',
-                              bgcolor: channel === 'Booking.com' ? '#003580' : 
-                                      channel === 'Airbnb' ? '#FF5A5F' : 
-                                      channel === 'VRBO' ? '#00A699' : '#666'
+                              bgcolor:
+                                channel === 'Booking.com'
+                                  ? '#003580'
+                                  : channel === 'Airbnb'
+                                    ? '#FF5A5F'
+                                    : channel === 'VRBO'
+                                      ? '#00A699'
+                                      : '#666',
                             }}
                           />
                           <Typography variant="body2" sx={{ fontSize: '0.875rem' }}>
@@ -483,8 +494,8 @@ export function AutomationCreateView() {
                         sx={{
                           flex: 1,
                           '& .MuiOutlinedInput-root': {
-                            borderRadius: 2
-                          }
+                            borderRadius: 2,
+                          },
                         }}
                       />
                       <Button
@@ -492,10 +503,10 @@ export function AutomationCreateView() {
                         onClick={() => setShowSelectedOnly(!showSelectedOnly)}
                         sx={{
                           color: showSelectedOnly ? '#23c6c8' : '#666',
-                          textTransform: 'none'
+                          textTransform: 'none',
                         }}
                       >
-                        Show {listings.filter(l => l.selected).length} selected only
+                        Show {listings.filter((l) => l.selected).length} selected only
                       </Button>
                       <Button
                         variant="contained"
@@ -503,19 +514,21 @@ export function AutomationCreateView() {
                         sx={{
                           bgcolor: '#23c6c8',
                           '&:hover': { bgcolor: '#1fb3b5' },
-                          borderRadius: 2
+                          borderRadius: 2,
                         }}
                       >
                         Select all
                       </Button>
                     </Box>
-                    <Box sx={{ 
-                      display: 'grid', 
-                      gridTemplateColumns: 'repeat(2, 1fr)', 
-                      gap: 2,
-                      maxHeight: 300,
-                      overflowY: 'auto'
-                    }}>
+                    <Box
+                      sx={{
+                        display: 'grid',
+                        gridTemplateColumns: 'repeat(2, 1fr)',
+                        gap: 2,
+                        maxHeight: 300,
+                        overflowY: 'auto',
+                      }}
+                    >
                       {filteredListings.map((listing) => (
                         <Paper
                           key={listing.id}
@@ -530,8 +543,8 @@ export function AutomationCreateView() {
                             bgcolor: listing.selected ? '#e3f2fd' : 'white',
                             '&:hover': {
                               borderColor: '#23c6c8',
-                              boxShadow: '0 2px 8px rgba(35, 198, 200, 0.1)'
-                            }
+                              boxShadow: '0 2px 8px rgba(35, 198, 200, 0.1)',
+                            },
                           }}
                           onClick={() => handleListingSelect(listing.id)}
                         >
@@ -543,7 +556,7 @@ export function AutomationCreateView() {
                               backgroundImage: `url('${listing.image}')`,
                               backgroundSize: 'cover',
                               backgroundPosition: 'center',
-                              flexShrink: 0
+                              flexShrink: 0,
                             }}
                           />
                           <Box sx={{ flex: 1, minWidth: 0 }}>
@@ -575,7 +588,7 @@ export function AutomationCreateView() {
             <Typography variant="body2" sx={{ mb: 2, color: '#666' }}>
               You can choose existing template as an example.
             </Typography>
-            
+
             <Accordion defaultExpanded>
               <AccordionSummary expandIcon={<ChevronDown size={16} />}>
                 <Typography variant="body2" sx={{ fontWeight: 600 }}>
@@ -670,8 +683,8 @@ Your Host`);
                         mb: 1,
                         '&:hover': {
                           borderColor: '#23c6c8',
-                          color: '#23c6c8'
-                        }
+                          color: '#23c6c8',
+                        },
                       }}
                     >
                       {template}
@@ -690,7 +703,7 @@ Your Host`);
           position: 'fixed',
           bottom: 20,
           right: 20,
-          zIndex: 1000
+          zIndex: 1000,
         }}
       >
         <Paper
@@ -701,7 +714,7 @@ Your Host`);
             boxShadow: '0 4px 12px rgba(0,0,0,0.15)',
             display: 'flex',
             alignItems: 'center',
-            gap: 1
+            gap: 1,
           }}
         >
           <Typography variant="body2">Hi. Need any help?</Typography>
@@ -720,7 +733,7 @@ Your Host`);
             justifyContent: 'center',
             position: 'relative',
             cursor: 'pointer',
-            boxShadow: '0 4px 12px rgba(0,0,0,0.15)'
+            boxShadow: '0 4px 12px rgba(0,0,0,0.15)',
           }}
         >
           <Typography variant="h6" sx={{ color: 'white', fontWeight: 600 }}>
@@ -737,7 +750,7 @@ Your Host`);
               borderRadius: '50%',
               display: 'flex',
               alignItems: 'center',
-              justifyContent: 'center'
+              justifyContent: 'center',
             }}
           >
             <Typography variant="caption" sx={{ color: 'white', fontSize: '10px' }}>

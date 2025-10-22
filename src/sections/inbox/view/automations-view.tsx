@@ -36,7 +36,7 @@ const mockAutomations = [
     selectedListings: [{ id: 1, name: 'Polacchi42' }],
     channels: [
       { name: 'Booking.com', color: '#003580', icon: '🏨' },
-      { name: 'Airbnb Pro', color: '#FF5A5F', icon: '🏠' }
+      { name: 'Airbnb Pro', color: '#FF5A5F', icon: '🏠' },
     ],
     listing: 'Polacchi42',
     creationDate: '6 September 2024 at 2:54 pm',
@@ -56,7 +56,7 @@ const mockAutomations = [
     selectedListings: [{ id: 2, name: 'Beach House Villa' }],
     channels: [
       { name: 'Airbnb', color: '#FF5A5F', icon: '🏠' },
-      { name: 'Booking.com', color: '#003580', icon: '🏨' }
+      { name: 'Booking.com', color: '#003580', icon: '🏨' },
     ],
     listing: 'Beach House Villa',
     creationDate: '15 January 2024 at 10:30 am',
@@ -76,7 +76,7 @@ const mockAutomations = [
     selectedListings: [{ id: 3, name: 'Downtown Apartment' }],
     channels: [
       { name: 'Airbnb', color: '#FF5A5F', icon: '🏠' },
-      { name: 'VRBO', color: '#00A699', icon: '🏖️' }
+      { name: 'VRBO', color: '#00A699', icon: '🏖️' },
     ],
     listing: 'Downtown Apartment',
     creationDate: '10 January 2024 at 9:00 am',
@@ -97,7 +97,7 @@ const mockAutomations = [
     channels: [
       { name: 'Airbnb', color: '#FF5A5F', icon: '🏠' },
       { name: 'Booking.com', color: '#003580', icon: '🏨' },
-      { name: 'VRBO', color: '#00A699', icon: '🏖️' }
+      { name: 'VRBO', color: '#00A699', icon: '🏖️' },
     ],
     listing: 'City Center Loft',
     creationDate: '8 January 2024 at 11:20 am',
@@ -123,7 +123,7 @@ export function AutomationsView() {
       const parsedAutomations = JSON.parse(savedAutomations);
       // Sort by ID (which is timestamp) to show newest first
       const sortedAutomations = parsedAutomations.sort((a: any, b: any) => b.id - a.id);
-      setAutomations(prev => [...sortedAutomations, ...prev]);
+      setAutomations((prev) => [...sortedAutomations, ...prev]);
     }
   }, []);
 
@@ -131,7 +131,7 @@ export function AutomationsView() {
   useEffect(() => {
     // Only save to localStorage if we have automations (avoid saving on initial load)
     if (automations.length > 0) {
-      const savedAutomations = automations.filter(a => a.id > 1000); // Only save user-created automations (IDs > 1000)
+      const savedAutomations = automations.filter((a) => a.id > 1000); // Only save user-created automations (IDs > 1000)
       localStorage.setItem('automations', JSON.stringify(savedAutomations));
     }
   }, [automations]);
@@ -148,11 +148,11 @@ export function AutomationsView() {
   };
 
   const handleToggleActive = (id: number) => {
-    setAutomations(prev => prev.map(automation => 
-      automation.id === id 
-        ? { ...automation, isActive: !automation.isActive }
-        : automation
-    ));
+    setAutomations((prev) =>
+      prev.map((automation) =>
+        automation.id === id ? { ...automation, isActive: !automation.isActive } : automation
+      )
+    );
   };
 
   const handleEdit = (id: number) => {
@@ -161,7 +161,7 @@ export function AutomationsView() {
 
   const handleCreateSimilar = (id: number) => {
     // Find the automation to copy
-    const automationToCopy = automations.find(a => a.id === id);
+    const automationToCopy = automations.find((a) => a.id === id);
     if (automationToCopy) {
       // Store the automation data to copy in localStorage
       localStorage.setItem('automationToCopy', JSON.stringify(automationToCopy));
@@ -176,7 +176,7 @@ export function AutomationsView() {
 
   const confirmDelete = () => {
     if (automationToDelete) {
-      setAutomations(prev => prev.filter(automation => automation.id !== automationToDelete));
+      setAutomations((prev) => prev.filter((automation) => automation.id !== automationToDelete));
       setDeleteDialogOpen(false);
       setAutomationToDelete(null);
     }
@@ -215,13 +215,13 @@ export function AutomationsView() {
               color: '#4caf50',
               '&:hover': {
                 borderColor: '#45a049',
-                backgroundColor: 'rgba(76, 175, 80, 0.04)'
-              }
+                backgroundColor: 'rgba(76, 175, 80, 0.04)',
+              },
             }}
           >
             Filters
           </Button>
-          
+
           <FormControl size="small" sx={{ minWidth: 120 }}>
             <Select
               value={sortBy}
@@ -229,8 +229,8 @@ export function AutomationsView() {
               displayEmpty
               sx={{
                 '& .MuiOutlinedInput-notchedOutline': {
-                  borderColor: '#e0e0e0'
-                }
+                  borderColor: '#e0e0e0',
+                },
               }}
             >
               <MenuItem value="date">Sort by</MenuItem>
@@ -265,7 +265,7 @@ export function AutomationsView() {
             '&:hover': { bgcolor: '#45a049' },
             px: 3,
             py: 1.5,
-            borderRadius: 2
+            borderRadius: 2,
           }}
         >
           Create new +
@@ -276,7 +276,9 @@ export function AutomationsView() {
       <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
         {automations.map((automation) => (
           <Card key={automation.id} sx={{ p: 3, border: '1px solid #e0e0e0', borderRadius: 2 }}>
-            <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+            <Box
+              sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}
+            >
               <Box sx={{ display: 'flex', alignItems: 'flex-start', gap: 2, flex: 1 }}>
                 <Switch
                   checked={automation.isActive}
@@ -294,28 +296,47 @@ export function AutomationsView() {
                   <Typography variant="h6" sx={{ fontWeight: 600, mb: 2, fontSize: '1.1rem' }}>
                     {automation.title}
                   </Typography>
-                  
-                  <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: 2, mb: 2 }}>
+
+                  <Box
+                    sx={{
+                      display: 'grid',
+                      gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
+                      gap: 2,
+                      mb: 2,
+                    }}
+                  >
                     <Box>
-                      <Typography variant="body2" color="text.secondary" sx={{ mb: 0.5, fontSize: '0.75rem' }}>
+                      <Typography
+                        variant="body2"
+                        color="text.secondary"
+                        sx={{ mb: 0.5, fontSize: '0.75rem' }}
+                      >
                         Subject
                       </Typography>
                       <Typography variant="body2" sx={{ fontWeight: 500, fontSize: '0.875rem' }}>
                         {automation.subject}
                       </Typography>
                     </Box>
-                    
+
                     <Box>
-                      <Typography variant="body2" color="text.secondary" sx={{ mb: 0.5, fontSize: '0.75rem' }}>
+                      <Typography
+                        variant="body2"
+                        color="text.secondary"
+                        sx={{ mb: 0.5, fontSize: '0.75rem' }}
+                      >
                         Event
                       </Typography>
                       <Typography variant="body2" sx={{ fontWeight: 500, fontSize: '0.875rem' }}>
                         {automation.eventTrigger}
                       </Typography>
                     </Box>
-                    
+
                     <Box>
-                      <Typography variant="body2" color="text.secondary" sx={{ mb: 0.5, fontSize: '0.75rem' }}>
+                      <Typography
+                        variant="body2"
+                        color="text.secondary"
+                        sx={{ mb: 0.5, fontSize: '0.75rem' }}
+                      >
                         Channels
                       </Typography>
                       <Box sx={{ display: 'flex', gap: 0.5, flexWrap: 'wrap' }}>
@@ -330,7 +351,7 @@ export function AutomationsView() {
                               py: 0.5,
                               borderRadius: 1,
                               bgcolor: 'grey.100',
-                              fontSize: '0.75rem'
+                              fontSize: '0.75rem',
                             }}
                           >
                             <span>{channel.icon}</span>
@@ -339,18 +360,22 @@ export function AutomationsView() {
                         ))}
                       </Box>
                     </Box>
-                    
+
                     <Box>
-                      <Typography variant="body2" color="text.secondary" sx={{ mb: 0.5, fontSize: '0.75rem' }}>
+                      <Typography
+                        variant="body2"
+                        color="text.secondary"
+                        sx={{ mb: 0.5, fontSize: '0.75rem' }}
+                      >
                         Listing
                       </Typography>
                       <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
-                        <Typography 
-                          variant="body2" 
-                          sx={{ 
-                            fontWeight: 500, 
+                        <Typography
+                          variant="body2"
+                          sx={{
+                            fontWeight: 500,
                             fontSize: '0.875rem',
-                            color: '#4caf50'
+                            color: '#4caf50',
                           }}
                         >
                           {automation.listing}
@@ -358,37 +383,52 @@ export function AutomationsView() {
                         <ExternalLink size={12} color="#4caf50" />
                       </Box>
                     </Box>
-                    
+
                     <Box>
-                      <Typography variant="body2" color="text.secondary" sx={{ mb: 0.5, fontSize: '0.75rem' }}>
+                      <Typography
+                        variant="body2"
+                        color="text.secondary"
+                        sx={{ mb: 0.5, fontSize: '0.75rem' }}
+                      >
                         Creation date
                       </Typography>
                       <Typography variant="body2" sx={{ fontWeight: 500, fontSize: '0.875rem' }}>
                         {automation.creationDate}
                       </Typography>
                     </Box>
-                    
+
                     <Box>
-                      <Typography variant="body2" color="text.secondary" sx={{ mb: 0.5, fontSize: '0.75rem' }}>
+                      <Typography
+                        variant="body2"
+                        color="text.secondary"
+                        sx={{ mb: 0.5, fontSize: '0.75rem' }}
+                      >
                         Last edit
                       </Typography>
                       <Typography variant="body2" sx={{ fontWeight: 500, fontSize: '0.875rem' }}>
                         {automation.lastEdit}
                       </Typography>
                     </Box>
-                    
+
                     <Box>
-                      <Typography variant="body2" color="text.secondary" sx={{ mb: 0.5, fontSize: '0.75rem' }}>
+                      <Typography
+                        variant="body2"
+                        color="text.secondary"
+                        sx={{ mb: 0.5, fontSize: '0.75rem' }}
+                      >
                         Automation id
                       </Typography>
-                      <Typography variant="body2" sx={{ fontWeight: 500, fontSize: '0.875rem', fontFamily: 'monospace' }}>
+                      <Typography
+                        variant="body2"
+                        sx={{ fontWeight: 500, fontSize: '0.875rem', fontFamily: 'monospace' }}
+                      >
                         {automation.automationId}
                       </Typography>
                     </Box>
                   </Box>
                 </Box>
               </Box>
-              
+
               <Box sx={{ display: 'flex', gap: 1, ml: 2 }}>
                 <Button
                   size="small"
@@ -403,8 +443,8 @@ export function AutomationsView() {
                     py: 0.5,
                     '&:hover': {
                       borderColor: '#45a049',
-                      backgroundColor: 'rgba(76, 175, 80, 0.04)'
-                    }
+                      backgroundColor: 'rgba(76, 175, 80, 0.04)',
+                    },
                   }}
                 >
                   Edit
@@ -422,8 +462,8 @@ export function AutomationsView() {
                     py: 0.5,
                     '&:hover': {
                       borderColor: '#45a049',
-                      backgroundColor: 'rgba(76, 175, 80, 0.04)'
-                    }
+                      backgroundColor: 'rgba(76, 175, 80, 0.04)',
+                    },
                   }}
                 >
                   Create Similar
@@ -441,8 +481,8 @@ export function AutomationsView() {
                     py: 0.5,
                     '&:hover': {
                       borderColor: '#d32f2f',
-                      backgroundColor: 'rgba(244, 67, 54, 0.04)'
-                    }
+                      backgroundColor: 'rgba(244, 67, 54, 0.04)',
+                    },
                   }}
                 >
                   Delete

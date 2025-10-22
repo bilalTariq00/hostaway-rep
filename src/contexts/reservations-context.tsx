@@ -39,7 +39,7 @@ const initialReservations: Reservation[] = [
     totalAmount: 225,
     email: 'john@example.com',
     phone: '+1234567890',
-    channel: 'Airbnb'
+    channel: 'Airbnb',
   },
   {
     id: 2,
@@ -53,7 +53,7 @@ const initialReservations: Reservation[] = [
     totalAmount: 150,
     email: 'maria@example.com',
     phone: '+1234567891',
-    channel: 'Booking.com'
+    channel: 'Booking.com',
   },
   {
     id: 3,
@@ -67,8 +67,8 @@ const initialReservations: Reservation[] = [
     totalAmount: 375,
     email: 'david@example.com',
     phone: '+1234567892',
-    channel: 'Direct'
-  }
+    channel: 'Direct',
+  },
 ];
 
 export function ReservationsProvider({ children }: { children: ReactNode }) {
@@ -77,30 +77,32 @@ export function ReservationsProvider({ children }: { children: ReactNode }) {
   const addReservation = (reservation: Omit<Reservation, 'id'>) => {
     const newReservation: Reservation = {
       ...reservation,
-      id: Math.max(...reservations.map(r => r.id), 0) + 1
+      id: Math.max(...reservations.map((r) => r.id), 0) + 1,
     };
-    setReservations(prev => [newReservation, ...prev]); // Add to beginning of array
+    setReservations((prev) => [newReservation, ...prev]); // Add to beginning of array
   };
 
   const updateReservation = (id: number, updatedReservation: Partial<Reservation>) => {
-    setReservations(prev =>
-      prev.map(reservation =>
+    setReservations((prev) =>
+      prev.map((reservation) =>
         reservation.id === id ? { ...reservation, ...updatedReservation } : reservation
       )
     );
   };
 
   const deleteReservation = (id: number) => {
-    setReservations(prev => prev.filter(reservation => reservation.id !== id));
+    setReservations((prev) => prev.filter((reservation) => reservation.id !== id));
   };
 
   return (
-    <ReservationsContext.Provider value={{
-      reservations,
-      addReservation,
-      updateReservation,
-      deleteReservation
-    }}>
+    <ReservationsContext.Provider
+      value={{
+        reservations,
+        addReservation,
+        updateReservation,
+        deleteReservation,
+      }}
+    >
       {children}
     </ReservationsContext.Provider>
   );

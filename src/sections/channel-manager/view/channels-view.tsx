@@ -1,5 +1,16 @@
 import React, { useState } from 'react';
-import { Copy, Info, Plug, Calendar, Settings, FileCheck, ArrowRight, CreditCard, CheckCircle, MessageSquare } from 'lucide-react';
+import {
+  Copy,
+  Info,
+  Plug,
+  Calendar,
+  Settings,
+  FileCheck,
+  ArrowRight,
+  CreditCard,
+  CheckCircle,
+  MessageSquare,
+} from 'lucide-react';
 
 import Box from '@mui/material/Box';
 import Tab from '@mui/material/Tab';
@@ -32,7 +43,6 @@ import FormControlLabel from '@mui/material/FormControlLabel';
 import { useRouter } from 'src/routes/hooks';
 
 import { DashboardContent } from 'src/layouts/dashboard';
-
 
 // Mock data for channels
 const mockChannels = [
@@ -115,7 +125,6 @@ const mockChannels = [
   },
 ];
 
-
 export function ChannelsView() {
   const router = useRouter();
   const [termsModalOpen, setTermsModalOpen] = useState(false);
@@ -160,7 +169,6 @@ export function ChannelsView() {
       setTermsModalOpen(true);
     }
   };
-
 
   const handleCopyLink = () => {
     navigator.clipboard.writeText(icalLink);
@@ -296,7 +304,7 @@ export function ChannelsView() {
         <Typography variant="h4" sx={{ fontWeight: 600, mb: 2 }}>
           Channel Manager
         </Typography>
-        
+
         {/* Tabs */}
         <Tabs value="channels" onChange={handleTabChange} sx={{ mb: 3 }}>
           <Tab label="Listing Mapping" value="listing-mapping" />
@@ -305,45 +313,58 @@ export function ChannelsView() {
       </Box>
 
       {/* Channels Table */}
-      <Card sx={{ 
-        boxShadow: '0 4px 20px rgba(0,0,0,0.08)', 
-        border: '1px solid', 
-        borderColor: 'grey.200', 
-        borderRadius: 3,
-        overflow: 'hidden',
-        '&:hover': {
-          boxShadow: '0 8px 30px rgba(0,0,0,0.12)',
-        },
-        transition: 'box-shadow 0.3s ease-in-out',
-      }}>
+      <Card
+        sx={{
+          boxShadow: '0 4px 20px rgba(0,0,0,0.08)',
+          border: '1px solid',
+          borderColor: 'grey.200',
+          borderRadius: 3,
+          overflow: 'hidden',
+          '&:hover': {
+            boxShadow: '0 8px 30px rgba(0,0,0,0.12)',
+          },
+          transition: 'box-shadow 0.3s ease-in-out',
+        }}
+      >
         <TableContainer>
           <Table>
             <TableHead>
               <TableRow sx={{ bgcolor: '#F8F9FA' }}>
-                <TableCell sx={{ fontWeight: 600, fontSize: '0.9rem', color: '#333' }}>Status</TableCell>
-                <TableCell sx={{ fontWeight: 600, fontSize: '0.9rem', color: '#333' }}>Channel</TableCell>
-                <TableCell sx={{ fontWeight: 600, fontSize: '0.9rem', color: '#333' }}>Partner Badge</TableCell>
-                <TableCell sx={{ fontWeight: 600, fontSize: '0.9rem', color: '#333', textAlign: 'center' }}>Action</TableCell>
+                <TableCell sx={{ fontWeight: 600, fontSize: '0.9rem', color: '#333' }}>
+                  Status
+                </TableCell>
+                <TableCell sx={{ fontWeight: 600, fontSize: '0.9rem', color: '#333' }}>
+                  Channel
+                </TableCell>
+                <TableCell sx={{ fontWeight: 600, fontSize: '0.9rem', color: '#333' }}>
+                  Partner Badge
+                </TableCell>
+                <TableCell
+                  sx={{ fontWeight: 600, fontSize: '0.9rem', color: '#333', textAlign: 'center' }}
+                >
+                  Action
+                </TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
-        {mockChannels.map((channel) => (
-                <TableRow key={channel.id} sx={{ 
-                  '&:hover': { 
-                    bgcolor: 'grey.50',
-                    transform: 'scale(1.01)',
-                    boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
-                  },
-                  transition: 'all 0.2s ease-in-out',
-                }}>
+              {mockChannels.map((channel) => (
+                <TableRow
+                  key={channel.id}
+                  sx={{
+                    '&:hover': {
+                      bgcolor: 'grey.50',
+                      transform: 'scale(1.01)',
+                      boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
+                    },
+                    transition: 'all 0.2s ease-in-out',
+                  }}
+                >
                   {/* Status Column */}
-                  <TableCell sx={{ py: 2 }}>
-                    {getStatusChip(channel.status)}
-                  </TableCell>
-                  
+                  <TableCell sx={{ py: 2 }}>{getStatusChip(channel.status)}</TableCell>
+
                   {/* Channel Column */}
                   <TableCell sx={{ py: 2 }}>
-              <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
                       <Box
                         sx={{
                           width: 40,
@@ -358,14 +379,14 @@ export function ChannelsView() {
                         }}
                       >
                         {channel.logo && !channel.logo.includes('placeholder') ? (
-                          <img 
-                            src={channel.logo} 
+                          <img
+                            src={channel.logo}
                             alt={channel.name}
-                            style={{ 
-                              width: '100%', 
-                              height: '100%', 
+                            style={{
+                              width: '100%',
+                              height: '100%',
                               objectFit: 'contain',
-                              filter: 'brightness(0) invert(1)'
+                              filter: 'brightness(0) invert(1)',
                             }}
                             onError={(e) => {
                               e.currentTarget.style.display = 'none';
@@ -376,35 +397,62 @@ export function ChannelsView() {
                             }}
                           />
                         ) : null}
-                        <Box sx={{ display: channel.logo && !channel.logo.includes('placeholder') ? 'none' : 'flex', color: 'white', fontSize: '1rem', fontWeight: 'bold' }}>
-                          {channel.name === 'Airbnb' ? 'A' : 
-                           channel.name === 'Booking.com' ? 'B' : 
-                           channel.name === 'Expedia' ? '7' : 
-                           channel.name === 'Google' ? 'G' : 
-                           channel.name === 'Vrbo' ? 'W' : 
-                           channel.name === 'Marriott' ? 'M' : 
-                           channel.name.includes('Homeaway') ? '🏠' : 
-                           channel.name.includes('Vrbo iCAL') ? 'W' : '📅'}
+                        <Box
+                          sx={{
+                            display:
+                              channel.logo && !channel.logo.includes('placeholder')
+                                ? 'none'
+                                : 'flex',
+                            color: 'white',
+                            fontSize: '1rem',
+                            fontWeight: 'bold',
+                          }}
+                        >
+                          {channel.name === 'Airbnb'
+                            ? 'A'
+                            : channel.name === 'Booking.com'
+                              ? 'B'
+                              : channel.name === 'Expedia'
+                                ? '7'
+                                : channel.name === 'Google'
+                                  ? 'G'
+                                  : channel.name === 'Vrbo'
+                                    ? 'W'
+                                    : channel.name === 'Marriott'
+                                      ? 'M'
+                                      : channel.name.includes('Homeaway')
+                                        ? '🏠'
+                                        : channel.name.includes('Vrbo iCAL')
+                                          ? 'W'
+                                          : '📅'}
                         </Box>
                       </Box>
-                      <Typography variant="subtitle1" sx={{ fontWeight: 600, fontSize: '1rem', color: '#333' }}>
-                    {channel.name}
-                  </Typography>
+                      <Typography
+                        variant="subtitle1"
+                        sx={{ fontWeight: 600, fontSize: '1rem', color: '#333' }}
+                      >
+                        {channel.name}
+                      </Typography>
                     </Box>
                   </TableCell>
-                  
+
                   {/* Partner Badge Column */}
                   <TableCell sx={{ py: 2 }}>
                     {channel.partnerBadge ? (
-                      <Chip 
-                        label={channel.partnerBadge} 
-                        size="small" 
-                        sx={{ 
+                      <Chip
+                        label={channel.partnerBadge}
+                        size="small"
+                        sx={{
                           fontSize: '0.7rem',
                           height: 24,
-                          bgcolor: channel.name === 'Airbnb' ? '#FF5A5F' : 
-                                  channel.name === 'Booking.com' ? '#003580' : 
-                                  channel.name === 'Vrbo' ? '#00A699' : '#FF6B35',
+                          bgcolor:
+                            channel.name === 'Airbnb'
+                              ? '#FF5A5F'
+                              : channel.name === 'Booking.com'
+                                ? '#003580'
+                                : channel.name === 'Vrbo'
+                                  ? '#00A699'
+                                  : '#FF6B35',
                           color: 'white',
                           fontWeight: 600,
                           borderRadius: 2,
@@ -419,18 +467,29 @@ export function ChannelsView() {
                             boxShadow: '0 4px 10px rgba(0,0,0,0.2)',
                           },
                           transition: 'all 0.2s ease-in-out',
-                        }} 
+                        }}
                       />
                     ) : (
-                      <Typography variant="body2" color="text.secondary" sx={{ fontSize: '0.8rem' }}>
+                      <Typography
+                        variant="body2"
+                        color="text.secondary"
+                        sx={{ fontSize: '0.8rem' }}
+                      >
                         -
-                  </Typography>
+                      </Typography>
                     )}
                   </TableCell>
-                  
+
                   {/* Action Column */}
                   <TableCell sx={{ py: 2, textAlign: 'center' }}>
-                    <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 1 }}>
+                    <Box
+                      sx={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        gap: 1,
+                      }}
+                    >
                       {channel.hasInfo && (
                         <Tooltip
                           title={getInfoTooltipContent(channel)}
@@ -452,34 +511,40 @@ export function ChannelsView() {
                             },
                           }}
                         >
-                          <Box sx={{ 
-                            width: 20, 
-                            height: 20, 
-                            borderRadius: '50%', 
-                            bgcolor: 'primary.main', 
-                            display: 'flex', 
-                            alignItems: 'center', 
-                            justifyContent: 'center',
-                            mr: 0.5,
-                            cursor: 'pointer',
-                            '&:hover': {
-                              bgcolor: 'primary.dark',
-                              transform: 'scale(1.1)',
-                            },
-                            transition: 'all 0.2s ease-in-out',
-                          }}>
-                            <Typography sx={{ color: 'white', fontSize: '0.7rem', fontWeight: 'bold' }}>i</Typography>
-                </Box>
+                          <Box
+                            sx={{
+                              width: 20,
+                              height: 20,
+                              borderRadius: '50%',
+                              bgcolor: 'primary.main',
+                              display: 'flex',
+                              alignItems: 'center',
+                              justifyContent: 'center',
+                              mr: 0.5,
+                              cursor: 'pointer',
+                              '&:hover': {
+                                bgcolor: 'primary.dark',
+                                transform: 'scale(1.1)',
+                              },
+                              transition: 'all 0.2s ease-in-out',
+                            }}
+                          >
+                            <Typography
+                              sx={{ color: 'white', fontSize: '0.7rem', fontWeight: 'bold' }}
+                            >
+                              i
+                            </Typography>
+                          </Box>
                         </Tooltip>
                       )}
-                {channel.type === 'config' ? (
-                  <Button
-                    variant="outlined"
+                      {channel.type === 'config' ? (
+                        <Button
+                          variant="outlined"
                           startIcon={<Settings size={14} />}
-                    onClick={() => handleConfigClick(channel)}
-                          sx={{ 
-                            textTransform: 'none', 
-                            borderColor: 'primary.main', 
+                          onClick={() => handleConfigClick(channel)}
+                          sx={{
+                            textTransform: 'none',
+                            borderColor: 'primary.main',
                             color: 'primary.main',
                             fontSize: '0.8rem',
                             px: 2.5,
@@ -500,14 +565,14 @@ export function ChannelsView() {
                           }}
                         >
                           Configure
-                  </Button>
-                ) : (
-                  <Button
-                    variant="contained"
+                        </Button>
+                      ) : (
+                        <Button
+                          variant="contained"
                           startIcon={<ArrowRight size={14} />}
-                    onClick={() => handleActivateClick(channel)}
-                          sx={{ 
-                            textTransform: 'none', 
+                          onClick={() => handleActivateClick(channel)}
+                          sx={{
+                            textTransform: 'none',
                             bgcolor: 'primary.main',
                             fontSize: '0.8rem',
                             px: 2.5,
@@ -524,18 +589,18 @@ export function ChannelsView() {
                             },
                             transition: 'all 0.2s ease-in-out',
                           }}
-                  >
-                    Activate
-                  </Button>
-                )}
-              </Box>
+                        >
+                          Activate
+                        </Button>
+                      )}
+                    </Box>
                   </TableCell>
                 </TableRow>
               ))}
             </TableBody>
           </Table>
         </TableContainer>
-          </Card>
+      </Card>
 
       {/* Terms Confirmation Modal */}
       <Dialog
@@ -552,12 +617,20 @@ export function ChannelsView() {
         }}
       >
         <DialogTitle sx={{ pb: 1 }}>
-          <Typography variant="h5" sx={{ fontWeight: 600, textAlign: 'center', mb: 2, color: '#333' }}>
+          <Typography
+            variant="h5"
+            sx={{ fontWeight: 600, textAlign: 'center', mb: 2, color: '#333' }}
+          >
             Please confirm the next statements to continue
           </Typography>
-          <Typography variant="body2" color="text.secondary" sx={{ textAlign: 'center', lineHeight: 1.6 }}>
-            The following Hostaway terms of services apply to the use of the Hostaway software including all channel connections and 3rd party connections.
-            </Typography>
+          <Typography
+            variant="body2"
+            color="text.secondary"
+            sx={{ textAlign: 'center', lineHeight: 1.6 }}
+          >
+            The following Hostaway terms of services apply to the use of the Hostaway software
+            including all channel connections and 3rd party connections.
+          </Typography>
         </DialogTitle>
         <DialogContent sx={{ px: 3, py: 1 }}>
           <Box sx={{ mt: 2 }}>
@@ -566,53 +639,62 @@ export function ChannelsView() {
                 <Box sx={{ display: 'flex', alignItems: 'flex-start', gap: 2, mb: 2 }}>
                   <FileCheck size={20} color="#4CAF50" />
                   <Typography variant="body2">
-                    When Booking.com is connected, all current Hostaway availability and rates will be uploaded and replace current Booking.com settings.
+                    When Booking.com is connected, all current Hostaway availability and rates will
+                    be uploaded and replace current Booking.com settings.
                   </Typography>
                 </Box>
                 <Box sx={{ display: 'flex', alignItems: 'flex-start', gap: 2, mb: 2 }}>
                   <CheckCircle size={20} color="#2196F3" />
                   <Typography variant="body2">
-                    I will ensure that my rates and availability are up to date on Hostaway before connecting.
+                    I will ensure that my rates and availability are up to date on Hostaway before
+                    connecting.
                   </Typography>
                 </Box>
                 <Box sx={{ display: 'flex', alignItems: 'flex-start', gap: 2, mb: 2 }}>
                   <CreditCard size={20} color="#FF9800" />
                   <Typography variant="body2">
-                    When different currencies are used in Booking.com and Hostaway, I will immediately adjust the markup to reflect this to avoid bookings at low rates.
+                    When different currencies are used in Booking.com and Hostaway, I will
+                    immediately adjust the markup to reflect this to avoid bookings at low rates.
                   </Typography>
                 </Box>
                 <Box sx={{ display: 'flex', alignItems: 'flex-start', gap: 2, mb: 2 }}>
                   <MessageSquare size={20} color="#9C27B0" />
                   <Typography variant="body2">
-                    Booking.com will manually activate my guest messaging connection with the Hostaway software. This may take a couple of weeks. Until then I will have to manage the guest messaging from the Booking.com platform.
+                    Booking.com will manually activate my guest messaging connection with the
+                    Hostaway software. This may take a couple of weeks. Until then I will have to
+                    manage the guest messaging from the Booking.com platform.
                   </Typography>
                 </Box>
                 <Box sx={{ display: 'flex', alignItems: 'flex-start', gap: 2, mb: 2 }}>
                   <Settings size={20} color="#607D8B" />
                   <Typography variant="body2">
-                    When I change my room mapping in Booking.com after connection, I will remap my listing in Hostaway.
+                    When I change my room mapping in Booking.com after connection, I will remap my
+                    listing in Hostaway.
                   </Typography>
                 </Box>
                 <Box sx={{ display: 'flex', alignItems: 'flex-start', gap: 2, mb: 2 }}>
                   <Calendar size={20} color="#795548" />
                   <Typography variant="body2">
-                    I am not using multi-room availability in my listings on Booking.com. My inventory has to consist of 1 room available per day per room type.
+                    I am not using multi-room availability in my listings on Booking.com. My
+                    inventory has to consist of 1 room available per day per room type.
                   </Typography>
                 </Box>
               </>
             ) : selectedChannel?.name === 'Expedia' ? (
               <>
                 <Box sx={{ display: 'flex', alignItems: 'flex-start', gap: 2, mb: 2 }}>
-                  <Box sx={{ 
-                    width: 24, 
-                    height: 24, 
-                   
-                    display: 'flex', 
-                    alignItems: 'center', 
-                    justifyContent: 'center',
-                    flexShrink: 0,
-                    mt: 0.5
-                  }}>
+                  <Box
+                    sx={{
+                      width: 24,
+                      height: 24,
+
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      flexShrink: 0,
+                      mt: 0.5,
+                    }}
+                  >
                     <Plug size={24} color="#666" />
                   </Box>
                   <Typography variant="body2" sx={{ lineHeight: 1.5 }}>
@@ -620,91 +702,115 @@ export function ChannelsView() {
                   </Typography>
                 </Box>
                 <Box sx={{ display: 'flex', alignItems: 'flex-start', gap: 2, mb: 2 }}>
-                  <Box sx={{ 
-                    width: 22, 
-                    height: 22, 
-                   
-                    display: 'flex', 
-                    alignItems: 'center', 
-                    justifyContent: 'center',
-                    flexShrink: 0,
-                    mt: 0.5
-                  }}>
+                  <Box
+                    sx={{
+                      width: 22,
+                      height: 22,
+
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      flexShrink: 0,
+                      mt: 0.5,
+                    }}
+                  >
                     <FileCheck size={22} color="#666" />
                   </Box>
                   <Typography variant="body2" sx={{ lineHeight: 1.5 }}>
-                    When the connection is made, I will check to ensure Hostaway reservations are seen in the Vrbo calendar and vice versa.
+                    When the connection is made, I will check to ensure Hostaway reservations are
+                    seen in the Vrbo calendar and vice versa.
                   </Typography>
                 </Box>
                 <Box sx={{ display: 'flex', alignItems: 'flex-start', gap: 2, mb: 2 }}>
-                  <Box sx={{ 
-                    width: 22, 
-                    height: 22, 
-                   
-                    display: 'flex', 
-                    alignItems: 'center', 
-                    justifyContent: 'center',
-                    flexShrink: 0,
-                    mt: 0.5
-                  }}>
+                  <Box
+                    sx={{
+                      width: 22,
+                      height: 22,
+
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      flexShrink: 0,
+                      mt: 0.5,
+                    }}
+                  >
                     <Calendar size={22} color="#666" />
                   </Box>
                   <Typography variant="body2" sx={{ lineHeight: 1.5 }}>
-                    I understand that Vrbo is responsible for importing the Hostaway calendar and issues should be reported to Vrbo.
+                    I understand that Vrbo is responsible for importing the Hostaway calendar and
+                    issues should be reported to Vrbo.
                   </Typography>
                 </Box>
                 <Box sx={{ display: 'flex', alignItems: 'flex-start', gap: 2, mb: 2 }}>
-                  <Box sx={{ 
-                    width: 22, 
-                    height: 22, 
-                  
-                    display: 'flex', 
-                    alignItems: 'center', 
-                    justifyContent: 'center',
-                    flexShrink: 0,
-                    mt: 0.5
-                  }}>
+                  <Box
+                    sx={{
+                      width: 22,
+                      height: 22,
+
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      flexShrink: 0,
+                      mt: 0.5,
+                    }}
+                  >
                     <MessageSquare size={22} color="#666" />
                   </Box>
                   <Typography variant="body2" sx={{ lineHeight: 1.5 }}>
-                    The guest messaging service is not available for this connection. I can manually use direct guest email as an alternative.
+                    The guest messaging service is not available for this connection. I can manually
+                    use direct guest email as an alternative.
                   </Typography>
                 </Box>
                 <Box sx={{ display: 'flex', alignItems: 'flex-start', gap: 2, mb: 2 }}>
-                  <Box sx={{ 
-                    width: 22, 
-                    height: 22, 
-                  
-                    display: 'flex', 
-                    alignItems: 'center', 
-                    justifyContent: 'center',
-                    flexShrink: 0,
-                    mt: 0.5
-                  }}>
+                  <Box
+                    sx={{
+                      width: 22,
+                      height: 22,
+
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      flexShrink: 0,
+                      mt: 0.5,
+                    }}
+                  >
                     <CreditCard size={22} color="#666" />
                   </Box>
                   <Typography variant="body2" sx={{ lineHeight: 1.5 }}>
                     Rates, listing settings, and guest message services are not supported by iCal.
-            </Typography>
+                  </Typography>
                 </Box>
               </>
             ) : (
               <>
                 <Box sx={{ display: 'flex', alignItems: 'flex-start', gap: 2, mb: 2 }}>
                   <Box sx={{ display: 'flex', gap: 1, mt: 0.5 }}>
-                    <Box sx={{ width: 20, height: 20, borderRadius: 1, bgcolor: '#9C27B0', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                      <Typography variant="caption" sx={{ fontSize: '0.7rem', color: 'white' }}>🔌</Typography>
-            </Box>
-          </Box>
+                    <Box
+                      sx={{
+                        width: 20,
+                        height: 20,
+                        borderRadius: 1,
+                        bgcolor: '#9C27B0',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                      }}
+                    >
+                      <Typography variant="caption" sx={{ fontSize: '0.7rem', color: 'white' }}>
+                        🔌
+                      </Typography>
+                    </Box>
+                  </Box>
                   <Typography variant="body2">
                     I understand that the sync process is slower than an API connection.
-            </Typography>
+                  </Typography>
                 </Box>
                 <Box sx={{ display: 'flex', alignItems: 'flex-start', gap: 2, mb: 2 }}>
                   <CheckCircle size={20} color="#4CAF50" />
                   <Typography variant="body2">
-                    When the connection is made, I will check to ensure Hostaway reservations are seen in the Vrbo calendar and vice versa.
-                    </Typography>
+                    When the connection is made, I will check to ensure Hostaway reservations are
+                    seen in the Vrbo calendar and vice versa.
+                  </Typography>
                 </Box>
                 <Box sx={{ display: 'flex', alignItems: 'flex-start', gap: 2, mb: 2 }}>
                   <Box sx={{ display: 'flex', gap: 1, mt: 0.5 }}>
@@ -712,29 +818,85 @@ export function ChannelsView() {
                     <CheckCircle size={20} color="#4CAF50" />
                   </Box>
                   <Typography variant="body2">
-                    I understand that Vrbo is responsible for importing the Hostaway calendar and issues should be reported to Vrbo.
-                    </Typography>
-                </Box>
-                <Box sx={{ display: 'flex', alignItems: 'flex-start', gap: 2, mb: 2 }}>
-                  <Box sx={{ display: 'flex', gap: 1, mt: 0.5 }}>
-                    <Box sx={{ width: 20, height: 20, borderRadius: '50%', bgcolor: '#2196F3', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                      <Typography variant="caption" sx={{ fontSize: '0.7rem', color: 'white' }}>💬</Typography>
-                    </Box>
-                    <Box sx={{ width: 20, height: 20, borderRadius: '50%', bgcolor: '#FF9800', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                      <Typography variant="caption" sx={{ fontSize: '0.7rem', color: 'white' }}>📞</Typography>
-                    </Box>
-                  </Box>
-                  <Typography variant="body2">
-                    The guest messaging service is not available for this connection. I can manually use direct guest email as an alternative.
+                    I understand that Vrbo is responsible for importing the Hostaway calendar and
+                    issues should be reported to Vrbo.
                   </Typography>
                 </Box>
                 <Box sx={{ display: 'flex', alignItems: 'flex-start', gap: 2, mb: 2 }}>
                   <Box sx={{ display: 'flex', gap: 1, mt: 0.5 }}>
-                    <Box sx={{ width: 20, height: 20, borderRadius: 1, bgcolor: '#4CAF50', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                      <Typography variant="caption" sx={{ fontSize: '0.7rem', fontWeight: 'bold', color: 'white' }}>$</Typography>
+                    <Box
+                      sx={{
+                        width: 20,
+                        height: 20,
+                        borderRadius: '50%',
+                        bgcolor: '#2196F3',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                      }}
+                    >
+                      <Typography variant="caption" sx={{ fontSize: '0.7rem', color: 'white' }}>
+                        💬
+                      </Typography>
                     </Box>
-                    <Box sx={{ width: 20, height: 20, borderRadius: 1, bgcolor: '#4CAF50', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                      <Typography variant="caption" sx={{ fontSize: '0.7rem', fontWeight: 'bold', color: 'white' }}>💳</Typography>
+                    <Box
+                      sx={{
+                        width: 20,
+                        height: 20,
+                        borderRadius: '50%',
+                        bgcolor: '#FF9800',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                      }}
+                    >
+                      <Typography variant="caption" sx={{ fontSize: '0.7rem', color: 'white' }}>
+                        📞
+                      </Typography>
+                    </Box>
+                  </Box>
+                  <Typography variant="body2">
+                    The guest messaging service is not available for this connection. I can manually
+                    use direct guest email as an alternative.
+                  </Typography>
+                </Box>
+                <Box sx={{ display: 'flex', alignItems: 'flex-start', gap: 2, mb: 2 }}>
+                  <Box sx={{ display: 'flex', gap: 1, mt: 0.5 }}>
+                    <Box
+                      sx={{
+                        width: 20,
+                        height: 20,
+                        borderRadius: 1,
+                        bgcolor: '#4CAF50',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                      }}
+                    >
+                      <Typography
+                        variant="caption"
+                        sx={{ fontSize: '0.7rem', fontWeight: 'bold', color: 'white' }}
+                      >
+                        $
+                      </Typography>
+                    </Box>
+                    <Box
+                      sx={{
+                        width: 20,
+                        height: 20,
+                        borderRadius: 1,
+                        bgcolor: '#4CAF50',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                      }}
+                    >
+                      <Typography
+                        variant="caption"
+                        sx={{ fontSize: '0.7rem', fontWeight: 'bold', color: 'white' }}
+                      >
+                        💳
+                      </Typography>
                     </Box>
                   </Box>
                   <Typography variant="body2">
@@ -744,10 +906,10 @@ export function ChannelsView() {
               </>
             )}
           </Box>
-          
+
           <FormControlLabel
             control={
-              <Checkbox 
+              <Checkbox
                 checked={agreedToTerms}
                 onChange={(e) => setAgreedToTerms(e.target.checked)}
                 sx={{
@@ -760,7 +922,15 @@ export function ChannelsView() {
             label={
               <Typography variant="body2" sx={{ fontSize: '0.9rem' }}>
                 I agree to Hostaway{' '}
-                <Typography component="span" sx={{ color: 'primary.main', textDecoration: 'underline', cursor: 'pointer', fontWeight: 500 }}>
+                <Typography
+                  component="span"
+                  sx={{
+                    color: 'primary.main',
+                    textDecoration: 'underline',
+                    cursor: 'pointer',
+                    fontWeight: 500,
+                  }}
+                >
                   terms & conditions
                 </Typography>
               </Typography>
@@ -769,10 +939,10 @@ export function ChannelsView() {
           />
         </DialogContent>
         <DialogActions sx={{ p: 4, gap: 2, justifyContent: 'center' }}>
-          <Button 
+          <Button
             onClick={() => setTermsModalOpen(false)}
-            sx={{ 
-              textTransform: 'none', 
+            sx={{
+              textTransform: 'none',
               color: '#666',
               bgcolor: '#E0E0E0',
               px: 3,
@@ -780,12 +950,12 @@ export function ChannelsView() {
               borderRadius: 2,
               '&:hover': {
                 bgcolor: '#D0D0D0',
-              }
+              },
             }}
           >
             Close
           </Button>
-          <Button 
+          <Button
             variant="contained"
             disabled={!agreedToTerms}
             onClick={() => {
@@ -796,8 +966,8 @@ export function ChannelsView() {
                 setSecondModalOpen(true);
               }
             }}
-            sx={{ 
-              textTransform: 'none', 
+            sx={{
+              textTransform: 'none',
               bgcolor: agreedToTerms ? 'primary.main' : '#E0E0E0',
               color: agreedToTerms ? 'white' : '#999',
               px: 3,
@@ -805,7 +975,7 @@ export function ChannelsView() {
               borderRadius: 2,
               '&:hover': {
                 bgcolor: agreedToTerms ? 'primary.dark' : '#E0E0E0',
-              }
+              },
             }}
           >
             Next
@@ -830,13 +1000,13 @@ export function ChannelsView() {
         <DialogTitle>
           <Typography variant="h5" sx={{ fontWeight: 600, textAlign: 'center' }}>
             Please open your Homeaway account and go to your Calendar
-            </Typography>
+          </Typography>
         </DialogTitle>
         <DialogContent sx={{ px: 3, py: 1 }}>
           <Box sx={{ mt: 2 }}>
             <Typography variant="subtitle1" sx={{ fontWeight: 600, mb: 2 }}>
               Choose listing
-                  </Typography>
+            </Typography>
             <FormControl fullWidth sx={{ mb: 2 }}>
               <InputLabel>Select listing</InputLabel>
               <Select
@@ -888,25 +1058,25 @@ export function ChannelsView() {
               placeholder="https://www.homeaway.com/ical/..."
               sx={{ mb: 2 }}
             />
-                  </Box>
+          </Box>
         </DialogContent>
         <DialogActions sx={{ p: 2, gap: 2 }}>
-          <Button 
+          <Button
             variant="outlined"
             onClick={() => setIcalModalOpen(false)}
-            sx={{ 
-              textTransform: 'none', 
+            sx={{
+              textTransform: 'none',
               borderColor: 'grey.300',
               color: 'text.secondary',
               '&:hover': {
                 borderColor: 'grey.400',
                 bgcolor: 'grey.50',
-              }
+              },
             }}
           >
             Cancel
           </Button>
-          <Button 
+          <Button
             variant="contained"
             onClick={handleActivateIcal}
             sx={{ textTransform: 'none', bgcolor: 'primary.main' }}
@@ -968,22 +1138,22 @@ export function ChannelsView() {
           </Box>
         </DialogContent>
         <DialogActions sx={{ p: 3, gap: 2 }}>
-          <Button 
+          <Button
             variant="outlined"
             onClick={() => setSupportModalOpen(false)}
-            sx={{ 
-              textTransform: 'none', 
+            sx={{
+              textTransform: 'none',
               borderColor: 'grey.300',
               color: 'text.secondary',
               '&:hover': {
                 borderColor: 'grey.400',
                 bgcolor: 'grey.50',
-              }
+              },
             }}
           >
             Cancel
           </Button>
-          <Button 
+          <Button
             variant="contained"
             onClick={handleContactSupport}
             sx={{ textTransform: 'none', bgcolor: 'primary.main' }}
@@ -1023,7 +1193,7 @@ export function ChannelsView() {
                 value={selectedListing}
                 label="Select listing"
                 onChange={(e) => setSelectedListing(e.target.value)}
-                sx={{ 
+                sx={{
                   '& .MuiOutlinedInput-notchedOutline': {
                     borderColor: '#E0E0E0',
                   },
@@ -1057,14 +1227,14 @@ export function ChannelsView() {
                       variant="outlined"
                       startIcon={<Copy size={16} />}
                       onClick={handleCopyLink}
-                      sx={{ 
+                      sx={{
                         textTransform: 'none',
                         borderColor: '#00A699',
                         color: '#00A699',
                         '&:hover': {
                           borderColor: '#008A7A',
                           bgcolor: '#F0F9F8',
-                        }
+                        },
                       }}
                     >
                       Copy
@@ -1072,7 +1242,7 @@ export function ChannelsView() {
                   </InputAdornment>
                 ),
               }}
-              sx={{ 
+              sx={{
                 mb: 2,
                 '& .MuiOutlinedInput-root': {
                   '& fieldset': {
@@ -1098,7 +1268,7 @@ export function ChannelsView() {
               value={homeawayLink}
               onChange={(e) => setHomeawayLink(e.target.value)}
               placeholder="https://www.homeaway.com/ical/..."
-              sx={{ 
+              sx={{
                 mb: 2,
                 '& .MuiOutlinedInput-root': {
                   '& fieldset': {
@@ -1116,40 +1286,40 @@ export function ChannelsView() {
           </Box>
         </DialogContent>
         <DialogActions sx={{ p: 2, gap: 2, justifyContent: 'flex-end' }}>
-          <Button 
+          <Button
             variant="outlined"
             onClick={() => setSecondModalOpen(false)}
-            sx={{ 
-              textTransform: 'none', 
+            sx={{
+              textTransform: 'none',
               color: 'primary.main',
-              borderColor: 'primary.main', 
+              borderColor: 'primary.main',
               px: 3,
               py: 1,
               borderRadius: 2,
               '&:hover': {
                 bgcolor: 'primary.main',
                 color: 'white',
-              }
+              },
             }}
           >
             Cancel
           </Button>
-          <Button 
+          <Button
             variant="contained"
             onClick={() => setSecondModalOpen(false)}
-            sx={{ 
-              textTransform: 'none', 
+            sx={{
+              textTransform: 'none',
               bgcolor: 'primary.main',
               px: 3,
               py: 1,
               borderRadius: 2,
               '&:hover': {
                 bgcolor: 'primary.dark',
-              }
+              },
             }}
           >
             Activate
-            </Button>
+          </Button>
         </DialogActions>
       </Dialog>
     </DashboardContent>

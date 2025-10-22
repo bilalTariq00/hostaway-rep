@@ -26,7 +26,7 @@ export function HostawayRegister() {
   const [error, setError] = useState('');
 
   const handleChange = (field: string) => (e: React.ChangeEvent<HTMLInputElement>) => {
-    setFormData(prev => ({ ...prev, [field]: e.target.value }));
+    setFormData((prev) => ({ ...prev, [field]: e.target.value }));
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -42,12 +42,12 @@ export function HostawayRegister() {
           name: `${formData.firstName} ${formData.lastName}`,
           role: 'user', // Default to user role for new registrations
         };
-        
+
         // Store user data
         localStorage.setItem('user', JSON.stringify(userData));
-        
+
         console.log('Registration successful, navigating to dashboard...');
-        navigate('/', { replace: true });
+        navigate('/dashboard', { replace: true });
       } else {
         setError('Please fill all fields and ensure password is at least 6 characters');
       }
@@ -86,11 +86,12 @@ export function HostawayRegister() {
             left: 0,
             right: 0,
             bottom: 0,
-            background: 'linear-gradient(135deg, rgba(255,107,53,0.1) 0%, rgba(247,147,30,0.1) 100%)',
+            background:
+              'linear-gradient(135deg, rgba(255,107,53,0.1) 0%, rgba(247,147,30,0.1) 100%)',
             opacity: 0.3,
           }}
         />
-        
+
         {/* Content */}
         <Box sx={{ position: 'relative', zIndex: 1, textAlign: 'center', p: 4 }}>
           <Typography variant="h3" sx={{ fontWeight: 700, mb: 2, color: '#333' }}>
@@ -99,17 +100,17 @@ export function HostawayRegister() {
           <Typography variant="h6" sx={{ color: 'text.secondary', mb: 4, fontWeight: 400 }}>
             More effectively with optimized workflows.
           </Typography>
-          
+
           {/* Hostaway Image */}
-          <img 
-            src="/assets/image.png" 
-            alt="Hostaway Dashboard" 
-            style={{ 
-              width: '100%', 
+          <img
+            src="/assets/image.png"
+            alt="Hostaway Dashboard"
+            style={{
+              width: '100%',
               maxWidth: '600px',
               height: 'auto',
-              objectFit: 'contain'
-            }} 
+              objectFit: 'contain',
+            }}
           />
         </Box>
       </Box>
@@ -134,13 +135,13 @@ export function HostawayRegister() {
             </Typography>
             <Typography variant="body2" sx={{ color: 'text.secondary' }}>
               Already have an account?{' '}
-              <Link 
-                href="/login" 
-                sx={{ 
+              <Link
+                href="/login"
+                sx={{
                   color: '#FF6B35',
                   textDecoration: 'none',
                   fontWeight: 600,
-                  '&:hover': { textDecoration: 'underline' }
+                  '&:hover': { textDecoration: 'underline' },
                 }}
               >
                 Get started
@@ -164,14 +165,14 @@ export function HostawayRegister() {
                 value={formData.firstName}
                 onChange={handleChange('firstName')}
                 required
-                sx={{ 
+                sx={{
                   '& .MuiOutlinedInput-root': {
                     borderRadius: 2,
                     bgcolor: 'white',
                   },
                   '& .MuiInputLabel-root': {
                     color: 'text.secondary',
-                  }
+                  },
                 }}
               />
               <TextField
@@ -180,14 +181,14 @@ export function HostawayRegister() {
                 value={formData.lastName}
                 onChange={handleChange('lastName')}
                 required
-                sx={{ 
+                sx={{
                   '& .MuiOutlinedInput-root': {
                     borderRadius: 2,
                     bgcolor: 'white',
                   },
                   '& .MuiInputLabel-root': {
                     color: 'text.secondary',
-                  }
+                  },
                 }}
               />
             </Box>
@@ -200,7 +201,7 @@ export function HostawayRegister() {
               value={formData.email}
               onChange={handleChange('email')}
               required
-              sx={{ 
+              sx={{
                 mb: 3,
                 '& .MuiOutlinedInput-root': {
                   borderRadius: 2,
@@ -208,7 +209,7 @@ export function HostawayRegister() {
                 },
                 '& .MuiInputLabel-root': {
                   color: 'text.secondary',
-                }
+                },
               }}
             />
 
@@ -221,7 +222,7 @@ export function HostawayRegister() {
               onChange={handleChange('password')}
               required
               helperText="6+ characters"
-              sx={{ 
+              sx={{
                 mb: 3,
                 '& .MuiOutlinedInput-root': {
                   borderRadius: 2,
@@ -233,15 +234,12 @@ export function HostawayRegister() {
                 '& .MuiFormHelperText-root': {
                   color: 'text.secondary',
                   fontSize: '12px',
-                }
+                },
               }}
               InputProps={{
                 endAdornment: (
                   <InputAdornment position="end">
-                    <IconButton
-                      onClick={() => setShowPassword(!showPassword)}
-                      edge="end"
-                    >
+                    <IconButton onClick={() => setShowPassword(!showPassword)} edge="end">
                       {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
                     </IconButton>
                   </InputAdornment>
@@ -266,7 +264,7 @@ export function HostawayRegister() {
                 },
                 '&:disabled': {
                   bgcolor: 'grey.300',
-                }
+                },
               }}
             >
               {isLoading ? 'Creating Account...' : 'Create account'}

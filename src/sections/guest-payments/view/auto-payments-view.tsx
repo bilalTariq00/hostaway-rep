@@ -40,8 +40,8 @@ const mockAutoPayments = [
         amount: 100,
         amountType: '%',
         scheduledBy: 'At',
-        reservationEvent: 'Reservation creation'
-      }
+        reservationEvent: 'Reservation creation',
+      },
     ],
     applyForNewListings: true,
     selectedListings: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
@@ -61,8 +61,8 @@ const mockAutoPayments = [
         amount: 200,
         amountType: '€',
         scheduledBy: 'At',
-        reservationEvent: 'Check-in'
-      }
+        reservationEvent: 'Check-in',
+      },
     ],
     applyForNewListings: false,
     selectedListings: [1, 3, 5],
@@ -179,7 +179,7 @@ export function AutoPaymentsView() {
   const [isEditMode, setIsEditMode] = useState(false);
   const [currentPage, setCurrentPage] = useState(0);
   const [itemsPerPage] = useState(12);
-  
+
   // Form state
   const [formData, setFormData] = useState({
     title: '',
@@ -188,7 +188,7 @@ export function AutoPaymentsView() {
     applyForNewListings: false,
     selectedListings: [] as number[],
   });
-  
+
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
 
@@ -225,9 +225,9 @@ export function AutoPaymentsView() {
   const handleSaveAutoPayment = () => {
     if (isEditMode && selectedAutoPayment) {
       // Update existing
-      setAutoPayments(prev => prev.map(ap => 
-        ap.id === selectedAutoPayment.id ? { ...ap, ...formData } : ap
-      ));
+      setAutoPayments((prev) =>
+        prev.map((ap) => (ap.id === selectedAutoPayment.id ? { ...ap, ...formData } : ap))
+      );
     } else {
       // Add new
       const newAutoPayment = {
@@ -236,14 +236,14 @@ export function AutoPaymentsView() {
         status: 'Active',
         createdAt: new Date().toISOString().split('T')[0],
       };
-      setAutoPayments(prev => [...prev, newAutoPayment]);
+      setAutoPayments((prev) => [...prev, newAutoPayment]);
     }
     handleAddAutoPayment(); // Reset form
   };
 
   const handleDeleteAutoPayment = () => {
     if (selectedAutoPayment) {
-      setAutoPayments(prev => prev.filter(ap => ap.id !== selectedAutoPayment.id));
+      setAutoPayments((prev) => prev.filter((ap) => ap.id !== selectedAutoPayment.id));
       handleAddAutoPayment(); // Reset form
     }
   };
@@ -257,76 +257,86 @@ export function AutoPaymentsView() {
       amount: 0,
       amountType: '%',
       scheduledBy: 'At',
-      reservationEvent: 'Reservation creation'
+      reservationEvent: 'Reservation creation',
     };
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
-      autoCharges: [...prev.autoCharges, newCharge]
+      autoCharges: [...prev.autoCharges, newCharge],
     }));
   };
 
   const handleRemoveAutoCharge = (chargeId: number) => {
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
-      autoCharges: prev.autoCharges.filter(charge => charge.id !== chargeId)
+      autoCharges: prev.autoCharges.filter((charge) => charge.id !== chargeId),
     }));
   };
 
   const handleAutoChargeChange = (chargeId: number, field: string, value: any) => {
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
-      autoCharges: prev.autoCharges.map(charge => 
+      autoCharges: prev.autoCharges.map((charge) =>
         charge.id === chargeId ? { ...charge, [field]: value } : charge
-      )
+      ),
     }));
   };
 
   const handleChannelChange = (event: any) => {
-    setFormData(prev => ({ ...prev, channels: event.target.value }));
+    setFormData((prev) => ({ ...prev, channels: event.target.value }));
   };
 
   const handleListingToggle = (listingId: number) => {
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
       selectedListings: prev.selectedListings.includes(listingId)
-        ? prev.selectedListings.filter(id => id !== listingId)
-        : [...prev.selectedListings, listingId]
+        ? prev.selectedListings.filter((id) => id !== listingId)
+        : [...prev.selectedListings, listingId],
     }));
   };
 
   const handleUnselectAllListings = () => {
-    setFormData(prev => ({ ...prev, selectedListings: [] }));
+    setFormData((prev) => ({ ...prev, selectedListings: [] }));
   };
-
 
   const totalPages = Math.ceil(mockListings.length / itemsPerPage);
   const startIndex = currentPage * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
   const currentListings = mockListings.slice(startIndex, endIndex);
 
-  const filteredListings = currentListings.filter(listing =>
-    listing.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    listing.type.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    listing.listingId.toLowerCase().includes(searchTerm.toLowerCase())
+  const filteredListings = currentListings.filter(
+    (listing) =>
+      listing.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      listing.type.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      listing.listingId.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   const getChannelColor = (channel: string) => {
     switch (channel) {
-      case 'Vrbo': return '#FF5A5F';
-      case 'Booking Engine': return '#FFD700';
-      case 'Airbnb': return '#FF5A5F';
-      case 'Direct': return '#00C853';
-      default: return '#9E9E9E';
+      case 'Vrbo':
+        return '#FF5A5F';
+      case 'Booking Engine':
+        return '#FFD700';
+      case 'Airbnb':
+        return '#FF5A5F';
+      case 'Direct':
+        return '#00C853';
+      default:
+        return '#9E9E9E';
     }
   };
 
   const getChannelIcon = (channel: string) => {
     switch (channel) {
-      case 'Vrbo': return 'W';
-      case 'Booking Engine': return 'B';
-      case 'Airbnb': return 'A';
-      case 'Direct': return 'D';
-      default: return '?';
+      case 'Vrbo':
+        return 'W';
+      case 'Booking Engine':
+        return 'B';
+      case 'Airbnb':
+        return 'A';
+      case 'Direct':
+        return 'D';
+      default:
+        return '?';
     }
   };
 
@@ -367,14 +377,16 @@ export function AutoPaymentsView() {
         {/* Left Sidebar - Auto Payments List */}
         <Grid size={{ xs: 12, md: 4 }}>
           <Paper sx={{ p: 2, height: 'fit-content' }}>
-            <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 2 }}>
+            <Box
+              sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 2 }}
+            >
               <Typography variant="h6" sx={{ fontWeight: 600 }}>
                 Auto Payments
               </Typography>
               <Button
                 variant="contained"
                 size="small"
-                startIcon={<Iconify icon={"eva:plus-fill" as any} />}
+                startIcon={<Iconify icon={'eva:plus-fill' as any} />}
                 onClick={handleAddAutoPayment}
                 sx={{ bgcolor: 'primary.main' }}
               >
@@ -390,14 +402,17 @@ export function AutoPaymentsView() {
                     p: 2,
                     cursor: 'pointer',
                     border: selectedAutoPayment?.id === autoPayment.id ? 2 : 1,
-                    borderColor: selectedAutoPayment?.id === autoPayment.id ? 'primary.main' : 'grey.200',
+                    borderColor:
+                      selectedAutoPayment?.id === autoPayment.id ? 'primary.main' : 'grey.200',
                     '&:hover': {
                       boxShadow: 2,
                     },
                   }}
                   onClick={() => handleEditAutoPayment(autoPayment)}
                 >
-                  <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                  <Box
+                    sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}
+                  >
                     <Box sx={{ flex: 1 }}>
                       <Typography variant="body2" sx={{ fontWeight: 500, mb: 0.5 }}>
                         {autoPayment.title}
@@ -416,7 +431,7 @@ export function AutoPaymentsView() {
                               justifyContent: 'center',
                               color: 'white',
                               fontSize: '0.6rem',
-                              fontWeight: 600
+                              fontWeight: 600,
                             }}
                           >
                             {getChannelIcon(channel)}
@@ -425,7 +440,7 @@ export function AutoPaymentsView() {
                         {autoPayment.channels.length > 2 && (
                           <Typography variant="caption" sx={{ ml: 0.5 }}>
                             +{autoPayment.channels.length - 2}
-                      </Typography>
+                          </Typography>
                         )}
                       </Box>
                     </Box>
@@ -445,13 +460,15 @@ export function AutoPaymentsView() {
         <Grid size={{ xs: 12, md: 8 }}>
           <Paper sx={{ p: 3 }}>
             {/* Header with Action Buttons */}
-            <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 3 }}>
+            <Box
+              sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 3 }}
+            >
               <Typography variant="h6" sx={{ fontWeight: 600 }}>
                 {isEditMode ? formData.title || 'Edit Auto Payment' : 'Create Auto Payment'}
               </Typography>
               <Box sx={{ display: 'flex', gap: 1 }}>
-                <Button 
-                  variant="outlined" 
+                <Button
+                  variant="outlined"
                   color="error"
                   onClick={handleDeleteAutoPayment}
                   disabled={!isEditMode}
@@ -461,8 +478,8 @@ export function AutoPaymentsView() {
                 <Button variant="outlined" onClick={handleAddAutoPayment}>
                   Discard changes
                 </Button>
-                <Button 
-                  variant="contained" 
+                <Button
+                  variant="contained"
                   onClick={handleSaveAutoPayment}
                   sx={{ bgcolor: 'primary.main' }}
                 >
@@ -477,7 +494,7 @@ export function AutoPaymentsView() {
                 fullWidth
                 label="Title *"
                 value={formData.title}
-                onChange={(e) => setFormData(prev => ({ ...prev, title: e.target.value }))}
+                onChange={(e) => setFormData((prev) => ({ ...prev, title: e.target.value }))}
                 placeholder="Enter auto payment title..."
               />
             </Box>
@@ -487,9 +504,9 @@ export function AutoPaymentsView() {
               <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 2 }}>
                 <Typography variant="subtitle1" sx={{ fontWeight: 600 }}>
                   Channels
-              </Typography>
+                </Typography>
                 <Tooltip title="Select channels for this auto payment">
-                  <Iconify icon={"eva:info-fill" as any} width={16} />
+                  <Iconify icon={'eva:info-fill' as any} width={16} />
                 </Tooltip>
               </Box>
               <FormControl fullWidth>
@@ -514,18 +531,20 @@ export function AutoPaymentsView() {
                               justifyContent: 'center',
                               color: 'white',
                               fontSize: '0.5rem',
-                              fontWeight: 600
+                              fontWeight: 600,
                             }}
                           >
                             {getChannelIcon(value)}
                           </Box>
-                          <Chip 
-                            label={value} 
-                            size="small" 
-                            onDelete={() => setFormData(prev => ({ 
-                              ...prev, 
-                              channels: prev.channels.filter(c => c !== value) 
-                            }))}
+                          <Chip
+                            label={value}
+                            size="small"
+                            onDelete={() =>
+                              setFormData((prev) => ({
+                                ...prev,
+                                channels: prev.channels.filter((c) => c !== value),
+                              }))
+                            }
                           />
                         </Box>
                       ))}
@@ -547,54 +566,65 @@ export function AutoPaymentsView() {
                 Auto charges
               </Typography>
               <Typography variant="body2" color="text.secondary" sx={{ mb: 3 }}>
-                Auto-payment consists of auto charges and pre authorisations. Add them and build suitable payment plan for your guests. Depending on the setup and reservation time, we merge several payments into one. The reservation&apos;s currency will be used.
+                Auto-payment consists of auto charges and pre authorisations. Add them and build
+                suitable payment plan for your guests. Depending on the setup and reservation time,
+                we merge several payments into one. The reservation&apos;s currency will be used.
               </Typography>
-              
+
               {/* Auto Charges Table */}
               <Box sx={{ mb: 2 }}>
                 {formData.autoCharges.map((charge) => (
-                  <Box key={charge.id} sx={{ display: 'flex', gap: 2, mb: 2, alignItems: 'center' }}>
+                  <Box
+                    key={charge.id}
+                    sx={{ display: 'flex', gap: 2, mb: 2, alignItems: 'center' }}
+                  >
                     <FormControl sx={{ minWidth: 120 }}>
-                    <Select
+                      <Select
                         value={charge.type}
                         onChange={(e) => handleAutoChargeChange(charge.id, 'type', e.target.value)}
                       >
                         <MenuItem value="Charge">Charge</MenuItem>
                         <MenuItem value="Refund">Refund</MenuItem>
                         <MenuItem value="Deposit">Deposit</MenuItem>
-                    </Select>
-                  </FormControl>
-                    
-                  <TextField
+                      </Select>
+                    </FormControl>
+
+                    <TextField
                       placeholder="Title"
                       value={charge.title}
                       onChange={(e) => handleAutoChargeChange(charge.id, 'title', e.target.value)}
                       sx={{ minWidth: 200 }}
                     />
-                    
+
                     <FormControl sx={{ minWidth: 150 }}>
-                    <Select
+                      <Select
                         value={charge.method}
-                        onChange={(e) => handleAutoChargeChange(charge.id, 'method', e.target.value)}
+                        onChange={(e) =>
+                          handleAutoChargeChange(charge.id, 'method', e.target.value)
+                        }
                       >
                         <MenuItem value="Credit card">Credit card</MenuItem>
                         <MenuItem value="Bank transfer">Bank transfer</MenuItem>
                         <MenuItem value="PayPal">PayPal</MenuItem>
                         <MenuItem value="Stripe">Stripe</MenuItem>
-                    </Select>
-                  </FormControl>
-                    
+                      </Select>
+                    </FormControl>
+
                     <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                  <TextField
-                    type="number"
+                      <TextField
+                        type="number"
                         value={charge.amount}
-                        onChange={(e) => handleAutoChargeChange(charge.id, 'amount', e.target.value)}
+                        onChange={(e) =>
+                          handleAutoChargeChange(charge.id, 'amount', e.target.value)
+                        }
                         sx={{ width: 80 }}
                       />
                       <FormControl sx={{ minWidth: 60 }}>
                         <Select
                           value={charge.amountType}
-                          onChange={(e) => handleAutoChargeChange(charge.id, 'amountType', e.target.value)}
+                          onChange={(e) =>
+                            handleAutoChargeChange(charge.id, 'amountType', e.target.value)
+                          }
                         >
                           <MenuItem value="%">%</MenuItem>
                           <MenuItem value="€">€</MenuItem>
@@ -602,22 +632,26 @@ export function AutoPaymentsView() {
                         </Select>
                       </FormControl>
                     </Box>
-                    
+
                     <FormControl sx={{ minWidth: 80 }}>
-                    <Select
+                      <Select
                         value={charge.scheduledBy}
-                        onChange={(e) => handleAutoChargeChange(charge.id, 'scheduledBy', e.target.value)}
+                        onChange={(e) =>
+                          handleAutoChargeChange(charge.id, 'scheduledBy', e.target.value)
+                        }
                       >
                         <MenuItem value="At">At</MenuItem>
                         <MenuItem value="Before">Before</MenuItem>
                         <MenuItem value="After">After</MenuItem>
-                    </Select>
-                  </FormControl>
-                    
+                      </Select>
+                    </FormControl>
+
                     <FormControl sx={{ minWidth: 150 }}>
-                    <Select
+                      <Select
                         value={charge.reservationEvent}
-                        onChange={(e) => handleAutoChargeChange(charge.id, 'reservationEvent', e.target.value)}
+                        onChange={(e) =>
+                          handleAutoChargeChange(charge.id, 'reservationEvent', e.target.value)
+                        }
                       >
                         <MenuItem value="Reservation creation">Reservation creation</MenuItem>
                         <MenuItem value="Check-in">Check-in</MenuItem>
@@ -625,21 +659,21 @@ export function AutoPaymentsView() {
                         <MenuItem value="Booking confirmation">Booking confirmation</MenuItem>
                       </Select>
                     </FormControl>
-                    
-                    <IconButton 
-                      size="small" 
+
+                    <IconButton
+                      size="small"
                       onClick={() => handleRemoveAutoCharge(charge.id)}
                       color="error"
                     >
-                      <Iconify icon={"eva:close-fill" as any} />
+                      <Iconify icon={'eva:close-fill' as any} />
                     </IconButton>
                   </Box>
                 ))}
               </Box>
-              
+
               <Button
                 variant="contained"
-                startIcon={<Iconify icon={"eva:plus-fill" as any} />}
+                startIcon={<Iconify icon={'eva:plus-fill' as any} />}
                 onClick={handleAddAutoCharge}
                 sx={{ bgcolor: 'primary.main' }}
               >
@@ -649,7 +683,14 @@ export function AutoPaymentsView() {
 
             {/* Listings Section */}
             <Box>
-              <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 2 }}>
+              <Box
+                sx={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'space-between',
+                  mb: 2,
+                }}
+              >
                 <Typography variant="subtitle1" sx={{ fontWeight: 600 }}>
                   Listings
                 </Typography>
@@ -657,7 +698,9 @@ export function AutoPaymentsView() {
                   control={
                     <Switch
                       checked={formData.applyForNewListings}
-                      onChange={(e) => setFormData(prev => ({ ...prev, applyForNewListings: e.target.checked }))}
+                      onChange={(e) =>
+                        setFormData((prev) => ({ ...prev, applyForNewListings: e.target.checked }))
+                      }
                     />
                   }
                   label="Apply for new listings automatically"
@@ -673,8 +716,8 @@ export function AutoPaymentsView() {
                 />
                 <FormControl sx={{ minWidth: 150 }}>
                   <InputLabel>Select tags</InputLabel>
-                  <Select 
-                    label="Select tags" 
+                  <Select
+                    label="Select tags"
                     multiple
                     value={selectedTags}
                     onChange={(e) => setSelectedTags(e.target.value as string[])}
@@ -685,8 +728,8 @@ export function AutoPaymentsView() {
                     <MenuItem value="business">Business</MenuItem>
                   </Select>
                 </FormControl>
-                <Button 
-                  variant="outlined" 
+                <Button
+                  variant="outlined"
                   onClick={handleUnselectAllListings}
                   sx={{ minWidth: 120 }}
                 >
@@ -702,7 +745,9 @@ export function AutoPaymentsView() {
                       sx={{
                         p: 2,
                         border: formData.selectedListings.includes(listing.id) ? 2 : 1,
-                        borderColor: formData.selectedListings.includes(listing.id) ? 'primary.main' : 'grey.200',
+                        borderColor: formData.selectedListings.includes(listing.id)
+                          ? 'primary.main'
+                          : 'grey.200',
                         cursor: 'pointer',
                         position: 'relative',
                         '&:hover': {
@@ -750,7 +795,7 @@ export function AutoPaymentsView() {
                             justifyContent: 'center',
                           }}
                         >
-                          <Iconify icon={"eva:checkmark-fill" as any} width={12} color="white" />
+                          <Iconify icon={'eva:checkmark-fill' as any} width={12} color="white" />
                         </Box>
                       )}
                     </Card>
@@ -768,23 +813,23 @@ export function AutoPaymentsView() {
                   >
                     FIRST
                   </Button>
-                    <Button
-                      size="small"
-                      disabled={currentPage === 0}
-                      onClick={() => setCurrentPage(prev => prev - 1)}
-                    >
-                      <Iconify icon={"eva:arrow-back-fill" as any} />
-                    </Button>
+                  <Button
+                    size="small"
+                    disabled={currentPage === 0}
+                    onClick={() => setCurrentPage((prev) => prev - 1)}
+                  >
+                    <Iconify icon={'eva:arrow-back-fill' as any} />
+                  </Button>
                   <Typography variant="body2" sx={{ px: 2 }}>
                     {currentPage + 1} / {totalPages}
                   </Typography>
-                    <Button
-                      size="small"
-                      disabled={currentPage >= totalPages - 1}
-                      onClick={() => setCurrentPage(prev => prev + 1)}
-                    >
-                      <Iconify icon={"eva:arrow-forward-fill" as any} />
-                    </Button>
+                  <Button
+                    size="small"
+                    disabled={currentPage >= totalPages - 1}
+                    onClick={() => setCurrentPage((prev) => prev + 1)}
+                  >
+                    <Iconify icon={'eva:arrow-forward-fill' as any} />
+                  </Button>
                   <Button
                     size="small"
                     disabled={currentPage >= totalPages - 1}

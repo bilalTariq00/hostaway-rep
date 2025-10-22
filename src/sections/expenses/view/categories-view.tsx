@@ -1,9 +1,5 @@
 import { useState } from 'react';
-import {
-  X,
-  Pencil,
-  Search,
-} from 'lucide-react';
+import { X, Pencil, Search } from 'lucide-react';
 
 import {
   Box,
@@ -52,7 +48,7 @@ export function CategoriesView() {
   const [itemsPerPage] = useState(25);
   const [searchTerm, setSearchTerm] = useState('');
   const [sidebarOpen, setSidebarOpen] = useState(false);
-  
+
   // New state for category management
   const [categories, setCategories] = useState(mockCategories);
   const [editingCategory, setEditingCategory] = useState<any>(null);
@@ -84,16 +80,18 @@ export function CategoriesView() {
     if (categoryName.trim()) {
       if (editingCategory) {
         // Update existing category
-        setCategories(prev => prev.map(cat => 
-          cat.id === editingCategory.id ? { ...cat, name: categoryName.trim() } : cat
-        ));
+        setCategories((prev) =>
+          prev.map((cat) =>
+            cat.id === editingCategory.id ? { ...cat, name: categoryName.trim() } : cat
+          )
+        );
       } else {
         // Add new category
         const newCategory = {
-          id: Math.max(...categories.map(cat => cat.id)) + 1,
+          id: Math.max(...categories.map((cat) => cat.id)) + 1,
           name: categoryName.trim(),
         };
-        setCategories(prev => [...prev, newCategory]);
+        setCategories((prev) => [...prev, newCategory]);
       }
       setSidebarOpen(false);
       setEditingCategory(null);
@@ -114,7 +112,7 @@ export function CategoriesView() {
 
   const handleDeleteConfirm = () => {
     if (categoryToDelete) {
-      setCategories(prev => prev.filter(cat => cat.id !== categoryToDelete.id));
+      setCategories((prev) => prev.filter((cat) => cat.id !== categoryToDelete.id));
     }
     setDeleteDialogOpen(false);
     setCategoryToDelete(null);
@@ -125,7 +123,7 @@ export function CategoriesView() {
     setCategoryToDelete(null);
   };
 
-  const filteredCategories = categories.filter(category =>
+  const filteredCategories = categories.filter((category) =>
     category.name.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
@@ -198,20 +196,20 @@ export function CategoriesView() {
             <TableHead>
               <TableRow>
                 <TableCell>Category name</TableCell>
-                  <TableCell align="center" />
+                <TableCell align="center" />
               </TableRow>
             </TableHead>
             <TableBody>
               {currentCategories.map((category) => (
                 <TableRow key={category.id}>
                   <TableCell>
-                    <Typography 
-                      variant="body2" 
-                      sx={{ 
-                        fontWeight: 500, 
-                        color: 'primary.main', 
-                        cursor: 'pointer', 
-                        '&:hover': { textDecoration: 'underline' } 
+                    <Typography
+                      variant="body2"
+                      sx={{
+                        fontWeight: 500,
+                        color: 'primary.main',
+                        cursor: 'pointer',
+                        '&:hover': { textDecoration: 'underline' },
                       }}
                       onClick={() => handleEditCategory(category)}
                     >
@@ -220,15 +218,15 @@ export function CategoriesView() {
                   </TableCell>
                   <TableCell align="right">
                     <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
-                      <IconButton 
-                        size="small" 
+                      <IconButton
+                        size="small"
                         onClick={() => handleEditCategory(category)}
                         sx={{ '&:hover': { bgcolor: 'primary.lighter' } }}
                       >
                         <Pencil size={16} />
                       </IconButton>
-                      <IconButton 
-                        size="small" 
+                      <IconButton
+                        size="small"
                         onClick={() => handleDeleteClick(category)}
                         sx={{ '&:hover': { bgcolor: 'error.lighter' } }}
                       >
@@ -290,11 +288,7 @@ export function CategoriesView() {
           />
 
           <Box sx={{ display: 'flex', gap: 2, mt: 4 }}>
-            <Button
-              fullWidth
-              variant="outlined"
-              onClick={handleSidebarClose}
-            >
+            <Button fullWidth variant="outlined" onClick={handleSidebarClose}>
               Cancel
             </Button>
             <Button
@@ -314,7 +308,8 @@ export function CategoriesView() {
         <DialogTitle>Delete Category</DialogTitle>
         <DialogContent>
           <Typography>
-            Are you sure you want to delete &quot;{categoryToDelete?.name}&quot;? This action cannot be undone.
+            Are you sure you want to delete &quot;{categoryToDelete?.name}&quot;? This action cannot
+            be undone.
           </Typography>
         </DialogContent>
         <DialogActions>

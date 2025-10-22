@@ -54,10 +54,8 @@ export function SettingsView() {
   };
 
   const handleAmenityToggle = (amenity: string) => {
-    setSelectedAmenities(prev => 
-      prev.includes(amenity) 
-        ? prev.filter(a => a !== amenity)
-        : [...prev, amenity]
+    setSelectedAmenities((prev) =>
+      prev.includes(amenity) ? prev.filter((a) => a !== amenity) : [...prev, amenity]
     );
   };
 
@@ -68,7 +66,7 @@ export function SettingsView() {
         <Typography variant="h4" sx={{ fontWeight: 600, mb: 2 }}>
           Booking Engine
         </Typography>
-        
+
         <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 3 }}>
           <Typography variant="body1" color="text.secondary">
             Your Webpage is published on Domusferiae.holdayfuture.com
@@ -106,15 +104,15 @@ export function SettingsView() {
                 onChange={(e, newValue) => setSettingsTab(newValue)}
                 sx={{ borderRight: 1, borderColor: 'divider' }}
               >
-                <Tab 
-                  label="Basic" 
-                  value="basic" 
+                <Tab
+                  label="Basic"
+                  value="basic"
                   icon={<SettingsIcon size={16} />}
                   iconPosition="start"
                 />
-                <Tab 
-                  label="Advanced" 
-                  value="advanced" 
+                <Tab
+                  label="Advanced"
+                  value="advanced"
                   icon={<Code size={16} />}
                   iconPosition="start"
                 />
@@ -203,7 +201,10 @@ export function SettingsView() {
                   <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
                     <FormControlLabel control={<Switch defaultChecked />} label="Allow Inquire" />
                     <FormControlLabel control={<Switch defaultChecked />} label="Instant Booking" />
-                    <FormControlLabel control={<Switch defaultChecked />} label="Require ID Verification" />
+                    <FormControlLabel
+                      control={<Switch defaultChecked />}
+                      label="Require ID Verification"
+                    />
                     <FormControlLabel control={<Switch />} label="Require Phone Verification" />
                   </Box>
                 </CardContent>
@@ -223,10 +224,7 @@ export function SettingsView() {
                           sx={{ borderRadius: 1, mb: 0.5 }}
                         >
                           <ListItemText primary={amenity} />
-                          <Switch
-                            checked={selectedAmenities.includes(amenity)}
-                            size="small"
-                          />
+                          <Switch checked={selectedAmenities.includes(amenity)} size="small" />
                         </ListItemButton>
                       </ListItem>
                     ))}
@@ -241,7 +239,10 @@ export function SettingsView() {
               {/* Domain Settings */}
               <Card>
                 <CardContent>
-                  <Typography variant="h6" sx={{ fontWeight: 600, mb: 2, display: 'flex', alignItems: 'center', gap: 1 }}>
+                  <Typography
+                    variant="h6"
+                    sx={{ fontWeight: 600, mb: 2, display: 'flex', alignItems: 'center', gap: 1 }}
+                  >
                     <Globe size={20} />
                     Choose Domain Name
                   </Typography>
@@ -249,17 +250,12 @@ export function SettingsView() {
                     Configure your custom domain, subdomain, and SSL settings
                   </Typography>
                   <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
-                    <TextField
-                      fullWidth
-                      label="Custom Domain"
-                      placeholder="yourdomain.com"
+                    <TextField fullWidth label="Custom Domain" placeholder="yourdomain.com" />
+                    <TextField fullWidth label="Subdomain" placeholder="booking.yourdomain.com" />
+                    <FormControlLabel
+                      control={<Switch defaultChecked />}
+                      label="Enable SSL Certificate"
                     />
-                    <TextField
-                      fullWidth
-                      label="Subdomain"
-                      placeholder="booking.yourdomain.com"
-                    />
-                    <FormControlLabel control={<Switch defaultChecked />} label="Enable SSL Certificate" />
                   </Box>
                 </CardContent>
               </Card>
@@ -267,7 +263,10 @@ export function SettingsView() {
               {/* Scripts */}
               <Card>
                 <CardContent>
-                  <Typography variant="h6" sx={{ fontWeight: 600, mb: 2, display: 'flex', alignItems: 'center', gap: 1 }}>
+                  <Typography
+                    variant="h6"
+                    sx={{ fontWeight: 600, mb: 2, display: 'flex', alignItems: 'center', gap: 1 }}
+                  >
                     <Code size={20} />
                     Scripts
                   </Typography>
@@ -303,21 +302,16 @@ export function SettingsView() {
               {/* Analytics */}
               <Card>
                 <CardContent>
-                  <Typography variant="h6" sx={{ fontWeight: 600, mb: 2, display: 'flex', alignItems: 'center', gap: 1 }}>
+                  <Typography
+                    variant="h6"
+                    sx={{ fontWeight: 600, mb: 2, display: 'flex', alignItems: 'center', gap: 1 }}
+                  >
                     <BarChart size={20} />
                     Analytics
                   </Typography>
                   <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
-                    <TextField
-                      fullWidth
-                      label="Google Analytics ID"
-                      placeholder="GA-XXXXXXXXX"
-                    />
-                    <TextField
-                      fullWidth
-                      label="Facebook Pixel ID"
-                      placeholder="1234567890"
-                    />
+                    <TextField fullWidth label="Google Analytics ID" placeholder="GA-XXXXXXXXX" />
+                    <TextField fullWidth label="Facebook Pixel ID" placeholder="1234567890" />
                     <TextField
                       fullWidth
                       label="Custom Analytics Code"
@@ -332,7 +326,10 @@ export function SettingsView() {
               {/* SEO */}
               <Card>
                 <CardContent>
-                  <Typography variant="h6" sx={{ fontWeight: 600, mb: 2, display: 'flex', alignItems: 'center', gap: 1 }}>
+                  <Typography
+                    variant="h6"
+                    sx={{ fontWeight: 600, mb: 2, display: 'flex', alignItems: 'center', gap: 1 }}
+                  >
                     <Search size={20} />
                     SEO
                   </Typography>
@@ -377,7 +374,7 @@ export function SettingsView() {
         <Typography variant="h6" sx={{ fontWeight: 600, mb: 3 }}>
           Language Settings
         </Typography>
-        
+
         <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
           <FormControl fullWidth>
             <InputLabel>Default Language</InputLabel>
@@ -395,9 +392,12 @@ export function SettingsView() {
           <Typography variant="subtitle1" sx={{ fontWeight: 600, mb: 1 }}>
             Available Languages
           </Typography>
-          
+
           {['English', 'Spanish', 'French', 'German', 'Italian'].map((language) => (
-            <Box key={language} sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+            <Box
+              key={language}
+              sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}
+            >
               <Typography variant="body2">{language}</Typography>
               <Switch defaultChecked={language === 'English'} />
             </Box>
@@ -408,9 +408,7 @@ export function SettingsView() {
           <Button variant="outlined" onClick={() => setLanguageSettingsOpen(false)}>
             Cancel
           </Button>
-          <Button variant="contained">
-            Save Changes
-          </Button>
+          <Button variant="contained">Save Changes</Button>
         </Box>
       </Drawer>
     </DashboardContent>

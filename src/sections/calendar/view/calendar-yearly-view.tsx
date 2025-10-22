@@ -52,7 +52,6 @@ export function CalendarYearlyView() {
     if (newValue === 1) router.push('/calendar/monthly');
   };
 
-
   const handlePropertyClose = () => {
     setPropertyAnchor(null);
   };
@@ -65,12 +64,22 @@ export function CalendarYearlyView() {
     }
   };
 
-  const getBookingForMonth = (month: number) => mockYearlyBookings.find(b => b.month === month);
+  const getBookingForMonth = (month: number) => mockYearlyBookings.find((b) => b.month === month);
 
   const getMonthName = (month: number) => {
     const monthNames = [
-      'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
-      'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'
+      'Jan',
+      'Feb',
+      'Mar',
+      'Apr',
+      'May',
+      'Jun',
+      'Jul',
+      'Aug',
+      'Sep',
+      'Oct',
+      'Nov',
+      'Dec',
     ];
     return monthNames[month];
   };
@@ -111,7 +120,7 @@ export function CalendarYearlyView() {
           <Typography variant="h4" sx={{ fontWeight: 600 }}>
             Calendar
           </Typography>
-          
+
           <Box sx={{ display: 'flex', gap: 1 }}>
             <Button variant="outlined" sx={{ mr: 1 }}>
               Available Properties
@@ -119,12 +128,10 @@ export function CalendarYearlyView() {
             <Button variant="contained" sx={{ mr: 1 }}>
               Listing
             </Button>
-            <Button variant="contained">
-              Direct Booking
-            </Button>
+            <Button variant="contained">Direct Booking</Button>
           </Box>
         </Box>
-        
+
         <Tabs
           value={activeTab}
           onChange={handleTabChange}
@@ -177,16 +184,16 @@ export function CalendarYearlyView() {
             <Button variant="outlined" size="small">
               Today
             </Button>
-            
+
             <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
               <IconButton onClick={() => navigateYear('prev')} size="small">
-                <Iconify icon={"eva:arrow-left-fill" as any} width={16} />
+                <Iconify icon={'eva:arrow-left-fill' as any} width={16} />
               </IconButton>
               <Typography variant="h6" sx={{ minWidth: 80, textAlign: 'center' }}>
                 {currentYear}
               </Typography>
               <IconButton onClick={() => navigateYear('next')} size="small">
-                <Iconify icon={"eva:arrow-right-fill" as any} width={16} />
+                <Iconify icon={'eva:arrow-right-fill' as any} width={16} />
               </IconButton>
             </Box>
           </Box>
@@ -205,13 +212,13 @@ export function CalendarYearlyView() {
         <Typography variant="h6" sx={{ mb: 3 }}>
           {currentYear} Overview
         </Typography>
-        
+
         <Grid container spacing={2}>
           {Array.from({ length: 12 }, (month, monthIdx) => {
             const booking = getBookingForMonth(monthIdx);
             const intensity = booking ? getBookingIntensity(booking.bookings) : 'very-low';
             const intensityColor = getIntensityColor(intensity);
-            
+
             return (
               <Grid size={{ xs: 12, sm: 6, md: 4, lg: 3 }} key={monthIdx}>
                 <Paper
@@ -232,7 +239,7 @@ export function CalendarYearlyView() {
                   <Typography variant="subtitle1" sx={{ fontWeight: 600, mb: 1 }}>
                     {getMonthName(monthIdx)}
                   </Typography>
-                  
+
                   {/* Booking Lines */}
                   <Box sx={{ mb: 2 }}>
                     {Array.from({ length: 5 }, (_, idx) => (
@@ -248,7 +255,7 @@ export function CalendarYearlyView() {
                       />
                     ))}
                   </Box>
-                  
+
                   {booking && (
                     <Box>
                       <Typography variant="body2" color="text.secondary">
@@ -259,7 +266,7 @@ export function CalendarYearlyView() {
                       </Typography>
                     </Box>
                   )}
-                  
+
                   {!booking && (
                     <Typography variant="body2" color="text.secondary">
                       No bookings

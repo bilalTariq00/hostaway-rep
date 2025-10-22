@@ -26,75 +26,87 @@ const mockListings = [
   {
     id: 305034,
     name: 'La Dimora Del Cavaliere',
-    image: 'https://pub-c5e31b5cdafb419fb247a8ac2e78df7a.r2.dev/public/assets/images/mock/cover/cover-1.webp',
-    selected: false
+    image:
+      'https://pub-c5e31b5cdafb419fb247a8ac2e78df7a.r2.dev/public/assets/images/mock/cover/cover-1.webp',
+    selected: false,
   },
   {
     id: 305035,
     name: 'Navigli',
-    image: 'https://pub-c5e31b5cdafb419fb247a8ac2e78df7a.r2.dev/public/assets/images/mock/cover/cover-2.webp',
-    selected: false
+    image:
+      'https://pub-c5e31b5cdafb419fb247a8ac2e78df7a.r2.dev/public/assets/images/mock/cover/cover-2.webp',
+    selected: false,
   },
   {
     id: 305225,
     name: 'Polacchi42',
-    image: 'https://pub-c5e31b5cdafb419fb247a8ac2e78df7a.r2.dev/public/assets/images/mock/cover/cover-3.webp',
-    selected: false
+    image:
+      'https://pub-c5e31b5cdafb419fb247a8ac2e78df7a.r2.dev/public/assets/images/mock/cover/cover-3.webp',
+    selected: false,
   },
   {
     id: 305421,
     name: 'Superattico - Via Del Corso 43',
-    image: 'https://pub-c5e31b5cdafb419fb247a8ac2e78df7a.r2.dev/public/assets/images/mock/cover/cover-4.webp',
-    selected: false
+    image:
+      'https://pub-c5e31b5cdafb419fb247a8ac2e78df7a.r2.dev/public/assets/images/mock/cover/cover-4.webp',
+    selected: false,
   },
   {
     id: 306532,
     name: 'Montecatini Terme',
-    image: 'https://pub-c5e31b5cdafb419fb247a8ac2e78df7a.r2.dev/public/assets/images/mock/cover/cover-5.webp',
-    selected: false
+    image:
+      'https://pub-c5e31b5cdafb419fb247a8ac2e78df7a.r2.dev/public/assets/images/mock/cover/cover-5.webp',
+    selected: false,
   },
   {
     id: 308582,
     name: 'Monteverde - Quattroventi',
-    image: 'https://pub-c5e31b5cdafb419fb247a8ac2e78df7a.r2.dev/public/assets/images/mock/cover/cover-6.webp',
-    selected: false
+    image:
+      'https://pub-c5e31b5cdafb419fb247a8ac2e78df7a.r2.dev/public/assets/images/mock/cover/cover-6.webp',
+    selected: false,
   },
   {
     id: 310867,
     name: 'La Storta',
-    image: 'https://pub-c5e31b5cdafb419fb247a8ac2e78df7a.r2.dev/public/assets/images/mock/cover/cover-1.webp',
-    selected: false
+    image:
+      'https://pub-c5e31b5cdafb419fb247a8ac2e78df7a.r2.dev/public/assets/images/mock/cover/cover-1.webp',
+    selected: false,
   },
   {
     id: 317154,
     name: '[5 Min From Trastevere] Chic Apt',
-    image: 'https://pub-c5e31b5cdafb419fb247a8ac2e78df7a.r2.dev/public/assets/images/mock/cover/cover-2.webp',
-    selected: false
+    image:
+      'https://pub-c5e31b5cdafb419fb247a8ac2e78df7a.r2.dev/public/assets/images/mock/cover/cover-2.webp',
+    selected: false,
   },
   {
     id: 332386,
     name: 'Via Poggio Tulliano',
-    image: 'https://pub-c5e31b5cdafb419fb247a8ac2e78df7a.r2.dev/public/assets/images/mock/cover/cover-3.webp',
-    selected: false
+    image:
+      'https://pub-c5e31b5cdafb419fb247a8ac2e78df7a.r2.dev/public/assets/images/mock/cover/cover-3.webp',
+    selected: false,
   },
   {
     id: 345603,
     name: 'Via Dei Marruccini | San Lorenzo',
-    image: 'https://pub-c5e31b5cdafb419fb247a8ac2e78df7a.r2.dev/public/assets/images/mock/cover/cover-4.webp',
-    selected: false
+    image:
+      'https://pub-c5e31b5cdafb419fb247a8ac2e78df7a.r2.dev/public/assets/images/mock/cover/cover-4.webp',
+    selected: false,
   },
   {
     id: 363365,
     name: 'Via di Acqua Bullicante 113',
-    image: 'https://pub-c5e31b5cdafb419fb247a8ac2e78df7a.r2.dev/public/assets/images/mock/cover/cover-5.webp',
-    selected: false
+    image:
+      'https://pub-c5e31b5cdafb419fb247a8ac2e78df7a.r2.dev/public/assets/images/mock/cover/cover-5.webp',
+    selected: false,
   },
   {
     id: 363366,
     name: 'Via Matera 23A -',
-    image: 'https://pub-c5e31b5cdafb419fb247a8ac2e78df7a.r2.dev/public/assets/images/mock/cover/cover-6.webp',
-    selected: false
-  }
+    image:
+      'https://pub-c5e31b5cdafb419fb247a8ac2e78df7a.r2.dev/public/assets/images/mock/cover/cover-6.webp',
+    selected: false,
+  },
 ];
 
 export function TemplateGroupEditView() {
@@ -121,18 +133,20 @@ export function TemplateGroupEditView() {
     if (savedGroups) {
       const parsedGroups = JSON.parse(savedGroups);
       const group = parsedGroups.find((g: any) => g.id === id);
-      
+
       if (group) {
         setGroupName(group.name || '');
         setGroupDescription(group.description || '');
         setChannel(group.channel || '');
         setAutoApply(group.autoApply || false);
-        
+
         // Update listings selection based on saved group
-        setListings(prev => prev.map(listing => ({
-          ...listing,
-          selected: group.selectedListings?.some((sl: any) => sl.id === listing.id) || false
-        })));
+        setListings((prev) =>
+          prev.map((listing) => ({
+            ...listing,
+            selected: group.selectedListings?.some((sl: any) => sl.id === listing.id) || false,
+          }))
+        );
       } else {
         router.push('/inbox/templates'); // Redirect if group not found
       }
@@ -142,16 +156,16 @@ export function TemplateGroupEditView() {
   }, [router]);
 
   const handleListingSelect = (listingId: number) => {
-    setListings(prev => prev.map(listing => 
-      listing.id === listingId 
-        ? { ...listing, selected: !listing.selected }
-        : listing
-    ));
+    setListings((prev) =>
+      prev.map((listing) =>
+        listing.id === listingId ? { ...listing, selected: !listing.selected } : listing
+      )
+    );
   };
 
   const handleSelectAll = () => {
     setSelectAll(!selectAll);
-    setListings(prev => prev.map(listing => ({ ...listing, selected: !selectAll })));
+    setListings((prev) => prev.map((listing) => ({ ...listing, selected: !selectAll })));
   };
 
   const handleSave = () => {
@@ -162,15 +176,13 @@ export function TemplateGroupEditView() {
       name: groupName,
       description: groupDescription,
       channel: channel || 'All',
-      listings: listings.filter(l => l.selected).length,
-      selectedListings: listings.filter(l => l.selected),
-      autoApply
+      listings: listings.filter((l) => l.selected).length,
+      selectedListings: listings.filter((l) => l.selected),
+      autoApply,
     };
 
     const existingGroups = JSON.parse(localStorage.getItem('templateGroups') || '[]');
-    const updatedGroupsList = existingGroups.map((g: any) => 
-      g.id === groupId ? updatedGroup : g
-    );
+    const updatedGroupsList = existingGroups.map((g: any) => (g.id === groupId ? updatedGroup : g));
     localStorage.setItem('templateGroups', JSON.stringify(updatedGroupsList));
     router.push('/inbox/templates');
   };
@@ -179,7 +191,7 @@ export function TemplateGroupEditView() {
     router.push('/inbox/templates');
   };
 
-  const filteredListings = listings.filter(listing =>
+  const filteredListings = listings.filter((listing) =>
     listing.name.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
@@ -211,7 +223,7 @@ export function TemplateGroupEditView() {
             '&:disabled': { bgcolor: 'grey.300' },
             px: 3,
             py: 1.5,
-            borderRadius: 2
+            borderRadius: 2,
           }}
         >
           Save
@@ -225,7 +237,7 @@ export function TemplateGroupEditView() {
             <Typography variant="h6" sx={{ mb: 3, fontWeight: 600 }}>
               Template Group Details
             </Typography>
-            
+
             {/* Template Group Name */}
             <Box sx={{ mb: 3 }}>
               <Typography variant="body2" sx={{ mb: 1, fontWeight: 500 }}>
@@ -238,8 +250,8 @@ export function TemplateGroupEditView() {
                 onChange={(e) => setGroupName(e.target.value)}
                 sx={{
                   '& .MuiOutlinedInput-root': {
-                    borderRadius: 2
-                  }
+                    borderRadius: 2,
+                  },
                 }}
               />
             </Box>
@@ -256,8 +268,8 @@ export function TemplateGroupEditView() {
                 onChange={(e) => setGroupDescription(e.target.value)}
                 sx={{
                   '& .MuiOutlinedInput-root': {
-                    borderRadius: 2
-                  }
+                    borderRadius: 2,
+                  },
                 }}
               />
             </Box>
@@ -275,8 +287,8 @@ export function TemplateGroupEditView() {
                   sx={{
                     borderRadius: 2,
                     '& .MuiOutlinedInput-notchedOutline': {
-                      borderColor: '#e0e0e0'
-                    }
+                      borderColor: '#e0e0e0',
+                    },
                   }}
                 >
                   <MenuItem value="">
@@ -307,8 +319,8 @@ export function TemplateGroupEditView() {
                 sx={{
                   flex: 1,
                   '& .MuiOutlinedInput-root': {
-                    borderRadius: 2
-                  }
+                    borderRadius: 2,
+                  },
                 }}
               />
               <FormControl sx={{ minWidth: 150 }}>
@@ -324,8 +336,8 @@ export function TemplateGroupEditView() {
                   sx={{
                     borderRadius: 2,
                     '& .MuiOutlinedInput-notchedOutline': {
-                      borderColor: '#e0e0e0'
-                    }
+                      borderColor: '#e0e0e0',
+                    },
                   }}
                 >
                   <MenuItem value="">
@@ -343,7 +355,7 @@ export function TemplateGroupEditView() {
                   bgcolor: '#23c6c8',
                   '&:hover': { bgcolor: '#1fb3b5' },
                   borderRadius: 2,
-                  px: 3
+                  px: 3,
                 }}
               >
                 Select all
@@ -351,14 +363,16 @@ export function TemplateGroupEditView() {
             </Box>
 
             {/* Listings Grid */}
-            <Box sx={{ 
-              display: 'grid', 
-              gridTemplateColumns: 'repeat(2, 1fr)', 
-              gap: 2, 
-              mb: 3,
-              maxHeight: 400,
-              overflowY: 'auto'
-            }}>
+            <Box
+              sx={{
+                display: 'grid',
+                gridTemplateColumns: 'repeat(2, 1fr)',
+                gap: 2,
+                mb: 3,
+                maxHeight: 400,
+                overflowY: 'auto',
+              }}
+            >
               {currentListings.map((listing) => (
                 <Paper
                   key={listing.id}
@@ -372,8 +386,8 @@ export function TemplateGroupEditView() {
                     borderRadius: 2,
                     '&:hover': {
                       borderColor: '#23c6c8',
-                      boxShadow: '0 2px 8px rgba(35, 198, 200, 0.1)'
-                    }
+                      boxShadow: '0 2px 8px rgba(35, 198, 200, 0.1)',
+                    },
                   }}
                   onClick={() => handleListingSelect(listing.id)}
                 >
@@ -385,7 +399,7 @@ export function TemplateGroupEditView() {
                       backgroundImage: `url('${listing.image}')`,
                       backgroundSize: 'cover',
                       backgroundPosition: 'center',
-                      flexShrink: 0
+                      flexShrink: 0,
                     }}
                   />
                   <Box sx={{ flex: 1, minWidth: 0 }}>
@@ -419,10 +433,7 @@ export function TemplateGroupEditView() {
             {/* Auto Apply Checkbox */}
             <FormControlLabel
               control={
-                <Checkbox
-                  checked={autoApply}
-                  onChange={(e) => setAutoApply(e.target.checked)}
-                />
+                <Checkbox checked={autoApply} onChange={(e) => setAutoApply(e.target.checked)} />
               }
               label={
                 <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
@@ -445,7 +456,7 @@ export function TemplateGroupEditView() {
           position: 'fixed',
           bottom: 20,
           right: 20,
-          zIndex: 1000
+          zIndex: 1000,
         }}
       >
         <Paper
@@ -456,7 +467,7 @@ export function TemplateGroupEditView() {
             boxShadow: '0 4px 12px rgba(0,0,0,0.15)',
             display: 'flex',
             alignItems: 'center',
-            gap: 1
+            gap: 1,
           }}
         >
           <Typography variant="body2">Hi. Need any help?</Typography>
@@ -475,7 +486,7 @@ export function TemplateGroupEditView() {
             justifyContent: 'center',
             position: 'relative',
             cursor: 'pointer',
-            boxShadow: '0 4px 12px rgba(0,0,0,0.15)'
+            boxShadow: '0 4px 12px rgba(0,0,0,0.15)',
           }}
         >
           <Typography variant="h6" sx={{ color: 'white', fontWeight: 600 }}>
@@ -492,7 +503,7 @@ export function TemplateGroupEditView() {
               borderRadius: '50%',
               display: 'flex',
               alignItems: 'center',
-              justifyContent: 'center'
+              justifyContent: 'center',
             }}
           >
             <Typography variant="caption" sx={{ color: 'white', fontSize: '10px' }}>

@@ -33,15 +33,32 @@ export function DocumentTemplatesView() {
   const [showSuccess, setShowSuccess] = useState(false);
   const [colorPickerAnchor, setColorPickerAnchor] = useState<HTMLElement | null>(null);
   const [currentColorType, setCurrentColorType] = useState<'background' | 'accent' | null>(null);
-  
+
   // Compact color palette - most commonly used colors
   const colorPalette = [
-    '#1976d2', '#f44336', '#4caf50', '#ff9800', '#9c27b0', '#00bcd4',
-    '#795548', '#607d8b', '#e91e63', '#3f51b5', '#8bc34a', '#ffc107',
-    '#673ab7', '#009688', '#ff5722', '#2196f3', '#cddc39', '#ffeb3b',
-    '#9e9e9e', '#000000', '#ffffff'
+    '#1976d2',
+    '#f44336',
+    '#4caf50',
+    '#ff9800',
+    '#9c27b0',
+    '#00bcd4',
+    '#795548',
+    '#607d8b',
+    '#e91e63',
+    '#3f51b5',
+    '#8bc34a',
+    '#ffc107',
+    '#673ab7',
+    '#009688',
+    '#ff5722',
+    '#2196f3',
+    '#cddc39',
+    '#ffeb3b',
+    '#9e9e9e',
+    '#000000',
+    '#ffffff',
   ];
-  
+
   const [templateSettings, setTemplateSettings] = useState({
     logo: '',
     backgroundColor: '#1976d2',
@@ -79,10 +96,13 @@ export function DocumentTemplatesView() {
   };
 
   const handleSettingChange = (field: string, value: any) => {
-    setTemplateSettings(prev => ({ ...prev, [field]: value }));
+    setTemplateSettings((prev) => ({ ...prev, [field]: value }));
   };
 
-  const handleColorPickerOpen = (event: React.MouseEvent<HTMLElement>, colorType: 'background' | 'accent') => {
+  const handleColorPickerOpen = (
+    event: React.MouseEvent<HTMLElement>,
+    colorType: 'background' | 'accent'
+  ) => {
     setColorPickerAnchor(event.currentTarget);
     setCurrentColorType(colorType);
   };
@@ -167,7 +187,7 @@ export function DocumentTemplatesView() {
       <Typography variant="subtitle1" sx={{ mb: 1.5, fontWeight: 600, fontSize: '0.9rem' }}>
         {currentColorType === 'background' ? 'Background' : 'Accent'} Color
       </Typography>
-      
+
       {/* Compact Color Grid */}
       <Box sx={{ mb: 2 }}>
         <Grid container spacing={0.5}>
@@ -180,7 +200,13 @@ export function DocumentTemplatesView() {
                   borderRadius: 1,
                   bgcolor: color,
                   border: '2px solid',
-                  borderColor: color === (currentColorType === 'background' ? templateSettings.backgroundColor : templateSettings.accentColor) ? 'primary.main' : 'grey.200',
+                  borderColor:
+                    color ===
+                    (currentColorType === 'background'
+                      ? templateSettings.backgroundColor
+                      : templateSettings.accentColor)
+                      ? 'primary.main'
+                      : 'grey.200',
                   cursor: 'pointer',
                   transition: 'all 0.2s ease',
                   '&:hover': {
@@ -217,7 +243,10 @@ export function DocumentTemplatesView() {
                     width: 16,
                     height: 16,
                     borderRadius: '50%',
-                    bgcolor: currentColorType === 'background' ? templateSettings.backgroundColor : templateSettings.accentColor,
+                    bgcolor:
+                      currentColorType === 'background'
+                        ? templateSettings.backgroundColor
+                        : templateSettings.accentColor,
                     border: '1px solid',
                     borderColor: 'grey.300',
                   }}
@@ -227,7 +256,11 @@ export function DocumentTemplatesView() {
           }}
           onChange={(e) => handleHexColorChange(e.target.value)}
         />
-        <Typography variant="caption" color="text.secondary" sx={{ mt: 0.5, display: 'block', fontSize: '0.7rem' }}>
+        <Typography
+          variant="caption"
+          color="text.secondary"
+          sx={{ mt: 0.5, display: 'block', fontSize: '0.7rem' }}
+        >
           Enter hex code
         </Typography>
       </Box>
@@ -240,16 +273,18 @@ export function DocumentTemplatesView() {
     const isRefund = templateType === 'refund';
 
     return (
-      <Box sx={{ 
-        bgcolor: 'white', 
-        borderRadius: 3, 
-        overflow: 'hidden', 
-        boxShadow: '0 8px 32px rgba(0,0,0,0.12)',
-        transition: 'all 0.3s ease',
-        '&:hover': {
-          boxShadow: '0 12px 40px rgba(0,0,0,0.16)',
-        }
-      }}>
+      <Box
+        sx={{
+          bgcolor: 'white',
+          borderRadius: 3,
+          overflow: 'hidden',
+          boxShadow: '0 8px 32px rgba(0,0,0,0.12)',
+          transition: 'all 0.3s ease',
+          '&:hover': {
+            boxShadow: '0 12px 40px rgba(0,0,0,0.16)',
+          },
+        }}
+      >
         {/* Header with curved bottom */}
         <Box
           sx={{
@@ -280,52 +315,77 @@ export function DocumentTemplatesView() {
             },
           }}
         >
-          <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', mb: 3, position: 'relative', zIndex: 2 }}>
-          <Box>
+          <Box
+            sx={{
+              display: 'flex',
+              justifyContent: 'space-between',
+              alignItems: 'flex-start',
+              mb: 3,
+              position: 'relative',
+              zIndex: 2,
+            }}
+          >
+            <Box>
               {templateSettings.logo ? (
-              <Box sx={{ mb: 2 }}>
-                  <img src={templateSettings.logo} alt="Logo" style={{ height: 50, borderRadius: 8 }} />
+                <Box sx={{ mb: 2 }}>
+                  <img
+                    src={templateSettings.logo}
+                    alt="Logo"
+                    style={{ height: 50, borderRadius: 8 }}
+                  />
                 </Box>
               ) : (
-                <Box sx={{ 
-                  mb: 2, 
-                  p: 2, 
-                  bgcolor: 'rgba(255,255,255,0.1)', 
-                  borderRadius: 2,
-                  border: '2px dashed rgba(255,255,255,0.3)',
-                  textAlign: 'center',
-                  minHeight: 50,
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center'
-                }}>
+                <Box
+                  sx={{
+                    mb: 2,
+                    p: 2,
+                    bgcolor: 'rgba(255,255,255,0.1)',
+                    borderRadius: 2,
+                    border: '2px dashed rgba(255,255,255,0.3)',
+                    textAlign: 'center',
+                    minHeight: 50,
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                  }}
+                >
                   <Typography variant="body2" sx={{ opacity: 0.7, fontWeight: 500 }}>
                     Your logo here
                   </Typography>
-              </Box>
-            )}
-          </Box>
-          <Box sx={{ textAlign: 'right' }}>
+                </Box>
+              )}
+            </Box>
+            <Box sx={{ textAlign: 'right' }}>
               <Typography variant="body2" sx={{ opacity: 0.9, mb: 0.5 }}>
                 Issue date: 5 April 2023
-            </Typography>
+              </Typography>
               {templateSettings.taxId && (
                 <Typography variant="body2" sx={{ opacity: 0.9 }}>
-                  Tax ID: {templateSettings.taxIdType === 'listing-specific' ? 'Listing Tax ID will be here' : templateSettings.customTaxId}
-            </Typography>
+                  Tax ID:{' '}
+                  {templateSettings.taxIdType === 'listing-specific'
+                    ? 'Listing Tax ID will be here'
+                    : templateSettings.customTaxId}
+                </Typography>
               )}
+            </Box>
           </Box>
-        </Box>
 
-          <Typography variant="h3" sx={{ 
-            fontWeight: 700, 
-            textAlign: 'center', 
-            mb: 0,
-            position: 'relative',
-            zIndex: 2,
-            textShadow: '0 2px 4px rgba(0,0,0,0.1)'
-          }}>
-            {isInvoice ? 'Invoice #0134524' : isCharge ? 'Receipt #0134524' : 'Refund receipt #0134524'}
+          <Typography
+            variant="h3"
+            sx={{
+              fontWeight: 700,
+              textAlign: 'center',
+              mb: 0,
+              position: 'relative',
+              zIndex: 2,
+              textShadow: '0 2px 4px rgba(0,0,0,0.1)',
+            }}
+          >
+            {isInvoice
+              ? 'Invoice #0134524'
+              : isCharge
+                ? 'Receipt #0134524'
+                : 'Refund receipt #0134524'}
           </Typography>
         </Box>
 
@@ -348,19 +408,31 @@ export function DocumentTemplatesView() {
                 Reservation ID: 123123123
               </Typography>
               <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5, mb: 1.5 }}>
-                <Iconify icon={"eva:calendar-fill" as any} width={18} color={templateSettings.accentColor} />
+                <Iconify
+                  icon={'eva:calendar-fill' as any}
+                  width={18}
+                  color={templateSettings.accentColor}
+                />
                 <Typography variant="body2" sx={{ fontWeight: 500 }}>
                   Mon, 4 April - Fri, 8 April, 2024 • 4 Nights
                 </Typography>
               </Box>
               <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5, mb: 1.5 }}>
-                <Iconify icon={"eva:people-fill" as any} width={18} color={templateSettings.accentColor} />
+                <Iconify
+                  icon={'eva:people-fill' as any}
+                  width={18}
+                  color={templateSettings.accentColor}
+                />
                 <Typography variant="body2" sx={{ fontWeight: 500 }}>
                   Guests: 2 Adults
                 </Typography>
               </Box>
               <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
-                <Iconify icon={"eva:person-fill" as any} width={18} color={templateSettings.accentColor} />
+                <Iconify
+                  icon={'eva:person-fill' as any}
+                  width={18}
+                  color={templateSettings.accentColor}
+                />
                 <Typography variant="body2" sx={{ fontWeight: 500 }}>
                   Guest name: John Doe
                 </Typography>
@@ -369,26 +441,41 @@ export function DocumentTemplatesView() {
             <Grid size={6}>
               {templateSettings.hostName && (
                 <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5, mb: 1.5 }}>
-                  <Iconify icon={"eva:person-fill" as any} width={18} color={templateSettings.accentColor} />
+                  <Iconify
+                    icon={'eva:person-fill' as any}
+                    width={18}
+                    color={templateSettings.accentColor}
+                  />
                   <Typography variant="body2" sx={{ fontWeight: 500 }}>
-                    Host name: {templateSettings.hostNameType === 'manual' ? 'Manuel Sciarria' : 'Listing contact person\'s name will be here'}
+                    Host name:{' '}
+                    {templateSettings.hostNameType === 'manual'
+                      ? 'Manuel Sciarria'
+                      : "Listing contact person's name will be here"}
                   </Typography>
                 </Box>
               )}
               {templateSettings.phone && (
                 <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5, mb: 1.5 }}>
-                  <Iconify icon={"eva:phone-fill" as any} width={18} color={templateSettings.accentColor} />
+                  <Iconify
+                    icon={'eva:phone-fill' as any}
+                    width={18}
+                    color={templateSettings.accentColor}
+                  />
                   <Typography variant="body2" sx={{ fontWeight: 500 }}>
                     Phone: {templateSettings.phoneNumber}
-            </Typography>
+                  </Typography>
                 </Box>
               )}
               {templateSettings.email && (
                 <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
-                  <Iconify icon={"eva:email-fill" as any} width={18} color={templateSettings.accentColor} />
+                  <Iconify
+                    icon={'eva:email-fill' as any}
+                    width={18}
+                    color={templateSettings.accentColor}
+                  />
                   <Typography variant="body2" sx={{ fontWeight: 500 }}>
                     Email: {templateSettings.emailAddress}
-            </Typography>
+                  </Typography>
                 </Box>
               )}
             </Grid>
@@ -402,71 +489,104 @@ export function DocumentTemplatesView() {
               {/* Price Breakdown */}
               <Typography variant="h6" sx={{ fontWeight: 700, mb: 3, color: 'text.primary' }}>
                 Price breakdown
-            </Typography>
+              </Typography>
               <Box sx={{ mb: 3 }}>
                 <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 1.5 }}>
-                  <Typography variant="body2" sx={{ fontWeight: 500 }}>Base rate</Typography>
-                  <Typography variant="body2" sx={{ fontWeight: 600 }}>$500</Typography>
+                  <Typography variant="body2" sx={{ fontWeight: 500 }}>
+                    Base rate
+                  </Typography>
+                  <Typography variant="body2" sx={{ fontWeight: 600 }}>
+                    $500
+                  </Typography>
                 </Box>
                 <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 1.5 }}>
-                  <Typography variant="body2" sx={{ fontWeight: 500 }}>Cleaning fee</Typography>
-                  <Typography variant="body2" sx={{ fontWeight: 600 }}>$60</Typography>
+                  <Typography variant="body2" sx={{ fontWeight: 500 }}>
+                    Cleaning fee
+                  </Typography>
+                  <Typography variant="body2" sx={{ fontWeight: 600 }}>
+                    $60
+                  </Typography>
                 </Box>
                 {isInvoice && (
                   <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 1.5 }}>
-                    <Typography variant="body2" sx={{ fontWeight: 500 }}>VAT / GST 10%</Typography>
-                    <Typography variant="body2" sx={{ fontWeight: 600 }}>$40</Typography>
+                    <Typography variant="body2" sx={{ fontWeight: 500 }}>
+                      VAT / GST 10%
+                    </Typography>
+                    <Typography variant="body2" sx={{ fontWeight: 600 }}>
+                      $40
+                    </Typography>
                   </Box>
                 )}
                 {isRefund && (
                   <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 1.5 }}>
-                    <Typography variant="body2" sx={{ fontWeight: 500 }}>Refund</Typography>
-                    <Typography variant="body2" sx={{ fontWeight: 600, color: 'error.main' }}>-$50</Typography>
+                    <Typography variant="body2" sx={{ fontWeight: 500 }}>
+                      Refund
+                    </Typography>
+                    <Typography variant="body2" sx={{ fontWeight: 600, color: 'error.main' }}>
+                      -$50
+                    </Typography>
                   </Box>
-          )}
-        </Box>
+                )}
+              </Box>
 
               <Divider sx={{ mb: 3, borderColor: 'grey.200' }} />
-              
+
               {/* Add-ons */}
               <Typography variant="h6" sx={{ fontWeight: 700, mb: 3, color: 'text.primary' }}>
                 Add-ons
               </Typography>
-        <Box sx={{ mb: 3 }}>
+              <Box sx={{ mb: 3 }}>
                 <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 1.5 }}>
-                  <Typography variant="body2" sx={{ fontWeight: 500 }}>Extra parking</Typography>
-                  <Typography variant="body2" sx={{ fontWeight: 600 }}>$50</Typography>
+                  <Typography variant="body2" sx={{ fontWeight: 500 }}>
+                    Extra parking
+                  </Typography>
+                  <Typography variant="body2" sx={{ fontWeight: 600 }}>
+                    $50
+                  </Typography>
                 </Box>
                 <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 1.5 }}>
-                  <Typography variant="body2" sx={{ fontWeight: 500 }}>Pet fee</Typography>
-                  <Typography variant="body2" sx={{ fontWeight: 600 }}>$50</Typography>
-        </Box>
+                  <Typography variant="body2" sx={{ fontWeight: 500 }}>
+                    Pet fee
+                  </Typography>
+                  <Typography variant="body2" sx={{ fontWeight: 600 }}>
+                    $50
+                  </Typography>
+                </Box>
                 <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 1.5 }}>
-                  <Typography variant="body2" sx={{ fontWeight: 500 }}>Fresh flowers</Typography>
-                  <Typography variant="body2" sx={{ fontWeight: 600 }}>$20</Typography>
-            </Box>
+                  <Typography variant="body2" sx={{ fontWeight: 500 }}>
+                    Fresh flowers
+                  </Typography>
+                  <Typography variant="body2" sx={{ fontWeight: 600 }}>
+                    $20
+                  </Typography>
+                </Box>
               </Box>
-              
+
               <Divider sx={{ mb: 3, borderColor: 'grey.200' }} />
-              
-              <Box sx={{ 
-                display: 'flex', 
-                justifyContent: 'space-between',
-                p: 2,
-                bgcolor: 'grey.50',
-                borderRadius: 2,
-                border: '2px solid',
-                borderColor: templateSettings.accentColor,
-              }}>
+
+              <Box
+                sx={{
+                  display: 'flex',
+                  justifyContent: 'space-between',
+                  p: 2,
+                  bgcolor: 'grey.50',
+                  borderRadius: 2,
+                  border: '2px solid',
+                  borderColor: templateSettings.accentColor,
+                }}
+              >
                 <Typography variant="h6" sx={{ fontWeight: 700, color: 'text.primary' }}>
                   {isInvoice ? 'Total' : isCharge ? 'Total price' : 'Total'}
                 </Typography>
-                <Typography variant="h6" sx={{ fontWeight: 700, color: templateSettings.accentColor }}>
+                <Typography
+                  variant="h6"
+                  sx={{ fontWeight: 700, color: templateSettings.accentColor }}
+                >
                   $720
                 </Typography>
               </Box>
             </Grid>
-            
+
             <Grid size={6}>
               {/* Payment Details */}
               {isInvoice && templateSettings.showPaymentStatus && (
@@ -479,45 +599,61 @@ export function DocumentTemplatesView() {
                       Partially paid
                     </Typography>
                     <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 1.5 }}>
-                      <Typography variant="body2" sx={{ fontWeight: 500 }}>Total paid</Typography>
-                      <Typography variant="body2" sx={{ fontWeight: 600 }}>$600</Typography>
-            </Box>
+                      <Typography variant="body2" sx={{ fontWeight: 500 }}>
+                        Total paid
+                      </Typography>
+                      <Typography variant="body2" sx={{ fontWeight: 600 }}>
+                        $600
+                      </Typography>
+                    </Box>
                     <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 1.5 }}>
-                      <Typography variant="body2" sx={{ fontWeight: 500 }}>Balance due</Typography>
-                      <Typography variant="body2" sx={{ fontWeight: 600, color: 'error.main' }}>$120</Typography>
-              </Box>
-            </Box>
+                      <Typography variant="body2" sx={{ fontWeight: 500 }}>
+                        Balance due
+                      </Typography>
+                      <Typography variant="body2" sx={{ fontWeight: 600, color: 'error.main' }}>
+                        $120
+                      </Typography>
+                    </Box>
+                  </Box>
                   <Divider sx={{ mb: 3, borderColor: 'grey.200' }} />
                 </>
               )}
-              
+
               {/* Payment Method */}
               <Typography variant="h6" sx={{ fontWeight: 700, mb: 3, color: 'text.primary' }}>
                 Payment method
               </Typography>
               <Box sx={{ mb: 3 }}>
                 <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5, mb: 1.5 }}>
-                  <Iconify icon={"eva:credit-card-fill" as any} width={20} color={templateSettings.accentColor} />
-                  <Typography variant="body2" sx={{ fontWeight: 600 }}>Card ending in 5523</Typography>
-          </Box>
+                  <Iconify
+                    icon={'eva:credit-card-fill' as any}
+                    width={20}
+                    color={templateSettings.accentColor}
+                  />
+                  <Typography variant="body2" sx={{ fontWeight: 600 }}>
+                    Card ending in 5523
+                  </Typography>
+                </Box>
                 <Typography variant="body2" color="text.secondary" sx={{ fontWeight: 500 }}>
                   22 Apr 22, 10:24 AM
                 </Typography>
-        </Box>
+              </Box>
 
               {isCharge && (
                 <>
                   <Divider sx={{ mb: 3, borderColor: 'grey.200' }} />
-                  <Box sx={{ 
-                    display: 'flex', 
-                    justifyContent: 'space-between', 
-                    mb: 3,
-                    p: 2,
-                    bgcolor: 'success.50',
-                    borderRadius: 2,
-                    border: '2px solid',
-                    borderColor: 'success.main',
-                  }}>
+                  <Box
+                    sx={{
+                      display: 'flex',
+                      justifyContent: 'space-between',
+                      mb: 3,
+                      p: 2,
+                      bgcolor: 'success.50',
+                      borderRadius: 2,
+                      border: '2px solid',
+                      borderColor: 'success.main',
+                    }}
+                  >
                     <Typography variant="h6" sx={{ fontWeight: 700, color: 'text.primary' }}>
                       Amount paid
                     </Typography>
@@ -527,20 +663,22 @@ export function DocumentTemplatesView() {
                   </Box>
                 </>
               )}
-              
+
               {isRefund && (
                 <>
                   <Divider sx={{ mb: 3, borderColor: 'grey.200' }} />
-                  <Box sx={{ 
-                    display: 'flex', 
-                    justifyContent: 'space-between', 
-                    mb: 3,
-                    p: 2,
-                    bgcolor: 'warning.50',
-                    borderRadius: 2,
-                    border: '2px solid',
-                    borderColor: 'warning.main',
-                  }}>
+                  <Box
+                    sx={{
+                      display: 'flex',
+                      justifyContent: 'space-between',
+                      mb: 3,
+                      p: 2,
+                      bgcolor: 'warning.50',
+                      borderRadius: 2,
+                      border: '2px solid',
+                      borderColor: 'warning.main',
+                    }}
+                  >
                     <Typography variant="h6" sx={{ fontWeight: 700, color: 'text.primary' }}>
                       Charged amount
                     </Typography>
@@ -549,33 +687,39 @@ export function DocumentTemplatesView() {
                     </Typography>
                   </Box>
                   <Divider sx={{ mb: 3, borderColor: 'grey.200' }} />
-                  <Box sx={{ 
-                    display: 'flex', 
-                    justifyContent: 'space-between', 
-                    mb: 3,
-                    p: 2,
-                    bgcolor: 'error.50',
-                    borderRadius: 2,
-                    border: '2px solid',
-                    borderColor: 'error.main',
-                  }}>
+                  <Box
+                    sx={{
+                      display: 'flex',
+                      justifyContent: 'space-between',
+                      mb: 3,
+                      p: 2,
+                      bgcolor: 'error.50',
+                      borderRadius: 2,
+                      border: '2px solid',
+                      borderColor: 'error.main',
+                    }}
+                  >
                     <Typography variant="h6" sx={{ fontWeight: 700, color: 'text.primary' }}>
                       Amount refunded
                     </Typography>
                     <Typography variant="h6" sx={{ fontWeight: 700, color: 'error.main' }}>
                       -$50
-            </Typography>
-          </Box>
+                    </Typography>
+                  </Box>
                 </>
               )}
-              
+
               <Divider sx={{ mb: 3, borderColor: 'grey.200' }} />
-              
+
               {/* Cancellation Policy */}
               <Typography variant="h6" sx={{ fontWeight: 700, mb: 2, color: 'text.primary' }}>
                 Cancellation Policy
               </Typography>
-              <Typography variant="body2" color="text.secondary" sx={{ fontWeight: 500, lineHeight: 1.6 }}>
+              <Typography
+                variant="body2"
+                color="text.secondary"
+                sx={{ fontWeight: 500, lineHeight: 1.6 }}
+              >
                 According to cancellation policy on Booking.com
               </Typography>
             </Grid>
@@ -635,7 +779,7 @@ export function DocumentTemplatesView() {
                 display: 'flex',
                 flexDirection: 'column',
                 justifyContent: 'space-between',
-                '&:hover': { 
+                '&:hover': {
                   boxShadow: 4,
                   transform: 'translateY(-2px)',
                 },
@@ -644,7 +788,7 @@ export function DocumentTemplatesView() {
               onClick={() => handleTemplateTypeChange('invoice')}
             >
               <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2 }}>
-                <Iconify icon={"eva:file-text-fill" as any} width={28} />
+                <Iconify icon={'eva:file-text-fill' as any} width={28} />
                 <Typography variant="h6" sx={{ fontWeight: 600 }}>
                   Invoice
                 </Typography>
@@ -668,7 +812,7 @@ export function DocumentTemplatesView() {
                 display: 'flex',
                 flexDirection: 'column',
                 justifyContent: 'space-between',
-                '&:hover': { 
+                '&:hover': {
                   boxShadow: 4,
                   transform: 'translateY(-2px)',
                 },
@@ -677,7 +821,7 @@ export function DocumentTemplatesView() {
               onClick={() => handleTemplateTypeChange('charge')}
             >
               <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2 }}>
-                <Iconify icon={"eva:credit-card-fill" as any} width={28} />
+                <Iconify icon={'eva:credit-card-fill' as any} width={28} />
                 <Typography variant="h6" sx={{ fontWeight: 600 }}>
                   Charge receipt
                 </Typography>
@@ -701,7 +845,7 @@ export function DocumentTemplatesView() {
                 display: 'flex',
                 flexDirection: 'column',
                 justifyContent: 'space-between',
-                '&:hover': { 
+                '&:hover': {
                   boxShadow: 4,
                   transform: 'translateY(-2px)',
                 },
@@ -710,7 +854,7 @@ export function DocumentTemplatesView() {
               onClick={() => handleTemplateTypeChange('refund')}
             >
               <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2 }}>
-                <Iconify icon={"eva:undo-fill" as any} width={28} />
+                <Iconify icon={'eva:undo-fill' as any} width={28} />
                 <Typography variant="h6" sx={{ fontWeight: 600 }}>
                   Refund receipt
                 </Typography>
@@ -725,16 +869,16 @@ export function DocumentTemplatesView() {
 
       {/* Action Buttons */}
       <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 3 }}>
-        <Button 
-          variant="outlined" 
+        <Button
+          variant="outlined"
           color="error"
-          startIcon={<Iconify icon={"eva:refresh-fill" as any} />}
+          startIcon={<Iconify icon={'eva:refresh-fill' as any} />}
           onClick={handleReset}
         >
           Reset template
         </Button>
-        <Button 
-          variant="contained" 
+        <Button
+          variant="contained"
           color="success"
           startIcon={<Iconify icon="eva:checkmark-fill" />}
           onClick={handleSave}
@@ -759,7 +903,7 @@ export function DocumentTemplatesView() {
               <Button
                 variant="outlined"
                 color="success"
-                startIcon={<Iconify icon={"eva:plus-fill" as any} />}
+                startIcon={<Iconify icon={'eva:plus-fill' as any} />}
                 sx={{ mb: 1 }}
               >
                 + Add logo
@@ -791,7 +935,9 @@ export function DocumentTemplatesView() {
                     }}
                     onClick={(e) => handleColorPickerOpen(e, 'background')}
                   />
-                  <Typography variant="body2" sx={{ fontWeight: 500 }}>Background color</Typography>
+                  <Typography variant="body2" sx={{ fontWeight: 500 }}>
+                    Background color
+                  </Typography>
                 </Box>
                 <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
                   <Box
@@ -812,7 +958,9 @@ export function DocumentTemplatesView() {
                     }}
                     onClick={(e) => handleColorPickerOpen(e, 'accent')}
                   />
-                  <Typography variant="body2" sx={{ fontWeight: 500 }}>Accent color</Typography>
+                  <Typography variant="body2" sx={{ fontWeight: 500 }}>
+                    Accent color
+                  </Typography>
                 </Box>
               </Stack>
             </Box>
@@ -849,15 +997,15 @@ export function DocumentTemplatesView() {
                     value={templateSettings.hostNameType}
                     onChange={(e) => handleSettingChange('hostNameType', e.target.value)}
                   >
-                    <FormControlLabel 
-                      value="manual" 
-                      control={<Radio color="success" />} 
-                      label="Manuel Sciarria" 
+                    <FormControlLabel
+                      value="manual"
+                      control={<Radio color="success" />}
+                      label="Manuel Sciarria"
                     />
-                    <FormControlLabel 
-                      value="listing-specific" 
-                      control={<Radio color="success" />} 
-                      label="Listing specific (contact person and invoicing)" 
+                    <FormControlLabel
+                      value="listing-specific"
+                      control={<Radio color="success" />}
+                      label="Listing specific (contact person and invoicing)"
                     />
                   </RadioGroup>
                   <TextField
@@ -890,15 +1038,15 @@ export function DocumentTemplatesView() {
                     value={templateSettings.phoneType}
                     onChange={(e) => handleSettingChange('phoneType', e.target.value)}
                   >
-                    <FormControlLabel 
-                      value="manual" 
-                      control={<Radio color="success" />} 
+                    <FormControlLabel
+                      value="manual"
+                      control={<Radio color="success" />}
                       label={templateSettings.phoneNumber}
                     />
-                    <FormControlLabel 
-                      value="listing-specific" 
-                      control={<Radio color="success" />} 
-                      label="Listing specific (contact person and invoicing)" 
+                    <FormControlLabel
+                      value="listing-specific"
+                      control={<Radio color="success" />}
+                      label="Listing specific (contact person and invoicing)"
                     />
                   </RadioGroup>
                 </Box>
@@ -923,20 +1071,20 @@ export function DocumentTemplatesView() {
                     value={templateSettings.email}
                     onChange={(e) => handleSettingChange('email', e.target.value)}
                   >
-                    <FormControlLabel 
-                      value="manual" 
-                      control={<Radio color="success" />} 
+                    <FormControlLabel
+                      value="manual"
+                      control={<Radio color="success" />}
                       label={templateSettings.emailAddress}
                     />
-                    <FormControlLabel 
-                      value="listing-specific" 
-                      control={<Radio color="success" />} 
-                      label="Listing specific (contact person and invoicing)" 
+                    <FormControlLabel
+                      value="listing-specific"
+                      control={<Radio color="success" />}
+                      label="Listing specific (contact person and invoicing)"
                     />
-                    <FormControlLabel 
-                      value="custom" 
-                      control={<Radio color="success" />} 
-                      label="Custom email" 
+                    <FormControlLabel
+                      value="custom"
+                      control={<Radio color="success" />}
+                      label="Custom email"
                     />
                   </RadioGroup>
                 </Box>
@@ -949,16 +1097,18 @@ export function DocumentTemplatesView() {
                 control={
                   <Switch
                     checked={!!templateSettings.additionalInfo}
-                    onChange={(e) => handleSettingChange('additionalInfo', e.target.checked ? '' : '')}
+                    onChange={(e) =>
+                      handleSettingChange('additionalInfo', e.target.checked ? '' : '')
+                    }
                     color="success"
                   />
                 }
                 label="Additional information"
               />
               {templateSettings.additionalInfo && (
-              <TextField
-                fullWidth
-                multiline
+                <TextField
+                  fullWidth
+                  multiline
                   rows={4}
                   value={templateSettings.additionalInfo}
                   onChange={(e) => handleSettingChange('additionalInfo', e.target.value)}
@@ -986,19 +1136,19 @@ export function DocumentTemplatesView() {
                     value={templateSettings.taxIdType}
                     onChange={(e) => handleSettingChange('taxIdType', e.target.value)}
                   >
-                    <FormControlLabel 
-                      value="listing-specific" 
-                      control={<Radio color="success" />} 
-                      label="Listing specific (contact person and invoicing)" 
+                    <FormControlLabel
+                      value="listing-specific"
+                      control={<Radio color="success" />}
+                      label="Listing specific (contact person and invoicing)"
                     />
-                    <FormControlLabel 
-                      value="custom" 
-                      control={<Radio color="success" />} 
-                      label="Custom Tax ID" 
+                    <FormControlLabel
+                      value="custom"
+                      control={<Radio color="success" />}
+                      label="Custom Tax ID"
                     />
                   </RadioGroup>
-              <TextField
-                fullWidth
+                  <TextField
+                    fullWidth
                     value={templateSettings.customTaxId}
                     onChange={(e) => handleSettingChange('customTaxId', e.target.value)}
                     placeholder="20291698"
@@ -1022,7 +1172,7 @@ export function DocumentTemplatesView() {
                 label={
                   <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
                     <Typography variant="body2">Show payment status and balance</Typography>
-                    <Iconify icon={"eva:info-fill" as any} width={16} />
+                    <Iconify icon={'eva:info-fill' as any} width={16} />
                   </Box>
                 }
               />
@@ -1041,7 +1191,7 @@ export function DocumentTemplatesView() {
                 label={
                   <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
                     <Typography variant="body2">Show charges</Typography>
-                    <Iconify icon={"eva:info-fill" as any} width={16} />
+                    <Iconify icon={'eva:info-fill' as any} width={16} />
                   </Box>
                 }
               />
@@ -1100,14 +1250,14 @@ export function DocumentTemplatesView() {
               <Typography variant="subtitle2" sx={{ fontWeight: 600, mb: 1 }}>
                 Custom fields
               </Typography>
-            <Button
-              variant="outlined"
+              <Button
+                variant="outlined"
                 color="success"
-              startIcon={<Iconify icon={"eva:plus-fill" as any} />}
-              fullWidth
-            >
+                startIcon={<Iconify icon={'eva:plus-fill' as any} />}
+                fullWidth
+              >
                 + Add custom field
-            </Button>
+              </Button>
             </Box>
           </Paper>
         </Grid>

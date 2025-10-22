@@ -77,9 +77,7 @@ const revenuePerReservationData = {
 };
 
 const checkinData = {
-  series: [
-    { name: 'Check-ins', data: [12, 15, 18, 14, 16, 20, 17] },
-  ],
+  series: [{ name: 'Check-ins', data: [12, 15, 18, 14, 16, 20, 17] }],
   categories: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
 };
 
@@ -87,7 +85,6 @@ const reservationsPerChannelData = {
   series: [45, 25, 15, 10, 5],
   labels: ['Airbnb', 'Booking.com', 'Expedia', 'Direct', 'Other'],
 };
-
 
 export function AnalyticsView() {
   const router = useRouter();
@@ -140,16 +137,8 @@ export function AnalyticsView() {
       {/* Filters */}
       <Paper sx={{ p: 2, mb: 3 }}>
         <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, flexWrap: 'wrap' }}>
-          <TextField
-            size="small"
-            placeholder="Listings"
-            sx={{ minWidth: 120 }}
-          />
-          <TextField
-            size="small"
-            placeholder="Tags"
-            sx={{ minWidth: 120 }}
-          />
+          <TextField size="small" placeholder="Listings" sx={{ minWidth: 120 }} />
+          <TextField size="small" placeholder="Tags" sx={{ minWidth: 120 }} />
           <TextField
             size="small"
             type="date"
@@ -164,19 +153,9 @@ export function AnalyticsView() {
             InputLabelProps={{ shrink: true }}
             sx={{ minWidth: 120 }}
           />
-          <TextField
-            size="small"
-            placeholder="Quick dates"
-            sx={{ minWidth: 120 }}
-          />
-          <TextField
-            size="small"
-            placeholder="Channels"
-            sx={{ minWidth: 120 }}
-          />
-          <Button variant="outlined">
-            Reset
-          </Button>
+          <TextField size="small" placeholder="Quick dates" sx={{ minWidth: 120 }} />
+          <TextField size="small" placeholder="Channels" sx={{ minWidth: 120 }} />
+          <Button variant="outlined">Reset</Button>
         </Box>
       </Paper>
 
@@ -243,7 +222,14 @@ export function AnalyticsView() {
         <Grid size={{ xs: 12, md: 8 }}>
           <Card>
             <CardContent>
-              <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 2 }}>
+              <Box
+                sx={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'space-between',
+                  mb: 2,
+                }}
+              >
                 <Typography variant="h6" sx={{ fontWeight: 600 }}>
                   Revenue Chart
                 </Typography>
@@ -280,7 +266,13 @@ export function AnalyticsView() {
                     onClick={() => setChartType(chartType === 'bar' ? 'line' : 'bar')}
                     size="small"
                   >
-                    <Iconify icon={chartType === 'bar' ? "eva:bar-chart-fill" as any : "eva:trending-up-fill" as any} />
+                    <Iconify
+                      icon={
+                        chartType === 'bar'
+                          ? ('eva:bar-chart-fill' as any)
+                          : ('eva:trending-up-fill' as any)
+                      }
+                    />
                   </IconButton>
                 </Box>
               </Box>
@@ -393,13 +385,24 @@ export function AnalyticsView() {
         <Grid size={{ xs: 12, md: 8 }}>
           <Card>
             <CardContent>
-              <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 2 }}>
+              <Box
+                sx={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'space-between',
+                  mb: 2,
+                }}
+              >
                 <Typography variant="h6" sx={{ fontWeight: 600 }}>
                   Check-in by Channels
                 </Typography>
                 <FormControl size="small" sx={{ minWidth: 120 }}>
                   <InputLabel>Chart Type</InputLabel>
-                  <Select value={chartType} onChange={(e) => setChartType(e.target.value)} label="Chart Type">
+                  <Select
+                    value={chartType}
+                    onChange={(e) => setChartType(e.target.value)}
+                    label="Chart Type"
+                  >
                     <MenuItem value="bar">Bar Chart</MenuItem>
                     <MenuItem value="line">Line Chart</MenuItem>
                   </Select>
@@ -472,9 +475,7 @@ export function AnalyticsView() {
             InputLabelProps={{ shrink: true }}
             sx={{ minWidth: 120 }}
           />
-          <Button variant="outlined">
-            Reset
-          </Button>
+          <Button variant="outlined">Reset</Button>
         </Box>
       </Paper>
 

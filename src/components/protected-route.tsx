@@ -27,9 +27,9 @@ export function ProtectedRoute({ children, requiredRole }: ProtectedRouteProps) 
         if (user.role === 'team') {
           navigate('/team-dashboard');
         } else if (['associate', 'supervisor', 'manager'].includes(user.role)) {
-          navigate('/');
+          navigate('/dashboard');
         } else {
-          navigate('/');
+          navigate('/dashboard');
         }
         return;
       }
@@ -38,9 +38,12 @@ export function ProtectedRoute({ children, requiredRole }: ProtectedRouteProps) 
       if (user.role === 'team' && window.location.pathname === '/') {
         navigate('/team-dashboard');
       } else if (user.role === 'user' && window.location.pathname.startsWith('/team-dashboard')) {
-        navigate('/');
-      } else if (['associate', 'supervisor', 'manager'].includes(user.role) && window.location.pathname.startsWith('/team-dashboard')) {
-        navigate('/');
+        navigate('/dashboard');
+      } else if (
+        ['associate', 'supervisor', 'manager'].includes(user.role) &&
+        window.location.pathname.startsWith('/team-dashboard')
+      ) {
+        navigate('/dashboard');
       }
     }
   }, [user, isLoading, navigate, requiredRole]);

@@ -57,16 +57,33 @@ export function AssociateDashboardPage() {
 
       // Load assigned properties
       const properties = [
-        { id: '305034', name: 'La Dimora Del Cavaliere', location: 'Anguillara Sabazia, Italy', clientId: 'client1' },
+        {
+          id: '305034',
+          name: 'La Dimora Del Cavaliere',
+          location: 'Anguillara Sabazia, Italy',
+          clientId: 'client1',
+        },
         { id: '305035', name: 'Navigli', location: 'Milano, Italy', clientId: 'client1' },
         { id: '305225', name: 'Polacchi42', location: 'Roma, Italy', clientId: 'client2' },
-        { id: '305421', name: 'Superattico - Via Del Corso 43', location: 'Roma, Italy', clientId: 'client2' },
-        { id: '306532', name: 'Montecatini Terme', location: 'Montecatini Terme, Italy', clientId: 'client3' },
+        {
+          id: '305421',
+          name: 'Superattico - Via Del Corso 43',
+          location: 'Roma, Italy',
+          clientId: 'client2',
+        },
+        {
+          id: '306532',
+          name: 'Montecatini Terme',
+          location: 'Montecatini Terme, Italy',
+          clientId: 'client3',
+        },
         { id: '306533', name: 'Tuscany Villa', location: 'Florence, Italy', clientId: 'client3' },
         { id: '306534', name: 'Coastal Retreat', location: 'Amalfi, Italy', clientId: 'client4' },
       ];
 
-      const userProperties = properties.filter((p: Property) => user.assignedProperties?.includes(p.id));
+      const userProperties = properties.filter((p: Property) =>
+        user.assignedProperties?.includes(p.id)
+      );
       setAssignedProperties(userProperties);
 
       // Load manager and supervisor
@@ -84,19 +101,27 @@ export function AssociateDashboardPage() {
 
   const getStatusColor = (status?: string) => {
     switch (status) {
-      case 'active': return 'success';
-      case 'inactive': return 'warning';
-      case 'suspended': return 'error';
-      default: return 'default';
+      case 'active':
+        return 'success';
+      case 'inactive':
+        return 'warning';
+      case 'suspended':
+        return 'error';
+      default:
+        return 'default';
     }
   };
 
   const getStatusLabel = (status?: string) => {
     switch (status) {
-      case 'active': return 'Active';
-      case 'inactive': return 'Inactive';
-      case 'suspended': return 'Suspended';
-      default: return 'Active';
+      case 'active':
+        return 'Active';
+      case 'inactive':
+        return 'Inactive';
+      case 'suspended':
+        return 'Suspended';
+      default:
+        return 'Active';
     }
   };
 
@@ -107,7 +132,8 @@ export function AssociateDashboardPage() {
           Associate Dashboard
         </Typography>
         <Typography variant="body2" color="text.secondary">
-          Welcome back, {user?.name}! Here&apos;s your assigned clients, properties, and current tasks.
+          Welcome back, {user?.name}! Here&apos;s your assigned clients, properties, and current
+          tasks.
         </Typography>
       </Box>
 
@@ -193,7 +219,11 @@ export function AssociateDashboardPage() {
             <CardHeader title="Assigned Clients" />
             <CardContent>
               {assignedClients.length === 0 ? (
-                <Typography variant="body2" color="text.secondary" sx={{ textAlign: 'center', py: 2 }}>
+                <Typography
+                  variant="body2"
+                  color="text.secondary"
+                  sx={{ textAlign: 'center', py: 2 }}
+                >
                   No clients assigned yet
                 </Typography>
               ) : (
@@ -228,7 +258,11 @@ export function AssociateDashboardPage() {
             <CardHeader title="Assigned Properties" />
             <CardContent>
               {assignedProperties.length === 0 ? (
-                <Typography variant="body2" color="text.secondary" sx={{ textAlign: 'center', py: 2 }}>
+                <Typography
+                  variant="body2"
+                  color="text.secondary"
+                  sx={{ textAlign: 'center', py: 2 }}
+                >
                   No properties assigned yet
                 </Typography>
               ) : (
@@ -263,13 +297,13 @@ export function AssociateDashboardPage() {
               <Stack spacing={2}>
                 {manager && (
                   <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-                    <Avatar 
-                      sx={{ 
+                    <Avatar
+                      sx={{
                         bgcolor: manager.avatar ? 'transparent' : 'info.main',
                         backgroundImage: manager.avatar ? `url(${manager.avatar})` : 'none',
                         backgroundSize: 'cover',
                         backgroundPosition: 'center',
-                        backgroundRepeat: 'no-repeat'
+                        backgroundRepeat: 'no-repeat',
                       }}
                     >
                       {!manager.avatar && manager.name.charAt(0).toUpperCase()}
@@ -283,16 +317,16 @@ export function AssociateDashboardPage() {
                     <Chip label="Manager" color="info" size="small" />
                   </Box>
                 )}
-                
+
                 {supervisor && (
                   <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-                    <Avatar 
-                      sx={{ 
+                    <Avatar
+                      sx={{
                         bgcolor: supervisor.avatar ? 'transparent' : 'warning.main',
                         backgroundImage: supervisor.avatar ? `url(${supervisor.avatar})` : 'none',
                         backgroundSize: 'cover',
                         backgroundPosition: 'center',
-                        backgroundRepeat: 'no-repeat'
+                        backgroundRepeat: 'no-repeat',
                       }}
                     >
                       {!supervisor.avatar && supervisor.name.charAt(0).toUpperCase()}
@@ -308,7 +342,11 @@ export function AssociateDashboardPage() {
                 )}
 
                 {!manager && !supervisor && (
-                  <Typography variant="body2" color="text.secondary" sx={{ textAlign: 'center', py: 2 }}>
+                  <Typography
+                    variant="body2"
+                    color="text.secondary"
+                    sx={{ textAlign: 'center', py: 2 }}
+                  >
                     No manager or supervisor assigned
                   </Typography>
                 )}
@@ -326,23 +364,41 @@ export function AssociateDashboardPage() {
                 <Box>
                   <Stack direction="row" justifyContent="space-between" sx={{ mb: 1 }}>
                     <Typography variant="body2">Task Completion</Typography>
-                    <Typography variant="body2" sx={{ fontWeight: 600 }}>85%</Typography>
+                    <Typography variant="body2" sx={{ fontWeight: 600 }}>
+                      85%
+                    </Typography>
                   </Stack>
-                  <LinearProgress variant="determinate" value={85} sx={{ height: 8, borderRadius: 4 }} />
+                  <LinearProgress
+                    variant="determinate"
+                    value={85}
+                    sx={{ height: 8, borderRadius: 4 }}
+                  />
                 </Box>
                 <Box>
                   <Stack direction="row" justifyContent="space-between" sx={{ mb: 1 }}>
                     <Typography variant="body2">Response Time</Typography>
-                    <Typography variant="body2" sx={{ fontWeight: 600 }}>2.3 hrs</Typography>
+                    <Typography variant="body2" sx={{ fontWeight: 600 }}>
+                      2.3 hrs
+                    </Typography>
                   </Stack>
-                  <LinearProgress variant="determinate" value={75} sx={{ height: 8, borderRadius: 4 }} />
+                  <LinearProgress
+                    variant="determinate"
+                    value={75}
+                    sx={{ height: 8, borderRadius: 4 }}
+                  />
                 </Box>
                 <Box>
                   <Stack direction="row" justifyContent="space-between" sx={{ mb: 1 }}>
                     <Typography variant="body2">Client Satisfaction</Typography>
-                    <Typography variant="body2" sx={{ fontWeight: 600 }}>4.7/5</Typography>
+                    <Typography variant="body2" sx={{ fontWeight: 600 }}>
+                      4.7/5
+                    </Typography>
                   </Stack>
-                  <LinearProgress variant="determinate" value={94} sx={{ height: 8, borderRadius: 4 }} />
+                  <LinearProgress
+                    variant="determinate"
+                    value={94}
+                    sx={{ height: 8, borderRadius: 4 }}
+                  />
                 </Box>
               </Stack>
             </CardContent>
@@ -360,8 +416,12 @@ export function AssociateDashboardPage() {
                     <CheckCircle size={16} />
                   </Avatar>
                   <Box sx={{ flex: 1 }}>
-                    <Typography variant="body2">Property inspection - La Dimora Del Cavaliere</Typography>
-                    <Typography variant="caption" color="text.secondary">Due: Today, 3:00 PM</Typography>
+                    <Typography variant="body2">
+                      Property inspection - La Dimora Del Cavaliere
+                    </Typography>
+                    <Typography variant="caption" color="text.secondary">
+                      Due: Today, 3:00 PM
+                    </Typography>
                   </Box>
                   <Chip label="High Priority" color="error" size="small" />
                 </Box>
@@ -372,7 +432,9 @@ export function AssociateDashboardPage() {
                   </Avatar>
                   <Box sx={{ flex: 1 }}>
                     <Typography variant="body2">Client meeting - Luxury Rentals LLC</Typography>
-                    <Typography variant="caption" color="text.secondary">Due: Tomorrow, 10:00 AM</Typography>
+                    <Typography variant="caption" color="text.secondary">
+                      Due: Tomorrow, 10:00 AM
+                    </Typography>
                   </Box>
                   <Chip label="Medium Priority" color="warning" size="small" />
                 </Box>
@@ -383,7 +445,9 @@ export function AssociateDashboardPage() {
                   </Avatar>
                   <Box sx={{ flex: 1 }}>
                     <Typography variant="body2">Weekly report submission</Typography>
-                    <Typography variant="caption" color="text.secondary">Due: Friday, 5:00 PM</Typography>
+                    <Typography variant="caption" color="text.secondary">
+                      Due: Friday, 5:00 PM
+                    </Typography>
                   </Box>
                   <Chip label="Low Priority" color="info" size="small" />
                 </Box>
@@ -404,7 +468,9 @@ export function AssociateDashboardPage() {
                   </Avatar>
                   <Box sx={{ flex: 1 }}>
                     <Typography variant="body2">Completed property maintenance check</Typography>
-                    <Typography variant="caption" color="text.secondary">2 hours ago</Typography>
+                    <Typography variant="caption" color="text.secondary">
+                      2 hours ago
+                    </Typography>
                   </Box>
                 </Box>
                 <Divider />
@@ -414,7 +480,9 @@ export function AssociateDashboardPage() {
                   </Avatar>
                   <Box sx={{ flex: 1 }}>
                     <Typography variant="body2">Received 5-star client review</Typography>
-                    <Typography variant="caption" color="text.secondary">1 day ago</Typography>
+                    <Typography variant="caption" color="text.secondary">
+                      1 day ago
+                    </Typography>
                   </Box>
                 </Box>
                 <Divider />
@@ -424,7 +492,9 @@ export function AssociateDashboardPage() {
                   </Avatar>
                   <Box sx={{ flex: 1 }}>
                     <Typography variant="body2">Scheduled client meeting</Typography>
-                    <Typography variant="caption" color="text.secondary">3 days ago</Typography>
+                    <Typography variant="caption" color="text.secondary">
+                      3 days ago
+                    </Typography>
                   </Box>
                 </Box>
               </Stack>

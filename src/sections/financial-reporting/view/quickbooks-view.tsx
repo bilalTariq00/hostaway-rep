@@ -90,15 +90,14 @@ export function QuickBooksView() {
           </Typography>
           <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
             <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-              <img 
-                src="/assets/images/quickbooks-logo.png" 
-                alt="QuickBooks" 
+              <img
+                src="/assets/images/quickbooks-logo.png"
+                alt="QuickBooks"
                 style={{ height: 40 }}
                 onError={(e) => {
                   e.currentTarget.style.display = 'none';
                 }}
               />
-            
             </Box>
             <Button variant="outlined" onClick={handlePricingModalOpen}>
               Pricing Info
@@ -117,23 +116,23 @@ export function QuickBooksView() {
                   sx={{
                     width: 300,
                     height: 300,
-                  
+
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
                     mx: 'auto',
                     mb: 3,
-                    
+
                     overflow: 'hidden',
                     position: 'relative',
                   }}
                 >
-                  <img 
-                    src="https://dashboard.hostaway.com/v3-widget-bundle/649712b9a1f363df.png" 
-                    alt="QuickBooks Integration" 
-                    style={{ 
-                      width: '100%', 
-                      height: '100%', 
+                  <img
+                    src="https://dashboard.hostaway.com/v3-widget-bundle/649712b9a1f363df.png"
+                    alt="QuickBooks Integration"
+                    style={{
+                      width: '100%',
+                      height: '100%',
                       objectFit: 'cover',
                       borderRadius: '8px',
                     }}
@@ -145,9 +144,7 @@ export function QuickBooksView() {
                       }
                     }}
                   />
-                 
                 </Box>
-                
               </Box>
             </Grid>
             <Grid size={{ xs: 12, md: 6 }}>
@@ -155,14 +152,14 @@ export function QuickBooksView() {
                 Seamless QuickBooks Integration
               </Typography>
               <Typography variant="body1" sx={{ mb: 3, color: 'text.secondary', lineHeight: 1.6 }}>
-                Connect your property management system directly with QuickBooks for automated 
+                Connect your property management system directly with QuickBooks for automated
                 financial reporting and streamlined accounting processes.
               </Typography>
               <Box sx={{ display: 'flex', gap: 2 }}>
-                <Button 
-                  variant="contained" 
+                <Button
+                  variant="contained"
                   size="large"
-                  sx={{ 
+                  sx={{
                     bgcolor: 'primary.main',
                     '&:hover': { bgcolor: 'primary.dark' },
                     px: 4,
@@ -173,13 +170,13 @@ export function QuickBooksView() {
                 >
                   Connect QuickBooks
                 </Button>
-                <Button 
-                  variant="outlined" 
+                <Button
+                  variant="outlined"
                   size="large"
-                  sx={{ 
+                  sx={{
                     borderColor: 'primary.main',
                     color: 'primary.main',
-                    '&:hover': { 
+                    '&:hover': {
                       borderColor: 'primary.dark',
                       bgcolor: 'primary.lighter',
                     },
@@ -219,12 +216,12 @@ export function QuickBooksView() {
                     position: 'relative',
                   }}
                 >
-                  <img 
-                    src="/assets/images/automated-sync.png" 
-                    alt="Automated Sync" 
-                    style={{ 
-                      width: '100%', 
-                      height: '100%', 
+                  <img
+                    src="/assets/images/automated-sync.png"
+                    alt="Automated Sync"
+                    style={{
+                      width: '100%',
+                      height: '100%',
                       objectFit: 'cover',
                       borderRadius: '12px',
                     }}
@@ -272,12 +269,12 @@ export function QuickBooksView() {
                     position: 'relative',
                   }}
                 >
-                  <img 
-                    src="/assets/images/error-reduction.png" 
-                    alt="Error Reduction" 
-                    style={{ 
-                      width: '100%', 
-                      height: '100%', 
+                  <img
+                    src="/assets/images/error-reduction.png"
+                    alt="Error Reduction"
+                    style={{
+                      width: '100%',
+                      height: '100%',
                       objectFit: 'cover',
                       borderRadius: '12px',
                     }}
@@ -325,12 +322,12 @@ export function QuickBooksView() {
                     position: 'relative',
                   }}
                 >
-                  <img 
-                    src="/assets/images/real-time-reports.png" 
-                    alt="Real-time Reports" 
-                    style={{ 
-                      width: '100%', 
-                      height: '100%', 
+                  <img
+                    src="/assets/images/real-time-reports.png"
+                    alt="Real-time Reports"
+                    style={{
+                      width: '100%',
+                      height: '100%',
                       objectFit: 'cover',
                       borderRadius: '12px',
                     }}
@@ -378,12 +375,12 @@ export function QuickBooksView() {
                     position: 'relative',
                   }}
                 >
-                  <img 
-                    src="/assets/images/secure-connection.png" 
-                    alt="Secure Connection" 
-                    style={{ 
-                      width: '100%', 
-                      height: '100%', 
+                  <img
+                    src="/assets/images/secure-connection.png"
+                    alt="Secure Connection"
+                    style={{
+                      width: '100%',
+                      height: '100%',
                       objectFit: 'cover',
                       borderRadius: '12px',
                     }}
@@ -442,12 +439,12 @@ export function QuickBooksView() {
                       position: 'relative',
                     }}
                   >
-                    <img 
-                      src="/assets/images/automated-bookkeeping.png" 
-                      alt="Automated Bookkeeping" 
-                      style={{ 
-                        width: '100%', 
-                        height: '100%', 
+                    <img
+                      src="/assets/images/automated-bookkeeping.png"
+                      alt="Automated Bookkeeping"
+                      style={{
+                        width: '100%',
+                        height: '100%',
                         objectFit: 'cover',
                         borderRadius: '8px',
                       }}
@@ -473,39 +470,39 @@ export function QuickBooksView() {
                     </Box>
                   </Box>
                   <Typography variant="h6" sx={{ fontWeight: 600, color: 'text.primary' }}>
-                  Automated Bookkeeping
-                </Typography>
+                    Automated Bookkeeping
+                  </Typography>
                 </Box>
                 <Typography variant="body2" color="text.secondary" sx={{ mb: 3, lineHeight: 1.6 }}>
                   Automatically categorize income and expenses based on your booking data
                 </Typography>
                 <Box sx={{ display: 'flex', gap: 1, flexWrap: 'wrap' }}>
-                  <Chip 
-                    label="Income Tracking" 
-                    size="small" 
-                    sx={{ 
+                  <Chip
+                    label="Income Tracking"
+                    size="small"
+                    sx={{
                       bgcolor: 'primary.lighter',
                       color: 'primary.main',
                       fontWeight: 500,
-                    }} 
+                    }}
                   />
-                  <Chip 
-                    label="Expense Management" 
-                    size="small" 
-                    sx={{ 
+                  <Chip
+                    label="Expense Management"
+                    size="small"
+                    sx={{
                       bgcolor: 'primary.lighter',
                       color: 'primary.main',
                       fontWeight: 500,
-                    }} 
+                    }}
                   />
-                  <Chip 
-                    label="Tax Preparation" 
-                    size="small" 
-                    sx={{ 
+                  <Chip
+                    label="Tax Preparation"
+                    size="small"
+                    sx={{
                       bgcolor: 'primary.lighter',
                       color: 'primary.main',
                       fontWeight: 500,
-                    }} 
+                    }}
                   />
                 </Box>
               </Box>
@@ -525,12 +522,12 @@ export function QuickBooksView() {
                       position: 'relative',
                     }}
                   >
-                    <img 
-                      src="/assets/images/financial-insights.png" 
-                      alt="Financial Insights" 
-                      style={{ 
-                        width: '100%', 
-                        height: '100%', 
+                    <img
+                      src="/assets/images/financial-insights.png"
+                      alt="Financial Insights"
+                      style={{
+                        width: '100%',
+                        height: '100%',
                         objectFit: 'cover',
                         borderRadius: '8px',
                       }}
@@ -556,39 +553,39 @@ export function QuickBooksView() {
                     </Box>
                   </Box>
                   <Typography variant="h6" sx={{ fontWeight: 600, color: 'text.primary' }}>
-                  Financial Insights
-                </Typography>
+                    Financial Insights
+                  </Typography>
                 </Box>
                 <Typography variant="body2" color="text.secondary" sx={{ mb: 3, lineHeight: 1.6 }}>
                   Get detailed insights into your property&apos;s financial performance
                 </Typography>
                 <Box sx={{ display: 'flex', gap: 1, flexWrap: 'wrap' }}>
-                  <Chip 
-                    label="Profit Analysis" 
-                    size="small" 
-                    sx={{ 
+                  <Chip
+                    label="Profit Analysis"
+                    size="small"
+                    sx={{
                       bgcolor: 'primary.lighter',
                       color: 'primary.main',
                       fontWeight: 500,
-                    }} 
+                    }}
                   />
-                  <Chip 
-                    label="Revenue Trends" 
-                    size="small" 
-                    sx={{ 
+                  <Chip
+                    label="Revenue Trends"
+                    size="small"
+                    sx={{
                       bgcolor: 'primary.lighter',
                       color: 'primary.main',
                       fontWeight: 500,
-                    }} 
+                    }}
                   />
-                  <Chip 
-                    label="Cost Tracking" 
-                    size="small" 
-                    sx={{ 
+                  <Chip
+                    label="Cost Tracking"
+                    size="small"
+                    sx={{
                       bgcolor: 'primary.lighter',
                       color: 'primary.main',
                       fontWeight: 500,
-                    }} 
+                    }}
                   />
                 </Box>
               </Box>
@@ -608,12 +605,12 @@ export function QuickBooksView() {
                       position: 'relative',
                     }}
                   >
-                    <img 
-                      src="/assets/images/invoice-management.png" 
-                      alt="Invoice Management" 
-                      style={{ 
-                        width: '100%', 
-                        height: '100%', 
+                    <img
+                      src="/assets/images/invoice-management.png"
+                      alt="Invoice Management"
+                      style={{
+                        width: '100%',
+                        height: '100%',
                         objectFit: 'cover',
                         borderRadius: '8px',
                       }}
@@ -639,39 +636,39 @@ export function QuickBooksView() {
                     </Box>
                   </Box>
                   <Typography variant="h6" sx={{ fontWeight: 600, color: 'text.primary' }}>
-                  Invoice Management
-                </Typography>
+                    Invoice Management
+                  </Typography>
                 </Box>
                 <Typography variant="body2" color="text.secondary" sx={{ mb: 3, lineHeight: 1.6 }}>
                   Create and send professional invoices directly from your booking data
                 </Typography>
                 <Box sx={{ display: 'flex', gap: 1, flexWrap: 'wrap' }}>
-                  <Chip 
-                    label="Auto Invoicing" 
-                    size="small" 
-                    sx={{ 
+                  <Chip
+                    label="Auto Invoicing"
+                    size="small"
+                    sx={{
                       bgcolor: 'primary.lighter',
                       color: 'primary.main',
                       fontWeight: 500,
-                    }} 
+                    }}
                   />
-                  <Chip 
-                    label="Payment Tracking" 
-                    size="small" 
-                    sx={{ 
+                  <Chip
+                    label="Payment Tracking"
+                    size="small"
+                    sx={{
                       bgcolor: 'primary.lighter',
                       color: 'primary.main',
                       fontWeight: 500,
-                    }} 
+                    }}
                   />
-                  <Chip 
-                    label="Receipt Management" 
-                    size="small" 
-                    sx={{ 
+                  <Chip
+                    label="Receipt Management"
+                    size="small"
+                    sx={{
                       bgcolor: 'primary.lighter',
                       color: 'primary.main',
                       fontWeight: 500,
-                    }} 
+                    }}
                   />
                 </Box>
               </Box>
@@ -691,12 +688,12 @@ export function QuickBooksView() {
                       position: 'relative',
                     }}
                   >
-                    <img 
-                      src="/assets/images/compliance-reporting.png" 
-                      alt="Compliance & Reporting" 
-                      style={{ 
-                        width: '100%', 
-                        height: '100%', 
+                    <img
+                      src="/assets/images/compliance-reporting.png"
+                      alt="Compliance & Reporting"
+                      style={{
+                        width: '100%',
+                        height: '100%',
                         objectFit: 'cover',
                         borderRadius: '8px',
                       }}
@@ -722,39 +719,39 @@ export function QuickBooksView() {
                     </Box>
                   </Box>
                   <Typography variant="h6" sx={{ fontWeight: 600, color: 'text.primary' }}>
-                  Compliance & Reporting
-                </Typography>
+                    Compliance & Reporting
+                  </Typography>
                 </Box>
                 <Typography variant="body2" color="text.secondary" sx={{ mb: 3, lineHeight: 1.6 }}>
                   Stay compliant with automated tax calculations and reporting
                 </Typography>
                 <Box sx={{ display: 'flex', gap: 1, flexWrap: 'wrap' }}>
-                  <Chip 
-                    label="Tax Calculations" 
-                    size="small" 
-                    sx={{ 
+                  <Chip
+                    label="Tax Calculations"
+                    size="small"
+                    sx={{
                       bgcolor: 'primary.lighter',
                       color: 'primary.main',
                       fontWeight: 500,
-                    }} 
+                    }}
                   />
-                  <Chip 
-                    label="Audit Trails" 
-                    size="small" 
-                    sx={{ 
+                  <Chip
+                    label="Audit Trails"
+                    size="small"
+                    sx={{
                       bgcolor: 'primary.lighter',
                       color: 'primary.main',
                       fontWeight: 500,
-                    }} 
+                    }}
                   />
-                  <Chip 
-                    label="Regulatory Reports" 
-                    size="small" 
-                    sx={{ 
+                  <Chip
+                    label="Regulatory Reports"
+                    size="small"
+                    sx={{
                       bgcolor: 'primary.lighter',
                       color: 'primary.main',
                       fontWeight: 500,
-                    }} 
+                    }}
                   />
                 </Box>
               </Box>
@@ -769,11 +766,11 @@ export function QuickBooksView() {
           <Typography variant="h4" sx={{ fontWeight: 700, mb: 4, color: 'text.primary' }}>
             Frequently Asked Questions
           </Typography>
-          
+
           <Accordion sx={{ mb: 2, borderRadius: 2, '&:before': { display: 'none' } }}>
-            <AccordionSummary 
+            <AccordionSummary
               expandIcon={<ChevronDown size={20} color="#00A76F" />}
-              sx={{ 
+              sx={{
                 borderRadius: 2,
                 '&.Mui-expanded': {
                   borderRadius: '8px 8px 0 0',
@@ -789,17 +786,17 @@ export function QuickBooksView() {
             </AccordionSummary>
             <AccordionDetails sx={{ bgcolor: 'grey.50', borderRadius: '0 0 8px 8px' }}>
               <Typography variant="body2" sx={{ lineHeight: 1.6, color: 'text.secondary' }}>
-                Our integration automatically syncs your booking data, revenue, and expenses 
-                with QuickBooks. You can set up automated rules for categorization and 
-                generate reports directly from your property management system.
+                Our integration automatically syncs your booking data, revenue, and expenses with
+                QuickBooks. You can set up automated rules for categorization and generate reports
+                directly from your property management system.
               </Typography>
             </AccordionDetails>
           </Accordion>
 
           <Accordion sx={{ mb: 2, borderRadius: 2, '&:before': { display: 'none' } }}>
-            <AccordionSummary 
+            <AccordionSummary
               expandIcon={<ChevronDown size={20} color="#00A76F" />}
-              sx={{ 
+              sx={{
                 borderRadius: 2,
                 '&.Mui-expanded': {
                   borderRadius: '8px 8px 0 0',
@@ -815,17 +812,17 @@ export function QuickBooksView() {
             </AccordionSummary>
             <AccordionDetails sx={{ bgcolor: 'grey.50', borderRadius: '0 0 8px 8px' }}>
               <Typography variant="body2" sx={{ lineHeight: 1.6, color: 'text.secondary' }}>
-                We support QuickBooks Online, QuickBooks Desktop (Pro, Premier, Enterprise), 
-                and QuickBooks Self-Employed. The integration works seamlessly across all 
-                versions with real-time data synchronization.
+                We support QuickBooks Online, QuickBooks Desktop (Pro, Premier, Enterprise), and
+                QuickBooks Self-Employed. The integration works seamlessly across all versions with
+                real-time data synchronization.
               </Typography>
             </AccordionDetails>
           </Accordion>
 
           <Accordion sx={{ mb: 2, borderRadius: 2, '&:before': { display: 'none' } }}>
-            <AccordionSummary 
+            <AccordionSummary
               expandIcon={<ChevronDown size={20} color="#00A76F" />}
-              sx={{ 
+              sx={{
                 borderRadius: 2,
                 '&.Mui-expanded': {
                   borderRadius: '8px 8px 0 0',
@@ -841,17 +838,17 @@ export function QuickBooksView() {
             </AccordionSummary>
             <AccordionDetails sx={{ bgcolor: 'grey.50', borderRadius: '0 0 8px 8px' }}>
               <Typography variant="body2" sx={{ lineHeight: 1.6, color: 'text.secondary' }}>
-                Yes, we use bank-level encryption and follow industry-standard security 
-                protocols. Your data is encrypted in transit and at rest, and we never 
-                store your QuickBooks credentials.
+                Yes, we use bank-level encryption and follow industry-standard security protocols.
+                Your data is encrypted in transit and at rest, and we never store your QuickBooks
+                credentials.
               </Typography>
             </AccordionDetails>
           </Accordion>
 
           <Accordion sx={{ mb: 2, borderRadius: 2, '&:before': { display: 'none' } }}>
-            <AccordionSummary 
+            <AccordionSummary
               expandIcon={<ChevronDown size={20} color="#00A76F" />}
-              sx={{ 
+              sx={{
                 borderRadius: 2,
                 '&.Mui-expanded': {
                   borderRadius: '8px 8px 0 0',
@@ -867,18 +864,17 @@ export function QuickBooksView() {
             </AccordionSummary>
             <AccordionDetails sx={{ bgcolor: 'grey.50', borderRadius: '0 0 8px 8px' }}>
               <Typography variant="body2" sx={{ lineHeight: 1.6, color: 'text.secondary' }}>
-                Absolutely! You can customize how your booking data maps to QuickBooks 
-                accounts, set up automated categorization rules, and choose which data 
-                fields to sync. This ensures the integration works perfectly with your 
-                existing accounting setup.
+                Absolutely! You can customize how your booking data maps to QuickBooks accounts, set
+                up automated categorization rules, and choose which data fields to sync. This
+                ensures the integration works perfectly with your existing accounting setup.
               </Typography>
             </AccordionDetails>
           </Accordion>
 
           <Accordion sx={{ borderRadius: 2, '&:before': { display: 'none' } }}>
-            <AccordionSummary 
+            <AccordionSummary
               expandIcon={<ChevronDown size={20} color="#00A76F" />}
-              sx={{ 
+              sx={{
                 borderRadius: 2,
                 '&.Mui-expanded': {
                   borderRadius: '8px 8px 0 0',
@@ -894,9 +890,9 @@ export function QuickBooksView() {
             </AccordionSummary>
             <AccordionDetails sx={{ bgcolor: 'grey.50', borderRadius: '0 0 8px 8px' }}>
               <Typography variant="body2" sx={{ lineHeight: 1.6, color: 'text.secondary' }}>
-                Our support team provides free setup assistance and training. We also offer 
-                comprehensive documentation, video tutorials, and live chat support to help 
-                you get the most out of your QuickBooks integration.
+                Our support team provides free setup assistance and training. We also offer
+                comprehensive documentation, video tutorials, and live chat support to help you get
+                the most out of your QuickBooks integration.
               </Typography>
             </AccordionDetails>
           </Accordion>
@@ -904,42 +900,46 @@ export function QuickBooksView() {
       </Card>
 
       {/* Pricing Info Modal */}
-      <Dialog 
-        open={pricingModalOpen} 
-        onClose={handlePricingModalClose} 
-        maxWidth="md" 
+      <Dialog
+        open={pricingModalOpen}
+        onClose={handlePricingModalClose}
+        maxWidth="md"
         fullWidth
         PaperProps={{
           sx: {
             borderRadius: 3,
             boxShadow: '0 8px 32px rgba(0, 0, 0, 0.12)',
-          }
+          },
         }}
       >
-        <DialogTitle sx={{ 
-          textAlign: 'center', 
-          fontWeight: 700, 
-          fontSize: '1.5rem',
-          color: 'text.primary',
-          pb: 2,
-        }}>
+        <DialogTitle
+          sx={{
+            textAlign: 'center',
+            fontWeight: 700,
+            fontSize: '1.5rem',
+            color: 'text.primary',
+            pb: 2,
+          }}
+        >
           QuickBooks Integration Pricing
         </DialogTitle>
         <DialogContent sx={{ px: 4 }}>
           <Grid container spacing={3} sx={{ mt: 1 }}>
             <Grid size={{ xs: 12, md: 4 }}>
-              <Card sx={{ 
-                textAlign: 'center', 
-                p: 3, 
-                borderRadius: 2,
-                border: '2px solid',
-                borderColor: 'grey.200',
-                height: '100%',
-                '&:hover': {
-                  borderColor: 'primary.light',
-                  boxShadow: '0 4px 20px rgba(0, 167, 111, 0.1)',
-                },
-              }}>
+              <Card
+                sx={{
+                  textAlign: 'center',
+                  p: 3,
+                  borderRadius: 2,
+                  border: '2px solid',
+                  borderColor: 'grey.200',
+                  height: '100%',
+                  '&:hover': {
+                    borderColor: 'primary.light',
+                    boxShadow: '0 4px 20px rgba(0, 167, 111, 0.1)',
+                  },
+                }}
+              >
                 <Typography variant="h6" sx={{ fontWeight: 600, mb: 2, color: 'text.primary' }}>
                   Basic
                 </Typography>
@@ -953,25 +953,33 @@ export function QuickBooksView() {
                   Perfect for small properties
                 </Typography>
                 <Box sx={{ textAlign: 'left' }}>
-                  <Typography variant="body2" sx={{ mb: 1 }}>• Up to 5 properties</Typography>
-                  <Typography variant="body2" sx={{ mb: 1 }}>• Basic sync</Typography>
-                  <Typography variant="body2" sx={{ mb: 1 }}>• Email support</Typography>
+                  <Typography variant="body2" sx={{ mb: 1 }}>
+                    • Up to 5 properties
+                  </Typography>
+                  <Typography variant="body2" sx={{ mb: 1 }}>
+                    • Basic sync
+                  </Typography>
+                  <Typography variant="body2" sx={{ mb: 1 }}>
+                    • Email support
+                  </Typography>
                 </Box>
               </Card>
             </Grid>
             <Grid size={{ xs: 12, md: 4 }}>
-              <Card sx={{ 
-                textAlign: 'center', 
-                p: 3, 
-                borderRadius: 2,
-                border: '3px solid',
-                borderColor: 'primary.main',
-                height: '100%',
-                position: 'relative',
-                '&:hover': {
-                  boxShadow: '0 8px 32px rgba(0, 167, 111, 0.2)',
-                },
-              }}>
+              <Card
+                sx={{
+                  textAlign: 'center',
+                  p: 3,
+                  borderRadius: 2,
+                  border: '3px solid',
+                  borderColor: 'primary.main',
+                  height: '100%',
+                  position: 'relative',
+                  '&:hover': {
+                    boxShadow: '0 8px 32px rgba(0, 167, 111, 0.2)',
+                  },
+                }}
+              >
                 <Box
                   sx={{
                     position: 'absolute',
@@ -1002,26 +1010,36 @@ export function QuickBooksView() {
                   Most popular choice
                 </Typography>
                 <Box sx={{ textAlign: 'left' }}>
-                  <Typography variant="body2" sx={{ mb: 1 }}>• Up to 25 properties</Typography>
-                  <Typography variant="body2" sx={{ mb: 1 }}>• Advanced sync</Typography>
-                  <Typography variant="body2" sx={{ mb: 1 }}>• Priority support</Typography>
-                  <Typography variant="body2" sx={{ mb: 1 }}>• Custom reports</Typography>
+                  <Typography variant="body2" sx={{ mb: 1 }}>
+                    • Up to 25 properties
+                  </Typography>
+                  <Typography variant="body2" sx={{ mb: 1 }}>
+                    • Advanced sync
+                  </Typography>
+                  <Typography variant="body2" sx={{ mb: 1 }}>
+                    • Priority support
+                  </Typography>
+                  <Typography variant="body2" sx={{ mb: 1 }}>
+                    • Custom reports
+                  </Typography>
                 </Box>
               </Card>
             </Grid>
             <Grid size={{ xs: 12, md: 4 }}>
-              <Card sx={{ 
-                textAlign: 'center', 
-                p: 3, 
-                borderRadius: 2,
-                border: '2px solid',
-                borderColor: 'grey.200',
-                height: '100%',
-                '&:hover': {
-                  borderColor: 'primary.light',
-                  boxShadow: '0 4px 20px rgba(0, 167, 111, 0.1)',
-                },
-              }}>
+              <Card
+                sx={{
+                  textAlign: 'center',
+                  p: 3,
+                  borderRadius: 2,
+                  border: '2px solid',
+                  borderColor: 'grey.200',
+                  height: '100%',
+                  '&:hover': {
+                    borderColor: 'primary.light',
+                    boxShadow: '0 4px 20px rgba(0, 167, 111, 0.1)',
+                  },
+                }}
+              >
                 <Typography variant="h6" sx={{ fontWeight: 600, mb: 2, color: 'text.primary' }}>
                   Enterprise
                 </Typography>
@@ -1035,20 +1053,28 @@ export function QuickBooksView() {
                   For large operations
                 </Typography>
                 <Box sx={{ textAlign: 'left' }}>
-                  <Typography variant="body2" sx={{ mb: 1 }}>• Unlimited properties</Typography>
-                  <Typography variant="body2" sx={{ mb: 1 }}>• Full sync</Typography>
-                  <Typography variant="body2" sx={{ mb: 1 }}>• 24/7 support</Typography>
-                  <Typography variant="body2" sx={{ mb: 1 }}>• API access</Typography>
+                  <Typography variant="body2" sx={{ mb: 1 }}>
+                    • Unlimited properties
+                  </Typography>
+                  <Typography variant="body2" sx={{ mb: 1 }}>
+                    • Full sync
+                  </Typography>
+                  <Typography variant="body2" sx={{ mb: 1 }}>
+                    • 24/7 support
+                  </Typography>
+                  <Typography variant="body2" sx={{ mb: 1 }}>
+                    • API access
+                  </Typography>
                 </Box>
               </Card>
             </Grid>
           </Grid>
         </DialogContent>
         <DialogActions sx={{ px: 4, pb: 3, gap: 2 }}>
-          <Button 
+          <Button
             onClick={handlePricingModalClose}
             variant="outlined"
-            sx={{ 
+            sx={{
               borderColor: 'grey.300',
               color: 'text.secondary',
               '&:hover': {
@@ -1059,10 +1085,10 @@ export function QuickBooksView() {
           >
             Close
           </Button>
-          <Button 
-            variant="contained" 
+          <Button
+            variant="contained"
             onClick={handlePricingModalClose}
-            sx={{ 
+            sx={{
               bgcolor: 'primary.main',
               '&:hover': { bgcolor: 'primary.dark' },
               px: 4,

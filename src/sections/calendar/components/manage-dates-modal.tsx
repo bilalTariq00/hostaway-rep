@@ -64,7 +64,7 @@ export function ManageDatesModal({ dates, open, onClose }: ManageDatesModalProps
         <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
           <Typography variant="h6">Manage Dates</Typography>
           <IconButton onClick={onClose}>
-            <Iconify icon={"eva:close-fill" as any} width={20} />
+            <Iconify icon={'eva:close-fill' as any} width={20} />
           </IconButton>
         </Box>
       </DialogTitle>
@@ -103,7 +103,9 @@ export function ManageDatesModal({ dates, open, onClose }: ManageDatesModalProps
         <Box sx={{ mb: 3 }}>
           {/* Pricing */}
           <Accordion defaultExpanded>
-            <AccordionSummary expandIcon={<Iconify icon={"eva:arrow-down-fill" as any} width={20} />}>
+            <AccordionSummary
+              expandIcon={<Iconify icon={'eva:arrow-down-fill' as any} width={20} />}
+            >
               <Typography variant="subtitle1" sx={{ fontWeight: 600 }}>
                 Pricing
               </Typography>
@@ -128,7 +130,9 @@ export function ManageDatesModal({ dates, open, onClose }: ManageDatesModalProps
                     label="Weekend Price"
                     type="number"
                     value={pricing.weekendPrice}
-                    onChange={(e) => setPricing({ ...pricing, weekendPrice: Number(e.target.value) })}
+                    onChange={(e) =>
+                      setPricing({ ...pricing, weekendPrice: Number(e.target.value) })
+                    }
                     InputProps={{
                       startAdornment: <Typography sx={{ mr: 1 }}>$</Typography>,
                     }}
@@ -140,7 +144,9 @@ export function ManageDatesModal({ dates, open, onClose }: ManageDatesModalProps
                     label="Monthly Discount (%)"
                     type="number"
                     value={pricing.monthlyDiscount}
-                    onChange={(e) => setPricing({ ...pricing, monthlyDiscount: Number(e.target.value) })}
+                    onChange={(e) =>
+                      setPricing({ ...pricing, monthlyDiscount: Number(e.target.value) })
+                    }
                     InputProps={{
                       endAdornment: <Typography sx={{ ml: 1 }}>%</Typography>,
                     }}
@@ -152,7 +158,9 @@ export function ManageDatesModal({ dates, open, onClose }: ManageDatesModalProps
 
           {/* Availability */}
           <Accordion>
-            <AccordionSummary expandIcon={<Iconify icon={"eva:arrow-down-fill" as any} width={20} />}>
+            <AccordionSummary
+              expandIcon={<Iconify icon={'eva:arrow-down-fill' as any} width={20} />}
+            >
               <Typography variant="subtitle1" sx={{ fontWeight: 600 }}>
                 Availability
               </Typography>
@@ -165,7 +173,9 @@ export function ManageDatesModal({ dates, open, onClose }: ManageDatesModalProps
                     label="Minimum Stay"
                     type="number"
                     value={availability.minStay}
-                    onChange={(e) => setAvailability({ ...availability, minStay: Number(e.target.value) })}
+                    onChange={(e) =>
+                      setAvailability({ ...availability, minStay: Number(e.target.value) })
+                    }
                     InputProps={{
                       endAdornment: <Typography sx={{ ml: 1 }}>nights</Typography>,
                     }}
@@ -177,7 +187,9 @@ export function ManageDatesModal({ dates, open, onClose }: ManageDatesModalProps
                     label="Maximum Stay"
                     type="number"
                     value={availability.maxStay}
-                    onChange={(e) => setAvailability({ ...availability, maxStay: Number(e.target.value) })}
+                    onChange={(e) =>
+                      setAvailability({ ...availability, maxStay: Number(e.target.value) })
+                    }
                     InputProps={{
                       endAdornment: <Typography sx={{ ml: 1 }}>nights</Typography>,
                     }}
@@ -189,7 +201,9 @@ export function ManageDatesModal({ dates, open, onClose }: ManageDatesModalProps
                     label="Advance Notice"
                     type="number"
                     value={availability.advanceNotice}
-                    onChange={(e) => setAvailability({ ...availability, advanceNotice: Number(e.target.value) })}
+                    onChange={(e) =>
+                      setAvailability({ ...availability, advanceNotice: Number(e.target.value) })
+                    }
                     InputProps={{
                       endAdornment: <Typography sx={{ ml: 1 }}>days</Typography>,
                     }}
@@ -201,7 +215,9 @@ export function ManageDatesModal({ dates, open, onClose }: ManageDatesModalProps
 
           {/* Rule Sets */}
           <Accordion>
-            <AccordionSummary expandIcon={<Iconify icon={"eva:arrow-down-fill" as any} width={20} />}>
+            <AccordionSummary
+              expandIcon={<Iconify icon={'eva:arrow-down-fill' as any} width={20} />}
+            >
               <Typography variant="subtitle1" sx={{ fontWeight: 600 }}>
                 Rule Sets
               </Typography>
@@ -214,7 +230,9 @@ export function ManageDatesModal({ dates, open, onClose }: ManageDatesModalProps
                     select
                     label="Cancellation Policy"
                     value={ruleSets.cancellationPolicy}
-                    onChange={(e) => setRuleSets({ ...ruleSets, cancellationPolicy: e.target.value })}
+                    onChange={(e) =>
+                      setRuleSets({ ...ruleSets, cancellationPolicy: e.target.value })
+                    }
                     SelectProps={{
                       native: true,
                     }}
@@ -240,7 +258,9 @@ export function ManageDatesModal({ dates, open, onClose }: ManageDatesModalProps
 
           {/* Calendar Note */}
           <Accordion>
-            <AccordionSummary expandIcon={<Iconify icon={"eva:arrow-down-fill" as any} width={20} />}>
+            <AccordionSummary
+              expandIcon={<Iconify icon={'eva:arrow-down-fill' as any} width={20} />}
+            >
               <Typography variant="subtitle1" sx={{ fontWeight: 600 }}>
                 Calendar Note
               </Typography>

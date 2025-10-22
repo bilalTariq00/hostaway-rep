@@ -136,22 +136,22 @@ export function TaskFormPage() {
     const loadTasks = () => {
       const savedTasks = localStorage.getItem('tasks');
       const savedArchivedTasks = localStorage.getItem('archivedTasks');
-      
+
       let allTasks: any[] = [];
-      
+
       if (savedTasks) {
         allTasks = [...allTasks, ...JSON.parse(savedTasks)];
       }
-      
+
       if (savedArchivedTasks) {
         allTasks = [...allTasks, ...JSON.parse(savedArchivedTasks)];
       }
-      
+
       // If no saved tasks, use mock data
       if (allTasks.length === 0) {
         allTasks = mockTasks;
       }
-      
+
       return allTasks;
     };
 
@@ -217,7 +217,7 @@ export function TaskFormPage() {
 
   const handleInputChange = (field: string, value: any) => {
     if (!isView) {
-      setFormData(prev => ({
+      setFormData((prev) => ({
         ...prev,
         [field]: value,
       }));
@@ -226,7 +226,7 @@ export function TaskFormPage() {
 
   const handleAddChecklistItem = () => {
     if (!isView) {
-      setFormData(prev => ({
+      setFormData((prev) => ({
         ...prev,
         checklist: [...prev.checklist, ''],
       }));
@@ -235,16 +235,16 @@ export function TaskFormPage() {
 
   const handleChecklistChange = (index: number, value: string) => {
     if (!isView) {
-      setFormData(prev => ({
+      setFormData((prev) => ({
         ...prev,
-        checklist: prev.checklist.map((item, i) => i === index ? value : item),
+        checklist: prev.checklist.map((item, i) => (i === index ? value : item)),
       }));
     }
   };
 
   const handleRemoveChecklistItem = (index: number) => {
     if (!isView) {
-      setFormData(prev => ({
+      setFormData((prev) => ({
         ...prev,
         checklist: prev.checklist.filter((_, i) => i !== index),
       }));
@@ -257,32 +257,32 @@ export function TaskFormPage() {
     const loadTasks = () => {
       const savedTasks = localStorage.getItem('tasks');
       const savedArchivedTasks = localStorage.getItem('archivedTasks');
-      
+
       let allTasks: any[] = [];
-      
+
       if (savedTasks) {
         allTasks = [...allTasks, ...JSON.parse(savedTasks)];
       }
-      
+
       if (savedArchivedTasks) {
         allTasks = [...allTasks, ...JSON.parse(savedArchivedTasks)];
       }
-      
+
       // If no saved tasks, use mock data
       if (allTasks.length === 0) {
         allTasks = mockTasks;
       }
-      
+
       return allTasks;
     };
 
     const tasksData = loadTasks();
-    
+
     if (isDuplicate) {
       const newTask = {
         id: Date.now(),
         ...formData,
-        checklist: formData.checklist.filter(item => item.trim() !== ''),
+        checklist: formData.checklist.filter((item) => item.trim() !== ''),
       };
       const updatedTasks = [...tasksData, newTask];
       localStorage.setItem('tasks', JSON.stringify(updatedTasks));
@@ -292,7 +292,7 @@ export function TaskFormPage() {
           ? {
               ...task,
               ...formData,
-              checklist: formData.checklist.filter(item => item.trim() !== ''),
+              checklist: formData.checklist.filter((item) => item.trim() !== ''),
             }
           : task
       );
@@ -301,12 +301,12 @@ export function TaskFormPage() {
       const newTask = {
         id: Date.now(),
         ...formData,
-        checklist: formData.checklist.filter(item => item.trim() !== ''),
+        checklist: formData.checklist.filter((item) => item.trim() !== ''),
       };
       const updatedTasks = [...tasksData, newTask];
       localStorage.setItem('tasks', JSON.stringify(updatedTasks));
     }
-    
+
     router.push('/tasks/archive');
   };
 
@@ -315,22 +315,22 @@ export function TaskFormPage() {
       const loadTasks = () => {
         const savedTasks = localStorage.getItem('tasks');
         const savedArchivedTasks = localStorage.getItem('archivedTasks');
-        
+
         let allTasks: any[] = [];
-        
+
         if (savedTasks) {
           allTasks = [...allTasks, ...JSON.parse(savedTasks)];
         }
-        
+
         if (savedArchivedTasks) {
           allTasks = [...allTasks, ...JSON.parse(savedArchivedTasks)];
         }
-        
+
         // If no saved tasks, use mock data
         if (allTasks.length === 0) {
           allTasks = mockTasks;
         }
-        
+
         return allTasks;
       };
 
@@ -357,18 +357,14 @@ export function TaskFormPage() {
         <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 2 }}>
           <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
             <IconButton onClick={() => router.push('/tasks/archive')}>
-              <Iconify icon={"eva:arrow-back-fill" as any} />
+              <Iconify icon={'eva:arrow-back-fill' as any} />
             </IconButton>
             <Typography variant="h4" sx={{ fontWeight: 600 }}>
               {getPageTitle()}
             </Typography>
           </Box>
           {!isReadOnly && (
-            <Button
-              variant="contained"
-              onClick={handleSaveTask}
-              disabled={!formData.title.trim()}
-            >
+            <Button variant="contained" onClick={handleSaveTask} disabled={!formData.title.trim()}>
               Save task
             </Button>
           )}
@@ -561,27 +557,27 @@ export function TaskFormPage() {
           {/* Task Checklist */}
           <Card sx={{ mb: 3 }}>
             <CardContent>
-              <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 2 }}>
+              <Box
+                sx={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'space-between',
+                  mb: 2,
+                }}
+              >
                 <Typography variant="h6" sx={{ fontWeight: 600 }}>
                   Task checklist
                 </Typography>
                 {!isReadOnly && (
-                  <Button
-                    variant="text"
-                    color="primary"
-                    onClick={handleAddChecklistItem}
-                  >
+                  <Button variant="text" color="primary" onClick={handleAddChecklistItem}>
                     ADD CHECKLIST
                   </Button>
                 )}
               </Box>
-              
+
               {formData.checklist.map((item, index) => (
                 <Box key={index} sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1 }}>
-                  <Checkbox
-                    disabled
-                    sx={{ p: 0.5 }}
-                  />
+                  <Checkbox disabled sx={{ p: 0.5 }} />
                   <TextField
                     fullWidth
                     value={item}
@@ -596,14 +592,18 @@ export function TaskFormPage() {
                       onClick={() => handleRemoveChecklistItem(index)}
                       sx={{ color: 'error.main' }}
                     >
-                      <Iconify icon={"eva:trash-2-fill" as any} />
+                      <Iconify icon={'eva:trash-2-fill' as any} />
                     </IconButton>
                   )}
                 </Box>
               ))}
 
               {formData.checklist.length === 0 && (
-                <Typography variant="body2" color="text.secondary" sx={{ textAlign: 'center', py: 2 }}>
+                <Typography
+                  variant="body2"
+                  color="text.secondary"
+                  sx={{ textAlign: 'center', py: 2 }}
+                >
                   No checklist items added yet.
                 </Typography>
               )}
@@ -614,7 +614,7 @@ export function TaskFormPage() {
                     variant="contained"
                     size="small"
                     onClick={handleAddChecklistItem}
-                    startIcon={<Iconify icon={"eva:plus-fill" as any} />}
+                    startIcon={<Iconify icon={'eva:plus-fill' as any} />}
                   >
                     Add
                   </Button>
@@ -626,15 +626,19 @@ export function TaskFormPage() {
           {/* Attachments */}
           <Card sx={{ mb: 3 }}>
             <CardContent>
-              <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 2 }}>
+              <Box
+                sx={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'space-between',
+                  mb: 2,
+                }}
+              >
                 <Typography variant="h6" sx={{ fontWeight: 600 }}>
                   Attachments
                 </Typography>
                 {!isReadOnly && (
-                  <Button
-                    variant="text"
-                    color="primary"
-                  >
+                  <Button variant="text" color="primary">
                     ADD ATTACHMENT
                   </Button>
                 )}
@@ -832,7 +836,7 @@ export function TaskFormPage() {
                 variant="outlined"
                 color="error"
                 onClick={() => setDeleteDialogOpen(true)}
-                startIcon={<Iconify icon={"eva:trash-2-fill" as any} />}
+                startIcon={<Iconify icon={'eva:trash-2-fill' as any} />}
               >
                 Delete Task
               </Button>

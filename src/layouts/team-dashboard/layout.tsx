@@ -78,7 +78,7 @@ function TeamDashboardLayoutContent({
           <Box
             sx={{
               display: 'none',
-              [theme.breakpoints.up(layoutQuery)]: { 
+              [theme.breakpoints.up(layoutQuery)]: {
                 display: 'flex',
                 position: 'relative',
                 alignItems: 'center',
@@ -149,7 +149,9 @@ function TeamDashboardLayoutContent({
         {
           [`& .${layoutClasses.sidebarContainer}`]: {
             [theme.breakpoints.up(layoutQuery)]: {
-              pl: collapsed ? 'var(--layout-nav-vertical-width-collapsed)' : 'var(--layout-nav-vertical-width)',
+              pl: collapsed
+                ? 'var(--layout-nav-vertical-width-collapsed)'
+                : 'var(--layout-nav-vertical-width)',
               transition: theme.transitions.create(['padding-left'], {
                 easing: 'var(--layout-transition-easing)',
                 duration: 'var(--layout-transition-duration)',

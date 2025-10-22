@@ -31,25 +31,25 @@ export function HostawayLogin() {
 
     try {
       const success = await login(email, password);
-      
+
       if (success) {
         // Get the stored user data to check role
         const storedUser = localStorage.getItem('user');
         if (storedUser) {
           const userData = JSON.parse(storedUser);
           console.log('Login successful, navigating to dashboard...', userData);
-          
+
           // Navigate based on user role
           if (userData.role === 'team') {
             navigate('/team-dashboard', { replace: true });
           } else if (['associate', 'supervisor', 'manager'].includes(userData.role)) {
-            navigate('/', { replace: true });
+            navigate('/dashboard', { replace: true });
           } else {
-            navigate('/', { replace: true });
+            navigate('/dashboard', { replace: true });
           }
         } else {
           // Fallback to main dashboard if no user data
-          navigate('/', { replace: true });
+          navigate('/dashboard', { replace: true });
         }
       } else {
         setError('Invalid email or password');
@@ -89,11 +89,12 @@ export function HostawayLogin() {
             left: 0,
             right: 0,
             bottom: 0,
-            background: 'linear-gradient(135deg, rgba(255,107,53,0.1) 0%, rgba(247,147,30,0.1) 100%)',
+            background:
+              'linear-gradient(135deg, rgba(255,107,53,0.1) 0%, rgba(247,147,30,0.1) 100%)',
             opacity: 0.3,
           }}
         />
-        
+
         {/* Content */}
         <Box sx={{ position: 'relative', zIndex: 1, textAlign: 'center', p: 4 }}>
           <Typography variant="h3" sx={{ fontWeight: 700, mb: 2, color: '#333' }}>
@@ -102,17 +103,17 @@ export function HostawayLogin() {
           <Typography variant="h6" sx={{ color: 'text.secondary', mb: 4, fontWeight: 400 }}>
             More effectively with optimized workflows.
           </Typography>
-          
+
           {/* Hostaway Image */}
-          <img 
-            src="/assets/image.png" 
-            alt="Hostaway Dashboard" 
-            style={{ 
-              width: '100%', 
+          <img
+            src="/assets/image.png"
+            alt="Hostaway Dashboard"
+            style={{
+              width: '100%',
               maxWidth: '600px',
               height: 'auto',
-              objectFit: 'contain'
-            }} 
+              objectFit: 'contain',
+            }}
           />
         </Box>
       </Box>
@@ -135,26 +136,26 @@ export function HostawayLogin() {
             <Typography variant="h4" sx={{ fontWeight: 700, mb: 1, color: '#333' }}>
               Sign in to your account
             </Typography>
-                <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-                  Don&apos;t have an account?{' '}
-                  <Link 
-                    href="/register" 
-                    sx={{ 
-                      color: '#FF6B35',
-                      textDecoration: 'none',
-                      fontWeight: 600,
-                      '&:hover': { textDecoration: 'underline' }
-                    }}
-                  >
-                    Get started
-                  </Link>
-                </Typography>
+            <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+              Don&apos;t have an account?{' '}
+              <Link
+                href="/register"
+                sx={{
+                  color: '#FF6B35',
+                  textDecoration: 'none',
+                  fontWeight: 600,
+                  '&:hover': { textDecoration: 'underline' },
+                }}
+              >
+                Get started
+              </Link>
+            </Typography>
           </Box>
 
           {/* Demo Credentials Section */}
           <Card sx={{ mb: 3 }}>
-            <CardHeader 
-              title="Demo Credentials" 
+            <CardHeader
+              title="Demo Credentials"
               subheader="Use these credentials to test different user roles"
               sx={{ pb: 1 }}
             />
@@ -209,7 +210,7 @@ export function HostawayLogin() {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
-              sx={{ 
+              sx={{
                 mb: 3,
                 '& .MuiOutlinedInput-root': {
                   borderRadius: 2,
@@ -217,18 +218,18 @@ export function HostawayLogin() {
                 },
                 '& .MuiInputLabel-root': {
                   color: 'text.secondary',
-                }
+                },
               }}
             />
-            
+
             <Box sx={{ display: 'flex', justifyContent: 'flex-end', mb: 1 }}>
-              <Link 
-                href="#" 
-                sx={{ 
-                  fontSize: '14px', 
+              <Link
+                href="#"
+                sx={{
+                  fontSize: '14px',
                   color: 'text.secondary',
                   textDecoration: 'none',
-                  '&:hover': { textDecoration: 'underline' }
+                  '&:hover': { textDecoration: 'underline' },
                 }}
               >
                 Forgot password?
@@ -242,7 +243,7 @@ export function HostawayLogin() {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
-              sx={{ 
+              sx={{
                 mb: 3,
                 '& .MuiOutlinedInput-root': {
                   borderRadius: 2,
@@ -250,15 +251,12 @@ export function HostawayLogin() {
                 },
                 '& .MuiInputLabel-root': {
                   color: 'text.secondary',
-                }
+                },
               }}
               InputProps={{
                 endAdornment: (
                   <InputAdornment position="end">
-                    <IconButton
-                      onClick={() => setShowPassword(!showPassword)}
-                      edge="end"
-                    >
+                    <IconButton onClick={() => setShowPassword(!showPassword)} edge="end">
                       {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
                     </IconButton>
                   </InputAdornment>
@@ -283,7 +281,7 @@ export function HostawayLogin() {
                 },
                 '&:disabled': {
                   bgcolor: 'grey.300',
-                }
+                },
               }}
             >
               {isLoading ? 'Signing In...' : 'Sign in'}

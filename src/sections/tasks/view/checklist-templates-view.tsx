@@ -179,7 +179,9 @@ export function ChecklistTemplatesView() {
   const handleDeleteConfirm = () => {
     if (selectedTemplate) {
       const templatesData = loadChecklistTemplates();
-      const updatedTemplates = templatesData.filter((template: any) => template.id !== selectedTemplate.id);
+      const updatedTemplates = templatesData.filter(
+        (template: any) => template.id !== selectedTemplate.id
+      );
       localStorage.setItem('checklistTemplates', JSON.stringify(updatedTemplates));
       setChecklistTemplates(updatedTemplates);
     }
@@ -235,8 +237,8 @@ export function ChecklistTemplatesView() {
       <Grid container spacing={3}>
         {checklistTemplates.map((template) => (
           <Grid key={template.id} size={{ xs: 12, sm: 6, md: 4 }}>
-            <Card 
-              sx={{ 
+            <Card
+              sx={{
                 height: '100%',
                 display: 'flex',
                 flexDirection: 'column',
@@ -246,15 +248,19 @@ export function ChecklistTemplatesView() {
               }}
             >
               <CardContent sx={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
-                <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', mb: 2 }}>
+                <Box
+                  sx={{
+                    display: 'flex',
+                    justifyContent: 'space-between',
+                    alignItems: 'flex-start',
+                    mb: 2,
+                  }}
+                >
                   <Typography variant="h6" sx={{ fontWeight: 600, flex: 1 }}>
                     {template.name}
                   </Typography>
-                  <IconButton 
-                    size="small" 
-                    onClick={(e) => handleActionMenuOpen(e, template)}
-                  >
-                    <Iconify icon={"eva:more-vertical-fill" as any} width={16} />
+                  <IconButton size="small" onClick={(e) => handleActionMenuOpen(e, template)}>
+                    <Iconify icon={'eva:more-vertical-fill' as any} width={16} />
                   </IconButton>
                 </Box>
 
@@ -270,29 +276,25 @@ export function ChecklistTemplatesView() {
                     {template.tasks.slice(0, 4).map((task: string, index: number) => (
                       <ListItem key={index} sx={{ py: 0.5, px: 0 }}>
                         <ListItemIcon sx={{ minWidth: 32 }}>
-                          <Checkbox
-                            size="small"
-                            disabled
-                            sx={{ p: 0.5 }}
-                          />
+                          <Checkbox size="small" disabled sx={{ p: 0.5 }} />
                         </ListItemIcon>
-                        <ListItemText 
+                        <ListItemText
                           primary={
                             <Typography variant="body2" sx={{ fontSize: '0.875rem' }}>
                               {task}
                             </Typography>
-                          } 
+                          }
                         />
                       </ListItem>
                     ))}
                     {template.tasks.length > 4 && (
                       <ListItem sx={{ py: 0.5, px: 0 }}>
-                        <ListItemText 
+                        <ListItemText
                           primary={
                             <Typography variant="caption" color="text.secondary">
                               +{template.tasks.length - 4} more tasks
                             </Typography>
-                          } 
+                          }
                         />
                       </ListItem>
                     )}
@@ -300,14 +302,30 @@ export function ChecklistTemplatesView() {
                 </Box>
 
                 <Box sx={{ display: 'flex', justifyContent: 'flex-end', gap: 1, mt: 2 }}>
-                  <IconButton size="small" onClick={() => router.push(`/tasks/checklist-templates/${template.id}/edit`)}>
-                    <Iconify icon={"eva:edit-fill" as any} width={16} />
+                  <IconButton
+                    size="small"
+                    onClick={() => router.push(`/tasks/checklist-templates/${template.id}/edit`)}
+                  >
+                    <Iconify icon={'eva:edit-fill' as any} width={16} />
                   </IconButton>
-                  <IconButton size="small" onClick={() => { setSelectedTemplate(template); setDuplicateDialogOpen(true); }}>
-                    <Iconify icon={"eva:copy-fill" as any} width={16} />
+                  <IconButton
+                    size="small"
+                    onClick={() => {
+                      setSelectedTemplate(template);
+                      setDuplicateDialogOpen(true);
+                    }}
+                  >
+                    <Iconify icon={'eva:copy-fill' as any} width={16} />
                   </IconButton>
-                  <IconButton size="small" sx={{ color: 'error.main' }} onClick={() => { setSelectedTemplate(template); setDeleteDialogOpen(true); }}>
-                    <Iconify icon={"eva:trash-2-fill" as any} width={16} />
+                  <IconButton
+                    size="small"
+                    sx={{ color: 'error.main' }}
+                    onClick={() => {
+                      setSelectedTemplate(template);
+                      setDeleteDialogOpen(true);
+                    }}
+                  >
+                    <Iconify icon={'eva:trash-2-fill' as any} width={16} />
                   </IconButton>
                 </Box>
               </CardContent>
@@ -323,15 +341,15 @@ export function ChecklistTemplatesView() {
         onClose={handleActionMenuClose}
       >
         <MenuItem onClick={handleEditTemplate}>
-          <Iconify icon={"eva:edit-fill" as any} sx={{ mr: 1 }} />
+          <Iconify icon={'eva:edit-fill' as any} sx={{ mr: 1 }} />
           Edit
         </MenuItem>
         <MenuItem onClick={handleDuplicateTemplate}>
-          <Iconify icon={"eva:copy-fill" as any} sx={{ mr: 1 }} />
+          <Iconify icon={'eva:copy-fill' as any} sx={{ mr: 1 }} />
           Duplicate
         </MenuItem>
         <MenuItem onClick={handleDeleteTemplate} sx={{ color: 'error.main' }}>
-          <Iconify icon={"eva:trash-2-fill" as any} sx={{ mr: 1 }} />
+          <Iconify icon={'eva:trash-2-fill' as any} sx={{ mr: 1 }} />
           Delete
         </MenuItem>
       </Menu>
@@ -341,7 +359,8 @@ export function ChecklistTemplatesView() {
         <DialogTitle>Duplicate?</DialogTitle>
         <DialogContent>
           <Typography>
-            Are you sure you want to duplicate this checklist template? This will create a copy with &quot;(Copy)&quot; added to the name.
+            Are you sure you want to duplicate this checklist template? This will create a copy with
+            &quot;(Copy)&quot; added to the name.
           </Typography>
         </DialogContent>
         <DialogActions>
@@ -370,4 +389,3 @@ export function ChecklistTemplatesView() {
     </DashboardContent>
   );
 }
-

@@ -24,7 +24,8 @@ const mockChecklistTemplates = [
   {
     id: 1,
     name: 'Property Inspection Checklist',
-    description: 'This is an example checklist template for property inspection tasks. Feel free to edit the items below.',
+    description:
+      'This is an example checklist template for property inspection tasks. Feel free to edit the items below.',
     tasks: [
       'Check all lights and switches',
       'Test air conditioning',
@@ -92,7 +93,9 @@ export function ChecklistTemplateFormPage() {
     };
 
     const existingTemplates = loadChecklistTemplates();
-    const foundTemplate = existingTemplates.find((template: any) => template.id === parseInt(id || '0'));
+    const foundTemplate = existingTemplates.find(
+      (template: any) => template.id === parseInt(id || '0')
+    );
 
     if (isEdit && foundTemplate) {
       setFormData({
@@ -112,42 +115,44 @@ export function ChecklistTemplateFormPage() {
   }, [id, isEdit, isDuplicate]);
 
   const handleInputChange = (field: string, value: any) => {
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
       [field]: value,
     }));
   };
 
   const handleAddTask = () => {
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
       tasks: [...prev.tasks, ''],
     }));
   };
 
   const handleTaskChange = (index: number, value: string) => {
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
-      tasks: prev.tasks.map((task, i) => i === index ? value : task),
+      tasks: prev.tasks.map((task, i) => (i === index ? value : task)),
     }));
   };
 
   const handleRemoveTask = (index: number) => {
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
       tasks: prev.tasks.filter((_, i) => i !== index),
     }));
   };
 
   const handleSaveTemplate = () => {
-    const templatesData = JSON.parse(localStorage.getItem('checklistTemplates') || JSON.stringify(mockChecklistTemplates));
-    
+    const templatesData = JSON.parse(
+      localStorage.getItem('checklistTemplates') || JSON.stringify(mockChecklistTemplates)
+    );
+
     if (isDuplicate) {
       const newTemplate = {
         id: Date.now(),
         name: formData.name,
         description: formData.description,
-        tasks: formData.tasks.filter(task => task.trim() !== ''),
+        tasks: formData.tasks.filter((task) => task.trim() !== ''),
         active: formData.active,
       };
       const updatedTemplates = [...templatesData, newTemplate];
@@ -159,7 +164,7 @@ export function ChecklistTemplateFormPage() {
               ...template,
               name: formData.name,
               description: formData.description,
-              tasks: formData.tasks.filter(task => task.trim() !== ''),
+              tasks: formData.tasks.filter((task) => task.trim() !== ''),
               active: formData.active,
             }
           : template
@@ -170,20 +175,24 @@ export function ChecklistTemplateFormPage() {
         id: Date.now(),
         name: formData.name,
         description: formData.description,
-        tasks: formData.tasks.filter(task => task.trim() !== ''),
+        tasks: formData.tasks.filter((task) => task.trim() !== ''),
         active: formData.active,
       };
       const updatedTemplates = [...templatesData, newTemplate];
       localStorage.setItem('checklistTemplates', JSON.stringify(updatedTemplates));
     }
-    
+
     router.push('/tasks/checklist-templates');
   };
 
   const handleDeleteTemplate = () => {
     if (id) {
-      const templatesData = JSON.parse(localStorage.getItem('checklistTemplates') || JSON.stringify(mockChecklistTemplates));
-      const updatedTemplates = templatesData.filter((template: any) => template.id !== parseInt(id));
+      const templatesData = JSON.parse(
+        localStorage.getItem('checklistTemplates') || JSON.stringify(mockChecklistTemplates)
+      );
+      const updatedTemplates = templatesData.filter(
+        (template: any) => template.id !== parseInt(id)
+      );
       localStorage.setItem('checklistTemplates', JSON.stringify(updatedTemplates));
     }
     setDeleteDialogOpen(false);
@@ -202,7 +211,7 @@ export function ChecklistTemplateFormPage() {
         <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 2 }}>
           <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
             <IconButton onClick={() => router.push('/tasks/checklist-templates')}>
-              <Iconify icon={"eva:arrow-back-fill" as any} />
+              <Iconify icon={'eva:arrow-back-fill' as any} />
             </IconButton>
             <Typography variant="h4" sx={{ fontWeight: 600 }}>
               {getPageTitle()}
@@ -211,7 +220,10 @@ export function ChecklistTemplateFormPage() {
           <Button
             variant="contained"
             onClick={handleSaveTemplate}
-            disabled={!formData.name.trim() || formData.tasks.filter(task => task.trim() !== '').length === 0}
+            disabled={
+              !formData.name.trim() ||
+              formData.tasks.filter((task) => task.trim() !== '').length === 0
+            }
           >
             Save checklist template
           </Button>
@@ -250,7 +262,9 @@ export function ChecklistTemplateFormPage() {
           </Box>
 
           <Box sx={{ mb: 3 }}>
-            <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 2 }}>
+            <Box
+              sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 2 }}
+            >
               <Typography variant="h6" sx={{ fontWeight: 600 }}>
                 Checklist
               </Typography>
@@ -258,7 +272,7 @@ export function ChecklistTemplateFormPage() {
                 variant="contained"
                 size="small"
                 onClick={handleAddTask}
-                startIcon={<Iconify icon={"eva:plus-fill" as any} />}
+                startIcon={<Iconify icon={'eva:plus-fill' as any} />}
               >
                 Add
               </Button>
@@ -267,7 +281,7 @@ export function ChecklistTemplateFormPage() {
             {formData.tasks.map((task, index) => (
               <Box key={index} sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1 }}>
                 <IconButton size="small" sx={{ cursor: 'grab' }}>
-                  <Iconify icon={"eva:menu-fill" as any} />
+                  <Iconify icon={'eva:menu-fill' as any} />
                 </IconButton>
                 <TextField
                   fullWidth
@@ -281,13 +295,17 @@ export function ChecklistTemplateFormPage() {
                   onClick={() => handleRemoveTask(index)}
                   sx={{ color: 'error.main' }}
                 >
-                  <Iconify icon={"eva:trash-2-fill" as any} />
+                  <Iconify icon={'eva:trash-2-fill' as any} />
                 </IconButton>
               </Box>
             ))}
 
             {formData.tasks.length === 0 && (
-              <Typography variant="body2" color="text.secondary" sx={{ textAlign: 'center', py: 2 }}>
+              <Typography
+                variant="body2"
+                color="text.secondary"
+                sx={{ textAlign: 'center', py: 2 }}
+              >
                 No tasks added yet. Click &quot;Add&quot; to create your first task.
               </Typography>
             )}
@@ -318,7 +336,7 @@ export function ChecklistTemplateFormPage() {
                 variant="outlined"
                 color="error"
                 onClick={() => setDeleteDialogOpen(true)}
-                startIcon={<Iconify icon={"eva:trash-2-fill" as any} />}
+                startIcon={<Iconify icon={'eva:trash-2-fill' as any} />}
               >
                 Delete Template
               </Button>

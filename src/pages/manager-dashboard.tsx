@@ -57,11 +57,26 @@ export function ManagerDashboardPage() {
       // Load clients and properties from assigned users
       const clients = JSON.parse(localStorage.getItem('clients') || '[]');
       const properties = [
-        { id: '305034', name: 'La Dimora Del Cavaliere', location: 'Anguillara Sabazia, Italy', clientId: 'client1' },
+        {
+          id: '305034',
+          name: 'La Dimora Del Cavaliere',
+          location: 'Anguillara Sabazia, Italy',
+          clientId: 'client1',
+        },
         { id: '305035', name: 'Navigli', location: 'Milano, Italy', clientId: 'client1' },
         { id: '305225', name: 'Polacchi42', location: 'Roma, Italy', clientId: 'client2' },
-        { id: '305421', name: 'Superattico - Via Del Corso 43', location: 'Roma, Italy', clientId: 'client2' },
-        { id: '306532', name: 'Montecatini Terme', location: 'Montecatini Terme, Italy', clientId: 'client3' },
+        {
+          id: '305421',
+          name: 'Superattico - Via Del Corso 43',
+          location: 'Roma, Italy',
+          clientId: 'client2',
+        },
+        {
+          id: '306532',
+          name: 'Montecatini Terme',
+          location: 'Montecatini Terme, Italy',
+          clientId: 'client3',
+        },
         { id: '306533', name: 'Tuscany Villa', location: 'Florence, Italy', clientId: 'client3' },
         { id: '306534', name: 'Coastal Retreat', location: 'Amalfi, Italy', clientId: 'client4' },
       ];
@@ -69,7 +84,7 @@ export function ManagerDashboardPage() {
       // Get unique clients from assigned users
       const userClientIds = new Set<string>();
       users.forEach((u: User) => {
-        u.assignedClients?.forEach(clientId => userClientIds.add(clientId));
+        u.assignedClients?.forEach((clientId) => userClientIds.add(clientId));
       });
 
       const userClients = clients.filter((c: Client) => userClientIds.has(c.id));
@@ -78,7 +93,7 @@ export function ManagerDashboardPage() {
       // Get properties from assigned clients
       const userPropertyIds = new Set<string>();
       users.forEach((u: User) => {
-        u.assignedProperties?.forEach(propertyId => userPropertyIds.add(propertyId));
+        u.assignedProperties?.forEach((propertyId) => userPropertyIds.add(propertyId));
       });
 
       const userProperties = properties.filter((p: Property) => userPropertyIds.has(p.id));
@@ -88,19 +103,27 @@ export function ManagerDashboardPage() {
 
   const getStatusColor = (status?: string) => {
     switch (status) {
-      case 'active': return 'success';
-      case 'inactive': return 'warning';
-      case 'suspended': return 'error';
-      default: return 'default';
+      case 'active':
+        return 'success';
+      case 'inactive':
+        return 'warning';
+      case 'suspended':
+        return 'error';
+      default:
+        return 'default';
     }
   };
 
   const getStatusLabel = (status?: string) => {
     switch (status) {
-      case 'active': return 'Active';
-      case 'inactive': return 'Inactive';
-      case 'suspended': return 'Suspended';
-      default: return 'Active';
+      case 'active':
+        return 'Active';
+      case 'inactive':
+        return 'Inactive';
+      case 'suspended':
+        return 'Suspended';
+      default:
+        return 'Active';
     }
   };
 
@@ -111,7 +134,8 @@ export function ManagerDashboardPage() {
           Manager Dashboard
         </Typography>
         <Typography variant="body2" color="text.secondary">
-          Welcome back, {user?.name}! Here&apos;s a comprehensive overview of your team, clients, and business performance.
+          Welcome back, {user?.name}! Here&apos;s a comprehensive overview of your team, clients,
+          and business performance.
         </Typography>
       </Box>
 
@@ -197,20 +221,24 @@ export function ManagerDashboardPage() {
             <CardHeader title="Team Overview" />
             <CardContent>
               {assignedUsers.length === 0 ? (
-                <Typography variant="body2" color="text.secondary" sx={{ textAlign: 'center', py: 2 }}>
+                <Typography
+                  variant="body2"
+                  color="text.secondary"
+                  sx={{ textAlign: 'center', py: 2 }}
+                >
                   No team members assigned yet
                 </Typography>
               ) : (
                 <Stack spacing={2}>
                   {assignedUsers.map((member) => (
                     <Box key={member.id} sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-                      <Avatar 
-                        sx={{ 
+                      <Avatar
+                        sx={{
                           bgcolor: member.avatar ? 'transparent' : 'primary.main',
                           backgroundImage: member.avatar ? `url(${member.avatar})` : 'none',
                           backgroundSize: 'cover',
                           backgroundPosition: 'center',
-                          backgroundRepeat: 'no-repeat'
+                          backgroundRepeat: 'no-repeat',
                         }}
                       >
                         {!member.avatar && member.name.charAt(0).toUpperCase()}
@@ -240,7 +268,11 @@ export function ManagerDashboardPage() {
             <CardHeader title="Client Portfolio" />
             <CardContent>
               {assignedClients.length === 0 ? (
-                <Typography variant="body2" color="text.secondary" sx={{ textAlign: 'center', py: 2 }}>
+                <Typography
+                  variant="body2"
+                  color="text.secondary"
+                  sx={{ textAlign: 'center', py: 2 }}
+                >
                   No clients in portfolio yet
                 </Typography>
               ) : (
@@ -275,7 +307,11 @@ export function ManagerDashboardPage() {
             <CardHeader title="Properties Management" />
             <CardContent>
               {assignedProperties.length === 0 ? (
-                <Typography variant="body2" color="text.secondary" sx={{ textAlign: 'center', py: 2 }}>
+                <Typography
+                  variant="body2"
+                  color="text.secondary"
+                  sx={{ textAlign: 'center', py: 2 }}
+                >
                   No properties managed yet
                 </Typography>
               ) : (
@@ -293,7 +329,11 @@ export function ManagerDashboardPage() {
                           <Typography variant="caption" color="text.secondary">
                             {property.location}
                           </Typography>
-                          <Typography variant="caption" color="text.secondary" sx={{ display: 'block' }}>
+                          <Typography
+                            variant="caption"
+                            color="text.secondary"
+                            sx={{ display: 'block' }}
+                          >
                             ID: {property.id}
                           </Typography>
                         </CardContent>
@@ -315,30 +355,54 @@ export function ManagerDashboardPage() {
                 <Box>
                   <Stack direction="row" justifyContent="space-between" sx={{ mb: 1 }}>
                     <Typography variant="body2">Revenue Growth</Typography>
-                    <Typography variant="body2" sx={{ fontWeight: 600 }}>+12.5%</Typography>
+                    <Typography variant="body2" sx={{ fontWeight: 600 }}>
+                      +12.5%
+                    </Typography>
                   </Stack>
-                  <LinearProgress variant="determinate" value={75} sx={{ height: 8, borderRadius: 4 }} />
+                  <LinearProgress
+                    variant="determinate"
+                    value={75}
+                    sx={{ height: 8, borderRadius: 4 }}
+                  />
                 </Box>
                 <Box>
                   <Stack direction="row" justifyContent="space-between" sx={{ mb: 1 }}>
                     <Typography variant="body2">Client Retention</Typography>
-                    <Typography variant="body2" sx={{ fontWeight: 600 }}>96%</Typography>
+                    <Typography variant="body2" sx={{ fontWeight: 600 }}>
+                      96%
+                    </Typography>
                   </Stack>
-                  <LinearProgress variant="determinate" value={96} sx={{ height: 8, borderRadius: 4 }} />
+                  <LinearProgress
+                    variant="determinate"
+                    value={96}
+                    sx={{ height: 8, borderRadius: 4 }}
+                  />
                 </Box>
                 <Box>
                   <Stack direction="row" justifyContent="space-between" sx={{ mb: 1 }}>
                     <Typography variant="body2">Property Occupancy</Typography>
-                    <Typography variant="body2" sx={{ fontWeight: 600 }}>89%</Typography>
+                    <Typography variant="body2" sx={{ fontWeight: 600 }}>
+                      89%
+                    </Typography>
                   </Stack>
-                  <LinearProgress variant="determinate" value={89} sx={{ height: 8, borderRadius: 4 }} />
+                  <LinearProgress
+                    variant="determinate"
+                    value={89}
+                    sx={{ height: 8, borderRadius: 4 }}
+                  />
                 </Box>
                 <Box>
                   <Stack direction="row" justifyContent="space-between" sx={{ mb: 1 }}>
                     <Typography variant="body2">Team Productivity</Typography>
-                    <Typography variant="body2" sx={{ fontWeight: 600 }}>94%</Typography>
+                    <Typography variant="body2" sx={{ fontWeight: 600 }}>
+                      94%
+                    </Typography>
                   </Stack>
-                  <LinearProgress variant="determinate" value={94} sx={{ height: 8, borderRadius: 4 }} />
+                  <LinearProgress
+                    variant="determinate"
+                    value={94}
+                    sx={{ height: 8, borderRadius: 4 }}
+                  />
                 </Box>
               </Stack>
             </CardContent>
@@ -353,26 +417,42 @@ export function ManagerDashboardPage() {
               <Grid container spacing={2}>
                 <Grid size={{ xs: 6 }}>
                   <Box sx={{ textAlign: 'center', p: 2 }}>
-                    <Typography variant="h4" color="primary.main">98%</Typography>
-                    <Typography variant="caption" color="text.secondary">Response Rate</Typography>
+                    <Typography variant="h4" color="primary.main">
+                      98%
+                    </Typography>
+                    <Typography variant="caption" color="text.secondary">
+                      Response Rate
+                    </Typography>
                   </Box>
                 </Grid>
                 <Grid size={{ xs: 6 }}>
                   <Box sx={{ textAlign: 'center', p: 2 }}>
-                    <Typography variant="h4" color="success.main">4.8</Typography>
-                    <Typography variant="caption" color="text.secondary">Avg Rating</Typography>
+                    <Typography variant="h4" color="success.main">
+                      4.8
+                    </Typography>
+                    <Typography variant="caption" color="text.secondary">
+                      Avg Rating
+                    </Typography>
                   </Box>
                 </Grid>
                 <Grid size={{ xs: 6 }}>
                   <Box sx={{ textAlign: 'center', p: 2 }}>
-                    <Typography variant="h4" color="info.main">156</Typography>
-                    <Typography variant="caption" color="text.secondary">Tasks Completed</Typography>
+                    <Typography variant="h4" color="info.main">
+                      156
+                    </Typography>
+                    <Typography variant="caption" color="text.secondary">
+                      Tasks Completed
+                    </Typography>
                   </Box>
                 </Grid>
                 <Grid size={{ xs: 6 }}>
                   <Box sx={{ textAlign: 'center', p: 2 }}>
-                    <Typography variant="h4" color="warning.main">$45K</Typography>
-                    <Typography variant="caption" color="text.secondary">Monthly Revenue</Typography>
+                    <Typography variant="h4" color="warning.main">
+                      $45K
+                    </Typography>
+                    <Typography variant="caption" color="text.secondary">
+                      Monthly Revenue
+                    </Typography>
                   </Box>
                 </Grid>
               </Grid>
@@ -391,8 +471,12 @@ export function ManagerDashboardPage() {
                     <BarChart3 size={16} />
                   </Avatar>
                   <Box sx={{ flex: 1 }}>
-                    <Typography variant="body2">Monthly revenue report generated - $45,000</Typography>
-                    <Typography variant="caption" color="text.secondary">2 hours ago</Typography>
+                    <Typography variant="body2">
+                      Monthly revenue report generated - $45,000
+                    </Typography>
+                    <Typography variant="caption" color="text.secondary">
+                      2 hours ago
+                    </Typography>
                   </Box>
                 </Box>
                 <Divider />
@@ -401,8 +485,12 @@ export function ManagerDashboardPage() {
                     <Users size={16} />
                   </Avatar>
                   <Box sx={{ flex: 1 }}>
-                    <Typography variant="body2">New team member onboarded - Sarah Johnson</Typography>
-                    <Typography variant="caption" color="text.secondary">1 day ago</Typography>
+                    <Typography variant="body2">
+                      New team member onboarded - Sarah Johnson
+                    </Typography>
+                    <Typography variant="caption" color="text.secondary">
+                      1 day ago
+                    </Typography>
                   </Box>
                 </Box>
                 <Divider />
@@ -411,8 +499,12 @@ export function ManagerDashboardPage() {
                     <Building2 size={16} />
                   </Avatar>
                   <Box sx={{ flex: 1 }}>
-                    <Typography variant="body2">New client contract signed - Premium Properties</Typography>
-                    <Typography variant="caption" color="text.secondary">3 days ago</Typography>
+                    <Typography variant="body2">
+                      New client contract signed - Premium Properties
+                    </Typography>
+                    <Typography variant="caption" color="text.secondary">
+                      3 days ago
+                    </Typography>
                   </Box>
                 </Box>
                 <Divider />
@@ -421,8 +513,12 @@ export function ManagerDashboardPage() {
                     <Star size={16} />
                   </Avatar>
                   <Box sx={{ flex: 1 }}>
-                    <Typography variant="body2">Client satisfaction survey completed - 4.8/5 rating</Typography>
-                    <Typography variant="caption" color="text.secondary">1 week ago</Typography>
+                    <Typography variant="body2">
+                      Client satisfaction survey completed - 4.8/5 rating
+                    </Typography>
+                    <Typography variant="caption" color="text.secondary">
+                      1 week ago
+                    </Typography>
                   </Box>
                 </Box>
               </Stack>

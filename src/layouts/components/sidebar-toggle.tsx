@@ -49,9 +49,9 @@ export function SidebarToggle({ sx }: SidebarToggleProps) {
           ...(Array.isArray(sx) ? sx : [sx]),
         ]}
       >
-        <Iconify 
-          icon={(collapsed ? 'solar:arrow-right-bold' : 'solar:arrow-left-bold') as any} 
-          width={16} 
+        <Iconify
+          icon={(collapsed ? 'solar:arrow-right-bold' : 'solar:arrow-left-bold') as any}
+          width={16}
         />
       </IconButton>
     </Tooltip>

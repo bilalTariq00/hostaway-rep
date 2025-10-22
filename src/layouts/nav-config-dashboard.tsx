@@ -3,20 +3,21 @@ import { SvgColor } from 'src/components/svg-color';
 // ----------------------------------------------------------------------
 
 // Function to filter navigation items based on user role
-export const filterNavItemsByRole = (items: NavItem[], userRole: string): NavItem[] => items.filter(item => {
+export const filterNavItemsByRole = (items: NavItem[], userRole: string): NavItem[] =>
+  items.filter((item) => {
     // If no roles specified, item is visible to all
     if (!item.roles || item.roles.length === 0) {
       return true;
     }
-    
+
     // Check if user role is in the allowed roles
     const hasAccess = item.roles.includes(userRole);
-    
+
     // If item has children, filter them too
     if (hasAccess && item.children) {
       item.children = filterNavItemsByRole(item.children, userRole);
     }
-    
+
     return hasAccess;
   });
 

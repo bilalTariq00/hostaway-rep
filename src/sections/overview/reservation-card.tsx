@@ -20,7 +20,15 @@ type ReservationCardProps = CardProps & {
   color?: PaletteColorKey;
 };
 
-export function ReservationCard({ title, value, subtitle, icon, color = 'primary', sx, ...other }: ReservationCardProps) {
+export function ReservationCard({
+  title,
+  value,
+  subtitle,
+  icon,
+  color = 'primary',
+  sx,
+  ...other
+}: ReservationCardProps) {
   const theme = useTheme();
 
   return (
@@ -38,14 +46,12 @@ export function ReservationCard({ title, value, subtitle, icon, color = 'primary
       ]}
       {...other}
     >
-      <Box sx={{ width: 48, height: 48, mb: 3 }}>
-        {icon || <Box sx={{ fontSize: 24 }}>📊</Box>}
-      </Box>
+      <Box sx={{ width: 48, height: 48, mb: 3 }}>{icon || <Box sx={{ fontSize: 24 }}>📊</Box>}</Box>
 
       <Box sx={{ mb: 1, typography: 'subtitle2' }}>{title}</Box>
-      
+
       <Box sx={{ typography: 'h4', mb: 1 }}>{value}</Box>
-      
+
       {subtitle && (
         <Typography variant="body2" sx={{ color: 'text.secondary' }}>
           {subtitle}

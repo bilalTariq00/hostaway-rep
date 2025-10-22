@@ -45,7 +45,7 @@ const mockCharges = [
     dueDate: '09 Sep 2025 10:58 pm',
     chargeDate: '09 Sep 2025 11:00 pm',
     chargeId: '20614431',
-    amount: 2207.00,
+    amount: 2207.0,
     channel: 'VRBO',
     balance: { paid: 0, total: 2207 },
   },
@@ -62,7 +62,7 @@ const mockCharges = [
     dueDate: '12 Jul 2025 1:00 am',
     chargeDate: '',
     chargeId: '12515684',
-    amount: 591.00,
+    amount: 591.0,
     channel: 'VRBO',
     balance: { paid: 0, total: 591 },
   },
@@ -79,7 +79,7 @@ const mockCharges = [
     dueDate: '12 Jul 2025 1:00 am',
     chargeDate: '',
     chargeId: '12515684',
-    amount: 196.00,
+    amount: 196.0,
     channel: 'VRBO',
     balance: { paid: 0, total: 196 },
   },
@@ -96,7 +96,7 @@ const mockCharges = [
     dueDate: '15 May 2025 3:31 am',
     chargeDate: '15 May 2025 3:31 am',
     chargeId: '12515684',
-    amount: 340.00,
+    amount: 340.0,
     channel: 'Direct',
     balance: { paid: 340, total: 340 },
   },
@@ -113,7 +113,7 @@ const mockCharges = [
     dueDate: '12 Jul 2025 1:00 am',
     chargeDate: '',
     chargeId: '12515684',
-    amount: 591.00,
+    amount: 591.0,
     channel: 'VRBO',
     balance: { paid: 0, total: 591 },
   },
@@ -130,7 +130,7 @@ const mockCharges = [
     dueDate: '15 May 2025 3:31 am',
     chargeDate: '15 May 2025 3:31 am',
     chargeId: '12515684',
-    amount: 340.00,
+    amount: 340.0,
     channel: 'Direct',
     balance: { paid: 340, total: 340 },
   },
@@ -147,7 +147,7 @@ const mockCharges = [
     dueDate: '12 Mar 2025 2:04 am',
     chargeDate: '',
     chargeId: '12515684',
-    amount: 340.00,
+    amount: 340.0,
     channel: 'Hostaway',
     balance: { paid: 0, total: 340 },
   },
@@ -164,7 +164,7 @@ const mockCharges = [
     dueDate: '04 Mar 2025 6:10 pm',
     chargeDate: '04 Mar 2025 6:15 pm',
     chargeId: '14470884',
-    amount: 591.00,
+    amount: 591.0,
     channel: 'VRBO',
     balance: { paid: 0, total: 591 },
   },
@@ -181,7 +181,7 @@ const mockCharges = [
     dueDate: '03 Feb 2025 4:28 am',
     chargeDate: '03 Feb 2025 4:30 am',
     chargeId: '13628282',
-    amount: 196.00,
+    amount: 196.0,
     channel: 'Google',
     balance: { paid: 0, total: 196 },
   },
@@ -269,14 +269,14 @@ export function ChargesView() {
   };
 
   const handleColumnToggle = (column: string) => {
-    setVisibleColumns(prev => ({
+    setVisibleColumns((prev) => ({
       ...prev,
-      [column]: !prev[column as keyof typeof prev]
+      [column]: !prev[column as keyof typeof prev],
     }));
   };
 
   const handleReservationToggle = (reservationId: string) => {
-    setExpandedReservations(prev => {
+    setExpandedReservations((prev) => {
       const newSet = new Set(prev);
       if (newSet.has(reservationId)) {
         newSet.delete(reservationId);
@@ -290,9 +290,11 @@ export function ChargesView() {
   const handleSaveCharge = (chargeData: any) => {
     if (isEditMode && selectedCharge) {
       // Update existing charge
-      setCharges(prev => prev.map(charge => 
-        charge.id === selectedCharge.id ? { ...charge, ...chargeData } : charge
-      ));
+      setCharges((prev) =>
+        prev.map((charge) =>
+          charge.id === selectedCharge.id ? { ...charge, ...chargeData } : charge
+        )
+      );
     } else {
       // Add new charge
       const newCharge = {
@@ -300,82 +302,95 @@ export function ChargesView() {
         id: Date.now(),
         chargeId: `CHG-${Date.now()}`,
       };
-      setCharges(prev => [...prev, newCharge]);
+      setCharges((prev) => [...prev, newCharge]);
     }
     handleSidebarClose();
   };
 
   const handleRetryCharge = () => {
     if (selectedCharge) {
-      setCharges(prev => prev.map(charge => 
-        charge.id === selectedCharge.id ? { ...charge, status: 'PENDING' } : charge
-      ));
+      setCharges((prev) =>
+        prev.map((charge) =>
+          charge.id === selectedCharge.id ? { ...charge, status: 'PENDING' } : charge
+        )
+      );
     }
     handleActionMenuClose();
   };
 
   const handleCancelCharge = () => {
     if (selectedCharge) {
-      setCharges(prev => prev.map(charge => 
-        charge.id === selectedCharge.id ? { ...charge, status: 'CANCELLED' } : charge
-      ));
+      setCharges((prev) =>
+        prev.map((charge) =>
+          charge.id === selectedCharge.id ? { ...charge, status: 'CANCELLED' } : charge
+        )
+      );
     }
     handleActionMenuClose();
   };
 
-
   // Filter charges based on active filter tab
   const getFilteredCharges = () => {
     let filtered = charges;
-    
-    if (filterTab === 1) { // Pending
-      filtered = charges.filter(charge => charge.status === 'PENDING' || charge.status === 'DUE');
-    } else if (filterTab === 2) { // Past Due
-      filtered = charges.filter(charge => charge.status === 'FAILED' || charge.status === 'OVERDUE');
-    } else if (filterTab === 3) { // By Reservation
+
+    if (filterTab === 1) {
+      // Pending
+      filtered = charges.filter((charge) => charge.status === 'PENDING' || charge.status === 'DUE');
+    } else if (filterTab === 2) {
+      // Past Due
+      filtered = charges.filter(
+        (charge) => charge.status === 'FAILED' || charge.status === 'OVERDUE'
+      );
+    } else if (filterTab === 3) {
+      // By Reservation
       // Group by reservation - show all for grouping
       filtered = charges;
     }
-    
+
     // Apply search filter
     if (searchTerm) {
-      filtered = filtered.filter(charge => 
-        charge.guestName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        charge.listing.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        charge.chargeName.toLowerCase().includes(searchTerm.toLowerCase())
+      filtered = filtered.filter(
+        (charge) =>
+          charge.guestName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          charge.listing.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          charge.chargeName.toLowerCase().includes(searchTerm.toLowerCase())
       );
     }
-    
+
     return filtered;
   };
 
   // Group charges by reservation for "By Reservation" view
   const getGroupedCharges = () => {
     const filtered = getFilteredCharges();
-    
-    if (filterTab !== 3) { // Not "By Reservation"
-      return filtered.map(charge => ({ type: 'charge', data: charge }));
+
+    if (filterTab !== 3) {
+      // Not "By Reservation"
+      return filtered.map((charge) => ({ type: 'charge', data: charge }));
     }
-    
+
     // Group by reservation
-    const grouped = filtered.reduce((acc, charge) => {
-      const reservationId = charge.reservationId;
-      if (!acc[reservationId]) {
-        acc[reservationId] = [];
-      }
-      acc[reservationId].push(charge);
-      return acc;
-    }, {} as Record<string, any[]>);
-    
+    const grouped = filtered.reduce(
+      (acc, charge) => {
+        const reservationId = charge.reservationId;
+        if (!acc[reservationId]) {
+          acc[reservationId] = [];
+        }
+        acc[reservationId].push(charge);
+        return acc;
+      },
+      {} as Record<string, any[]>
+    );
+
     // Convert to array format for rendering
-    const result: Array<{ type: 'reservation' | 'charge', data: any }> = [];
-    
+    const result: Array<{ type: 'reservation' | 'charge'; data: any }> = [];
+
     Object.entries(grouped).forEach(([reservationId, reservationCharges]) => {
       // Add reservation summary row
       const totalAmount = reservationCharges.reduce((sum, charge) => sum + charge.amount, 0);
       const paidAmount = reservationCharges.reduce((sum, charge) => sum + charge.balance.paid, 0);
       const unpaidAmount = totalAmount - paidAmount;
-      
+
       result.push({
         type: 'reservation',
         data: {
@@ -389,18 +404,18 @@ export function ChargesView() {
           paidAmount,
           unpaidAmount,
           charges: reservationCharges,
-          status: unpaidAmount > 0 ? 'UNPAID' : 'PAID'
-        }
+          status: unpaidAmount > 0 ? 'UNPAID' : 'PAID',
+        },
       });
-      
+
       // Add individual charge rows if expanded
       if (expandedReservations.has(reservationId)) {
-        reservationCharges.forEach(charge => {
+        reservationCharges.forEach((charge) => {
           result.push({ type: 'charge', data: charge });
         });
       }
     });
-    
+
     return result;
   };
 
@@ -410,39 +425,56 @@ export function ChargesView() {
   const endIndex = startIndex + rowsPerPage;
   const currentCharges = groupedCharges.slice(startIndex, endIndex);
 
-  const formatCurrency = (amount: number) => new Intl.NumberFormat('en-US', {
-    style: 'currency',
-    currency: 'EUR',
-  }).format(amount);
+  const formatCurrency = (amount: number) =>
+    new Intl.NumberFormat('en-US', {
+      style: 'currency',
+      currency: 'EUR',
+    }).format(amount);
 
   const getStatusColor = (status: string) => {
     switch (status) {
-      case 'PAID': return 'success';
-      case 'PENDING': return 'warning';
-      case 'DUE': return 'info';
-      case 'FAILED': return 'error';
-      case 'CANCELLED': return 'default';
-      default: return 'default';
+      case 'PAID':
+        return 'success';
+      case 'PENDING':
+        return 'warning';
+      case 'DUE':
+        return 'info';
+      case 'FAILED':
+        return 'error';
+      case 'CANCELLED':
+        return 'default';
+      default:
+        return 'default';
     }
   };
 
   const getChannelIcon = (channel: string) => {
     switch (channel) {
-      case 'VRBO': return 'W';
-      case 'Google': return 'G';
-      case 'Hostaway': return 'H';
-      case 'Direct': return 'D';
-      default: return '?';
+      case 'VRBO':
+        return 'W';
+      case 'Google':
+        return 'G';
+      case 'Hostaway':
+        return 'H';
+      case 'Direct':
+        return 'D';
+      default:
+        return '?';
     }
   };
 
   const getChannelColor = (channel: string) => {
     switch (channel) {
-      case 'VRBO': return '#FF5A5F';
-      case 'Google': return '#4285F4';
-      case 'Hostaway': return '#FF6B35';
-      case 'Direct': return '#00C853';
-      default: return '#9E9E9E';
+      case 'VRBO':
+        return '#FF5A5F';
+      case 'Google':
+        return '#4285F4';
+      case 'Hostaway':
+        return '#FF6B35';
+      case 'Direct':
+        return '#00C853';
+      default:
+        return '#9E9E9E';
     }
   };
 
@@ -458,18 +490,22 @@ export function ChargesView() {
             <Button
               variant="outlined"
               onClick={handleDownloadMenuOpen}
-              startIcon={<Iconify icon={"eva:download-fill" as any} />}
-              sx={{ bgcolor: 'primary.main', color: 'white', '&:hover': { bgcolor: 'primary.dark' } }}
+              startIcon={<Iconify icon={'eva:download-fill' as any} />}
+              sx={{
+                bgcolor: 'primary.main',
+                color: 'white',
+                '&:hover': { bgcolor: 'primary.dark' },
+              }}
             >
               Download report
             </Button>
             <Button
               variant="contained"
               onClick={handleAddCharge}
-              startIcon={<Iconify icon={"eva:plus-fill" as any} />}
+              startIcon={<Iconify icon={'eva:plus-fill' as any} />}
               sx={{ bgcolor: 'primary.main', '&:hover': { bgcolor: 'primary.dark' } }}
             >
-               Add transaction
+              Add transaction
             </Button>
           </Box>
         </Box>
@@ -504,17 +540,17 @@ export function ChargesView() {
         <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
           <Button
             variant="outlined"
-            startIcon={<Iconify icon={"eva:funnel-fill" as any} />}
-            sx={{ 
-              bgcolor: 'grey.100', 
+            startIcon={<Iconify icon={'eva:funnel-fill' as any} />}
+            sx={{
+              bgcolor: 'grey.100',
               color: 'text.primary',
               borderColor: 'grey.300',
-              '&:hover': { bgcolor: 'grey.200' }
+              '&:hover': { bgcolor: 'grey.200' },
             }}
           >
             Filters
           </Button>
-          
+
           {/* Filter Tabs */}
           <Box sx={{ display: 'flex', gap: 1 }}>
             {['All', 'Pending', 'Past Due', 'By Reservation', 'No Grouping'].map((label, index) => (
@@ -542,20 +578,20 @@ export function ChargesView() {
           </Box>
         </Box>
 
-            <TextField
+        <TextField
           placeholder="Search"
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
           sx={{ width: 200 }}
-              InputProps={{
-                startAdornment: (
-                  <InputAdornment position="start">
-                    <Iconify icon={"eva:search-fill" as any} />
-                  </InputAdornment>
-                ),
-              }}
-            />
-        </Box>
+          InputProps={{
+            startAdornment: (
+              <InputAdornment position="start">
+                <Iconify icon={'eva:search-fill' as any} />
+              </InputAdornment>
+            ),
+          }}
+        />
+      </Box>
 
       {/* Charges Table */}
       <Paper sx={{ mb: 3 }}>
@@ -570,7 +606,7 @@ export function ChargesView() {
                     <TableCell>Balance</TableCell>
                     <TableCell>Status</TableCell>
                     <TableCell>Reservation</TableCell>
-                <TableCell>Listing</TableCell>
+                    <TableCell>Listing</TableCell>
                     <TableCell>Reservation dates</TableCell>
                     <TableCell>Actions</TableCell>
                   </>
@@ -579,8 +615,12 @@ export function ChargesView() {
                   <>
                     {visibleColumns.guestName && <TableCell>Guest name</TableCell>}
                     {visibleColumns.listing && <TableCell>Listing</TableCell>}
-                    {visibleColumns.reservationCheckIn && <TableCell>Reservation check-in</TableCell>}
-                    {visibleColumns.reservationCheckOut && <TableCell>Reservation check-out</TableCell>}
+                    {visibleColumns.reservationCheckIn && (
+                      <TableCell>Reservation check-in</TableCell>
+                    )}
+                    {visibleColumns.reservationCheckOut && (
+                      <TableCell>Reservation check-out</TableCell>
+                    )}
                     {visibleColumns.type && <TableCell>Type</TableCell>}
                     {visibleColumns.chargeName && <TableCell>Charge name</TableCell>}
                     {visibleColumns.status && <TableCell>Status</TableCell>}
@@ -593,8 +633,8 @@ export function ChargesView() {
                 )}
               </TableRow>
               {/* Floating sticky settings icon */}
-              <IconButton 
-                size="small" 
+              <IconButton
+                size="small"
                 onClick={handleSettingsMenuOpen}
                 sx={{
                   position: 'absolute',
@@ -607,10 +647,10 @@ export function ChargesView() {
                   zIndex: 3,
                   '&:hover': {
                     bgcolor: 'action.hover',
-                  }
+                  },
                 }}
               >
-                <Iconify icon={"eva:settings-fill" as any} width={16} />
+                <Iconify icon={'eva:settings-fill' as any} width={16} />
               </IconButton>
             </TableHead>
             <TableBody>
@@ -618,7 +658,7 @@ export function ChargesView() {
                 if (item.type === 'reservation') {
                   const reservation = item.data;
                   const isExpanded = expandedReservations.has(reservation.reservationId);
-                  
+
                   return (
                     <React.Fragment key={`reservation-${reservation.reservationId}`}>
                       {/* Reservation Summary Row */}
@@ -635,7 +675,7 @@ export function ChargesView() {
                               justifyContent: 'center',
                               color: 'white',
                               fontSize: '0.75rem',
-                              fontWeight: 600
+                              fontWeight: 600,
                             }}
                           >
                             {getChannelIcon(reservation.channel)}
@@ -644,7 +684,8 @@ export function ChargesView() {
                         <TableCell>
                           <Box sx={{ display: 'flex', flexDirection: 'column', gap: 0.5 }}>
                             <Typography variant="body2" sx={{ fontWeight: 500 }}>
-                              {formatCurrency(reservation.paidAmount)} of {formatCurrency(reservation.totalAmount)}
+                              {formatCurrency(reservation.paidAmount)} of{' '}
+                              {formatCurrency(reservation.totalAmount)}
                             </Typography>
                             <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
                               <Box
@@ -652,14 +693,16 @@ export function ChargesView() {
                                   width: 6,
                                   height: 6,
                                   borderRadius: '50%',
-                                  bgcolor: reservation.status === 'UNPAID' ? 'error.main' : 'success.main'
+                                  bgcolor:
+                                    reservation.status === 'UNPAID' ? 'error.main' : 'success.main',
                                 }}
                               />
-                              <Typography 
-                                variant="caption" 
-                                sx={{ 
-                                  color: reservation.status === 'UNPAID' ? 'error.main' : 'success.main',
-                                  fontWeight: 500
+                              <Typography
+                                variant="caption"
+                                sx={{
+                                  color:
+                                    reservation.status === 'UNPAID' ? 'error.main' : 'success.main',
+                                  fontWeight: 500,
                                 }}
                               >
                                 {reservation.status === 'UNPAID' ? 'Unpaid' : 'Paid'}
@@ -671,21 +714,28 @@ export function ChargesView() {
                           <Chip
                             label="MODIFIED"
                             size="small"
-                            sx={{ bgcolor: 'info.light', color: 'info.contrastText', fontWeight: 500 }}
+                            sx={{
+                              bgcolor: 'info.light',
+                              color: 'info.contrastText',
+                              fontWeight: 500,
+                            }}
                           />
                         </TableCell>
-                  <TableCell>
-                    <Typography variant="body2" sx={{ fontWeight: 500 }}>
+                        <TableCell>
+                          <Typography variant="body2" sx={{ fontWeight: 500 }}>
                             {reservation.guestName} ({reservation.reservationId})
                           </Typography>
                         </TableCell>
                         <TableCell>
-                          <Typography variant="body2" sx={{ color: 'primary.main', cursor: 'pointer' }}>
+                          <Typography
+                            variant="body2"
+                            sx={{ color: 'primary.main', cursor: 'pointer' }}
+                          >
                             {reservation.listing}
-                    </Typography>
-                  </TableCell>
-                  <TableCell>
-                    <Typography variant="body2">
+                          </Typography>
+                        </TableCell>
+                        <TableCell>
+                          <Typography variant="body2">
                             {reservation.checkIn} - {reservation.checkOut}
                           </Typography>
                         </TableCell>
@@ -695,66 +745,70 @@ export function ChargesView() {
                               size="small"
                               onClick={(e) => handleActionMenuOpen(e, reservation)}
                             >
-                              <Iconify icon={"eva:more-vertical-fill" as any} />
+                              <Iconify icon={'eva:more-vertical-fill' as any} />
                             </IconButton>
                             <IconButton
                               size="small"
                               onClick={() => handleReservationToggle(reservation.reservationId)}
                             >
-                              <Iconify 
-                                icon={isExpanded ? "eva:chevron-up-fill" : "eva:chevron-down-fill" as any} 
+                              <Iconify
+                                icon={
+                                  isExpanded
+                                    ? 'eva:chevron-up-fill'
+                                    : ('eva:chevron-down-fill' as any)
+                                }
                               />
                             </IconButton>
                           </Box>
                         </TableCell>
                       </TableRow>
-                      
+
                       {/* Expanded Charge Details */}
-                      {isExpanded && reservation.charges.map((charge: any) => (
-                        <TableRow key={`charge-${charge.id}`} sx={{ bgcolor: 'background.paper' }}>
-                          <TableCell colSpan={2}>
-                            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                              <Chip
-                                label={charge.type}
+                      {isExpanded &&
+                        reservation.charges.map((charge: any) => (
+                          <TableRow
+                            key={`charge-${charge.id}`}
+                            sx={{ bgcolor: 'background.paper' }}
+                          >
+                            <TableCell colSpan={2}>
+                              <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                                <Chip
+                                  label={charge.type}
+                                  size="small"
+                                  sx={{ bgcolor: 'success.main', color: 'white', fontWeight: 500 }}
+                                />
+                                <Typography variant="body2" sx={{ fontWeight: 500 }}>
+                                  {formatCurrency(charge.amount)}
+                                </Typography>
+                              </Box>
+                            </TableCell>
+                            <TableCell>
+                              <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
+                                <Chip
+                                  label={charge.status}
+                                  size="small"
+                                  color={getStatusColor(charge.status) as any}
+                                  sx={{ fontWeight: 500 }}
+                                />
+                                <Iconify icon={'eva:info-fill' as any} width={14} />
+                              </Box>
+                            </TableCell>
+                            <TableCell>
+                              <Typography variant="body2">Due date: {charge.dueDate}</Typography>
+                            </TableCell>
+                            <TableCell>
+                              <Typography variant="body2">{charge.chargeName}</Typography>
+                            </TableCell>
+                            <TableCell>
+                              <IconButton
                                 size="small"
-                                sx={{ bgcolor: 'success.main', color: 'white', fontWeight: 500 }}
-                              />
-                              <Typography variant="body2" sx={{ fontWeight: 500 }}>
-                                {formatCurrency(charge.amount)}
-                              </Typography>
-                            </Box>
-                          </TableCell>
-                          <TableCell>
-                            <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
-                              <Chip
-                                label={charge.status}
-                                size="small"
-                                color={getStatusColor(charge.status) as any}
-                                sx={{ fontWeight: 500 }}
-                              />
-                              <Iconify icon={"eva:info-fill" as any} width={14} />
-                            </Box>
-                          </TableCell>
-                          <TableCell>
-                            <Typography variant="body2">
-                              Due date: {charge.dueDate}
-                    </Typography>
-                  </TableCell>
-                  <TableCell>
-                    <Typography variant="body2">
-                              {charge.chargeName}
-                    </Typography>
-                  </TableCell>
-                          <TableCell>
-                            <IconButton
-                              size="small"
-                              onClick={(e) => handleActionMenuOpen(e, charge)}
-                            >
-                              <Iconify icon={"eva:more-vertical-fill" as any} />
-                            </IconButton>
-                          </TableCell>
-                        </TableRow>
-                      ))}
+                                onClick={(e) => handleActionMenuOpen(e, charge)}
+                              >
+                                <Iconify icon={'eva:more-vertical-fill' as any} />
+                              </IconButton>
+                            </TableCell>
+                          </TableRow>
+                        ))}
                     </React.Fragment>
                   );
                 } else {
@@ -764,95 +818,86 @@ export function ChargesView() {
                     <TableRow key={charge.id} hover>
                       {visibleColumns.guestName && (
                         <TableCell>
-                          <Typography variant="body2" sx={{ fontWeight: 500, color: 'primary.main', cursor: 'pointer' }}>
+                          <Typography
+                            variant="body2"
+                            sx={{ fontWeight: 500, color: 'primary.main', cursor: 'pointer' }}
+                          >
                             {charge.guestName}
                           </Typography>
                         </TableCell>
                       )}
                       {visibleColumns.listing && (
                         <TableCell>
-                          <Typography variant="body2" sx={{ color: 'primary.main', cursor: 'pointer' }}>
+                          <Typography
+                            variant="body2"
+                            sx={{ color: 'primary.main', cursor: 'pointer' }}
+                          >
                             {charge.listing}
                           </Typography>
                         </TableCell>
                       )}
                       {visibleColumns.reservationCheckIn && (
-                  <TableCell>
-                    <Typography variant="body2">
-                      {charge.checkIn}
-                    </Typography>
-                  </TableCell>
+                        <TableCell>
+                          <Typography variant="body2">{charge.checkIn}</Typography>
+                        </TableCell>
                       )}
                       {visibleColumns.reservationCheckOut && (
-                  <TableCell>
-                    <Typography variant="body2">
-                      {charge.checkOut}
-                    </Typography>
-                  </TableCell>
+                        <TableCell>
+                          <Typography variant="body2">{charge.checkOut}</Typography>
+                        </TableCell>
                       )}
                       {visibleColumns.type && (
-                  <TableCell>
+                        <TableCell>
                           <Chip
                             label={charge.type}
                             size="small"
                             sx={{ bgcolor: 'primary.main', color: 'white', fontWeight: 500 }}
                           />
-                  </TableCell>
+                        </TableCell>
                       )}
                       {visibleColumns.chargeName && (
-                  <TableCell>
-                    <Typography variant="body2">
-                      {charge.chargeName}
-                    </Typography>
-                  </TableCell>
+                        <TableCell>
+                          <Typography variant="body2">{charge.chargeName}</Typography>
+                        </TableCell>
                       )}
                       {visibleColumns.status && (
-                  <TableCell>
-                    <Chip
-                      label={charge.status}
-                      size="small"
+                        <TableCell>
+                          <Chip
+                            label={charge.status}
+                            size="small"
                             color={getStatusColor(charge.status) as any}
                             sx={{ fontWeight: 500 }}
-                    />
-                  </TableCell>
+                          />
+                        </TableCell>
                       )}
                       {visibleColumns.dueDate && (
-                  <TableCell>
-                    <Typography variant="body2">
-                      {charge.dueDate}
-                    </Typography>
-                  </TableCell>
+                        <TableCell>
+                          <Typography variant="body2">{charge.dueDate}</Typography>
+                        </TableCell>
                       )}
                       {visibleColumns.chargeDate && (
-                  <TableCell>
-                    <Typography variant="body2">
-                            {charge.chargeDate || '-'}
-                    </Typography>
-                  </TableCell>
+                        <TableCell>
+                          <Typography variant="body2">{charge.chargeDate || '-'}</Typography>
+                        </TableCell>
                       )}
                       {visibleColumns.chargeId && (
-                  <TableCell>
-                    <Typography variant="body2">
-                      {charge.chargeId}
-                    </Typography>
-                  </TableCell>
+                        <TableCell>
+                          <Typography variant="body2">{charge.chargeId}</Typography>
+                        </TableCell>
                       )}
                       {visibleColumns.amount && (
-                  <TableCell align="right">
-                    <Typography variant="body2" sx={{ fontWeight: 500 }}>
-                      {formatCurrency(charge.amount)}
-                    </Typography>
+                        <TableCell align="right">
+                          <Typography variant="body2" sx={{ fontWeight: 500 }}>
+                            {formatCurrency(charge.amount)}
+                          </Typography>
                         </TableCell>
                       )}
                       <TableCell>
-                        <IconButton
-                          size="small"
-                          onClick={(e) => handleActionMenuOpen(e, charge)}
-                        >
-                          <Iconify icon={"eva:more-vertical-fill" as any} />
+                        <IconButton size="small" onClick={(e) => handleActionMenuOpen(e, charge)}>
+                          <Iconify icon={'eva:more-vertical-fill' as any} />
                         </IconButton>
-                  </TableCell>
-                </TableRow>
+                      </TableCell>
+                    </TableRow>
                   );
                 }
               })}
@@ -893,18 +938,14 @@ export function ChargesView() {
             {isEditMode ? 'Edit transaction' : 'Add transaction'}
           </Typography>
           <IconButton onClick={handleSidebarClose}>
-            <Iconify icon={"eva:close-fill" as any} />
+            <Iconify icon={'eva:close-fill' as any} />
           </IconButton>
         </Box>
 
         <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
           <FormControl fullWidth>
             <InputLabel>Type*</InputLabel>
-            <Select 
-              label="Type*" 
-              defaultValue="charge"
-              disabled={isEditMode}
-            >
+            <Select label="Type*" defaultValue="charge" disabled={isEditMode}>
               <MenuItem value="charge">Charge</MenuItem>
               <MenuItem value="refund">Refund</MenuItem>
             </Select>
@@ -973,18 +1014,20 @@ export function ChargesView() {
               Schedule charge
             </Typography>
             <Box sx={{ display: 'flex', gap: 1 }}>
-              <Button variant="contained" size="small">Register now</Button>
-              <Button variant="outlined" size="small">On date</Button>
-              <Button variant="outlined" size="small">On event</Button>
+              <Button variant="contained" size="small">
+                Register now
+              </Button>
+              <Button variant="outlined" size="small">
+                On date
+              </Button>
+              <Button variant="outlined" size="small">
+                On event
+              </Button>
             </Box>
           </Box>
 
           <Box sx={{ display: 'flex', gap: 2, mt: 4 }}>
-            <Button
-              fullWidth
-              variant="outlined"
-              onClick={handleSidebarClose}
-            >
+            <Button fullWidth variant="outlined" onClick={handleSidebarClose}>
               Cancel
             </Button>
             <Button
@@ -1006,15 +1049,15 @@ export function ChargesView() {
         onClose={handleDownloadMenuClose}
       >
         <MenuItem onClick={handleDownloadMenuClose}>
-          <Iconify icon={"eva:file-text-fill" as any} sx={{ mr: 1 }} />
+          <Iconify icon={'eva:file-text-fill' as any} sx={{ mr: 1 }} />
           Export to Excel
         </MenuItem>
         <MenuItem onClick={handleDownloadMenuClose}>
-          <Iconify icon={"eva:file-pdf-fill" as any} sx={{ mr: 1 }} />
+          <Iconify icon={'eva:file-pdf-fill' as any} sx={{ mr: 1 }} />
           Export to PDF
         </MenuItem>
         <MenuItem onClick={handleDownloadMenuClose}>
-          <Iconify icon={"eva:file-csv-fill" as any} sx={{ mr: 1 }} />
+          <Iconify icon={'eva:file-csv-fill' as any} sx={{ mr: 1 }} />
           Export to CSV
         </MenuItem>
       </Menu>
@@ -1026,31 +1069,31 @@ export function ChargesView() {
         onClose={handleActionMenuClose}
       >
         <MenuItem onClick={() => handleEditCharge(selectedCharge)}>
-          <Iconify icon={"eva:edit-fill" as any} sx={{ mr: 1 }} />
+          <Iconify icon={'eva:edit-fill' as any} sx={{ mr: 1 }} />
           Edit
         </MenuItem>
         <MenuItem onClick={handleActionMenuClose}>
-          <Iconify icon={"eva:link-fill" as any} sx={{ mr: 1 }} />
+          <Iconify icon={'eva:link-fill' as any} sx={{ mr: 1 }} />
           Send payment link
         </MenuItem>
         <MenuItem onClick={handleActionMenuClose}>
-          <Iconify icon={"eva:copy-fill" as any} sx={{ mr: 1 }} />
+          <Iconify icon={'eva:copy-fill' as any} sx={{ mr: 1 }} />
           Copy payment link
         </MenuItem>
         <MenuItem onClick={handleRetryCharge}>
-          <Iconify icon={"eva:refresh-fill" as any} sx={{ mr: 1 }} />
+          <Iconify icon={'eva:refresh-fill' as any} sx={{ mr: 1 }} />
           Retry
         </MenuItem>
         <MenuItem onClick={handleCancelCharge}>
-          <Iconify icon={"eva:close-circle-fill" as any} sx={{ mr: 1 }} />
+          <Iconify icon={'eva:close-circle-fill' as any} sx={{ mr: 1 }} />
           Cancel
         </MenuItem>
         <MenuItem onClick={handleActionMenuClose}>
-          <Iconify icon={"eva:download-fill" as any} sx={{ mr: 1 }} />
+          <Iconify icon={'eva:download-fill' as any} sx={{ mr: 1 }} />
           Download receipt
         </MenuItem>
         <MenuItem onClick={handleActionMenuClose}>
-          <Iconify icon={"eva:external-link-fill" as any} sx={{ mr: 1 }} />
+          <Iconify icon={'eva:external-link-fill' as any} sx={{ mr: 1 }} />
           View in Stripe
         </MenuItem>
       </Menu>
@@ -1062,47 +1105,80 @@ export function ChargesView() {
         onClose={handleSettingsMenuClose}
       >
         <MenuItem onClick={() => handleColumnToggle('guestName')}>
-          <Iconify icon={visibleColumns.guestName ? "eva:eye-fill" : "eva:eye-off-fill" as any} sx={{ mr: 1 }} />
+          <Iconify
+            icon={visibleColumns.guestName ? 'eva:eye-fill' : ('eva:eye-off-fill' as any)}
+            sx={{ mr: 1 }}
+          />
           Guest name
         </MenuItem>
         <MenuItem onClick={() => handleColumnToggle('listing')}>
-          <Iconify icon={visibleColumns.listing ? "eva:eye-fill" : "eva:eye-off-fill" as any} sx={{ mr: 1 }} />
+          <Iconify
+            icon={visibleColumns.listing ? 'eva:eye-fill' : ('eva:eye-off-fill' as any)}
+            sx={{ mr: 1 }}
+          />
           Listing
         </MenuItem>
         <MenuItem onClick={() => handleColumnToggle('reservationCheckIn')}>
-          <Iconify icon={visibleColumns.reservationCheckIn ? "eva:eye-fill" : "eva:eye-off-fill" as any} sx={{ mr: 1 }} />
+          <Iconify
+            icon={visibleColumns.reservationCheckIn ? 'eva:eye-fill' : ('eva:eye-off-fill' as any)}
+            sx={{ mr: 1 }}
+          />
           Reservation check-in
         </MenuItem>
         <MenuItem onClick={() => handleColumnToggle('reservationCheckOut')}>
-          <Iconify icon={visibleColumns.reservationCheckOut ? "eva:eye-fill" : "eva:eye-off-fill" as any} sx={{ mr: 1 }} />
+          <Iconify
+            icon={visibleColumns.reservationCheckOut ? 'eva:eye-fill' : ('eva:eye-off-fill' as any)}
+            sx={{ mr: 1 }}
+          />
           Reservation check-out
         </MenuItem>
         <MenuItem onClick={() => handleColumnToggle('type')}>
-          <Iconify icon={visibleColumns.type ? "eva:eye-fill" : "eva:eye-off-fill" as any} sx={{ mr: 1 }} />
+          <Iconify
+            icon={visibleColumns.type ? 'eva:eye-fill' : ('eva:eye-off-fill' as any)}
+            sx={{ mr: 1 }}
+          />
           Type
         </MenuItem>
         <MenuItem onClick={() => handleColumnToggle('chargeName')}>
-          <Iconify icon={visibleColumns.chargeName ? "eva:eye-fill" : "eva:eye-off-fill" as any} sx={{ mr: 1 }} />
+          <Iconify
+            icon={visibleColumns.chargeName ? 'eva:eye-fill' : ('eva:eye-off-fill' as any)}
+            sx={{ mr: 1 }}
+          />
           Charge name
         </MenuItem>
         <MenuItem onClick={() => handleColumnToggle('status')}>
-          <Iconify icon={visibleColumns.status ? "eva:eye-fill" : "eva:eye-off-fill" as any} sx={{ mr: 1 }} />
+          <Iconify
+            icon={visibleColumns.status ? 'eva:eye-fill' : ('eva:eye-off-fill' as any)}
+            sx={{ mr: 1 }}
+          />
           Status
         </MenuItem>
         <MenuItem onClick={() => handleColumnToggle('dueDate')}>
-          <Iconify icon={visibleColumns.dueDate ? "eva:eye-fill" : "eva:eye-off-fill" as any} sx={{ mr: 1 }} />
+          <Iconify
+            icon={visibleColumns.dueDate ? 'eva:eye-fill' : ('eva:eye-off-fill' as any)}
+            sx={{ mr: 1 }}
+          />
           Due date
         </MenuItem>
         <MenuItem onClick={() => handleColumnToggle('chargeDate')}>
-          <Iconify icon={visibleColumns.chargeDate ? "eva:eye-fill" : "eva:eye-off-fill" as any} sx={{ mr: 1 }} />
+          <Iconify
+            icon={visibleColumns.chargeDate ? 'eva:eye-fill' : ('eva:eye-off-fill' as any)}
+            sx={{ mr: 1 }}
+          />
           Charge date
         </MenuItem>
         <MenuItem onClick={() => handleColumnToggle('chargeId')}>
-          <Iconify icon={visibleColumns.chargeId ? "eva:eye-fill" : "eva:eye-off-fill" as any} sx={{ mr: 1 }} />
+          <Iconify
+            icon={visibleColumns.chargeId ? 'eva:eye-fill' : ('eva:eye-off-fill' as any)}
+            sx={{ mr: 1 }}
+          />
           Charge ID
         </MenuItem>
         <MenuItem onClick={() => handleColumnToggle('amount')}>
-          <Iconify icon={visibleColumns.amount ? "eva:eye-fill" : "eva:eye-off-fill" as any} sx={{ mr: 1 }} />
+          <Iconify
+            icon={visibleColumns.amount ? 'eva:eye-fill' : ('eva:eye-off-fill' as any)}
+            sx={{ mr: 1 }}
+          />
           Amount
         </MenuItem>
       </Menu>

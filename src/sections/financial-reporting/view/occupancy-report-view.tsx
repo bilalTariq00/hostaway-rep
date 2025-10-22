@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { 
+import {
   Minus,
   Search,
   Download,
@@ -7,7 +7,7 @@ import {
   ChevronUp,
   TrendingUp,
   ChevronDown,
-  TrendingDown
+  TrendingDown,
 } from 'lucide-react';
 
 import Box from '@mui/material/Box';
@@ -125,12 +125,12 @@ const renderOccupancyRate = (rate: number, trend: string, change: number) => {
       {change !== 0 && (
         <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.25 }}>
           {getTrendIcon()}
-          <Typography 
-            variant="caption" 
-            sx={{ 
+          <Typography
+            variant="caption"
+            sx={{
               fontSize: '0.75rem',
               color: getTrendColor(),
-              fontWeight: 500
+              fontWeight: 500,
             }}
           >
             {Math.abs(change)}%
@@ -202,17 +202,15 @@ export function OccupancyReportView() {
   };
 
   const handleColumnToggle = (columnKey: string) => {
-    const column = allColumns.find(col => col.key === columnKey);
-    
+    const column = allColumns.find((col) => col.key === columnKey);
+
     // Prevent removing mandatory columns
     if (column?.mandatory) {
       return;
     }
-    
-    setVisibleColumns(prev => 
-      prev.includes(columnKey) 
-        ? prev.filter(col => col !== columnKey)
-        : [...prev, columnKey]
+
+    setVisibleColumns((prev) =>
+      prev.includes(columnKey) ? prev.filter((col) => col !== columnKey) : [...prev, columnKey]
     );
   };
 
@@ -232,26 +230,24 @@ export function OccupancyReportView() {
   // Sort data
   const sortedData = [...mockOccupancyData].sort((a, b) => {
     if (!sortColumn) return 0;
-    
+
     const aValue = a[sortColumn as keyof typeof a];
     const bValue = b[sortColumn as keyof typeof b];
-    
+
     if (typeof aValue === 'number' && typeof bValue === 'number') {
       return sortDirection === 'asc' ? aValue - bValue : bValue - aValue;
     }
-    
+
     const aStr = String(aValue || '');
     const bStr = String(bValue || '');
-    
-    return sortDirection === 'asc' 
-      ? aStr.localeCompare(bStr)
-      : bStr.localeCompare(aStr);
+
+    return sortDirection === 'asc' ? aStr.localeCompare(bStr) : bStr.localeCompare(aStr);
   });
 
   const currentData = sortedData.slice(startIndex, endIndex);
 
   // Filter columns for settings popover
-  const filteredColumns = allColumns.filter(column =>
+  const filteredColumns = allColumns.filter((column) =>
     column.label.toLowerCase().includes(columnSearchTerm.toLowerCase())
   );
 
@@ -267,12 +263,14 @@ export function OccupancyReportView() {
     { nightsAvailable: 0, nightsBooked: 0, ownerStayNights: 0, totalCheckin: 0, occupancyChange: 0 }
   );
 
-  const overallOccupancyRate = totals.nightsAvailable > 0 
-    ? ((totals.nightsBooked / totals.nightsAvailable) * 100).toFixed(1)
-    : '0';
+  const overallOccupancyRate =
+    totals.nightsAvailable > 0
+      ? ((totals.nightsBooked / totals.nightsAvailable) * 100).toFixed(1)
+      : '0';
 
   // Calculate overall trend
-  const overallTrend = totals.occupancyChange > 0 ? 'up' : totals.occupancyChange < 0 ? 'down' : 'stable';
+  const overallTrend =
+    totals.occupancyChange > 0 ? 'up' : totals.occupancyChange < 0 ? 'down' : 'stable';
 
   return (
     <DashboardContent maxWidth="xl">
@@ -311,9 +309,7 @@ export function OccupancyReportView() {
             Occupancy Report
           </Typography>
           <Box sx={{ display: 'flex', gap: 1 }}>
-            <Button variant="contained">
-              New Custom View
-            </Button>
+            <Button variant="contained">New Custom View</Button>
             <Button
               variant="outlined"
               onClick={handleDownloadClick}
@@ -389,11 +385,7 @@ export function OccupancyReportView() {
           <Button variant="outlined" size="small">
             MTD
           </Button>
-          <TextField
-            size="small"
-            placeholder="Check-in"
-            sx={{ minWidth: 120 }}
-          />
+          <TextField size="small" placeholder="Check-in" sx={{ minWidth: 120 }} />
           <FormControl size="small" sx={{ minWidth: 120 }}>
             <InputLabel>Status</InputLabel>
             <Select label="Status">
@@ -423,35 +415,50 @@ export function OccupancyReportView() {
             <TableHead>
               <TableRow>
                 {visibleColumns.map((columnKey) => {
-                  const column = allColumns.find(col => col.key === columnKey);
+                  const column = allColumns.find((col) => col.key === columnKey);
                   if (!column) return null;
-                  
+
                   return (
                     <TableCell
                       key={columnKey}
                       align="center"
-                      sx={{ 
+                      sx={{
                         fontWeight: 600,
                         minWidth: 150,
                         whiteSpace: 'nowrap',
                         cursor: column.sortable ? 'pointer' : 'default',
-                        '&:hover': column.sortable ? { bgcolor: 'grey.50' } : {}
+                        '&:hover': column.sortable ? { bgcolor: 'grey.50' } : {},
                       }}
                       onClick={() => column.sortable && handleSort(columnKey)}
                     >
-                      <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 0.5 }}>
+                      <Box
+                        sx={{
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          gap: 0.5,
+                        }}
+                      >
                         <Typography variant="subtitle2" sx={{ fontWeight: 600 }}>
                           {column.label}
                         </Typography>
                         {column.sortable && (
                           <Box sx={{ display: 'flex', flexDirection: 'column', ml: 0.5 }}>
-                            <ChevronUp 
-                              size={12} 
-                              color={sortColumn === columnKey && sortDirection === 'asc' ? '#00A76F' : '#637381'} 
+                            <ChevronUp
+                              size={12}
+                              color={
+                                sortColumn === columnKey && sortDirection === 'asc'
+                                  ? '#00A76F'
+                                  : '#637381'
+                              }
                             />
-                            <ChevronDown 
-                              size={12} 
-                              color={sortColumn === columnKey && sortDirection === 'desc' ? '#00A76F' : '#637381'} 
+                            <ChevronDown
+                              size={12}
+                              color={
+                                sortColumn === columnKey && sortDirection === 'desc'
+                                  ? '#00A76F'
+                                  : '#637381'
+                              }
                             />
                           </Box>
                         )}
@@ -462,7 +469,7 @@ export function OccupancyReportView() {
                 {/* Settings Column */}
                 <TableCell
                   align="center"
-                  sx={{ 
+                  sx={{
                     minWidth: 60,
                     width: 60,
                     position: 'sticky',
@@ -471,7 +478,7 @@ export function OccupancyReportView() {
                     borderLeft: '1px solid',
                     borderColor: 'divider',
                     zIndex: 1,
-                    px: 0
+                    px: 0,
                   }}
                 >
                   <IconButton
@@ -494,36 +501,40 @@ export function OccupancyReportView() {
               {currentData.map((item) => (
                 <TableRow key={item.id}>
                   {visibleColumns.map((columnKey) => {
-                    const column = allColumns.find(col => col.key === columnKey);
+                    const column = allColumns.find((col) => col.key === columnKey);
                     if (!column) return null;
-                    
+
                     return (
                       <TableCell
                         key={columnKey}
                         align="center"
-                        sx={{ 
+                        sx={{
                           minWidth: 150,
-                          whiteSpace: 'nowrap'
+                          whiteSpace: 'nowrap',
                         }}
                       >
                         {columnKey === 'listingName' ? (
                           <Typography
                             variant="body2"
-                            sx={{ 
-                              fontWeight: 500, 
+                            sx={{
+                              fontWeight: 500,
                               cursor: 'pointer',
                               color: 'primary.main',
-                              '&:hover': { textDecoration: 'underline' }
+                              '&:hover': { textDecoration: 'underline' },
                             }}
                             onClick={() => handleListingClick(item.id)}
                           >
                             {item.listingName}
                           </Typography>
                         ) : columnKey === 'occupancyRate' ? (
-                          renderOccupancyRate(item.occupancyRate, item.occupancyTrend, item.occupancyChange)
+                          renderOccupancyRate(
+                            item.occupancyRate,
+                            item.occupancyTrend,
+                            item.occupancyChange
+                          )
                         ) : (
-                          <Typography 
-                            variant="body2" 
+                          <Typography
+                            variant="body2"
                             sx={{ fontWeight: columnKey === 'ownerStayNights' ? 400 : 500 }}
                           >
                             {item[columnKey as keyof typeof item]}
@@ -535,7 +546,7 @@ export function OccupancyReportView() {
                   {/* Empty Settings Column */}
                   <TableCell
                     align="center"
-                    sx={{ 
+                    sx={{
                       minWidth: 60,
                       width: 60,
                       position: 'sticky',
@@ -544,7 +555,7 @@ export function OccupancyReportView() {
                       borderLeft: '1px solid',
                       borderColor: 'divider',
                       zIndex: 1,
-                      px: 0
+                      px: 0,
                     }}
                   >
                     {/* Empty cell for settings column */}
@@ -554,16 +565,16 @@ export function OccupancyReportView() {
               {/* Totals Row */}
               <TableRow sx={{ bgcolor: 'grey.50', fontWeight: 600 }}>
                 {visibleColumns.map((columnKey) => {
-                  const column = allColumns.find(col => col.key === columnKey);
+                  const column = allColumns.find((col) => col.key === columnKey);
                   if (!column) return null;
-                  
+
                   return (
                     <TableCell
                       key={columnKey}
                       align="center"
-                      sx={{ 
+                      sx={{
                         minWidth: 150,
-                        whiteSpace: 'nowrap'
+                        whiteSpace: 'nowrap',
                       }}
                     >
                       {columnKey === 'listingName' ? (
@@ -571,7 +582,11 @@ export function OccupancyReportView() {
                           Total
                         </Typography>
                       ) : columnKey === 'occupancyRate' ? (
-                        renderOccupancyRate(parseFloat(overallOccupancyRate), overallTrend, totals.occupancyChange)
+                        renderOccupancyRate(
+                          parseFloat(overallOccupancyRate),
+                          overallTrend,
+                          totals.occupancyChange
+                        )
                       ) : (
                         <Typography variant="body2" sx={{ fontWeight: 600 }}>
                           {totals[columnKey as keyof typeof totals]}
@@ -583,7 +598,7 @@ export function OccupancyReportView() {
                 {/* Empty Settings Column */}
                 <TableCell
                   align="center"
-                  sx={{ 
+                  sx={{
                     minWidth: 60,
                     width: 60,
                     position: 'sticky',
@@ -592,7 +607,7 @@ export function OccupancyReportView() {
                     borderLeft: '1px solid',
                     borderColor: 'divider',
                     zIndex: 1,
-                    px: 0
+                    px: 0,
                   }}
                 >
                   {/* Empty cell for settings column */}
@@ -643,7 +658,7 @@ export function OccupancyReportView() {
           <Typography variant="h6" sx={{ mb: 2, fontWeight: 600 }}>
             Column Settings
           </Typography>
-          
+
           <TextField
             size="small"
             placeholder="Find column"
@@ -654,7 +669,7 @@ export function OccupancyReportView() {
             }}
             sx={{ mb: 2 }}
           />
-          
+
           {/* Column List */}
           <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
             {filteredColumns.map((column) => (
@@ -678,12 +693,12 @@ export function OccupancyReportView() {
                   />
                 }
                 label={
-                  <Typography 
-                    variant="body2" 
-                    sx={{ 
+                  <Typography
+                    variant="body2"
+                    sx={{
                       fontSize: '0.875rem',
                       color: column.mandatory ? 'grey.500' : 'text.primary',
-                      fontWeight: column.mandatory ? 500 : 400
+                      fontWeight: column.mandatory ? 500 : 400,
                     }}
                   >
                     {column.label}

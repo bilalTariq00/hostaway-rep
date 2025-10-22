@@ -69,8 +69,8 @@ export function useMessages(conversationId?: string) {
           statusIcon: 'hourglass',
           participants: [
             { id: 'host-1', name: 'Manuel Sciarria', type: 'host', isOnline: true },
-            { id: 'guest-1', name: 'Polina', type: 'guest', isOnline: false }
-          ]
+            { id: 'guest-1', name: 'Polina', type: 'guest', isOnline: false },
+          ],
         },
         {
           id: '2',
@@ -86,14 +86,15 @@ export function useMessages(conversationId?: string) {
           statusIcon: 'read',
           participants: [
             { id: 'host-1', name: 'Manuel Sciarria', type: 'host', isOnline: true },
-            { id: 'guest-2', name: 'Alexandra Kirkland', type: 'guest', isOnline: true }
-          ]
+            { id: 'guest-2', name: 'Alexandra Kirkland', type: 'guest', isOnline: true },
+          ],
         },
         {
           id: '3',
           name: 'Monica Dovarch',
           origin: 'Booking.com',
-          avatar: 'https://images.unsplash.com/photo-1494790108755-2616b612b786?w=40&h=40&fit=crop&crop=face',
+          avatar:
+            'https://images.unsplash.com/photo-1494790108755-2616b612b786?w=40&h=40&fit=crop&crop=face',
           lastMessage: 'Is there parking available at the property?',
           timestamp: '18:45',
           unread: true,
@@ -103,8 +104,8 @@ export function useMessages(conversationId?: string) {
           statusIcon: 'unread',
           participants: [
             { id: 'host-1', name: 'Manuel Sciarria', type: 'host', isOnline: true },
-            { id: 'guest-3', name: 'Monica Dovarch', type: 'guest', isOnline: false }
-          ]
+            { id: 'guest-3', name: 'Monica Dovarch', type: 'guest', isOnline: false },
+          ],
         },
         {
           id: '4',
@@ -120,9 +121,9 @@ export function useMessages(conversationId?: string) {
           statusIcon: 'read',
           participants: [
             { id: 'host-1', name: 'Manuel Sciarria', type: 'host', isOnline: true },
-            { id: 'guest-4', name: 'Yury Burman', type: 'guest', isOnline: true }
-          ]
-        }
+            { id: 'guest-4', name: 'Yury Burman', type: 'guest', isOnline: true },
+          ],
+        },
       ];
       setConversations(mockConversations);
     } catch {
@@ -160,8 +161,8 @@ Warm regards. ❤️
 
 Team Domus Feriae`,
           timestamp: '01 Sep 25 13:02',
-          isRead: true
-        }
+          isRead: true,
+        },
       ];
       setMessages(mockMessages);
     } catch {
@@ -172,64 +173,71 @@ Team Domus Feriae`,
   }, []);
 
   // Send a message
-  const sendMessage = useCallback((messageText: string, targetConversationId: string) => {
-    if (!socket || !isConnected) {
-      setError('Not connected to server');
-      return;
-    }
+  const sendMessage = useCallback(
+    (messageText: string, targetConversationId: string) => {
+      if (!socket || !isConnected) {
+        setError('Not connected to server');
+        return;
+      }
 
-    const newMessage: Message = {
-      id: Date.now().toString(),
-      conversationId: targetConversationId,
-      senderId: 'host-1',
-      senderName: 'Manuel Sciarria',
-      senderType: 'host',
-      message: messageText,
-      timestamp: new Date().toISOString(),
-      isRead: false
-    };
+      const newMessage: Message = {
+        id: Date.now().toString(),
+        conversationId: targetConversationId,
+        senderId: 'host-1',
+        senderName: 'Manuel Sciarria',
+        senderType: 'host',
+        message: messageText,
+        timestamp: new Date().toISOString(),
+        isRead: false,
+      };
 
-    // Emit message to server
-    emit('send_message', {
-      conversationId: targetConversationId,
-      message: newMessage
-    });
+      // Emit message to server
+      emit('send_message', {
+        conversationId: targetConversationId,
+        message: newMessage,
+      });
 
-    // Optimistically add message to local state
-    setMessages(prev => [...prev, newMessage]);
+      // Optimistically add message to local state
+      setMessages((prev) => [...prev, newMessage]);
 
-    // Update conversation's last message
-    setConversations(prev => 
-      prev.map(conv => 
-        conv.id === targetConversationId 
-          ? { 
-              ...conv, 
-              lastMessage: messageText.length > 50 ? messageText.substring(0, 50) + '...' : messageText,
-              timestamp: new Date().toLocaleTimeString('en-US', { 
-                hour: '2-digit', 
-                minute: '2-digit',
-                hour12: false 
-              })
-            }
-          : conv
-      )
-    );
-  }, [socket, isConnected, emit]);
+      // Update conversation's last message
+      setConversations((prev) =>
+        prev.map((conv) =>
+          conv.id === targetConversationId
+            ? {
+                ...conv,
+                lastMessage:
+                  messageText.length > 50 ? messageText.substring(0, 50) + '...' : messageText,
+                timestamp: new Date().toLocaleTimeString('en-US', {
+                  hour: '2-digit',
+                  minute: '2-digit',
+                  hour12: false,
+                }),
+              }
+            : conv
+        )
+      );
+    },
+    [socket, isConnected, emit]
+  );
 
   // Mark message as read
-  const markAsRead = useCallback((targetConversationId: string) => {
-    if (!socket || !isConnected) return;
+  const markAsRead = useCallback(
+    (targetConversationId: string) => {
+      if (!socket || !isConnected) return;
 
-    emit('mark_as_read', { conversationId: targetConversationId });
-    
-    setConversations(prev => 
-      prev.map(conv => 
-        conv.id === targetConversationId 
-          ? { ...conv, unread: false, statusIcon: 'read' as const }
-          : conv
-      )
-    );
-  }, [socket, isConnected, emit]);
+      emit('mark_as_read', { conversationId: targetConversationId });
+
+      setConversations((prev) =>
+        prev.map((conv) =>
+          conv.id === targetConversationId
+            ? { ...conv, unread: false, statusIcon: 'read' as const }
+            : conv
+        )
+      );
+    },
+    [socket, isConnected, emit]
+  );
 
   // Set up real-time listeners
   useEffect(() => {
@@ -237,7 +245,7 @@ Team Domus Feriae`,
 
     // Listen for new messages
     const handleNewMessage = (data: { conversationId: string; message: Message }) => {
-      setMessages(prev => {
+      setMessages((prev) => {
         // Only add if it's for the current conversation
         if (data.conversationId === conversationId) {
           return [...prev, data.message];
@@ -246,21 +254,23 @@ Team Domus Feriae`,
       });
 
       // Update conversation list
-      setConversations(prev => 
-        prev.map(conv => 
-          conv.id === data.conversationId 
-            ? { 
-                ...conv, 
-                lastMessage: data.message.message.length > 50 
-                  ? data.message.message.substring(0, 50) + '...' 
-                  : data.message.message,
-                timestamp: new Date().toLocaleTimeString('en-US', { 
-                  hour: '2-digit', 
+      setConversations((prev) =>
+        prev.map((conv) =>
+          conv.id === data.conversationId
+            ? {
+                ...conv,
+                lastMessage:
+                  data.message.message.length > 50
+                    ? data.message.message.substring(0, 50) + '...'
+                    : data.message.message,
+                timestamp: new Date().toLocaleTimeString('en-US', {
+                  hour: '2-digit',
                   minute: '2-digit',
-                  hour12: false 
+                  hour12: false,
                 }),
                 unread: data.message.senderType === 'guest',
-                statusIcon: data.message.senderType === 'guest' ? 'unread' as const : 'read' as const
+                statusIcon:
+                  data.message.senderType === 'guest' ? ('unread' as const) : ('read' as const),
               }
             : conv
         )
@@ -269,12 +279,8 @@ Team Domus Feriae`,
 
     // Listen for message read status
     const handleMessageRead = (data: { conversationId: string; messageId: string }) => {
-      setMessages(prev => 
-        prev.map(msg => 
-          msg.id === data.messageId 
-            ? { ...msg, isRead: true }
-            : msg
-        )
+      setMessages((prev) =>
+        prev.map((msg) => (msg.id === data.messageId ? { ...msg, isRead: true } : msg))
       );
     };
 
@@ -286,14 +292,14 @@ Team Domus Feriae`,
 
     // Listen for user online status
     const handleUserStatus = (data: { userId: string; isOnline: boolean }) => {
-      setConversations(prev => 
-        prev.map(conv => ({
+      setConversations((prev) =>
+        prev.map((conv) => ({
           ...conv,
-          participants: conv.participants.map(participant => 
-            participant.id === data.userId 
+          participants: conv.participants.map((participant) =>
+            participant.id === data.userId
               ? { ...participant, isOnline: data.isOnline }
               : participant
-          )
+          ),
         }))
       );
     };
@@ -334,6 +340,6 @@ Team Domus Feriae`,
     sendMessage,
     markAsRead,
     loadConversations,
-    loadMessages
+    loadMessages,
   };
 }

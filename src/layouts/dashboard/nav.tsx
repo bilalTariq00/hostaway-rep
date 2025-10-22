@@ -61,7 +61,9 @@ export function NavDesktop({
         position: 'fixed',
         flexDirection: 'column',
         zIndex: 'var(--layout-nav-zIndex)',
-        width: collapsed ? 'var(--layout-nav-vertical-width-collapsed)' : 'var(--layout-nav-vertical-width)',
+        width: collapsed
+          ? 'var(--layout-nav-vertical-width-collapsed)'
+          : 'var(--layout-nav-vertical-width)',
         borderRight: `1px solid ${varAlpha(theme.vars.palette.grey['500Channel'], 0.12)}`,
         transition: theme.transitions.create(['width', 'padding'], {
           easing: theme.transitions.easing.easeInOut,
@@ -222,7 +224,7 @@ export function NavContent({ data, slots, workspaces, collapsed = false, sx }: N
                       transition: 'transform 0.2s ease-in-out',
                     }}
                   >
-                    <Iconify icon={"eva:arrow-right-fill" as any} width={16} />
+                    <Iconify icon={'eva:arrow-right-fill' as any} width={16} />
                   </IconButton>
                 )}
 
@@ -315,7 +317,7 @@ export function NavContent({ data, slots, workspaces, collapsed = false, sx }: N
               },
             }}
           >
-            <Iconify icon={"logos:apple" as any} width={20} />
+            <Iconify icon={'logos:apple' as any} width={20} />
           </Box>
           <Box
             component="a"
@@ -335,7 +337,7 @@ export function NavContent({ data, slots, workspaces, collapsed = false, sx }: N
               },
             }}
           >
-            <Iconify icon={"logos:google-play-icon" as any} width={20} />
+            <Iconify icon={'logos:google-play-icon' as any} width={20} />
           </Box>
           <Box
             component="a"
@@ -355,7 +357,7 @@ export function NavContent({ data, slots, workspaces, collapsed = false, sx }: N
               },
             }}
           >
-            <Iconify icon={"logos:twitter" as any} width={20} />
+            <Iconify icon={'logos:twitter' as any} width={20} />
           </Box>
           <Box
             component="a"
@@ -375,7 +377,7 @@ export function NavContent({ data, slots, workspaces, collapsed = false, sx }: N
               },
             }}
           >
-            <Iconify icon={"logos:facebook" as any} width={20} />
+            <Iconify icon={'logos:facebook' as any} width={20} />
           </Box>
           <Box
             component="a"
@@ -395,7 +397,7 @@ export function NavContent({ data, slots, workspaces, collapsed = false, sx }: N
               },
             }}
           >
-            <Iconify icon={"logos:linkedin-icon" as any} width={20} />
+            <Iconify icon={'logos:linkedin-icon' as any} width={20} />
           </Box>
           <Box
             component="a"
@@ -415,7 +417,7 @@ export function NavContent({ data, slots, workspaces, collapsed = false, sx }: N
               },
             }}
           >
-            <Iconify icon={"logos:instagram-icon" as any} width={20} />
+            <Iconify icon={'logos:instagram-icon' as any} width={20} />
           </Box>
         </Box>
       )}

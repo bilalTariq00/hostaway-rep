@@ -1,5 +1,28 @@
 import { useRef, useState, useEffect } from 'react';
-import { X, Eye, Bed, Car, List, Lock, Star, Bath, Wifi, Home, Users, Filter, Search, EyeOff, MapPin, Coffee, Grid3X3, Calendar, ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight } from 'lucide-react';
+import {
+  X,
+  Eye,
+  Bed,
+  Car,
+  List,
+  Lock,
+  Star,
+  Bath,
+  Wifi,
+  Home,
+  Users,
+  Filter,
+  Search,
+  EyeOff,
+  MapPin,
+  Coffee,
+  Grid3X3,
+  Calendar,
+  ChevronLeft,
+  ChevronRight,
+  ChevronsLeft,
+  ChevronsRight,
+} from 'lucide-react';
 
 import Box from '@mui/material/Box';
 import Tab from '@mui/material/Tab';
@@ -35,9 +58,9 @@ import { BookingDetailsModal } from '../components/booking-details-modal';
 
 // Simple mock data - just one property
 const mockListings = [
-  { 
-    id: 305034, 
-    name: 'La Dimora Del Cavaliere', 
+  {
+    id: 305034,
+    name: 'La Dimora Del Cavaliere',
     price: 75,
     bookings: 8,
     image: 'https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?w=400',
@@ -51,12 +74,12 @@ const mockListings = [
     description: 'Modern loft in the trendy Navigli district with canal views.',
     status: 'active',
     lastBooking: '2024-12-10',
-    revenue: 10800
+    revenue: 10800,
   },
-  { 
-    id: 305225, 
-    name: 'Polacchi42', 
-    price: 120, 
+  {
+    id: 305225,
+    name: 'Polacchi42',
+    price: 120,
     bookings: 12,
     image: 'https://images.unsplash.com/photo-1571896349842-33c89424de2d?w=400',
     location: 'Florence, Italy',
@@ -69,12 +92,12 @@ const mockListings = [
     description: 'Charming apartment near the Duomo with traditional Italian architecture.',
     status: 'active',
     lastBooking: '2024-12-12',
-    revenue: 14400
+    revenue: 14400,
   },
-  { 
-    id: 305421, 
-    name: 'Superattico - Via Del Corso', 
-    price: 200, 
+  {
+    id: 305421,
+    name: 'Superattico - Via Del Corso',
+    price: 200,
     bookings: 20,
     image: 'https://images.unsplash.com/photo-1564501049412-61c2a3083791?w=400',
     location: 'Rome, Italy',
@@ -87,12 +110,12 @@ const mockListings = [
     description: 'Luxury penthouse with panoramic views of Rome and modern amenities.',
     status: 'active',
     lastBooking: '2024-12-18',
-    revenue: 40000
+    revenue: 40000,
   },
-  { 
-    id: 306532, 
-    name: 'Montecatini Terme', 
-    price: 90, 
+  {
+    id: 306532,
+    name: 'Montecatini Terme',
+    price: 90,
     bookings: 10,
     image: 'https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=400',
     location: 'Tuscany, Italy',
@@ -105,12 +128,12 @@ const mockListings = [
     description: 'Peaceful retreat in the Tuscan countryside with thermal spa access.',
     status: 'active',
     lastBooking: '2024-12-08',
-    revenue: 9000
+    revenue: 9000,
   },
-  { 
-    id: 308582, 
-    name: 'Monteverde - Quattroventi', 
-    price: 150, 
+  {
+    id: 308582,
+    name: 'Monteverde - Quattroventi',
+    price: 150,
     bookings: 18,
     image: 'https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=400',
     location: 'Rome, Italy',
@@ -123,12 +146,12 @@ const mockListings = [
     description: 'Spacious apartment in Monteverde with beautiful garden views.',
     status: 'active',
     lastBooking: '2024-12-14',
-    revenue: 27000
+    revenue: 27000,
   },
-  { 
-    id: 310867, 
-    name: 'La Storta', 
-    price: 110, 
+  {
+    id: 310867,
+    name: 'La Storta',
+    price: 110,
     bookings: 5,
     image: 'https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?w=400',
     location: 'Rome, Italy',
@@ -141,12 +164,12 @@ const mockListings = [
     description: 'Cozy studio apartment perfect for short stays in Rome.',
     status: 'maintenance',
     lastBooking: '2024-11-28',
-    revenue: 5500
+    revenue: 5500,
   },
-  { 
-    id: 317154, 
-    name: '[5 Min From Trastevere] Chic Apt', 
-    price: 180, 
+  {
+    id: 317154,
+    name: '[5 Min From Trastevere] Chic Apt',
+    price: 180,
     bookings: 22,
     image: 'https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?w=400',
     location: 'Rome, Italy',
@@ -159,12 +182,12 @@ const mockListings = [
     description: 'Stylish apartment just minutes from Trastevere with modern design.',
     status: 'active',
     lastBooking: '2024-12-16',
-    revenue: 39600
+    revenue: 39600,
   },
-  { 
-    id: 332386, 
-    name: 'Via Poggio Tulliano', 
-    price: 160, 
+  {
+    id: 332386,
+    name: 'Via Poggio Tulliano',
+    price: 160,
     bookings: 14,
     image: 'https://images.unsplash.com/photo-1571896349842-33c89424de2d?w=400',
     location: 'Rome, Italy',
@@ -177,12 +200,12 @@ const mockListings = [
     description: 'Elegant apartment in a quiet neighborhood with garden access.',
     status: 'active',
     lastBooking: '2024-12-11',
-    revenue: 22400
+    revenue: 22400,
   },
-  { 
-    id: 345603, 
-    name: 'Via Dei Marruccini | San Lorenzo', 
-    price: 140, 
+  {
+    id: 345603,
+    name: 'Via Dei Marruccini | San Lorenzo',
+    price: 140,
     bookings: 16,
     image: 'https://images.unsplash.com/photo-1564501049412-61c2a3083791?w=400',
     location: 'Rome, Italy',
@@ -195,12 +218,12 @@ const mockListings = [
     description: 'Modern apartment in San Lorenzo district with great transport links.',
     status: 'active',
     lastBooking: '2024-12-13',
-    revenue: 22400
+    revenue: 22400,
   },
-  { 
-    id: 363365, 
-    name: 'Via di Acqua Bullicante 113', 
-    price: 130, 
+  {
+    id: 363365,
+    name: 'Via di Acqua Bullicante 113',
+    price: 130,
     bookings: 11,
     image: 'https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=400',
     location: 'Rome, Italy',
@@ -213,12 +236,12 @@ const mockListings = [
     description: 'Comfortable apartment with parking space in residential area.',
     status: 'active',
     lastBooking: '2024-12-09',
-    revenue: 14300
+    revenue: 14300,
   },
-  { 
-    id: 363366, 
-    name: 'Via Matera 23A', 
-    price: 125, 
+  {
+    id: 363366,
+    name: 'Via Matera 23A',
+    price: 125,
     bookings: 9,
     image: 'https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=400',
     location: 'Rome, Italy',
@@ -231,12 +254,12 @@ const mockListings = [
     description: 'Compact apartment perfect for couples visiting Rome.',
     status: 'active',
     lastBooking: '2024-12-07',
-    revenue: 11250
+    revenue: 11250,
   },
-  { 
-    id: 372243, 
-    name: 'Luxury Stay in Rome – Steps from Metro A Cornelia', 
-    price: 220, 
+  {
+    id: 372243,
+    name: 'Luxury Stay in Rome – Steps from Metro A Cornelia',
+    price: 220,
     bookings: 25,
     image: 'https://images.unsplash.com/photo-1566073771259-6a8506099945?w=400',
     location: 'Rome, Italy',
@@ -249,7 +272,7 @@ const mockListings = [
     description: 'Premium apartment with metro access and luxury amenities.',
     status: 'active',
     lastBooking: '2024-12-17',
-    revenue: 55000
+    revenue: 55000,
   },
 ];
 
@@ -265,7 +288,8 @@ const mockBookings = [
     status: 'confirmed',
     source: 'Airbnb',
     guestName: 'Zhanna Badytsia',
-    guestPhoto: 'https://a0.muscache.com/im/pictures/user/User/original/d0d5acbd-64bc-4e35-a2a2-6c4065cb7bf4.jpeg?aki_policy=profile_x_medium',
+    guestPhoto:
+      'https://a0.muscache.com/im/pictures/user/User/original/d0d5acbd-64bc-4e35-a2a2-6c4065cb7bf4.jpeg?aki_policy=profile_x_medium',
     nights: 6,
     commission: 45,
     payout: 405,
@@ -294,7 +318,8 @@ const mockBookings = [
     status: 'confirmed',
     source: 'Airbnb',
     guestName: 'Fang Lin',
-    guestPhoto: 'https://a0.muscache.com/im/pictures/user/User/original/14db9c42-856c-4984-a80b-9c08cbcec3a2.jpeg?aki_policy=profile_x_medium',
+    guestPhoto:
+      'https://a0.muscache.com/im/pictures/user/User/original/14db9c42-856c-4984-a80b-9c08cbcec3a2.jpeg?aki_policy=profile_x_medium',
     nights: 1,
     commission: 12,
     payout: 108,
@@ -309,7 +334,8 @@ const mockBookings = [
     status: 'confirmed',
     source: 'Airbnb',
     guestName: 'Andrzej Malecki',
-    guestPhoto: 'https://a0.muscache.com/im/pictures/user/User/original/6797c219-e5e6-4033-9088-9449d53c9132.jpeg?aki_policy=profile_x_medium',
+    guestPhoto:
+      'https://a0.muscache.com/im/pictures/user/User/original/6797c219-e5e6-4033-9088-9449d53c9132.jpeg?aki_policy=profile_x_medium',
     nights: 3,
     commission: 36,
     payout: 324,
@@ -324,7 +350,8 @@ const mockBookings = [
     status: 'confirmed',
     source: 'Airbnb',
     guestName: 'Lidia Kuszczak',
-    guestPhoto: 'https://a0.muscache.com/im/pictures/user/User/original/02ee859b-d033-4492-9bea-3e4e9c0e1b39.jpeg?aki_policy=profile_x_medium',
+    guestPhoto:
+      'https://a0.muscache.com/im/pictures/user/User/original/02ee859b-d033-4492-9bea-3e4e9c0e1b39.jpeg?aki_policy=profile_x_medium',
     nights: 2,
     commission: 24,
     payout: 216,
@@ -339,7 +366,8 @@ const mockBookings = [
     status: 'confirmed',
     source: 'Airbnb',
     guestName: 'Nader Thabet',
-    guestPhoto: 'https://a0.muscache.com/im/pictures/user/User/original/6797c219-e5e6-4033-9088-9449d53c9132.jpeg?aki_policy=profile_x_medium',
+    guestPhoto:
+      'https://a0.muscache.com/im/pictures/user/User/original/6797c219-e5e6-4033-9088-9449d53c9132.jpeg?aki_policy=profile_x_medium',
     nights: 2,
     commission: 40,
     payout: 360,
@@ -354,7 +382,8 @@ const mockBookings = [
     status: 'confirmed',
     source: 'Airbnb',
     guestName: 'Kara Maggiore',
-    guestPhoto: 'https://a0.muscache.com/im/pictures/user/User/original/73671fee-536a-4e5b-afe6-c9a5160870cb.jpeg?aki_policy=profile_x_medium',
+    guestPhoto:
+      'https://a0.muscache.com/im/pictures/user/User/original/73671fee-536a-4e5b-afe6-c9a5160870cb.jpeg?aki_policy=profile_x_medium',
     nights: 2,
     commission: 40,
     payout: 360,
@@ -381,7 +410,8 @@ const mockBookings = [
     status: 'confirmed',
     source: 'Airbnb',
     guestName: 'Ana Evstatieva',
-    guestPhoto: 'https://a0.muscache.com/im/pictures/user/User/original/02ee859b-d033-4492-9bea-3e4e9c0e1b39.jpeg?aki_policy=profile_x_medium',
+    guestPhoto:
+      'https://a0.muscache.com/im/pictures/user/User/original/02ee859b-d033-4492-9bea-3e4e9c0e1b39.jpeg?aki_policy=profile_x_medium',
     nights: 6,
     commission: 90,
     payout: 810,
@@ -396,7 +426,8 @@ const mockBookings = [
     status: 'confirmed',
     source: 'Airbnb',
     guestName: 'Assel Sapasheva',
-    guestPhoto: 'https://a0.muscache.com/im/pictures/user/User/original/6797c219-e5e6-4033-9088-9449d53c9132.jpeg?aki_policy=profile_x_medium',
+    guestPhoto:
+      'https://a0.muscache.com/im/pictures/user/User/original/6797c219-e5e6-4033-9088-9449d53c9132.jpeg?aki_policy=profile_x_medium',
     nights: 2,
     commission: 30,
     payout: 270,
@@ -425,7 +456,8 @@ const mockBookings = [
     status: 'confirmed',
     source: 'Airbnb',
     guestName: 'Chris Allen',
-    guestPhoto: 'https://a0.muscache.com/im/pictures/user/User/original/73671fee-536a-4e5b-afe6-c9a5160870cb.jpeg?aki_policy=profile_x_medium',
+    guestPhoto:
+      'https://a0.muscache.com/im/pictures/user/User/original/73671fee-536a-4e5b-afe6-c9a5160870cb.jpeg?aki_policy=profile_x_medium',
     nights: 4,
     commission: 72,
     payout: 648,
@@ -1283,7 +1315,7 @@ export function CalendarMultiView() {
   const [selectedBookingForModal, setSelectedBookingForModal] = useState<any>(null);
   const [selectedDateRange, setSelectedDateRange] = useState({
     startDate: '',
-    endDate: ''
+    endDate: '',
   });
   const [selectedProperty, setSelectedProperty] = useState<any>(null);
   const [showPropertyDetails, setShowPropertyDetails] = useState(false);
@@ -1299,7 +1331,7 @@ export function CalendarMultiView() {
     const startDate = new Date(currentDate);
     startDate.setMonth(startDate.getMonth() - 6);
     startDate.setDate(1); // Start from the first day of the month
-    
+
     // Generate 12 months worth of days (12 * 42 = 504 days)
     for (let i = 0; i < 504; i++) {
       const date = new Date(startDate);
@@ -1321,14 +1353,14 @@ export function CalendarMultiView() {
     setSelectedBookingForModal(booking);
     setSelectedDateRange({
       startDate: booking.startDate,
-      endDate: booking.endDate
+      endDate: booking.endDate,
     });
     setManageDatesOpen(true);
   };
 
   const handleDateClick = (date: string, listingId: number) => {
-    const booking = mockBookings.find(b => 
-      b.startDate <= date && b.endDate > date && b.listingId === listingId
+    const booking = mockBookings.find(
+      (b) => b.startDate <= date && b.endDate > date && b.listingId === listingId
     );
     if (booking) {
       handleBookingClick(booking);
@@ -1345,18 +1377,18 @@ export function CalendarMultiView() {
     const daysInMonth = 30; // Approximate days to scroll
     const scrollAmount = daysInMonth * cellWidth;
     const maxScrollLeft = scrollContainer.scrollWidth - scrollContainer.clientWidth;
-    
+
     if (direction === 'prev') {
       const newScrollLeft = Math.max(0, scrollContainer.scrollLeft - scrollAmount);
       scrollContainer.scrollTo({
         left: newScrollLeft,
-        behavior: 'smooth'
+        behavior: 'smooth',
       });
     } else {
       const newScrollLeft = Math.min(maxScrollLeft, scrollContainer.scrollLeft + scrollAmount);
       scrollContainer.scrollTo({
         left: newScrollLeft,
-        behavior: 'smooth'
+        behavior: 'smooth',
       });
     }
   };
@@ -1366,28 +1398,28 @@ export function CalendarMultiView() {
     if (!scrollContainer) return;
 
     const today = new Date();
-    
+
     // Calculate the start date of our calendar (6 months before current date)
     const startDate = new Date(today);
     startDate.setMonth(startDate.getMonth() - 6);
     startDate.setDate(1); // Start from first day of the month
-    
+
     // Calculate how many days from start to today
     const timeDiff = today.getTime() - startDate.getTime();
     const daysDiff = Math.floor(timeDiff / (1000 * 3600 * 24));
-    
+
     const cellWidth = 84;
     const containerWidth = scrollContainer.clientWidth;
-    
+
     // Center today's date in the view
-    const scrollPosition = (daysDiff * cellWidth) - (containerWidth / 2) + (cellWidth / 2);
+    const scrollPosition = daysDiff * cellWidth - containerWidth / 2 + cellWidth / 2;
     const finalScrollPosition = Math.max(0, scrollPosition);
-    
+
     scrollContainer.scrollTo({
       left: finalScrollPosition,
-      behavior: 'smooth'
+      behavior: 'smooth',
     });
-    
+
     setCurrentDate(today);
   };
 
@@ -1413,37 +1445,37 @@ export function CalendarMultiView() {
     if (!scrollContainer) return undefined;
 
     let scrollTimeout: NodeJS.Timeout;
-    
+
     const handleScroll = () => {
       // Clear previous timeout
       clearTimeout(scrollTimeout);
-      
+
       // Throttle scroll detection to make it smoother
       scrollTimeout = setTimeout(() => {
         const scrollLeft = scrollContainer.scrollLeft;
         const cellWidth = 84; // Width of each day cell
         const containerWidth = scrollContainer.clientWidth;
-        
+
         // Calculate which day is in the center of the visible area
-        const centerPosition = scrollLeft + (containerWidth / 2);
+        const centerPosition = scrollLeft + containerWidth / 2;
         const centerDayIndex = Math.floor(centerPosition / cellWidth);
-        
+
         // Calculate which month we're currently viewing
         const startDate = new Date();
         startDate.setMonth(startDate.getMonth() - 6);
         startDate.setDate(1);
         const currentViewDate = new Date(startDate);
         currentViewDate.setDate(startDate.getDate() + centerDayIndex);
-        
+
         // Update the header if we've scrolled to a different month
         const newMonth = currentViewDate.getMonth();
         const newYear = currentViewDate.getFullYear();
-        
+
         // Use a more stable approach - only update if we're sure we're in a different month
-        setCurrentDate(prevDate => {
+        setCurrentDate((prevDate) => {
           const prevMonth = prevDate.getMonth();
           const prevYear = prevDate.getFullYear();
-          
+
           if (newMonth !== prevMonth || newYear !== prevYear) {
             return new Date(newYear, newMonth, 1);
           }
@@ -1469,35 +1501,29 @@ export function CalendarMultiView() {
     // Calculate scroll position to center on today
     const cellWidth = 84;
     const containerWidth = scrollContainer.clientWidth;
-    
+
     // Calculate how many days from start to today
     const today = new Date();
     const startDate = new Date(today);
     startDate.setMonth(startDate.getMonth() - 6);
     startDate.setDate(1);
-    
+
     const timeDiff = today.getTime() - startDate.getTime();
     const daysDiff = Math.floor(timeDiff / (1000 * 3600 * 24));
-    
+
     // Center today's date in the view
-    const scrollPosition = (daysDiff * cellWidth) - (containerWidth / 2) + (cellWidth / 2);
+    const scrollPosition = daysDiff * cellWidth - containerWidth / 2 + cellWidth / 2;
     const finalScrollPosition = Math.max(0, scrollPosition);
-    
+
     scrollContainer.scrollLeft = finalScrollPosition;
   }, []);
 
-  const getBookingForDate = (date: string, listingId: number) => 
-    mockBookings.find(b => 
-      b.startDate <= date && b.endDate > date && b.listingId === listingId
-    );
+  const getBookingForDate = (date: string, listingId: number) =>
+    mockBookings.find((b) => b.startDate <= date && b.endDate > date && b.listingId === listingId);
 
   // Get booking that starts on this date for continuous bar rendering
-  const getBookingStartingOnDate = (date: string, listingId: number) => 
-    mockBookings.find(b => 
-      b.startDate === date && b.listingId === listingId
-    );
-
-
+  const getBookingStartingOnDate = (date: string, listingId: number) =>
+    mockBookings.find((b) => b.startDate === date && b.listingId === listingId);
 
   const formatDate = (date: Date) => date.toISOString().split('T')[0];
 
@@ -1512,13 +1538,15 @@ export function CalendarMultiView() {
     return date < today;
   };
 
-  const isCurrentMonth = (date: Date) => date.getMonth() === currentDate.getMonth() && date.getFullYear() === currentDate.getFullYear();
+  const isCurrentMonth = (date: Date) =>
+    date.getMonth() === currentDate.getMonth() && date.getFullYear() === currentDate.getFullYear();
 
   // Search functionality
   useEffect(() => {
-    const filtered = mockListings.filter(listing =>
-      listing.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      listing.location.toLowerCase().includes(searchTerm.toLowerCase())
+    const filtered = mockListings.filter(
+      (listing) =>
+        listing.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        listing.location.toLowerCase().includes(searchTerm.toLowerCase())
     );
     setFilteredListings(filtered);
   }, [searchTerm]);
@@ -1527,7 +1555,6 @@ export function CalendarMultiView() {
     setSelectedProperty(property);
     setShowPropertyDetails(true);
   };
-
 
   const handlePropertyMenuClose = () => {
     setPropertyMenuAnchor(null);
@@ -1548,12 +1575,10 @@ export function CalendarMultiView() {
             <Button variant="contained" sx={{ mr: 1 }}>
               Listing
             </Button>
-            <Button variant="contained">
-              Direct Booking
-            </Button>
+            <Button variant="contained">Direct Booking</Button>
           </Box>
         </Box>
-        
+
         <Tabs
           value={activeTab}
           onChange={handleTabChange}
@@ -1583,23 +1608,23 @@ export function CalendarMultiView() {
       {/* Filters and Search Bar */}
       <Paper sx={{ p: 2, mb: 3 }}>
         <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2 }}>
-          <Button 
-            variant="contained" 
+          <Button
+            variant="contained"
             size="small"
             startIcon={<Filter size={16} />}
-            sx={{ 
+            sx={{
               bgcolor: 'success.main',
               color: 'white',
-              '&:hover': { bgcolor: 'success.dark' }
+              '&:hover': { bgcolor: 'success.dark' },
             }}
           >
             Available listings
           </Button>
-          
+
           <Button variant="outlined" size="small">
             Tags
           </Button>
-          
+
           <TextField
             select
             size="small"
@@ -1612,7 +1637,7 @@ export function CalendarMultiView() {
             <option>Spain</option>
             <option>France</option>
           </TextField>
-          
+
           <TextField
             select
             size="small"
@@ -1625,7 +1650,7 @@ export function CalendarMultiView() {
             <option>Milan</option>
             <option>Florence</option>
           </TextField>
-          
+
           <TextField
             select
             size="small"
@@ -1638,16 +1663,16 @@ export function CalendarMultiView() {
             <option>Houses</option>
             <option>Villas</option>
           </TextField>
-          
-          <Chip 
-            label="Show (2)" 
-            variant="outlined" 
+
+          <Chip
+            label="Show (2)"
+            variant="outlined"
             size="small"
             sx={{ minWidth: 80, justifyContent: 'center' }}
           />
-          
+
           <Box sx={{ flexGrow: 1 }} />
-          
+
           <TextField
             size="small"
             placeholder="Search by listing"
@@ -1669,60 +1694,60 @@ export function CalendarMultiView() {
       <Paper sx={{ p: 2, mb: 3 }}>
         <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
           <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-            <Button 
-              variant="contained" 
+            <Button
+              variant="contained"
               size="small"
               onClick={goToToday}
-              sx={{ 
+              sx={{
                 bgcolor: 'grey.800',
                 color: 'white',
-                '&:hover': { bgcolor: 'grey.900' }
+                '&:hover': { bgcolor: 'grey.900' },
               }}
             >
               Today
             </Button>
-            
+
             <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-              <IconButton 
-                onClick={() => navigateDate('prev')} 
+              <IconButton
+                onClick={() => navigateDate('prev')}
                 size="small"
-                sx={{ 
-                  bgcolor: 'primary.main', 
+                sx={{
+                  bgcolor: 'primary.main',
                   color: 'white',
-                  '&:hover': { bgcolor: 'primary.dark' }
+                  '&:hover': { bgcolor: 'primary.dark' },
                 }}
               >
                 <ChevronLeft size={16} />
               </IconButton>
-              <Typography 
-                variant="h6" 
-                sx={{ 
-                  minWidth: 150, 
-                  textAlign: 'center', 
+              <Typography
+                variant="h6"
+                sx={{
+                  minWidth: 150,
+                  textAlign: 'center',
                   fontWeight: 600,
                   bgcolor: 'primary.50',
                   px: 2,
                   py: 1,
                   borderRadius: 1,
                   border: '2px solid',
-                  borderColor: 'primary.main'
+                  borderColor: 'primary.main',
                 }}
               >
                 {currentDate.toLocaleDateString('en-US', { month: 'long', year: 'numeric' })}
               </Typography>
-              <IconButton 
-                onClick={() => navigateDate('next')} 
+              <IconButton
+                onClick={() => navigateDate('next')}
                 size="small"
-                sx={{ 
-                  bgcolor: 'primary.main', 
+                sx={{
+                  bgcolor: 'primary.main',
                   color: 'white',
-                  '&:hover': { bgcolor: 'primary.dark' }
+                  '&:hover': { bgcolor: 'primary.dark' },
                 }}
               >
                 <ChevronRight size={16} />
               </IconButton>
             </Box>
-            
+
             <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
               <IconButton size="small">
                 <ChevronsLeft size={16} />
@@ -1731,12 +1756,12 @@ export function CalendarMultiView() {
                 <ChevronsRight size={16} />
               </IconButton>
             </Box>
-            
+
             <Typography variant="caption" color="text.secondary" sx={{ ml: 2 }}>
               Use ← → arrow keys or click buttons to navigate months
             </Typography>
           </Box>
-          
+
           <Box sx={{ display: 'flex', gap: 1 }}>
             <IconButton
               onClick={() => setCalendarView('grid')}
@@ -1756,9 +1781,9 @@ export function CalendarMultiView() {
 
       {/* Hostaway-style Calendar */}
       <Paper sx={{ overflow: 'hidden' }}>
-        <Box 
-          sx={{ 
-            display: 'flex', 
+        <Box
+          sx={{
+            display: 'flex',
             height: '600px',
             overflowX: 'auto',
             overflowY: 'auto',
@@ -1776,34 +1801,46 @@ export function CalendarMultiView() {
                 backgroundColor: 'grey.600',
               },
             },
-          }} 
+          }}
           ref={scrollContainerRef}
         >
           {/* Left Sidebar - Properties - Sticky horizontally, scrolls vertically */}
-          <Box sx={{ 
-            width: 320, 
-            borderRight: 1, 
-            borderColor: 'divider',
-            bgcolor: 'white',
-            position: 'sticky',
-            left: 0,
-            zIndex: 20,
-            display: 'flex',
-            flexDirection: 'column',
-            height: 'fit-content',
-            minHeight: '100%'
-          }}>
+          <Box
+            sx={{
+              width: 320,
+              borderRight: 1,
+              borderColor: 'divider',
+              bgcolor: 'white',
+              position: 'sticky',
+              left: 0,
+              zIndex: 20,
+              display: 'flex',
+              flexDirection: 'column',
+              height: 'fit-content',
+              minHeight: '100%',
+            }}
+          >
             {/* Property Header */}
-            <Box sx={{ p: 1.5, bgcolor: 'grey.50', borderBottom: 1, borderColor: 'divider', height: 50, display: 'flex', alignItems: 'center' }}>
+            <Box
+              sx={{
+                p: 1.5,
+                bgcolor: 'grey.50',
+                borderBottom: 1,
+                borderColor: 'divider',
+                height: 50,
+                display: 'flex',
+                alignItems: 'center',
+              }}
+            >
               <Typography variant="body2" fontWeight={600} color="text.secondary">
                 Property
               </Typography>
             </Box>
 
             {/* Property List */}
-            <Box 
-              ref={propertySidebarRef} 
-              sx={{ 
+            <Box
+              ref={propertySidebarRef}
+              sx={{
                 flex: 1,
                 '&::-webkit-scrollbar': {
                   width: 6,
@@ -1821,195 +1858,227 @@ export function CalendarMultiView() {
               }}
             >
               {filteredListings.map((listing) => (
-              <Box
-                key={listing.id}
-                sx={{
+                <Box
+                  key={listing.id}
+                  sx={{
                     p: 2,
-                  borderBottom: 1,
-                  borderColor: 'divider',
-                  cursor: 'pointer',
+                    borderBottom: 1,
+                    borderColor: 'divider',
+                    cursor: 'pointer',
                     height: 50,
-                  display: 'flex',
+                    display: 'flex',
                     flexDirection: 'column',
                     justifyContent: 'center',
                     bgcolor: selectedProperty?.id === listing.id ? 'primary.50' : 'white',
-                  '&:hover': {
+                    '&:hover': {
                       bgcolor: selectedProperty?.id === listing.id ? 'primary.100' : 'grey.50',
                     },
                     transition: 'background-color 0.2s ease',
                   }}
                   onClick={() => handlePropertySelect(listing)}
                 >
-                  <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', width: '100%' }}>
-                    <Typography 
-                      variant="body1" 
-                      sx={{ 
-                        fontWeight: 600, 
+                  <Box
+                    sx={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'space-between',
+                      width: '100%',
+                    }}
+                  >
+                    <Typography
+                      variant="body1"
+                      sx={{
+                        fontWeight: 600,
                         lineHeight: 1.3,
-                        color: selectedProperty?.id === listing.id ? 'primary.main' : 'text.primary',
+                        color:
+                          selectedProperty?.id === listing.id ? 'primary.main' : 'text.primary',
                         fontSize: '0.95rem',
                         overflow: 'hidden',
                         textOverflow: 'ellipsis',
                         whiteSpace: 'nowrap',
                         letterSpacing: '0.01em',
                         flex: 1,
-                        mr: 1
+                        mr: 1,
                       }}
                     >
-                  {listing.name}
-                </Typography>
+                      {listing.name}
+                    </Typography>
                     <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
-                      <Typography variant="caption" color="text.secondary" sx={{ fontSize: '0.8rem', fontWeight: 500 }}>
-                  {listing.id}
-                </Typography>
+                      <Typography
+                        variant="caption"
+                        color="text.secondary"
+                        sx={{ fontSize: '0.8rem', fontWeight: 500 }}
+                      >
+                        {listing.id}
+                      </Typography>
                       {listing.status === 'maintenance' && (
-                        <Box sx={{ 
-                          width: 16, 
-                          height: 16, 
-                          bgcolor: 'error.main', 
-                          borderRadius: '50%',
-                          display: 'flex',
-                          alignItems: 'center',
-                          justifyContent: 'center',
-                          ml: 0.5
-                        }}>
+                        <Box
+                          sx={{
+                            width: 16,
+                            height: 16,
+                            bgcolor: 'error.main',
+                            borderRadius: '50%',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            ml: 0.5,
+                          }}
+                        >
                           <X size={10} color="white" />
                         </Box>
                       )}
-                      {listing.status === 'blocked' && (
-                        <Lock size={12} color="#666" />
-                      )}
+                      {listing.status === 'blocked' && <Lock size={12} color="#666" />}
                       {listing.status === 'active' && (
-                        <Box sx={{ 
-                          width: 8, 
-                          height: 8, 
-                          bgcolor: 'success.main', 
-                          borderRadius: '50%',
-                          ml: 0.5
-                        }} />
+                        <Box
+                          sx={{
+                            width: 8,
+                            height: 8,
+                            bgcolor: 'success.main',
+                            borderRadius: '50%',
+                            ml: 0.5,
+                          }}
+                        />
                       )}
                     </Box>
                   </Box>
-              </Box>
-            ))}
+                </Box>
+              ))}
             </Box>
           </Box>
 
           {/* Calendar Grid Container - Scrolls with property sidebar */}
-          <Box sx={{ 
-              flex: 1, 
+          <Box
+            sx={{
+              flex: 1,
               position: 'relative',
-            minWidth: 'max-content'
-          }}>
-            <Box sx={{ 
               minWidth: 'max-content',
-              minHeight: `${(filteredListings.length + 1) * 50}px`, // +1 for header row
-              bgcolor: 'white'
-            }}>
+            }}
+          >
+            <Box
+              sx={{
+                minWidth: 'max-content',
+                minHeight: `${(filteredListings.length + 1) * 50}px`, // +1 for header row
+                bgcolor: 'white',
+              }}
+            >
               {/* Calendar Header - Part of the scrollable content */}
-            <Box sx={{ 
-              display: 'flex', 
-              position: 'sticky', 
-              top: 0, 
-              zIndex: 10,
-              bgcolor: 'white',
-                borderBottom: 1,
-                borderColor: 'divider',
-                height: 50,
-            }}>
-              {calendarDays.map((day) => (
-                <Box
-                  key={formatDate(day)}
-                  sx={{
-                    width: 84,
-                    minWidth: 84,
+              <Box
+                sx={{
+                  display: 'flex',
+                  position: 'sticky',
+                  top: 0,
+                  zIndex: 10,
+                  bgcolor: 'white',
+                  borderBottom: 1,
+                  borderColor: 'divider',
+                  height: 50,
+                }}
+              >
+                {calendarDays.map((day) => (
+                  <Box
+                    key={formatDate(day)}
+                    sx={{
+                      width: 84,
+                      minWidth: 84,
                       height: 50,
-                    p: 1,
-                    textAlign: 'center',
-                    borderRight: 'none',
+                      p: 1,
+                      textAlign: 'center',
+                      borderRight: 'none',
                       borderColor: 'divider',
-                    bgcolor: isToday(day) ? 'primary.50' : 'white',
+                      bgcolor: isToday(day) ? 'primary.50' : 'white',
                       display: 'flex',
                       flexDirection: 'column',
                       justifyContent: 'center',
                       alignItems: 'center',
-                  }}
-                >
-                    <Typography variant="body2" fontWeight={600} color="text.secondary">
-                    {day.toLocaleDateString('en-US', { weekday: 'short' })}
-                  </Typography>
-                  <Typography 
-                      variant="body2" 
-                      color={isToday(day) ? 'primary.main' : 'text.primary'}
-                    sx={{ fontWeight: isToday(day) ? 600 : 400 }}
+                    }}
                   >
-                    {day.getDate()}
-                  </Typography>
-                </Box>
-              ))}
-            </Box>
+                    <Typography variant="body2" fontWeight={600} color="text.secondary">
+                      {day.toLocaleDateString('en-US', { weekday: 'short' })}
+                    </Typography>
+                    <Typography
+                      variant="body2"
+                      color={isToday(day) ? 'primary.main' : 'text.primary'}
+                      sx={{ fontWeight: isToday(day) ? 600 : 400 }}
+                    >
+                      {day.getDate()}
+                    </Typography>
+                  </Box>
+                ))}
+              </Box>
 
               {/* Calendar Body - Property Rows */}
               {filteredListings.map((listing) => (
                 <Box key={listing.id} sx={{ display: 'flex', height: 50, position: 'relative' }}>
-                    {/* Calendar Days */}
-                    {calendarDays.map((day) => {
-                      const dateStr = formatDate(day);
-                      const booking = getBookingForDate(dateStr, listing.id);
-                      const bookingStarting = getBookingStartingOnDate(dateStr, listing.id);
-                      const isBooked = !!booking;
-                      const isBookingStart = !!bookingStarting;
-                      const isPast = isPastDate(day);
-                      const isTodayDate = isToday(day);
-                      const isCurrentMonthDate = isCurrentMonth(day);
-                      
-                    // Calculate booking span for proper bar display
-                    const bookingSpan = booking ? 
-                      Math.ceil((new Date(booking.endDate).getTime() - new Date(booking.startDate).getTime()) / (1000 * 60 * 60 * 24)) : 0;
+                  {/* Calendar Days */}
+                  {calendarDays.map((day) => {
+                    const dateStr = formatDate(day);
+                    const booking = getBookingForDate(dateStr, listing.id);
+                    const bookingStarting = getBookingStartingOnDate(dateStr, listing.id);
+                    const isBooked = !!booking;
+                    const isBookingStart = !!bookingStarting;
+                    const isPast = isPastDate(day);
+                    const isTodayDate = isToday(day);
+                    const isCurrentMonthDate = isCurrentMonth(day);
 
-                      return (
-                        <Box
-                          key={dateStr}
-                          sx={{
-                            width: 84,
-                            minWidth: 84,
+                    // Calculate booking span for proper bar display
+                    const bookingSpan = booking
+                      ? Math.ceil(
+                          (new Date(booking.endDate).getTime() -
+                            new Date(booking.startDate).getTime()) /
+                            (1000 * 60 * 60 * 24)
+                        )
+                      : 0;
+
+                    return (
+                      <Box
+                        key={dateStr}
+                        sx={{
+                          width: 84,
+                          minWidth: 84,
                           height: 50,
                           borderRight: isBooked ? 'none' : 1,
                           borderBottom: 1,
                           borderColor: 'divider',
-                            position: 'relative',
-                            cursor: 'pointer',
-                            bgcolor: isBooked ? 'transparent' : (isPast ? 'grey.100' : isCurrentMonthDate ? 'white' : 'grey.50'),
-                            opacity: isPast ? 0.6 : isCurrentMonthDate ? 1 : 0.7,
-                            '&:hover': {
-                              bgcolor: isPast ? 'grey.200' : 'grey.50',
-                            },
-                          }}
-                          onClick={() => handleDateClick(dateStr, listing.id)}
-                        >
+                          position: 'relative',
+                          cursor: 'pointer',
+                          bgcolor: isBooked
+                            ? 'transparent'
+                            : isPast
+                              ? 'grey.100'
+                              : isCurrentMonthDate
+                                ? 'white'
+                                : 'grey.50',
+                          opacity: isPast ? 0.6 : isCurrentMonthDate ? 1 : 0.7,
+                          '&:hover': {
+                            bgcolor: isPast ? 'grey.200' : 'grey.50',
+                          },
+                        }}
+                        onClick={() => handleDateClick(dateStr, listing.id)}
+                      >
                         {isBookingStart ? (
-                            <Tooltip
-                              title={
-                                <Box>
-                                  <Typography variant="body2" sx={{ fontWeight: 600, mb: 0.5 }}>
-                                    {bookingStarting.guestName}
-                                  </Typography>
-                                  <Typography variant="caption" sx={{ display: 'block' }}>
-                                    {bookingStarting.guests} guests • {bookingStarting.nights} nights
-                                  </Typography>
-                                  <Typography variant="caption" sx={{ display: 'block' }}>
-                                    €{bookingStarting.price}/night • {bookingStarting.source}
-                                  </Typography>
-                                  <Typography variant="caption" sx={{ display: 'block', mt: 0.5 }}>
-                                    Check-in: {bookingStarting.startDate} • Check-out: {bookingStarting.endDate}
-                                  </Typography>
-                                </Box>
-                              }
-                              arrow
-                              placement="top"
+                          <Tooltip
+                            title={
+                              <Box>
+                                <Typography variant="body2" sx={{ fontWeight: 600, mb: 0.5 }}>
+                                  {bookingStarting.guestName}
+                                </Typography>
+                                <Typography variant="caption" sx={{ display: 'block' }}>
+                                  {bookingStarting.guests} guests • {bookingStarting.nights} nights
+                                </Typography>
+                                <Typography variant="caption" sx={{ display: 'block' }}>
+                                  €{bookingStarting.price}/night • {bookingStarting.source}
+                                </Typography>
+                                <Typography variant="caption" sx={{ display: 'block', mt: 0.5 }}>
+                                  Check-in: {bookingStarting.startDate} • Check-out:{' '}
+                                  {bookingStarting.endDate}
+                                </Typography>
+                              </Box>
+                            }
+                            arrow
+                            placement="top"
                             enterDelay={500}
                             leaveDelay={200}
-                            >
+                          >
                             <Box
                               sx={{
                                 position: 'absolute',
@@ -2042,150 +2111,166 @@ export function CalendarMultiView() {
                               onClick={(e) => {
                                 e.stopPropagation();
                                 handleBookingClick(bookingStarting);
+                              }}
+                            >
+                              {/* Channel Logo */}
+                              <Box
+                                sx={{
+                                  width: 26,
+                                  height: 26,
+                                  borderRadius: '50%',
+                                  backgroundColor: 'rgba(255,255,255,0.4)',
+                                  display: 'flex',
+                                  alignItems: 'center',
+                                  justifyContent: 'center',
+                                  mr: 1.2,
+                                  flexShrink: 0,
+                                  border: '2px solid rgba(255,255,255,0.6)',
+                                  boxShadow: '0 2px 6px rgba(0,0,0,0.3)',
+                                  backdropFilter: 'blur(4px)',
                                 }}
                               >
-                              {/* Channel Logo */}
-                              <Box sx={{ 
-                                width: 26, 
-                                height: 26, 
-                                borderRadius: '50%', 
-                                backgroundColor: 'rgba(255,255,255,0.4)',
-                                display: 'flex',
-                                alignItems: 'center',
-                                justifyContent: 'center',
-                                mr: 1.2,
-                                flexShrink: 0,
-                                border: '2px solid rgba(255,255,255,0.6)',
-                                boxShadow: '0 2px 6px rgba(0,0,0,0.3)',
-                                backdropFilter: 'blur(4px)'
-                              }}>
-                                <Typography sx={{ 
-                                  fontSize: '0.75rem', 
-                                  fontWeight: 800,
-                                  color: 'white',
-                                  textShadow: '0 2px 4px rgba(0,0,0,0.7)',
-                                  letterSpacing: '0.05em'
-                                }}>
-                                  {bookingStarting.source === 'Airbnb' ? 'A' : 
-                                   bookingStarting.source === 'Booking.com' ? 'B' : 'M'}
+                                <Typography
+                                  sx={{
+                                    fontSize: '0.75rem',
+                                    fontWeight: 800,
+                                    color: 'white',
+                                    textShadow: '0 2px 4px rgba(0,0,0,0.7)',
+                                    letterSpacing: '0.05em',
+                                  }}
+                                >
+                                  {bookingStarting.source === 'Airbnb'
+                                    ? 'A'
+                                    : bookingStarting.source === 'Booking.com'
+                                      ? 'B'
+                                      : 'M'}
                                 </Typography>
                               </Box>
-                                
+
                               {/* Guest info */}
-                              <Box sx={{ 
-                                flex: 1, 
-                                minWidth: 0,
-                                overflow: 'visible',
-                                display: 'flex',
-                                flexDirection: 'column',
-                                justifyContent: 'center',
-                                alignItems: 'flex-start',
-                                px: 1
-                              }}>
-                                <Typography sx={{ 
-                                  fontSize: '0.85rem', 
-                                  fontWeight: 800, 
-                                  lineHeight: 1.1,
-                                  color: 'white',
-                                  textShadow: '0 2px 4px rgba(0,0,0,0.8)',
-                                  letterSpacing: '0.02em',
-                                  whiteSpace: 'nowrap',
-                                  overflow: 'hidden',
-                                  textOverflow: 'ellipsis',
-                                  maxWidth: '100%',
-                                  display: 'block'
-                                }}>
+                              <Box
+                                sx={{
+                                  flex: 1,
+                                  minWidth: 0,
+                                  overflow: 'visible',
+                                  display: 'flex',
+                                  flexDirection: 'column',
+                                  justifyContent: 'center',
+                                  alignItems: 'flex-start',
+                                  px: 1,
+                                }}
+                              >
+                                <Typography
+                                  sx={{
+                                    fontSize: '0.85rem',
+                                    fontWeight: 800,
+                                    lineHeight: 1.1,
+                                    color: 'white',
+                                    textShadow: '0 2px 4px rgba(0,0,0,0.8)',
+                                    letterSpacing: '0.02em',
+                                    whiteSpace: 'nowrap',
+                                    overflow: 'hidden',
+                                    textOverflow: 'ellipsis',
+                                    maxWidth: '100%',
+                                    display: 'block',
+                                  }}
+                                >
                                   {bookingStarting.guestName}
                                 </Typography>
-                                <Typography sx={{ 
-                                  fontSize: '0.75rem',
-                                  color: 'white',
-                                  fontWeight: 700,
-                                  textShadow: '0 1px 3px rgba(0,0,0,0.8)',
-                                  letterSpacing: '0.01em',
-                                  whiteSpace: 'nowrap',
-                                  overflow: 'hidden',
-                                  textOverflow: 'ellipsis',
-                                  maxWidth: '100%',
-                                  display: 'block',
-                                  mt: 0.1
-                                }}>
+                                <Typography
+                                  sx={{
+                                    fontSize: '0.75rem',
+                                    color: 'white',
+                                    fontWeight: 700,
+                                    textShadow: '0 1px 3px rgba(0,0,0,0.8)',
+                                    letterSpacing: '0.01em',
+                                    whiteSpace: 'nowrap',
+                                    overflow: 'hidden',
+                                    textOverflow: 'ellipsis',
+                                    maxWidth: '100%',
+                                    display: 'block',
+                                    mt: 0.1,
+                                  }}
+                                >
                                   {bookingStarting.guests} guests • €{bookingStarting.price}
                                 </Typography>
-                                <Typography sx={{ 
-                                  fontSize: '0.65rem',
-                                  color: 'rgba(255,255,255,0.9)',
-                                  fontWeight: 600,
-                                  textShadow: '0 1px 2px rgba(0,0,0,0.6)',
-                                  letterSpacing: '0.01em',
-                                  whiteSpace: 'nowrap',
-                                  overflow: 'hidden',
-                                  textOverflow: 'ellipsis',
-                                  maxWidth: '100%',
-                                  display: 'block',
-                                  mt: 0.1
-                                }}>
+                                <Typography
+                                  sx={{
+                                    fontSize: '0.65rem',
+                                    color: 'rgba(255,255,255,0.9)',
+                                    fontWeight: 600,
+                                    textShadow: '0 1px 2px rgba(0,0,0,0.6)',
+                                    letterSpacing: '0.01em',
+                                    whiteSpace: 'nowrap',
+                                    overflow: 'hidden',
+                                    textOverflow: 'ellipsis',
+                                    maxWidth: '100%',
+                                    display: 'block',
+                                    mt: 0.1,
+                                  }}
+                                >
                                   {bookingStarting.source} • {bookingStarting.nights} nights
                                 </Typography>
                               </Box>
-                              </Box>
-                            </Tooltip>
-                          ) : isBooked ? (
-                            // Show continuation of booking bar (no content, just background)
-                            null
-                          ) : (
-                            <Box sx={{ 
-                              position: 'absolute', 
-                              top: 0, 
-                              left: 0, 
-                              right: 0, 
+                            </Box>
+                          </Tooltip>
+                        ) : isBooked ? null : ( // Show continuation of booking bar (no content, just background)
+                          <Box
+                            sx={{
+                              position: 'absolute',
+                              top: 0,
+                              left: 0,
+                              right: 0,
                               bottom: 0,
                               display: 'flex',
                               alignItems: 'center',
                               justifyContent: 'center',
                               '&:hover': {
                                 bgcolor: 'rgba(0,0,0,0.02)',
-                              }
-                            }}>
-                              <Typography 
-                                variant="caption" 
-                                color={isCurrentMonthDate ? "text.secondary" : "text.disabled"}
-                                sx={{ 
-                                  fontSize: '0.7rem',
-                                  fontWeight: isTodayDate ? 600 : 400
-                                }}
-                              >
-                                €{listing.price}
-                              </Typography>
-                            </Box>
-                          )}
+                              },
+                            }}
+                          >
+                            <Typography
+                              variant="caption"
+                              color={isCurrentMonthDate ? 'text.secondary' : 'text.disabled'}
+                              sx={{
+                                fontSize: '0.7rem',
+                                fontWeight: isTodayDate ? 600 : 400,
+                              }}
+                            >
+                              €{listing.price}
+                            </Typography>
+                          </Box>
+                        )}
 
-                          {/* Lock indicator for blocked dates */}
-                          {isBooked && booking.status === 'blocked' && (
-                            <Box sx={{ 
-                              position: 'absolute', 
-                            top: 4, 
-                            left: 4,
+                        {/* Lock indicator for blocked dates */}
+                        {isBooked && booking.status === 'blocked' && (
+                          <Box
+                            sx={{
+                              position: 'absolute',
+                              top: 4,
+                              left: 4,
                               bgcolor: 'rgba(0,0,0,0.7)',
                               borderRadius: '50%',
                               width: 16,
                               height: 16,
                               display: 'flex',
                               alignItems: 'center',
-                              justifyContent: 'center'
-                            }}>
-                              <Lock size={10} color="white" />
-                            </Box>
-                          )}
-                        </Box>
-                      );
-                    })}
-                  </Box>
+                              justifyContent: 'center',
+                            }}
+                          >
+                            <Lock size={10} color="white" />
+                          </Box>
+                        )}
+                      </Box>
+                    );
+                  })}
+                </Box>
               ))}
             </Box>
           </Box>
         </Box>
-          </Paper>
+      </Paper>
 
       {/* Modals */}
       {selectedBooking && (
@@ -2211,13 +2296,15 @@ export function CalendarMultiView() {
         maxWidth="sm"
         fullWidth
       >
-        <DialogTitle sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+        <DialogTitle
+          sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}
+        >
           Manage dates
           <IconButton onClick={() => setManageDatesOpen(false)} size="small">
             <X size={20} />
           </IconButton>
         </DialogTitle>
-        
+
         <DialogContent>
           {selectedBookingForModal && (
             <Box sx={{ mt: 2 }}>
@@ -2255,7 +2342,9 @@ export function CalendarMultiView() {
                   <TextField
                     label="Start date"
                     value={selectedDateRange.startDate}
-                    onChange={(e) => setSelectedDateRange(prev => ({ ...prev, startDate: e.target.value }))}
+                    onChange={(e) =>
+                      setSelectedDateRange((prev) => ({ ...prev, startDate: e.target.value }))
+                    }
                     InputProps={{
                       endAdornment: (
                         <InputAdornment position="end">
@@ -2268,7 +2357,9 @@ export function CalendarMultiView() {
                   <TextField
                     label="End date"
                     value={selectedDateRange.endDate}
-                    onChange={(e) => setSelectedDateRange(prev => ({ ...prev, endDate: e.target.value }))}
+                    onChange={(e) =>
+                      setSelectedDateRange((prev) => ({ ...prev, endDate: e.target.value }))
+                    }
                     InputProps={{
                       endAdornment: (
                         <InputAdornment position="end">
@@ -2290,7 +2381,10 @@ export function CalendarMultiView() {
                   label="Nightly base rate (before mark-up)"
                   value={selectedBookingForModal.price}
                   onChange={(e) => {
-                    const updatedBooking = { ...selectedBookingForModal, price: parseInt(e.target.value) || 0 };
+                    const updatedBooking = {
+                      ...selectedBookingForModal,
+                      price: parseInt(e.target.value) || 0,
+                    };
                     setSelectedBookingForModal(updatedBooking);
                   }}
                   fullWidth
@@ -2311,24 +2405,19 @@ export function CalendarMultiView() {
                     label="Minimum nights"
                     value={selectedBookingForModal.nights}
                     onChange={(e) => {
-                      const updatedBooking = { ...selectedBookingForModal, nights: parseInt(e.target.value) || 1 };
+                      const updatedBooking = {
+                        ...selectedBookingForModal,
+                        nights: parseInt(e.target.value) || 1,
+                      };
                       setSelectedBookingForModal(updatedBooking);
                     }}
                     type="number"
                     sx={{ flex: 1 }}
                   />
-                  <TextField
-                    label="Maximum nights"
-                    value="365"
-                    type="number"
-                    sx={{ flex: 1 }}
-                  />
+                  <TextField label="Maximum nights" value="365" type="number" sx={{ flex: 1 }} />
                 </Box>
                 <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
-                  <FormControlLabel
-                    control={<Switch defaultChecked />}
-                    label="Availability"
-                  />
+                  <FormControlLabel control={<Switch defaultChecked />} label="Availability" />
                   <FormControlLabel
                     control={<Switch defaultChecked />}
                     label="Guest can check-in"
@@ -2346,9 +2435,7 @@ export function CalendarMultiView() {
                   Rule-sets
                 </Typography>
                 <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                  <Typography variant="body2">
-                    Airbnb Pro rules-sets
-                  </Typography>
+                  <Typography variant="body2">Airbnb Pro rules-sets</Typography>
                   <Box sx={{ width: 8, height: 8, bgcolor: 'error.main', borderRadius: '50%' }} />
                   <Typography variant="body2" color="primary" sx={{ cursor: 'pointer' }}>
                     ADD
@@ -2358,7 +2445,7 @@ export function CalendarMultiView() {
             </Box>
           )}
         </DialogContent>
-        
+
         <DialogActions sx={{ p: 3 }}>
           <Button variant="outlined" onClick={() => setManageDatesOpen(false)}>
             Cancel
@@ -2379,13 +2466,15 @@ export function CalendarMultiView() {
         maxWidth="md"
         fullWidth
       >
-        <DialogTitle sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+        <DialogTitle
+          sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}
+        >
           Property Details
           <IconButton onClick={() => setShowPropertyDetails(false)} size="small">
             <X size={20} />
           </IconButton>
         </DialogTitle>
-        
+
         <DialogContent>
           {selectedProperty && (
             <Box sx={{ mt: 2 }}>
@@ -2413,7 +2502,14 @@ export function CalendarMultiView() {
               </Box>
 
               {/* Property Stats */}
-              <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: 2, mb: 3 }}>
+              <Box
+                sx={{
+                  display: 'grid',
+                  gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
+                  gap: 2,
+                  mb: 3,
+                }}
+              >
                 <Card sx={{ p: 2 }}>
                   <Box sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
                     <Star size={20} color="#ffc107" />
@@ -2439,9 +2535,7 @@ export function CalendarMultiView() {
                 </Card>
 
                 <Card sx={{ p: 2 }}>
-                  <Typography variant="h6">
-                    {selectedProperty.bookings}
-                  </Typography>
+                  <Typography variant="h6">{selectedProperty.bookings}</Typography>
                   <Typography variant="body2" color="text.secondary">
                     Total Bookings
                   </Typography>
@@ -2458,7 +2552,13 @@ export function CalendarMultiView() {
               </Box>
 
               {/* Property Details */}
-              <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: 3 }}>
+              <Box
+                sx={{
+                  display: 'grid',
+                  gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
+                  gap: 3,
+                }}
+              >
                 <Box>
                   <Typography variant="h6" gutterBottom>
                     Property Details
@@ -2509,10 +2609,15 @@ export function CalendarMultiView() {
                         size="small"
                         variant="outlined"
                         icon={
-                          amenity === 'WiFi' ? <Wifi size={14} /> :
-                          amenity === 'Parking' ? <Car size={14} /> :
-                          amenity === 'Kitchen' ? <Coffee size={14} /> :
-                          <Home size={14} />
+                          amenity === 'WiFi' ? (
+                            <Wifi size={14} />
+                          ) : amenity === 'Parking' ? (
+                            <Car size={14} />
+                          ) : amenity === 'Kitchen' ? (
+                            <Coffee size={14} />
+                          ) : (
+                            <Home size={14} />
+                          )
                         }
                       />
                     ))}
@@ -2522,7 +2627,7 @@ export function CalendarMultiView() {
             </Box>
           )}
         </DialogContent>
-        
+
         <DialogActions sx={{ p: 3 }}>
           <Button variant="outlined" onClick={() => setShowPropertyDetails(false)}>
             Close

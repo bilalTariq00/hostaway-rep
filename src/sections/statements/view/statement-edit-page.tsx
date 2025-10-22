@@ -48,8 +48,8 @@ const mockStatement = {
   lastSavedOn: 'Sep 30, 2025',
   dates: 'Sep 01, 2025 to Sep 30, 2025',
   grandTotal: 129.08,
-  expensesAndExtras: -200.00,
-  commissioniBookingConIVA: 0.00,
+  expensesAndExtras: -200.0,
+  commissioniBookingConIVA: 0.0,
   commissioniOtaConIVAAirbnb: 165.91,
   rentalActivity: [
     {
@@ -61,8 +61,8 @@ const mockStatement = {
       checkInDate: '2025-09-27',
       checkOutDate: '2025-09-30',
       guest: 'Khade Hector',
-      ricavoLordo: 366.60,
-      commissioniBooki: 0.00,
+      ricavoLordo: 366.6,
+      commissioniBooki: 0.0,
     },
     {
       id: 2,
@@ -73,8 +73,8 @@ const mockStatement = {
       checkInDate: '2025-09-21',
       checkOutDate: '2025-09-26',
       guest: 'Dominika Wąsiewicz',
-      ricavoLordo: 540.00,
-      commissioniBooki: 0.00,
+      ricavoLordo: 540.0,
+      commissioniBooki: 0.0,
     },
   ],
   expenses: [
@@ -85,7 +85,7 @@ const mockStatement = {
       categories: '',
       listing: 'Stylish Roman Escape | Near Colosseum & Metro',
       reservation: '',
-      amount: -200.00,
+      amount: -200.0,
     },
   ],
   propertyOwner: {
@@ -127,7 +127,7 @@ export default function StatementEditPage() {
   };
 
   const handleInputChange = (section: string, field: string, value: any) => {
-    setStatement(prev => ({
+    setStatement((prev) => ({
       ...prev,
       [section]: {
         ...(prev[section as keyof typeof prev] as any),
@@ -137,9 +137,18 @@ export default function StatementEditPage() {
   };
 
   const totalNights = statement.rentalActivity.reduce((sum, activity) => sum + activity.nights, 0);
-  const totalGuests = statement.rentalActivity.reduce((sum, activity) => sum + activity.numberOfGuests, 0);
-  const totalRicavoLordo = statement.rentalActivity.reduce((sum, activity) => sum + activity.ricavoLordo, 0);
-  const totalCommissioniBooki = statement.rentalActivity.reduce((sum, activity) => sum + activity.commissioniBooki, 0);
+  const totalGuests = statement.rentalActivity.reduce(
+    (sum, activity) => sum + activity.numberOfGuests,
+    0
+  );
+  const totalRicavoLordo = statement.rentalActivity.reduce(
+    (sum, activity) => sum + activity.ricavoLordo,
+    0
+  );
+  const totalCommissioniBooki = statement.rentalActivity.reduce(
+    (sum, activity) => sum + activity.commissioniBooki,
+    0
+  );
 
   return (
     <DashboardContent maxWidth="xl">
@@ -150,32 +159,32 @@ export default function StatementEditPage() {
             <ArrowLeft size={24} />
           </IconButton>
           <Typography variant="h6" sx={{ color: 'text.secondary' }}>
-          Statements
+            Statements
           </Typography>
         </Box>
-        
+
         <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 2 }}>
           <Box>
             <TextField
               value={statement.statementName}
-              onChange={(e) => setStatement(prev => ({ ...prev, statementName: e.target.value }))}
+              onChange={(e) => setStatement((prev) => ({ ...prev, statementName: e.target.value }))}
               variant="outlined"
-              sx={{ 
-                '& .MuiOutlinedInput-root': { 
+              sx={{
+                '& .MuiOutlinedInput-root': {
                   fontSize: '1.5rem',
                   fontWeight: 600,
-                  '& fieldset': { border: 'none' }
-                }
+                  '& fieldset': { border: 'none' },
+                },
               }}
             />
             <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mt: 1 }}>
               <Chip
                 label={statement.status}
                 size="small"
-                sx={{ 
+                sx={{
                   bgcolor: 'grey.300',
                   color: 'text.primary',
-                  fontWeight: 600
+                  fontWeight: 600,
                 }}
               />
               <Typography variant="body2" color="text.secondary">
@@ -232,7 +241,9 @@ export default function StatementEditPage() {
       {/* Metrics */}
       <Card sx={{ mb: 3 }}>
         <CardContent>
-          <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 2 }}>
+          <Box
+            sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 2 }}
+          >
             <Typography variant="h6" sx={{ fontWeight: 600 }}>
               Metrics
             </Typography>
@@ -284,8 +295,12 @@ export default function StatementEditPage() {
             Rental activity
           </Typography>
           <Box sx={{ display: 'flex', gap: 1, mb: 2 }}>
-            <Button variant="contained" size="small">Per reservation</Button>
-            <Button variant="outlined" size="small">Per listing</Button>
+            <Button variant="contained" size="small">
+              Per reservation
+            </Button>
+            <Button variant="outlined" size="small">
+              Per listing
+            </Button>
           </Box>
           <TableContainer>
             <Table>
@@ -317,7 +332,9 @@ export default function StatementEditPage() {
                     </TableCell>
                     <TableCell>
                       <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                        <Box sx={{ width: 8, height: 8, bgcolor: 'error.main', borderRadius: '50%' }} />
+                        <Box
+                          sx={{ width: 8, height: 8, bgcolor: 'error.main', borderRadius: '50%' }}
+                        />
                         <Typography variant="body2">{activity.channel}</Typography>
                       </Box>
                     </TableCell>
@@ -361,7 +378,9 @@ export default function StatementEditPage() {
       {/* Expenses and extras */}
       <Card sx={{ mb: 3 }}>
         <CardContent>
-          <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 2 }}>
+          <Box
+            sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 2 }}
+          >
             <Typography variant="h6" sx={{ fontWeight: 600 }}>
               Expenses and extras
             </Typography>
@@ -392,14 +411,20 @@ export default function StatementEditPage() {
                     {statement.expenses.map((expense) => (
                       <TableRow key={expense.id}>
                         <TableCell>
-                          <Typography variant="body2" sx={{ color: 'primary.main', cursor: 'pointer' }}>
+                          <Typography
+                            variant="body2"
+                            sx={{ color: 'primary.main', cursor: 'pointer' }}
+                          >
                             {expense.name}
                           </Typography>
                         </TableCell>
                         <TableCell>{expense.date}</TableCell>
                         <TableCell>—</TableCell>
                         <TableCell>
-                          <Typography variant="body2" sx={{ color: 'primary.main', cursor: 'pointer' }}>
+                          <Typography
+                            variant="body2"
+                            sx={{ color: 'primary.main', cursor: 'pointer' }}
+                          >
                             {expense.listing}
                           </Typography>
                         </TableCell>
@@ -440,7 +465,9 @@ export default function StatementEditPage() {
                 </Table>
               </TableContainer>
               <Box sx={{ display: 'flex', gap: 1, mt: 2, justifyContent: 'flex-end' }}>
-                <Button variant="outlined" size="small">Hide all</Button>
+                <Button variant="outlined" size="small">
+                  Hide all
+                </Button>
                 <Button variant="contained" size="small" startIcon={<Plus size={16} />}>
                   + Add expense
                 </Button>
@@ -456,7 +483,9 @@ export default function StatementEditPage() {
       {/* Attachments */}
       <Card sx={{ mb: 3 }}>
         <CardContent>
-          <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 2 }}>
+          <Box
+            sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 2 }}
+          >
             <Typography variant="h6" sx={{ fontWeight: 600 }}>
               Attachments
             </Typography>
@@ -465,13 +494,15 @@ export default function StatementEditPage() {
             </IconButton>
           </Box>
           {attachmentsExpanded && (
-            <Box sx={{ 
-              border: '2px dashed', 
-              borderColor: 'grey.300', 
-              borderRadius: 2, 
-              p: 4, 
-              textAlign: 'center' 
-            }}>
+            <Box
+              sx={{
+                border: '2px dashed',
+                borderColor: 'grey.300',
+                borderRadius: 2,
+                p: 4,
+                textAlign: 'center',
+              }}
+            >
               <Typography variant="body1" sx={{ mb: 1 }}>
                 Drop files to upload or
               </Typography>
@@ -486,7 +517,9 @@ export default function StatementEditPage() {
       {/* Grand total */}
       <Card sx={{ mb: 3 }}>
         <CardContent>
-          <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 2 }}>
+          <Box
+            sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 2 }}
+          >
             <Typography variant="h6" sx={{ fontWeight: 600 }}>
               Grand total
             </Typography>
@@ -536,7 +569,9 @@ export default function StatementEditPage() {
       {/* Contact and statement details */}
       <Card sx={{ mb: 3 }}>
         <CardContent>
-          <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 2 }}>
+          <Box
+            sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 2 }}
+          >
             <Typography variant="h6" sx={{ fontWeight: 600 }}>
               Contact and statement details
             </Typography>
@@ -547,7 +582,9 @@ export default function StatementEditPage() {
           {contactExpanded && (
             <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
               <Box>
-                <Typography variant="body2" sx={{ mb: 1 }}>Owners</Typography>
+                <Typography variant="body2" sx={{ mb: 1 }}>
+                  Owners
+                </Typography>
                 <TextField
                   fullWidth
                   placeholder="Select owner..."
@@ -563,29 +600,39 @@ export default function StatementEditPage() {
                   Update
                 </Button>
               </Box>
-              
+
               <Box>
-                <Typography variant="body2" sx={{ mb: 1 }}>Property Owner name</Typography>
+                <Typography variant="body2" sx={{ mb: 1 }}>
+                  Property Owner name
+                </Typography>
                 <TextField fullWidth />
               </Box>
-              
+
               <Box>
-                <Typography variant="body2" sx={{ mb: 1 }}>Property Owner email</Typography>
+                <Typography variant="body2" sx={{ mb: 1 }}>
+                  Property Owner email
+                </Typography>
                 <TextField fullWidth />
               </Box>
-              
+
               <Box>
-                <Typography variant="body2" sx={{ mb: 1 }}>Property Owner phone</Typography>
+                <Typography variant="body2" sx={{ mb: 1 }}>
+                  Property Owner phone
+                </Typography>
                 <TextField fullWidth />
               </Box>
-              
+
               <Box>
-                <Typography variant="body2" sx={{ mb: 1 }}>Property Owner address</Typography>
+                <Typography variant="body2" sx={{ mb: 1 }}>
+                  Property Owner address
+                </Typography>
                 <TextField fullWidth />
               </Box>
-              
+
               <Box>
-                <Typography variant="body2" sx={{ mb: 1 }}>Property Owner tax number/ID</Typography>
+                <Typography variant="body2" sx={{ mb: 1 }}>
+                  Property Owner tax number/ID
+                </Typography>
                 <TextField fullWidth />
               </Box>
             </Box>
@@ -596,7 +643,9 @@ export default function StatementEditPage() {
       {/* Property Manager Details */}
       <Card sx={{ mb: 3 }}>
         <CardContent>
-          <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 2 }}>
+          <Box
+            sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 2 }}
+          >
             <Typography variant="h6" sx={{ fontWeight: 600 }}>
               Property Manager Details
             </Typography>
@@ -607,32 +656,44 @@ export default function StatementEditPage() {
           {propertyManagerExpanded && (
             <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
               <Box>
-                <Typography variant="body2" sx={{ mb: 1 }}>Property Manager name</Typography>
+                <Typography variant="body2" sx={{ mb: 1 }}>
+                  Property Manager name
+                </Typography>
                 <TextField fullWidth value={statement.propertyManager.name} />
               </Box>
-              
+
               <Box>
-                <Typography variant="body2" sx={{ mb: 1 }}>Property Manager email</Typography>
+                <Typography variant="body2" sx={{ mb: 1 }}>
+                  Property Manager email
+                </Typography>
                 <TextField fullWidth value={statement.propertyManager.email} />
               </Box>
-              
+
               <Box>
-                <Typography variant="body2" sx={{ mb: 1 }}>Property Manager phone</Typography>
+                <Typography variant="body2" sx={{ mb: 1 }}>
+                  Property Manager phone
+                </Typography>
                 <TextField fullWidth value={statement.propertyManager.phone} />
               </Box>
-              
+
               <Box>
-                <Typography variant="body2" sx={{ mb: 1 }}>Property Manager address</Typography>
+                <Typography variant="body2" sx={{ mb: 1 }}>
+                  Property Manager address
+                </Typography>
                 <TextField fullWidth />
               </Box>
-              
+
               <Box>
-                <Typography variant="body2" sx={{ mb: 1 }}>Property Manager tax number/ID</Typography>
+                <Typography variant="body2" sx={{ mb: 1 }}>
+                  Property Manager tax number/ID
+                </Typography>
                 <TextField fullWidth />
               </Box>
-              
+
               <Box>
-                <Typography variant="body2" sx={{ mb: 1 }}>Logo</Typography>
+                <Typography variant="body2" sx={{ mb: 1 }}>
+                  Logo
+                </Typography>
                 <Button variant="contained" startIcon={<Upload size={16} />}>
                   Upload
                 </Button>
@@ -645,14 +706,18 @@ export default function StatementEditPage() {
                   </IconButton>
                 </Box>
               </Box>
-              
+
               <Box>
-                <Typography variant="body2" sx={{ mb: 1 }}>Notes</Typography>
+                <Typography variant="body2" sx={{ mb: 1 }}>
+                  Notes
+                </Typography>
                 <TextField fullWidth multiline rows={4} />
               </Box>
-              
+
               <Box>
-                <Typography variant="body2" sx={{ mb: 1 }}>Invoice number</Typography>
+                <Typography variant="body2" sx={{ mb: 1 }}>
+                  Invoice number
+                </Typography>
                 <TextField fullWidth />
               </Box>
             </Box>

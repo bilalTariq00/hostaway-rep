@@ -1,11 +1,5 @@
 import { useState } from 'react';
-import { 
-  X,
-  Edit,
-  Info,
-  Plus,
-  ArrowLeft
-} from 'lucide-react';
+import { X, Edit, Info, Plus, ArrowLeft } from 'lucide-react';
 
 import Box from '@mui/material/Box';
 import Paper from '@mui/material/Paper';
@@ -114,19 +108,25 @@ export function ListingsCustomFieldsView() {
   const handleFormSubmit = () => {
     if (editingField) {
       // Edit existing field
-      setCustomFields(prev => prev.map(field => 
-        field.id === editingField.id 
-          ? { ...field, ...formData, variable: `{{${formData.name.toLowerCase().replace(/\s+/g, '_')}}}` }
-          : field
-      ));
+      setCustomFields((prev) =>
+        prev.map((field) =>
+          field.id === editingField.id
+            ? {
+                ...field,
+                ...formData,
+                variable: `{{${formData.name.toLowerCase().replace(/\s+/g, '_')}}}`,
+              }
+            : field
+        )
+      );
     } else {
       // Add new field
       const newField = {
-        id: Math.max(...customFields.map(f => f.id)) + 1,
+        id: Math.max(...customFields.map((f) => f.id)) + 1,
         ...formData,
         variable: `{{${formData.name.toLowerCase().replace(/\s+/g, '_')}}}`,
       };
-      setCustomFields(prev => [...prev, newField]);
+      setCustomFields((prev) => [...prev, newField]);
     }
     handleSidebarClose();
   };
@@ -148,7 +148,7 @@ export function ListingsCustomFieldsView() {
 
   const handleDeleteConfirm = () => {
     if (fieldToDelete) {
-      setCustomFields(prev => prev.filter(field => field.id !== fieldToDelete.id));
+      setCustomFields((prev) => prev.filter((field) => field.id !== fieldToDelete.id));
     }
     setDeleteDialogOpen(false);
     setFieldToDelete(null);
@@ -170,7 +170,6 @@ export function ListingsCustomFieldsView() {
   return (
     <DashboardContent maxWidth="xl">
       {/* Top Header Bar */}
-   
 
       {/* Main Content */}
       <Box sx={{ bgcolor: 'grey.50', minHeight: '100vh', p: 3 }}>
@@ -179,16 +178,16 @@ export function ListingsCustomFieldsView() {
           <Button
             startIcon={<ArrowLeft size={16} />}
             onClick={handleBackClick}
-            sx={{ 
+            sx={{
               color: 'text.secondary',
               textTransform: 'none',
-              '&:hover': { bgcolor: 'transparent' }
+              '&:hover': { bgcolor: 'transparent' },
             }}
           >
             Listings
           </Button>
         </Box>
-        
+
         {/* Title */}
         <Typography variant="h4" sx={{ fontWeight: 600, color: 'text.primary', mb: 3 }}>
           Custom fields
@@ -202,7 +201,7 @@ export function ListingsCustomFieldsView() {
             onClick={handleAddCustomField}
             sx={{
               bgcolor: 'primary.main',
-              '&:hover': { bgcolor: 'primary.dark' }
+              '&:hover': { bgcolor: 'primary.dark' },
             }}
           >
             Add custom field
@@ -219,7 +218,9 @@ export function ListingsCustomFieldsView() {
                   <TableCell sx={{ fontWeight: 600 }}>Type</TableCell>
                   <TableCell sx={{ fontWeight: 600 }}>Public</TableCell>
                   <TableCell sx={{ fontWeight: 600 }}>Variable</TableCell>
-                  <TableCell align="center" sx={{ fontWeight: 600 }}>Actions</TableCell>
+                  <TableCell align="center" sx={{ fontWeight: 600 }}>
+                    Actions
+                  </TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
@@ -231,38 +232,42 @@ export function ListingsCustomFieldsView() {
                       </Typography>
                     </TableCell>
                     <TableCell>
-                      <Typography variant="body2">
-                        {field.type}
-                      </Typography>
+                      <Typography variant="body2">{field.type}</Typography>
                     </TableCell>
                     <TableCell>
-                      <Typography variant="body2" color={field.public ? 'success.main' : 'text.secondary'}>
+                      <Typography
+                        variant="body2"
+                        color={field.public ? 'success.main' : 'text.secondary'}
+                      >
                         {field.public ? 'Yes' : 'No'}
                       </Typography>
                     </TableCell>
                     <TableCell>
-                      <Typography variant="body2" sx={{ 
-                        fontFamily: 'monospace', 
-                        bgcolor: 'grey.100', 
-                        px: 1, 
-                        py: 0.5, 
-                        borderRadius: 0.5,
-                        fontSize: '0.875rem'
-                      }}>
+                      <Typography
+                        variant="body2"
+                        sx={{
+                          fontFamily: 'monospace',
+                          bgcolor: 'grey.100',
+                          px: 1,
+                          py: 0.5,
+                          borderRadius: 0.5,
+                          fontSize: '0.875rem',
+                        }}
+                      >
                         {field.variable}
                       </Typography>
                     </TableCell>
                     <TableCell align="center">
                       <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
-                        <IconButton 
-                          size="small" 
+                        <IconButton
+                          size="small"
                           onClick={() => handleEdit(field)}
                           sx={{ color: 'primary.main' }}
                         >
                           <Edit size={16} />
                         </IconButton>
-                        <IconButton 
-                          size="small" 
+                        <IconButton
+                          size="small"
                           onClick={() => handleDeleteClick(field)}
                           sx={{ color: 'error.main' }}
                         >
@@ -307,7 +312,9 @@ export function ListingsCustomFieldsView() {
       >
         <Box sx={{ p: 3, height: '100%', display: 'flex', flexDirection: 'column' }}>
           {/* Header */}
-          <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 3 }}>
+          <Box
+            sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 3 }}
+          >
             <Typography variant="h6" sx={{ fontWeight: 600 }}>
               {editingField ? 'Edit custom field' : 'Add custom field'}
             </Typography>
@@ -324,7 +331,9 @@ export function ListingsCustomFieldsView() {
                 <Typography variant="body2" sx={{ fontWeight: 500 }}>
                   Custom field name
                 </Typography>
-                <Typography variant="body2" sx={{ color: 'error.main' }}>*</Typography>
+                <Typography variant="body2" sx={{ color: 'error.main' }}>
+                  *
+                </Typography>
                 <Info size={16} color="#666" />
               </Box>
               <TextField
@@ -385,7 +394,10 @@ export function ListingsCustomFieldsView() {
                     },
                   }}
                 />
-                <Typography variant="body2" color={formData.public ? 'success.main' : 'text.secondary'}>
+                <Typography
+                  variant="body2"
+                  color={formData.public ? 'success.main' : 'text.secondary'}
+                >
                   {formData.public ? 'Yes' : 'No'}
                 </Typography>
               </Box>
@@ -403,8 +415,8 @@ export function ListingsCustomFieldsView() {
                 color: 'text.secondary',
                 '&:hover': {
                   borderColor: 'grey.400',
-                  bgcolor: 'grey.50'
-                }
+                  bgcolor: 'grey.50',
+                },
               }}
             >
               Cancel
@@ -417,7 +429,7 @@ export function ListingsCustomFieldsView() {
               sx={{
                 bgcolor: 'success.main',
                 '&:hover': { bgcolor: 'success.dark' },
-                '&:disabled': { bgcolor: 'grey.300' }
+                '&:disabled': { bgcolor: 'grey.300' },
               }}
             >
               {editingField ? 'Update' : 'Save'}
@@ -427,12 +439,7 @@ export function ListingsCustomFieldsView() {
       </Drawer>
 
       {/* Delete Confirmation Dialog */}
-      <Dialog
-        open={deleteDialogOpen}
-        onClose={handleDeleteCancel}
-        maxWidth="sm"
-        fullWidth
-      >
+      <Dialog open={deleteDialogOpen} onClose={handleDeleteCancel} maxWidth="sm" fullWidth>
         <DialogTitle>
           <Typography variant="h6" sx={{ fontWeight: 600 }}>
             Delete Custom Field
@@ -440,7 +447,8 @@ export function ListingsCustomFieldsView() {
         </DialogTitle>
         <DialogContent>
           <Typography variant="body1">
-            Are you sure you want to delete the custom field &quot;{fieldToDelete?.name}&quot;? This action cannot be undone.
+            Are you sure you want to delete the custom field &quot;{fieldToDelete?.name}&quot;? This
+            action cannot be undone.
           </Typography>
         </DialogContent>
         <DialogActions sx={{ p: 3 }}>
@@ -452,8 +460,8 @@ export function ListingsCustomFieldsView() {
               color: 'text.secondary',
               '&:hover': {
                 borderColor: 'grey.400',
-                bgcolor: 'grey.50'
-              }
+                bgcolor: 'grey.50',
+              },
             }}
           >
             Cancel
@@ -463,7 +471,7 @@ export function ListingsCustomFieldsView() {
             variant="contained"
             sx={{
               bgcolor: 'error.main',
-              '&:hover': { bgcolor: 'error.dark' }
+              '&:hover': { bgcolor: 'error.dark' },
             }}
           >
             Yes, Delete

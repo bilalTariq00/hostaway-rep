@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { 
+import {
   X,
   Info,
   Save,
@@ -10,7 +10,7 @@ import {
   RefreshCw,
   PlusCircle,
   ChevronLeft,
-  ChevronRight
+  ChevronRight,
 } from 'lucide-react';
 
 import {
@@ -34,24 +34,25 @@ import {
 // Mock data for the listing being edited
 const mockListingData = {
   id: 1,
-  propertyName: "Superattico - Via Del Corso 43",
-  externalName: "[Sky Domus] Historic Center Penthouse With Jacuzzi",
+  propertyName: 'Superattico - Via Del Corso 43',
+  externalName: '[Sky Domus] Historic Center Penthouse With Jacuzzi',
   capacity: 5,
-  propertyType: "Apartment",
-  roomType: "Entire home",
+  propertyType: 'Apartment',
+  roomType: 'Entire home',
   bedrooms: 2,
   beds: 3,
-  description: "PENTHOUSE con JACUZZI, panoramica e lussuosa nel cuore di ROMA, su Via del Corso che regala una vista mozzafiato su PIAZZA VENEZIA e PIAZZA DEL POPOLO. A meno di 5 minuti a piedi dai monumenti storici più importanti, come PIAZZA DI SPAGNA E DEL POPOLO, FONTANA DI TREVI ed altri !",
-  address: "Via del Corso 43, Rome, Italy",
-  city: "Rome",
-  country: "Italy",
-  amenities: ["Wifi", "TV", "Kitchen", "Heating", "Air conditioning", "Pool", "Jacuzzi"],
+  description:
+    'PENTHOUSE con JACUZZI, panoramica e lussuosa nel cuore di ROMA, su Via del Corso che regala una vista mozzafiato su PIAZZA VENEZIA e PIAZZA DEL POPOLO. A meno di 5 minuti a piedi dai monumenti storici più importanti, come PIAZZA DI SPAGNA E DEL POPOLO, FONTANA DI TREVI ed altri !',
+  address: 'Via del Corso 43, Rome, Italy',
+  city: 'Rome',
+  country: 'Italy',
+  amenities: ['Wifi', 'TV', 'Kitchen', 'Heating', 'Air conditioning', 'Pool', 'Jacuzzi'],
   basePrice: 150,
   cleaningFee: 25,
   instantBookable: true,
   minimumNights: 2,
-  checkInTime: "15:00",
-  checkOutTime: "11:00"
+  checkInTime: '15:00',
+  checkOutTime: '11:00',
 };
 
 export default function ListingEditPage() {
@@ -73,9 +74,9 @@ export default function ListingEditPage() {
   };
 
   const handleInputChange = (field: string, value: any) => {
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
-      [field]: value
+      [field]: value,
     }));
   };
 
@@ -88,12 +89,10 @@ export default function ListingEditPage() {
   const renderBasicInfoTab = () => (
     <Box>
       <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
-        <Typography variant="h5" sx={{ fontWeight: 600 }}>Basic info</Typography>
-        <Button 
-          variant="text" 
-          size="small"
-          sx={{ color: 'primary.main' }}
-        >
+        <Typography variant="h5" sx={{ fontWeight: 600 }}>
+          Basic info
+        </Typography>
+        <Button variant="text" size="small" sx={{ color: 'primary.main' }}>
           Learn how to Export to Airbnb PRO
         </Button>
       </Box>
@@ -139,13 +138,7 @@ export default function ListingEditPage() {
             Tags
           </Typography>
           <Info size={16} color="#666" />
-          <TextField
-            fullWidth
-            placeholder="Tags"
-            variant="outlined"
-            size="small"
-            select
-          />
+          <TextField fullWidth placeholder="Tags" variant="outlined" size="small" select />
         </Box>
 
         <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
@@ -246,38 +239,32 @@ export default function ListingEditPage() {
 
   const renderAddressTab = () => (
     <Box>
-      <Typography variant="h5" sx={{ fontWeight: 600, mb: 3 }}>Address</Typography>
+      <Typography variant="h5" sx={{ fontWeight: 600, mb: 3 }}>
+        Address
+      </Typography>
       <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
-        <TextField 
-          fullWidth 
-          label="Street Address" 
+        <TextField
+          fullWidth
+          label="Street Address"
           value={formData.address}
           onChange={(e) => handleInputChange('address', e.target.value)}
-          variant="outlined" 
+          variant="outlined"
         />
-        <TextField 
-          fullWidth 
-          label="City" 
+        <TextField
+          fullWidth
+          label="City"
           value={formData.city}
           onChange={(e) => handleInputChange('city', e.target.value)}
-          variant="outlined" 
+          variant="outlined"
         />
-        <TextField 
-          fullWidth 
-          label="State/Province" 
-          variant="outlined" 
-        />
-        <TextField 
-          fullWidth 
-          label="Postal Code" 
-          variant="outlined" 
-        />
-        <TextField 
-          fullWidth 
-          label="Country" 
+        <TextField fullWidth label="State/Province" variant="outlined" />
+        <TextField fullWidth label="Postal Code" variant="outlined" />
+        <TextField
+          fullWidth
+          label="Country"
           value={formData.country}
           onChange={(e) => handleInputChange('country', e.target.value)}
-          variant="outlined" 
+          variant="outlined"
         />
       </Box>
     </Box>
@@ -285,13 +272,15 @@ export default function ListingEditPage() {
 
   const renderAmenitiesTab = () => (
     <Box>
-      <Typography variant="h5" sx={{ fontWeight: 600, mb: 3 }}>Amenities</Typography>
+      <Typography variant="h5" sx={{ fontWeight: 600, mb: 3 }}>
+        Amenities
+      </Typography>
       <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
         {formData.amenities.map((amenity, index) => (
-          <Chip 
+          <Chip
             key={index}
-            label={amenity} 
-            variant="outlined" 
+            label={amenity}
+            variant="outlined"
             size="small"
             onDelete={() => {
               const newAmenities = formData.amenities.filter((_, i) => i !== index);
@@ -305,74 +294,68 @@ export default function ListingEditPage() {
 
   const renderPricingTab = () => (
     <Box>
-      <Typography variant="h5" sx={{ fontWeight: 600, mb: 3 }}>Price & fees</Typography>
+      <Typography variant="h5" sx={{ fontWeight: 600, mb: 3 }}>
+        Price & fees
+      </Typography>
       <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
-        <TextField 
-          fullWidth 
-          label="Base Price (€)" 
+        <TextField
+          fullWidth
+          label="Base Price (€)"
           type="number"
           value={formData.basePrice}
           onChange={(e) => handleInputChange('basePrice', parseFloat(e.target.value))}
-          variant="outlined" 
+          variant="outlined"
         />
-        <TextField 
-          fullWidth 
-          label="Cleaning Fee (€)" 
+        <TextField
+          fullWidth
+          label="Cleaning Fee (€)"
           type="number"
           value={formData.cleaningFee}
           onChange={(e) => handleInputChange('cleaningFee', parseFloat(e.target.value))}
-          variant="outlined" 
+          variant="outlined"
         />
-        <TextField 
-          fullWidth 
-          label="Weekly Discount (%)" 
-          type="number"
-          variant="outlined" 
-        />
-        <TextField 
-          fullWidth 
-          label="Monthly Discount (%)" 
-          type="number"
-          variant="outlined" 
-        />
+        <TextField fullWidth label="Weekly Discount (%)" type="number" variant="outlined" />
+        <TextField fullWidth label="Monthly Discount (%)" type="number" variant="outlined" />
       </Box>
     </Box>
   );
 
   const renderBookingTab = () => (
     <Box>
-      <Typography variant="h5" sx={{ fontWeight: 600, mb: 3 }}>Booking settings</Typography>
+      <Typography variant="h5" sx={{ fontWeight: 600, mb: 3 }}>
+        Booking settings
+      </Typography>
       <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
         <FormControlLabel
           control={
-            <Switch 
+            <Switch
               checked={formData.instantBookable}
               onChange={(e) => handleInputChange('instantBookable', e.target.checked)}
             />
           }
           label="Instant Booking"
         />
-        <TextField 
-          fullWidth 
-          label="Minimum Nights" 
+        <TextField
+          fullWidth
+          label="Minimum Nights"
           type="number"
           value={formData.minimumNights}
           onChange={(e) => handleInputChange('minimumNights', parseInt(e.target.value))}
-          variant="outlined" 
+          variant="outlined"
         />
-        <TextField 
-          fullWidth 
-          label="Check-in Time" 
+        <TextField
+          fullWidth
+          label="Check-in Time"
           value={formData.checkInTime}
           onChange={(e) => handleInputChange('checkInTime', e.target.value)}
-          variant="outlined" 
+          variant="outlined"
         />
-        <TextField 
-          fullWidth 
-          label="Check-out Time" 
+        <TextField
+          fullWidth
+          label="Check-out Time"
           value={formData.checkOutTime}
           onChange={(e) => handleInputChange('checkOutTime', e.target.value)}
-          variant="outlined" 
+          variant="outlined"
         />
       </Box>
     </Box>
@@ -381,18 +364,20 @@ export default function ListingEditPage() {
   return (
     <Box sx={{ height: '100vh', display: 'flex', flexDirection: 'column' }}>
       {/* Header */}
-      <Box sx={{ 
-        display: 'flex', 
-        alignItems: 'center', 
-        justifyContent: 'space-between',
-        p: 3,
-        borderBottom: 1,
-        borderColor: 'divider',
-        bgcolor: 'background.paper'
-      }}>
+      <Box
+        sx={{
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          p: 3,
+          borderBottom: 1,
+          borderColor: 'divider',
+          bgcolor: 'background.paper',
+        }}
+      >
         <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-          <Button 
-            variant="text" 
+          <Button
+            variant="text"
             startIcon={<ArrowLeft size={20} />}
             onClick={handleBack}
             sx={{ color: 'text.secondary' }}
@@ -404,8 +389,8 @@ export default function ListingEditPage() {
           </Typography>
         </Box>
         <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-          <Button 
-            variant="outlined" 
+          <Button
+            variant="outlined"
             startIcon={<Globe size={16} />}
             onClick={handleTranslationsOpen}
           >
@@ -417,8 +402,8 @@ export default function ListingEditPage() {
           <IconButton size="small">
             <ChevronRight size={20} />
           </IconButton>
-          <Button 
-            variant="contained" 
+          <Button
+            variant="contained"
             startIcon={<Save size={16} />}
             onClick={handleSave}
             sx={{ bgcolor: 'primary.main' }}
@@ -433,8 +418,8 @@ export default function ListingEditPage() {
 
       {/* Tabs Navigation */}
       <Box sx={{ borderBottom: 1, borderColor: 'divider', px: 3, bgcolor: 'background.paper' }}>
-        <Tabs 
-          value={currentTab} 
+        <Tabs
+          value={currentTab}
           onChange={(e, newValue) => setCurrentTab(newValue)}
           variant="scrollable"
           scrollButtons="auto"
@@ -466,7 +451,7 @@ export default function ListingEditPage() {
         {currentTab === 'amenities' && renderAmenitiesTab()}
         {currentTab === 'pricing' && renderPricingTab()}
         {currentTab === 'booking' && renderBookingTab()}
-        
+
         {!['basic-info', 'address', 'amenities', 'pricing', 'booking'].includes(currentTab) && (
           <Box>
             <Typography variant="h5" sx={{ fontWeight: 600, mb: 3 }}>
@@ -485,23 +470,22 @@ export default function ListingEditPage() {
         open={translationsOpen}
         onClose={handleTranslationsClose}
         PaperProps={{
-          sx: { width: 400 }
+          sx: { width: 400 },
         }}
       >
         <Box sx={{ p: 3 }}>
-          <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
+          <Box
+            sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}
+          >
             <Typography variant="h6">Translations</Typography>
             <IconButton onClick={handleTranslationsClose}>
               <X size={20} />
             </IconButton>
           </Box>
-          
+
           <FormControl fullWidth sx={{ mb: 3 }}>
             <InputLabel>Language</InputLabel>
-            <Select
-              value="en"
-              label="Language"
-            >
+            <Select value="en" label="Language">
               <MenuItem value="en">English</MenuItem>
               <MenuItem value="es">Spanish</MenuItem>
               <MenuItem value="fr">French</MenuItem>
@@ -511,12 +495,7 @@ export default function ListingEditPage() {
           </FormControl>
 
           <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
-            <TextField
-              fullWidth
-              label="Property Name"
-              variant="outlined"
-              size="small"
-            />
+            <TextField fullWidth label="Property Name" variant="outlined" size="small" />
             <TextField
               fullWidth
               label="Description"
@@ -525,12 +504,7 @@ export default function ListingEditPage() {
               variant="outlined"
               size="small"
             />
-            <TextField
-              fullWidth
-              label="Address"
-              variant="outlined"
-              size="small"
-            />
+            <TextField fullWidth label="Address" variant="outlined" size="small" />
           </Box>
 
           <Box sx={{ mt: 3, display: 'flex', gap: 2 }}>

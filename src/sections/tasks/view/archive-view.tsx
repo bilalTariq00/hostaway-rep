@@ -92,7 +92,7 @@ export function ArchiveView() {
   const [selectedAssignee, setSelectedAssignee] = useState('');
   const [archivedTasks, setArchivedTasks] = useState<any[]>([]);
   const [settingsAnchor, setSettingsAnchor] = useState<null | HTMLElement>(null);
-  
+
   // Column visibility state
   const [visibleColumns, setVisibleColumns] = useState({
     task: true,
@@ -116,22 +116,22 @@ export function ArchiveView() {
   const loadTasks = () => {
     const savedTasks = localStorage.getItem('tasks');
     const savedArchivedTasks = localStorage.getItem('archivedTasks');
-    
+
     let allTasks: any[] = [];
-    
+
     if (savedTasks) {
       allTasks = [...allTasks, ...JSON.parse(savedTasks)];
     }
-    
+
     if (savedArchivedTasks) {
       allTasks = [...allTasks, ...JSON.parse(savedArchivedTasks)];
     }
-    
+
     // If no saved tasks, use mock data
     if (allTasks.length === 0) {
       allTasks = mockArchivedTasks;
     }
-    
+
     return allTasks;
   };
 
@@ -144,7 +144,7 @@ export function ArchiveView() {
     const handleFocus = () => {
       setArchivedTasks(loadTasks());
     };
-    
+
     window.addEventListener('focus', handleFocus);
     return () => window.removeEventListener('focus', handleFocus);
   }, []);
@@ -221,21 +221,22 @@ export function ArchiveView() {
   const handleDeleteConfirm = () => {
     if (selectedTask) {
       console.log('Deleting task:', selectedTask.id, selectedTask.title);
-      
+
       // Remove from both storage locations
       const savedTasks = localStorage.getItem('tasks');
       const savedArchivedTasks = localStorage.getItem('archivedTasks');
-      
+
       let updatedTasks = [];
       let updatedArchived = [];
-      
+
       if (savedTasks) {
         try {
           const tasksData = JSON.parse(savedTasks);
           updatedTasks = tasksData.filter((task: any) => {
             // Handle both string and number IDs
             const taskId = typeof task.id === 'string' ? parseInt(task.id) : task.id;
-            const selectedId = typeof selectedTask.id === 'string' ? parseInt(selectedTask.id) : selectedTask.id;
+            const selectedId =
+              typeof selectedTask.id === 'string' ? parseInt(selectedTask.id) : selectedTask.id;
             return taskId !== selectedId;
           });
           localStorage.setItem('tasks', JSON.stringify(updatedTasks));
@@ -244,14 +245,15 @@ export function ArchiveView() {
           console.error('Error parsing tasks data:', error);
         }
       }
-      
+
       if (savedArchivedTasks) {
         try {
           const archivedData = JSON.parse(savedArchivedTasks);
           updatedArchived = archivedData.filter((task: any) => {
             // Handle both string and number IDs
             const taskId = typeof task.id === 'string' ? parseInt(task.id) : task.id;
-            const selectedId = typeof selectedTask.id === 'string' ? parseInt(selectedTask.id) : selectedTask.id;
+            const selectedId =
+              typeof selectedTask.id === 'string' ? parseInt(selectedTask.id) : selectedTask.id;
             return taskId !== selectedId;
           });
           localStorage.setItem('archivedTasks', JSON.stringify(updatedArchived));
@@ -260,7 +262,7 @@ export function ArchiveView() {
           console.error('Error parsing archived data:', error);
         }
       }
-      
+
       // Combine remaining tasks and update state directly
       const remainingTasks = [...updatedTasks, ...updatedArchived];
       console.log('Remaining tasks after delete:', remainingTasks.length);
@@ -279,9 +281,9 @@ export function ArchiveView() {
   };
 
   const handleColumnToggle = (column: string) => {
-    setVisibleColumns(prev => ({
+    setVisibleColumns((prev) => ({
       ...prev,
-      [column]: !prev[column as keyof typeof prev]
+      [column]: !prev[column as keyof typeof prev],
     }));
   };
 
@@ -385,7 +387,7 @@ export function ArchiveView() {
           <Grid size={{ xs: 12, sm: 6, md: 3 }}>
             <Button
               variant="outlined"
-              startIcon={<Iconify icon={"eva:more-horizontal-fill" as any} />}
+              startIcon={<Iconify icon={'eva:more-horizontal-fill' as any} />}
               fullWidth
             >
               More Filter
@@ -397,12 +399,21 @@ export function ArchiveView() {
       {/* Data Mapping - Archived Tasks Table */}
       <Paper sx={{ mb: 3 }}>
         {/* Table Header with Settings */}
-        <Box sx={{ p: 2, borderBottom: 1, borderColor: 'divider', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+        <Box
+          sx={{
+            p: 2,
+            borderBottom: 1,
+            borderColor: 'divider',
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+          }}
+        >
           <Typography variant="h6">Tasks Table</Typography>
           <Button
             variant="outlined"
             size="small"
-            startIcon={<Iconify icon={"eva:settings-fill" as any} />}
+            startIcon={<Iconify icon={'eva:settings-fill' as any} />}
             onClick={handleSettingsOpen}
           >
             Column Settings
@@ -434,7 +445,7 @@ export function ArchiveView() {
               {currentTasks.map((task) => (
                 <TableRow key={task.id}>
                   {visibleColumns.task && (
-                  <TableCell>
+                    <TableCell>
                       <Typography variant="body2" sx={{ fontWeight: 500 }}>
                         {task.title || 'Untitled Task'}
                       </Typography>
@@ -445,122 +456,104 @@ export function ArchiveView() {
                       <Typography variant="body2" color="text.secondary">
                         {task.description || '-'}
                       </Typography>
-                  </TableCell>
+                    </TableCell>
                   )}
                   {visibleColumns.status && (
-                  <TableCell>
-                    <Chip
-                        label={task.status || 'Pending'}
-                      size="small"
-                      color="default"
-                    />
-                  </TableCell>
+                    <TableCell>
+                      <Chip label={task.status || 'Pending'} size="small" color="default" />
+                    </TableCell>
                   )}
                   {visibleColumns.priority && (
-                  <TableCell>
-                    <Chip
+                    <TableCell>
+                      <Chip
                         label={task.priority || 'Medium'}
-                      size="small"
-                      color={
-                        task.priority === 'High'
-                          ? 'error'
-                          : task.priority === 'Medium'
-                            ? 'warning'
-                            : 'success'
-                      }
-                    />
-                  </TableCell>
+                        size="small"
+                        color={
+                          task.priority === 'High'
+                            ? 'error'
+                            : task.priority === 'Medium'
+                              ? 'warning'
+                              : 'success'
+                        }
+                      />
+                    </TableCell>
                   )}
                   {visibleColumns.assignee && (
                     <TableCell>
-                      <Typography variant="body2">
-                        {task.assignee || '-'}
-                      </Typography>
+                      <Typography variant="body2">{task.assignee || '-'}</Typography>
                     </TableCell>
                   )}
                   {visibleColumns.supervisor && (
                     <TableCell>
-                      <Typography variant="body2">
-                        {task.supervisor || '-'}
-                      </Typography>
+                      <Typography variant="body2">{task.supervisor || '-'}</Typography>
                     </TableCell>
                   )}
                   {visibleColumns.group && (
                     <TableCell>
-                      <Typography variant="body2">
-                        {task.group || '-'}
-                      </Typography>
+                      <Typography variant="body2">{task.group || '-'}</Typography>
                     </TableCell>
                   )}
                   {visibleColumns.startDate && (
                     <TableCell>
-                      <Typography variant="body2">
-                        {task.startDate || '-'}
-                      </Typography>
+                      <Typography variant="body2">{task.startDate || '-'}</Typography>
                     </TableCell>
                   )}
                   {visibleColumns.endDate && (
-                  <TableCell>
-                    <Typography variant="body2">
-                        {task.endDate || '-'}
-                    </Typography>
-                  </TableCell>
+                    <TableCell>
+                      <Typography variant="body2">{task.endDate || '-'}</Typography>
+                    </TableCell>
                   )}
                   {visibleColumns.category && (
-                  <TableCell>
-                    <Typography variant="body2">
-                        {task.category || '-'}
-                    </Typography>
-                  </TableCell>
+                    <TableCell>
+                      <Typography variant="body2">{task.category || '-'}</Typography>
+                    </TableCell>
                   )}
                   {visibleColumns.listing && (
-                  <TableCell>
-                    <Typography variant="body2">
-                        {task.listing || '-'}
-                    </Typography>
-                  </TableCell>
+                    <TableCell>
+                      <Typography variant="body2">{task.listing || '-'}</Typography>
+                    </TableCell>
                   )}
                   {visibleColumns.channel && (
-                  <TableCell>
-                      <Typography variant="body2">
-                        {task.channel || '-'}
-                    </Typography>
-                  </TableCell>
+                    <TableCell>
+                      <Typography variant="body2">{task.channel || '-'}</Typography>
+                    </TableCell>
                   )}
                   {visibleColumns.reservation && (
-                  <TableCell>
-                    <Typography variant="body2">
-                        {task.reservation || '-'}
-                    </Typography>
-                  </TableCell>
+                    <TableCell>
+                      <Typography variant="body2">{task.reservation || '-'}</Typography>
+                    </TableCell>
                   )}
                   {visibleColumns.cost && (
-                  <TableCell>
-                    <Typography variant="body2">
-                        {task.cost ? `$${task.cost}` : '-'}
-                      </Typography>
+                    <TableCell>
+                      <Typography variant="body2">{task.cost ? `$${task.cost}` : '-'}</Typography>
                     </TableCell>
                   )}
                   {visibleColumns.archivedDate && (
                     <TableCell>
                       <Typography variant="body2" color="text.secondary">
                         {task.archivedDate || '-'}
-                    </Typography>
-                  </TableCell>
+                      </Typography>
+                    </TableCell>
                   )}
                   <TableCell align="center">
                     <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
-                      <IconButton size="small" onClick={() => router.push(`/tasks/${task.id}/view`)}>
-                        <Iconify icon={"eva:eye-fill" as any} width={16} />
-                      </IconButton>
-                      <IconButton size="small" onClick={() => { setSelectedTask(task); setDuplicateDialogOpen(true); }}>
-                        <Iconify icon={"eva:copy-fill" as any} width={16} />
-                      </IconButton>
-                      <IconButton 
-                        size="small" 
-                        onClick={(e) => handleActionMenuOpen(e, task)}
+                      <IconButton
+                        size="small"
+                        onClick={() => router.push(`/tasks/${task.id}/view`)}
                       >
-                        <Iconify icon={"eva:more-vertical-fill" as any} width={16} />
+                        <Iconify icon={'eva:eye-fill' as any} width={16} />
+                      </IconButton>
+                      <IconButton
+                        size="small"
+                        onClick={() => {
+                          setSelectedTask(task);
+                          setDuplicateDialogOpen(true);
+                        }}
+                      >
+                        <Iconify icon={'eva:copy-fill' as any} width={16} />
+                      </IconButton>
+                      <IconButton size="small" onClick={(e) => handleActionMenuOpen(e, task)}>
+                        <Iconify icon={'eva:more-vertical-fill' as any} width={16} />
                       </IconButton>
                     </Box>
                   </TableCell>
@@ -593,23 +586,23 @@ export function ArchiveView() {
         onClose={handleActionMenuClose}
       >
         <MenuItem onClick={handleViewTask}>
-          <Iconify icon={"eva:eye-fill" as any} sx={{ mr: 1 }} />
+          <Iconify icon={'eva:eye-fill' as any} sx={{ mr: 1 }} />
           View Details
         </MenuItem>
         <MenuItem onClick={handleEditTask}>
-          <Iconify icon={"eva:edit-fill" as any} sx={{ mr: 1 }} />
+          <Iconify icon={'eva:edit-fill' as any} sx={{ mr: 1 }} />
           Edit
         </MenuItem>
         <MenuItem onClick={handleDuplicateTask}>
-          <Iconify icon={"eva:copy-fill" as any} sx={{ mr: 1 }} />
+          <Iconify icon={'eva:copy-fill' as any} sx={{ mr: 1 }} />
           Duplicate
         </MenuItem>
         <MenuItem onClick={handleRestoreTask}>
-          <Iconify icon={"eva:refresh-fill" as any} sx={{ mr: 1 }} />
+          <Iconify icon={'eva:refresh-fill' as any} sx={{ mr: 1 }} />
           Restore
         </MenuItem>
         <MenuItem onClick={handleDeleteTask} sx={{ color: 'error.main' }}>
-          <Iconify icon={"eva:trash-2-fill" as any} sx={{ mr: 1 }} />
+          <Iconify icon={'eva:trash-2-fill' as any} sx={{ mr: 1 }} />
           Delete Permanently
         </MenuItem>
       </Menu>
@@ -619,7 +612,8 @@ export function ArchiveView() {
         <DialogTitle>Duplicate?</DialogTitle>
         <DialogContent>
           <Typography>
-            Are you sure you want to duplicate this task? This will create a copy with &quot;(Copy)&quot; added to the title.
+            Are you sure you want to duplicate this task? This will create a copy with
+            &quot;(Copy)&quot; added to the title.
           </Typography>
         </DialogContent>
         <DialogActions>
@@ -667,7 +661,15 @@ export function ArchiveView() {
           <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
             Select which columns to display in the table
           </Typography>
-          <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1, maxHeight: 300, overflowY: 'auto' }}>
+          <Box
+            sx={{
+              display: 'flex',
+              flexDirection: 'column',
+              gap: 1,
+              maxHeight: 300,
+              overflowY: 'auto',
+            }}
+          >
             {Object.entries(visibleColumns).map(([key, value]) => {
               const columnLabels: { [key: string]: string } = {
                 task: 'Task Title',
@@ -686,7 +688,7 @@ export function ArchiveView() {
                 cost: 'Cost',
                 archivedDate: 'Archived Date',
               };
-              
+
               return (
                 <FormControlLabel
                   key={key}
@@ -759,4 +761,3 @@ export function ArchiveView() {
     </DashboardContent>
   );
 }
-

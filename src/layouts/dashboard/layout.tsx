@@ -52,7 +52,7 @@ function DashboardLayoutContent({
 }: DashboardLayoutProps) {
   const theme = useTheme();
   const { user } = useAuth();
-  
+
   // Filter navigation data based on user role
   const filteredNavData = user ? filterNavItemsByRole(navData, user.role) : navData;
   const { collapsed } = useSidebar();
@@ -83,7 +83,7 @@ function DashboardLayoutContent({
           <Box
             sx={{
               display: 'none',
-              [theme.breakpoints.up(layoutQuery)]: { 
+              [theme.breakpoints.up(layoutQuery)]: {
                 display: 'flex',
                 position: 'relative',
                 alignItems: 'center',
@@ -94,7 +94,12 @@ function DashboardLayoutContent({
           >
             <SidebarToggle />
           </Box>
-          <NavMobile data={filteredNavData} open={open} onClose={onClose} workspaces={_workspaces} />
+          <NavMobile
+            data={filteredNavData}
+            open={open}
+            onClose={onClose}
+            workspaces={_workspaces}
+          />
         </>
       ),
       rightArea: (
@@ -154,7 +159,9 @@ function DashboardLayoutContent({
         {
           [`& .${layoutClasses.sidebarContainer}`]: {
             [theme.breakpoints.up(layoutQuery)]: {
-              pl: collapsed ? 'var(--layout-nav-vertical-width-collapsed)' : 'var(--layout-nav-vertical-width)',
+              pl: collapsed
+                ? 'var(--layout-nav-vertical-width-collapsed)'
+                : 'var(--layout-nav-vertical-width)',
               transition: theme.transitions.create(['padding-left'], {
                 easing: 'var(--layout-transition-easing)',
                 duration: 'var(--layout-transition-duration)',

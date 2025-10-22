@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { 
+import {
   Eye,
   Tag,
   Edit,
@@ -66,7 +66,8 @@ const mockListings = [
     tags: ['Luxury', 'Lake View'],
     channels: ['Airbnb', 'Booking.com', 'Vrbo', 'Google'],
     insurance: '', // Empty as requested
-    description: 'A LUXURY HOME is located in the heart of a NATURAL PARK, near a splendid LAKE and surrounded by a lush forest. Here you can experience a unique experience of RELAXATION and NATURE, with a breathtaking view that enchants the soul.',
+    description:
+      'A LUXURY HOME is located in the heart of a NATURAL PARK, near a splendid LAKE and surrounded by a lush forest. Here you can experience a unique experience of RELAXATION and NATURE, with a breathtaking view that enchants the soul.',
     capacity: 6,
     bedrooms: 2,
     beds: 4,
@@ -76,8 +77,16 @@ const mockListings = [
     price: 115,
     weeklyDiscount: 25,
     monthlyDiscount: 30,
-    amenities: ['Internet', 'Air conditioning', 'Kitchen', 'Washing Machine', 'Heating', 'Essentials'],
-    houseRules: 'Regulations for Accommodation: 1. Do not disturb other guests: Please refrain from creating excessive noise or disturbing other guests during your stay. 2. Pets: Please keep pets under control. 3. Contact the host: In case of any doubts or issues, please contact the host immediately for assistance.',
+    amenities: [
+      'Internet',
+      'Air conditioning',
+      'Kitchen',
+      'Washing Machine',
+      'Heating',
+      'Essentials',
+    ],
+    houseRules:
+      'Regulations for Accommodation: 1. Do not disturb other guests: Please refrain from creating excessive noise or disturbing other guests during your stay. 2. Pets: Please keep pets under control. 3. Contact the host: In case of any doubts or issues, please contact the host immediately for assistance.',
     checkInTime: '3:00pm',
     checkOutTime: '10:00am',
     cleaningFee: 20,
@@ -94,7 +103,8 @@ const mockListings = [
     tags: ['Canal View', 'Historic'],
     channels: ['Airbnb', 'Booking.com', 'Vrbo', 'Google'],
     insurance: '', // Empty as requested
-    description: 'Beautiful apartment in the heart of Navigli district with canal views and easy access to public transportation.',
+    description:
+      'Beautiful apartment in the heart of Navigli district with canal views and easy access to public transportation.',
     capacity: 4,
     bedrooms: 1,
     beds: 2,
@@ -117,7 +127,7 @@ const mockListings = [
     image: 'https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?w=400',
     propertyName: 'Polacchi42',
     listingId: '305225',
-    externalName: 'Peaceful apartment in piazza Venezia\'s alleys',
+    externalName: "Peaceful apartment in piazza Venezia's alleys",
     location: 'Roma, Italy',
     tags: ['Modern', 'City Center'],
     channels: ['Airbnb', 'Booking.com', 'Vrbo', 'Google'],
@@ -150,7 +160,8 @@ const mockListings = [
     tags: ['Penthouse', 'Luxury', 'Jacuzzi'],
     channels: ['Airbnb', 'Booking.com', 'Vrbo', 'Google'],
     insurance: '', // Empty as requested
-    description: 'Luxury penthouse in the historic center with private jacuzzi and panoramic views of Rome.',
+    description:
+      'Luxury penthouse in the historic center with private jacuzzi and panoramic views of Rome.',
     capacity: 8,
     bedrooms: 3,
     beds: 5,
@@ -160,7 +171,15 @@ const mockListings = [
     price: 200,
     weeklyDiscount: 30,
     monthlyDiscount: 35,
-    amenities: ['Internet', 'Air conditioning', 'Kitchen', 'Washing Machine', 'Heating', 'Jacuzzi', 'Balcony'],
+    amenities: [
+      'Internet',
+      'Air conditioning',
+      'Kitchen',
+      'Washing Machine',
+      'Heating',
+      'Jacuzzi',
+      'Balcony',
+    ],
     houseRules: 'This is a luxury property. Please treat it with respect and care.',
     checkInTime: '4:00pm',
     checkOutTime: '11:00am',
@@ -195,7 +214,7 @@ const mockListings = [
     cleaningFee: 15,
     instantBookable: true,
     minimumNights: 2,
-  }
+  },
 ];
 
 export function ListingsView() {
@@ -245,7 +264,6 @@ export function ListingsView() {
     setFilterOpen(false);
   };
 
-
   const handleActionMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
     setActionMenuAnchor(event.currentTarget);
   };
@@ -287,7 +305,6 @@ export function ListingsView() {
     router.push(`/listings/${listing.id}/edit`);
   };
 
-
   const handleTranslationsOpen = () => {
     setTranslationsOpen(true);
   };
@@ -297,9 +314,9 @@ export function ListingsView() {
   };
 
   const handleColumnToggle = (column: string) => {
-    setVisibleColumns(prev => ({
+    setVisibleColumns((prev) => ({
       ...prev,
-      [column]: !prev[column as keyof typeof prev]
+      [column]: !prev[column as keyof typeof prev],
     }));
   };
 
@@ -313,9 +330,10 @@ export function ListingsView() {
     handleTranslationsClose();
   };
 
-  const filteredListings = mockListings.filter(listing =>
-    listing.propertyName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    listing.location.toLowerCase().includes(searchTerm.toLowerCase())
+  const filteredListings = mockListings.filter(
+    (listing) =>
+      listing.propertyName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      listing.location.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   const startIndex = (currentPage - 1) * itemsPerPage;
@@ -334,7 +352,11 @@ export function ListingsView() {
             <Button variant="outlined" startIcon={<Filter size={16} />}>
               Filters
             </Button>
-            <Button variant="outlined" startIcon={<Tag size={16} />} onClick={handleQuickTaggingOpen}>
+            <Button
+              variant="outlined"
+              startIcon={<Tag size={16} />}
+              onClick={handleQuickTaggingOpen}
+            >
               Quick tagging
             </Button>
             <Button variant="outlined" endIcon={<Download size={16} />}>
@@ -373,11 +395,7 @@ export function ListingsView() {
         <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
           <FormControl size="small" sx={{ minWidth: 120 }}>
             <InputLabel>Sort by</InputLabel>
-            <Select
-              value={sortBy}
-              onChange={(e) => setSortBy(e.target.value)}
-              label="Sort by"
-            >
+            <Select value={sortBy} onChange={(e) => setSortBy(e.target.value)} label="Sort by">
               <MenuItem value="name">Name</MenuItem>
               <MenuItem value="location">Location</MenuItem>
               <MenuItem value="listingId">Listing ID</MenuItem>
@@ -416,11 +434,7 @@ export function ListingsView() {
                 {visibleColumns.location && <TableCell>Location</TableCell>}
                 {visibleColumns.tags && <TableCell>Tags</TableCell>}
                 {visibleColumns.channels && <TableCell>Channels</TableCell>}
-                {visibleColumns.insurance && (
-                  <TableCell>
-                    Insurance
-                  </TableCell>
-                )}
+                {visibleColumns.insurance && <TableCell>Insurance</TableCell>}
                 <TableCell align="center">
                   <IconButton size="small" onClick={(e) => handleColumnSettingsOpen(e)}>
                     <Settings size={16} />
@@ -432,65 +446,60 @@ export function ListingsView() {
               {currentListings.map((listing) => (
                 <TableRow key={listing.id}>
                   {visibleColumns.listing && (
-                  <TableCell>
-                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-                      <Avatar
-                        src={listing.image}
-                        alt={listing.propertyName}
-                        sx={{ width: 48, height: 48 }}
-                      />
-                        <Typography 
-                          variant="body2" 
-                          sx={{ 
-                            fontWeight: 500, 
+                    <TableCell>
+                      <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+                        <Avatar
+                          src={listing.image}
+                          alt={listing.propertyName}
+                          sx={{ width: 48, height: 48 }}
+                        />
+                        <Typography
+                          variant="body2"
+                          sx={{
+                            fontWeight: 500,
                             color: 'primary.main',
                             cursor: 'pointer',
-                            '&:hover': { textDecoration: 'underline' }
+                            '&:hover': { textDecoration: 'underline' },
                           }}
                           onClick={() => handleListingClick(listing)}
                         >
-                        {listing.propertyName}
-                      </Typography>
-                    </Box>
-                  </TableCell>
+                          {listing.propertyName}
+                        </Typography>
+                      </Box>
+                    </TableCell>
                   )}
                   {visibleColumns.listingId && (
-                  <TableCell>
-                    <Typography variant="body2" sx={{ fontFamily: 'monospace' }}>
-                      {listing.listingId}
-                    </Typography>
-                  </TableCell>
+                    <TableCell>
+                      <Typography variant="body2" sx={{ fontFamily: 'monospace' }}>
+                        {listing.listingId}
+                      </Typography>
+                    </TableCell>
                   )}
                   {visibleColumns.externalName && (
-                  <TableCell>
-                    <Typography variant="body2">
-                      {listing.externalName}
-                    </Typography>
-                  </TableCell>
+                    <TableCell>
+                      <Typography variant="body2">{listing.externalName}</Typography>
+                    </TableCell>
                   )}
                   {visibleColumns.location && (
-                  <TableCell>
-                    <Typography variant="body2">
-                      {listing.location}
-                    </Typography>
-                  </TableCell>
+                    <TableCell>
+                      <Typography variant="body2">{listing.location}</Typography>
+                    </TableCell>
                   )}
-                  {visibleColumns.tags && (
-                  <TableCell>
-                    {/* Empty as shown in image */}
-                  </TableCell>
-                  )}
+                  {visibleColumns.tags && <TableCell>{/* Empty as shown in image */}</TableCell>}
                   {visibleColumns.channels && (
-                  <TableCell>
-                    <Box sx={{ display: 'flex', gap: 0.5, flexWrap: 'wrap' }}>
+                    <TableCell>
+                      <Box sx={{ display: 'flex', gap: 0.5, flexWrap: 'wrap' }}>
                         {listing.channels.map((channel, index) => {
                           const channelIcons: { [key: string]: { icon: string; color: string } } = {
-                            'Airbnb': { icon: 'A', color: '#FF5A5F' },
+                            Airbnb: { icon: 'A', color: '#FF5A5F' },
                             'Booking.com': { icon: 'B', color: '#003580' },
-                            'Vrbo': { icon: 'W', color: '#FFB400' },
-                            'Google': { icon: 'G', color: '#4285F4' },
+                            Vrbo: { icon: 'W', color: '#FFB400' },
+                            Google: { icon: 'G', color: '#4285F4' },
                           };
-                          const channelInfo = channelIcons[channel] || { icon: channel[0], color: '#666' };
+                          const channelInfo = channelIcons[channel] || {
+                            icon: channel[0],
+                            color: '#666',
+                          };
                           return (
                             <Box
                               key={index}
@@ -511,38 +520,36 @@ export function ListingsView() {
                             </Box>
                           );
                         })}
-                    </Box>
-                  </TableCell>
+                      </Box>
+                    </TableCell>
                   )}
                   {visibleColumns.insurance && (
-                  <TableCell>
-                    {/* Empty as requested - no content */}
-                  </TableCell>
+                    <TableCell>{/* Empty as requested - no content */}</TableCell>
                   )}
                   <TableCell align="center">
                     <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
-                      <Button 
-                        size="small" 
+                      <Button
+                        size="small"
                         variant="contained"
                         startIcon={<Edit size={16} />}
                         onClick={() => handleEditClick(listing)}
-                        sx={{ 
-                          backgroundColor: '#E3F2FD', 
+                        sx={{
+                          backgroundColor: '#E3F2FD',
                           color: '#1976D2',
-                          '&:hover': { backgroundColor: '#BBDEFB' }
+                          '&:hover': { backgroundColor: '#BBDEFB' },
                         }}
                       >
                         Edit
                       </Button>
-                      <IconButton 
-                        size="small" 
+                      <IconButton
+                        size="small"
                         onClick={() => router.push('/calendar')}
                         sx={{ color: 'text.secondary' }}
                       >
                         <Calendar size={16} />
                       </IconButton>
-                      <IconButton 
-                        size="small" 
+                      <IconButton
+                        size="small"
                         onClick={handleActionMenuOpen}
                         sx={{ color: 'text.secondary' }}
                       >
@@ -563,11 +570,7 @@ export function ListingsView() {
           <Typography variant="body2" color="text.secondary">
             Show
           </Typography>
-          <Select
-            value={itemsPerPage}
-            size="small"
-            sx={{ minWidth: 60 }}
-          >
+          <Select value={itemsPerPage} size="small" sx={{ minWidth: 60 }}>
             <MenuItem value={20}>20</MenuItem>
             <MenuItem value={50}>50</MenuItem>
             <MenuItem value={100}>100</MenuItem>
@@ -577,12 +580,24 @@ export function ListingsView() {
           </Typography>
         </Box>
         <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-          <Button size="small" variant="outlined">FIRST</Button>
-          <Button size="small" variant="outlined">&lt;</Button>
-          <Button size="small" variant="contained">1</Button>
-          <Button size="small" variant="outlined">2</Button>
-          <Button size="small" variant="outlined">&gt;</Button>
-          <Button size="small" variant="outlined">LAST</Button>
+          <Button size="small" variant="outlined">
+            FIRST
+          </Button>
+          <Button size="small" variant="outlined">
+            &lt;
+          </Button>
+          <Button size="small" variant="contained">
+            1
+          </Button>
+          <Button size="small" variant="outlined">
+            2
+          </Button>
+          <Button size="small" variant="outlined">
+            &gt;
+          </Button>
+          <Button size="small" variant="outlined">
+            LAST
+          </Button>
         </Box>
       </Box>
 
@@ -593,24 +608,9 @@ export function ListingsView() {
           <Grid container spacing={3} sx={{ mt: 1 }}>
             <Grid size={{ xs: 6 }}>
               <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
-                <TextField
-                  fullWidth
-                  label="Tags"
-                  placeholder="Select tags..."
-                  size="small"
-                />
-                <TextField
-                  fullWidth
-                  label="Country"
-                  placeholder="Select country..."
-                  size="small"
-                />
-                <TextField
-                  fullWidth
-                  label="City"
-                  placeholder="Select city..."
-                  size="small"
-                />
+                <TextField fullWidth label="Tags" placeholder="Select tags..." size="small" />
+                <TextField fullWidth label="Country" placeholder="Select country..." size="small" />
+                <TextField fullWidth label="City" placeholder="Select city..." size="small" />
                 <TextField
                   fullWidth
                   label="Unit Type"
@@ -666,14 +666,17 @@ export function ListingsView() {
         </DialogTitle>
         <DialogContent>
           <Typography variant="body2" sx={{ mb: 3, color: 'text.secondary' }}>
-            Use quick tagging to quickly add tags to one or more listings. These tags can be used as filter in many places and help you grouping and finding this listings more easily.
+            Use quick tagging to quickly add tags to one or more listings. These tags can be used as
+            filter in many places and help you grouping and finding this listings more easily.
           </Typography>
-          
+
           <FormControlLabel
             control={
               <Checkbox
                 checked={quickTaggingData.replaceTags}
-                onChange={(e) => setQuickTaggingData(prev => ({ ...prev, replaceTags: e.target.checked }))}
+                onChange={(e) =>
+                  setQuickTaggingData((prev) => ({ ...prev, replaceTags: e.target.checked }))
+                }
               />
             }
             label="Replace tags instead of adding"
@@ -686,7 +689,7 @@ export function ListingsView() {
               label="Tags"
               placeholder="Tags"
               value={quickTaggingData.tags}
-              onChange={(e) => setQuickTaggingData(prev => ({ ...prev, tags: e.target.value }))}
+              onChange={(e) => setQuickTaggingData((prev) => ({ ...prev, tags: e.target.value }))}
               required
             />
             <TextField
@@ -694,7 +697,9 @@ export function ListingsView() {
               label="Listings"
               placeholder="Listings"
               value={quickTaggingData.listings}
-              onChange={(e) => setQuickTaggingData(prev => ({ ...prev, listings: e.target.value }))}
+              onChange={(e) =>
+                setQuickTaggingData((prev) => ({ ...prev, listings: e.target.value }))
+              }
             />
           </Box>
         </DialogContent>
@@ -702,8 +707,8 @@ export function ListingsView() {
           <Button onClick={handleQuickTaggingClose} sx={{ color: 'error.main' }}>
             Cancel
           </Button>
-          <Button 
-            variant="contained" 
+          <Button
+            variant="contained"
             onClick={handleQuickTaggingSubmit}
             disabled={!quickTaggingData.tags.trim()}
             sx={{ bgcolor: 'grey.400', '&:hover': { bgcolor: 'grey.500' } }}
@@ -732,40 +737,37 @@ export function ListingsView() {
               mt: 1,
               minWidth: 200,
               boxShadow: 3,
-            }
+            },
           }}
         >
-        <Box sx={{ p: 2, minWidth: 200 }}>
-          <TextField
-            size="small"
-            placeholder="Find column"
-            fullWidth
-            InputProps={{
-              startAdornment: (
-                <InputAdornment position="start">
-                  <Search size={16} />
-                </InputAdornment>
-              ),
-            }}
-            sx={{ mb: 2 }}
-          />
-          <List dense>
-            {Object.entries(visibleColumns).map(([key, visible]) => (
-              <ListItem key={key} sx={{ px: 0 }}>
-                <FormControlLabel
-                  control={
-                    <Checkbox
-                      checked={visible}
-                      onChange={() => handleColumnToggle(key)}
-                    />
-                  }
-                  label={key.charAt(0).toUpperCase() + key.slice(1).replace(/([A-Z])/g, ' $1')}
-                />
-              </ListItem>
-            ))}
-          </List>
-        </Box>
-      </Popover>
+          <Box sx={{ p: 2, minWidth: 200 }}>
+            <TextField
+              size="small"
+              placeholder="Find column"
+              fullWidth
+              InputProps={{
+                startAdornment: (
+                  <InputAdornment position="start">
+                    <Search size={16} />
+                  </InputAdornment>
+                ),
+              }}
+              sx={{ mb: 2 }}
+            />
+            <List dense>
+              {Object.entries(visibleColumns).map(([key, visible]) => (
+                <ListItem key={key} sx={{ px: 0 }}>
+                  <FormControlLabel
+                    control={
+                      <Checkbox checked={visible} onChange={() => handleColumnToggle(key)} />
+                    }
+                    label={key.charAt(0).toUpperCase() + key.slice(1).replace(/([A-Z])/g, ' $1')}
+                  />
+                </ListItem>
+              ))}
+            </List>
+          </Box>
+        </Popover>
       )}
 
       {/* Listing Detail Modal */}
@@ -837,12 +839,7 @@ export function ListingsView() {
                         }}
                         sx={{ mb: 2 }}
                       />
-                      <TextField
-                        fullWidth
-                        label="Tags"
-                        placeholder="Tags"
-                        sx={{ mb: 2 }}
-                      />
+                      <TextField fullWidth label="Tags" placeholder="Tags" sx={{ mb: 2 }} />
                       <TextField
                         fullWidth
                         label="Description"
@@ -925,7 +922,9 @@ export function ListingsView() {
 
               {currentListingTab === 'address' && (
                 <Box>
-                  <Typography variant="h6" sx={{ mb: 2 }}>Address</Typography>
+                  <Typography variant="h6" sx={{ mb: 2 }}>
+                    Address
+                  </Typography>
                   <Grid container spacing={3}>
                     <Grid size={{ xs: 6 }}>
                       <TextField
@@ -1038,7 +1037,9 @@ export function ListingsView() {
       >
         <Box sx={{ p: 3, height: '100%', display: 'flex', flexDirection: 'column' }}>
           {/* Header */}
-          <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 3 }}>
+          <Box
+            sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 3 }}
+          >
             <Typography variant="h6" sx={{ fontWeight: 600 }}>
               Translations
             </Typography>
@@ -1054,7 +1055,9 @@ export function ListingsView() {
             <Select
               fullWidth
               value={translationData.language}
-              onChange={(e) => setTranslationData(prev => ({ ...prev, language: e.target.value }))}
+              onChange={(e) =>
+                setTranslationData((prev) => ({ ...prev, language: e.target.value }))
+              }
             >
               <MenuItem value="Italian">🇮🇹 Italian</MenuItem>
               <MenuItem value="English">🇺🇸 English</MenuItem>
@@ -1072,7 +1075,9 @@ export function ListingsView() {
               <TextField
                 fullWidth
                 value={translationData.listingName}
-                onChange={(e) => setTranslationData(prev => ({ ...prev, listingName: e.target.value }))}
+                onChange={(e) =>
+                  setTranslationData((prev) => ({ ...prev, listingName: e.target.value }))
+                }
                 placeholder="500m DAL LAGO La Dimora del Cavaliere Martignano"
                 size="small"
               />
@@ -1087,7 +1092,9 @@ export function ListingsView() {
                 multiline
                 rows={4}
                 value={translationData.description}
-                onChange={(e) => setTranslationData(prev => ({ ...prev, description: e.target.value }))}
+                onChange={(e) =>
+                  setTranslationData((prev) => ({ ...prev, description: e.target.value }))
+                }
                 placeholder="A LUXURY HOME si trova nel cuore di un PARCO NATURALE..."
                 size="small"
               />
@@ -1102,7 +1109,9 @@ export function ListingsView() {
                 multiline
                 rows={4}
                 value={translationData.houseRules}
-                onChange={(e) => setTranslationData(prev => ({ ...prev, houseRules: e.target.value }))}
+                onChange={(e) =>
+                  setTranslationData((prev) => ({ ...prev, houseRules: e.target.value }))
+                }
                 placeholder="Norme per l'alloggio: 1. Non disturbare gli altri ospiti..."
                 size="small"
               />
@@ -1117,7 +1126,9 @@ export function ListingsView() {
                 multiline
                 rows={3}
                 value={translationData.rentalAgreement}
-                onChange={(e) => setTranslationData(prev => ({ ...prev, rentalAgreement: e.target.value }))}
+                onChange={(e) =>
+                  setTranslationData((prev) => ({ ...prev, rentalAgreement: e.target.value }))
+                }
                 placeholder="Body text"
                 size="small"
               />
@@ -1125,19 +1136,13 @@ export function ListingsView() {
           </Box>
 
           {/* Action Buttons */}
-          <Box sx={{ display: 'flex', gap: 2, pt: 2, borderTop: '1px solid', borderColor: 'divider' }}>
-            <Button
-              variant="outlined"
-              onClick={handleTranslationsClose}
-              sx={{ flex: 1 }}
-            >
+          <Box
+            sx={{ display: 'flex', gap: 2, pt: 2, borderTop: '1px solid', borderColor: 'divider' }}
+          >
+            <Button variant="outlined" onClick={handleTranslationsClose} sx={{ flex: 1 }}>
               Cancel
             </Button>
-            <Button
-              variant="contained"
-              onClick={handleTranslationSubmit}
-              sx={{ flex: 1 }}
-            >
+            <Button variant="contained" onClick={handleTranslationSubmit} sx={{ flex: 1 }}>
               Save
             </Button>
           </Box>

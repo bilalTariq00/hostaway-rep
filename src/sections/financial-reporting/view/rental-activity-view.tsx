@@ -1,12 +1,5 @@
 import { useState } from 'react';
-import { 
-  Eye,
-  Search,
-  Settings,
-  Download,
-  ChevronUp,
-  ChevronDown
-} from 'lucide-react';
+import { Eye, Search, Settings, Download, ChevronUp, ChevronDown } from 'lucide-react';
 
 import Box from '@mui/material/Box';
 import Tab from '@mui/material/Tab';
@@ -44,24 +37,24 @@ const mockRentalActivity = [
     occupancyTrend: 'up', // 'up', 'down', 'stable'
     occupancyChange: 5.2,
     cedolareSeccaAirbnb: 255.37,
-    cedolareSeccaBooking: 0.00,
+    cedolareSeccaBooking: 0.0,
     cedolareSeccaDomus: 107.82,
     cedolareSeccaTotale: 363.19,
-    cleaningFee: 50.00,
-    towelChangeFee: 15.00,
-    midstayCleaningFee: 80.00,
-    roomRequestFee: 25.00,
-    reservationChangeFee: 30.00,
-    checkinFee: 20.00,
-    lateCheckoutFee: 40.00,
-    otherFees: 0.00,
-    ivaBooking: 55.00,
-    ivaCommissioni: 12.50,
-    marginalitaProprietario: 1200.00,
-    percentualePropertyManager: 15.00,
-    ricavoBookingPrePMePulizie: 1500.00,
-    ricavoLordo: 1800.00,
-    tassaDiSoggiorno: 45.00,
+    cleaningFee: 50.0,
+    towelChangeFee: 15.0,
+    midstayCleaningFee: 80.0,
+    roomRequestFee: 25.0,
+    reservationChangeFee: 30.0,
+    checkinFee: 20.0,
+    lateCheckoutFee: 40.0,
+    otherFees: 0.0,
+    ivaBooking: 55.0,
+    ivaCommissioni: 12.5,
+    marginalitaProprietario: 1200.0,
+    percentualePropertyManager: 15.0,
+    ricavoBookingPrePMePulizie: 1500.0,
+    ricavoLordo: 1800.0,
+    tassaDiSoggiorno: 45.0,
   },
   {
     id: 305225,
@@ -69,25 +62,25 @@ const mockRentalActivity = [
     occupancyRate: 72.3,
     occupancyTrend: 'down',
     occupancyChange: -3.1,
-    cedolareSeccaAirbnb: 0.00,
+    cedolareSeccaAirbnb: 0.0,
     cedolareSeccaBooking: 198.84,
     cedolareSeccaDomus: 103.96,
-    cedolareSeccaTotale: 302.80,
-    cleaningFee: 60.00,
-    towelChangeFee: 20.00,
-    midstayCleaningFee: 100.00,
-    roomRequestFee: 30.00,
-    reservationChangeFee: 35.00,
-    checkinFee: 25.00,
-    lateCheckoutFee: 50.00,
-    otherFees: 15.00,
-    ivaBooking: 65.00,
-    ivaCommissioni: 15.00,
-    marginalitaProprietario: 1400.00,
-    percentualePropertyManager: 18.00,
-    ricavoBookingPrePMePulizie: 1700.00,
-    ricavoLordo: 2000.00,
-    tassaDiSoggiorno: 50.00,
+    cedolareSeccaTotale: 302.8,
+    cleaningFee: 60.0,
+    towelChangeFee: 20.0,
+    midstayCleaningFee: 100.0,
+    roomRequestFee: 30.0,
+    reservationChangeFee: 35.0,
+    checkinFee: 25.0,
+    lateCheckoutFee: 50.0,
+    otherFees: 15.0,
+    ivaBooking: 65.0,
+    ivaCommissioni: 15.0,
+    marginalitaProprietario: 1400.0,
+    percentualePropertyManager: 18.0,
+    ricavoBookingPrePMePulizie: 1700.0,
+    ricavoLordo: 2000.0,
+    tassaDiSoggiorno: 50.0,
   },
   {
     id: 305421,
@@ -99,21 +92,21 @@ const mockRentalActivity = [
     cedolareSeccaBooking: 219.59,
     cedolareSeccaDomus: 184.03,
     cedolareSeccaTotale: 515.97,
-    cleaningFee: 80.00,
-    towelChangeFee: 25.00,
-    midstayCleaningFee: 120.00,
-    roomRequestFee: 40.00,
-    reservationChangeFee: 45.00,
-    checkinFee: 30.00,
-    lateCheckoutFee: 60.00,
-    otherFees: 20.00,
-    ivaBooking: 85.00,
-    ivaCommissioni: 20.00,
-    marginalitaProprietario: 2000.00,
-    percentualePropertyManager: 20.00,
-    ricavoBookingPrePMePulizie: 2500.00,
-    ricavoLordo: 3000.00,
-    tassaDiSoggiorno: 75.00,
+    cleaningFee: 80.0,
+    towelChangeFee: 25.0,
+    midstayCleaningFee: 120.0,
+    roomRequestFee: 40.0,
+    reservationChangeFee: 45.0,
+    checkinFee: 30.0,
+    lateCheckoutFee: 60.0,
+    otherFees: 20.0,
+    ivaBooking: 85.0,
+    ivaCommissioni: 20.0,
+    marginalitaProprietario: 2000.0,
+    percentualePropertyManager: 20.0,
+    ricavoBookingPrePMePulizie: 2500.0,
+    ricavoLordo: 3000.0,
+    tassaDiSoggiorno: 75.0,
   },
   {
     id: 308582,
@@ -121,25 +114,25 @@ const mockRentalActivity = [
     occupancyRate: 78.2,
     occupancyTrend: 'stable',
     occupancyChange: 0.0,
-    cedolareSeccaAirbnb: 228.60,
-    cedolareSeccaBooking: 0.00,
-    cedolareSeccaDomus: 140.60,
-    cedolareSeccaTotale: 369.20,
-    cleaningFee: 70.00,
-    towelChangeFee: 18.00,
-    midstayCleaningFee: 110.00,
-    roomRequestFee: 35.00,
-    reservationChangeFee: 40.00,
-    checkinFee: 28.00,
-    lateCheckoutFee: 55.00,
-    otherFees: 10.00,
-    ivaBooking: 75.00,
-    ivaCommissioni: 18.00,
-    marginalitaProprietario: 1600.00,
-    percentualePropertyManager: 16.00,
-    ricavoBookingPrePMePulizie: 2000.00,
-    ricavoLordo: 2400.00,
-    tassaDiSoggiorno: 60.00,
+    cedolareSeccaAirbnb: 228.6,
+    cedolareSeccaBooking: 0.0,
+    cedolareSeccaDomus: 140.6,
+    cedolareSeccaTotale: 369.2,
+    cleaningFee: 70.0,
+    towelChangeFee: 18.0,
+    midstayCleaningFee: 110.0,
+    roomRequestFee: 35.0,
+    reservationChangeFee: 40.0,
+    checkinFee: 28.0,
+    lateCheckoutFee: 55.0,
+    otherFees: 10.0,
+    ivaBooking: 75.0,
+    ivaCommissioni: 18.0,
+    marginalitaProprietario: 1600.0,
+    percentualePropertyManager: 16.0,
+    ricavoBookingPrePMePulizie: 2000.0,
+    ricavoLordo: 2400.0,
+    tassaDiSoggiorno: 60.0,
   },
   {
     id: 317154,
@@ -151,21 +144,21 @@ const mockRentalActivity = [
     cedolareSeccaBooking: 83.29,
     cedolareSeccaDomus: 262.41,
     cedolareSeccaTotale: 651.29,
-    cleaningFee: 90.00,
-    towelChangeFee: 30.00,
-    midstayCleaningFee: 140.00,
-    roomRequestFee: 50.00,
-    reservationChangeFee: 55.00,
-    checkinFee: 35.00,
-    lateCheckoutFee: 70.00,
-    otherFees: 25.00,
-    ivaBooking: 95.00,
-    ivaCommissioni: 22.00,
-    marginalitaProprietario: 2200.00,
-    percentualePropertyManager: 22.00,
-    ricavoBookingPrePMePulizie: 2800.00,
-    ricavoLordo: 3400.00,
-    tassaDiSoggiorno: 85.00,
+    cleaningFee: 90.0,
+    towelChangeFee: 30.0,
+    midstayCleaningFee: 140.0,
+    roomRequestFee: 50.0,
+    reservationChangeFee: 55.0,
+    checkinFee: 35.0,
+    lateCheckoutFee: 70.0,
+    otherFees: 25.0,
+    ivaBooking: 95.0,
+    ivaCommissioni: 22.0,
+    marginalitaProprietario: 2200.0,
+    percentualePropertyManager: 22.0,
+    ricavoBookingPrePMePulizie: 2800.0,
+    ricavoLordo: 3400.0,
+    tassaDiSoggiorno: 85.0,
   },
   {
     id: 345603,
@@ -173,25 +166,25 @@ const mockRentalActivity = [
     occupancyRate: 65.4,
     occupancyTrend: 'down',
     occupancyChange: -7.2,
-    cedolareSeccaAirbnb: 241.40,
-    cedolareSeccaBooking: 0.00,
+    cedolareSeccaAirbnb: 241.4,
+    cedolareSeccaBooking: 0.0,
     cedolareSeccaDomus: 115.76,
     cedolareSeccaTotale: 357.16,
-    cleaningFee: 55.00,
-    towelChangeFee: 16.00,
-    midstayCleaningFee: 95.00,
-    roomRequestFee: 32.00,
-    reservationChangeFee: 38.00,
-    checkinFee: 26.00,
-    lateCheckoutFee: 52.00,
-    otherFees: 12.00,
-    ivaBooking: 70.00,
-    ivaCommissioni: 16.00,
-    marginalitaProprietario: 1500.00,
-    percentualePropertyManager: 17.00,
-    ricavoBookingPrePMePulizie: 1800.00,
-    ricavoLordo: 2200.00,
-    tassaDiSoggiorno: 55.00,
+    cleaningFee: 55.0,
+    towelChangeFee: 16.0,
+    midstayCleaningFee: 95.0,
+    roomRequestFee: 32.0,
+    reservationChangeFee: 38.0,
+    checkinFee: 26.0,
+    lateCheckoutFee: 52.0,
+    otherFees: 12.0,
+    ivaBooking: 70.0,
+    ivaCommissioni: 16.0,
+    marginalitaProprietario: 1500.0,
+    percentualePropertyManager: 17.0,
+    ricavoBookingPrePMePulizie: 1800.0,
+    ricavoLordo: 2200.0,
+    tassaDiSoggiorno: 55.0,
   },
   {
     id: 372243,
@@ -200,24 +193,24 @@ const mockRentalActivity = [
     occupancyTrend: 'up',
     occupancyChange: 2.8,
     cedolareSeccaAirbnb: 360.66,
-    cedolareSeccaBooking: 0.00,
+    cedolareSeccaBooking: 0.0,
     cedolareSeccaDomus: 176.14,
-    cedolareSeccaTotale: 536.80,
-    cleaningFee: 100.00,
-    towelChangeFee: 35.00,
-    midstayCleaningFee: 160.00,
-    roomRequestFee: 60.00,
-    reservationChangeFee: 65.00,
-    checkinFee: 40.00,
-    lateCheckoutFee: 80.00,
-    otherFees: 30.00,
-    ivaBooking: 110.00,
-    ivaCommissioni: 25.00,
-    marginalitaProprietario: 2800.00,
-    percentualePropertyManager: 25.00,
-    ricavoBookingPrePMePulizie: 3500.00,
-    ricavoLordo: 4200.00,
-    tassaDiSoggiorno: 105.00,
+    cedolareSeccaTotale: 536.8,
+    cleaningFee: 100.0,
+    towelChangeFee: 35.0,
+    midstayCleaningFee: 160.0,
+    roomRequestFee: 60.0,
+    reservationChangeFee: 65.0,
+    checkinFee: 40.0,
+    lateCheckoutFee: 80.0,
+    otherFees: 30.0,
+    ivaBooking: 110.0,
+    ivaCommissioni: 25.0,
+    marginalitaProprietario: 2800.0,
+    percentualePropertyManager: 25.0,
+    ricavoBookingPrePMePulizie: 3500.0,
+    ricavoLordo: 4200.0,
+    tassaDiSoggiorno: 105.0,
   },
 ];
 
@@ -298,17 +291,15 @@ export function RentalActivityView() {
   };
 
   const handleColumnToggle = (columnKey: string) => {
-    const column = allColumns.find(col => col.key === columnKey);
-    
+    const column = allColumns.find((col) => col.key === columnKey);
+
     // Prevent removing mandatory columns
     if (column?.mandatory) {
       return;
     }
-    
-    setVisibleColumns(prev => 
-      prev.includes(columnKey) 
-        ? prev.filter(col => col !== columnKey)
-        : [...prev, columnKey]
+
+    setVisibleColumns((prev) =>
+      prev.includes(columnKey) ? prev.filter((col) => col !== columnKey) : [...prev, columnKey]
     );
   };
 
@@ -328,16 +319,14 @@ export function RentalActivityView() {
     if (!sortColumn) return 0;
     const aValue = a[sortColumn as keyof typeof a];
     const bValue = b[sortColumn as keyof typeof b];
-    
+
     if (typeof aValue === 'number' && typeof bValue === 'number') {
       return sortDirection === 'asc' ? aValue - bValue : bValue - aValue;
     }
-    
+
     const aStr = String(aValue).toLowerCase();
     const bStr = String(bValue).toLowerCase();
-    return sortDirection === 'asc' 
-      ? aStr.localeCompare(bStr)
-      : bStr.localeCompare(aStr);
+    return sortDirection === 'asc' ? aStr.localeCompare(bStr) : bStr.localeCompare(aStr);
   });
 
   const totalPages = Math.ceil(sortedData.length / itemsPerPage);
@@ -346,21 +335,24 @@ export function RentalActivityView() {
   const currentData = sortedData.slice(startIndex, endIndex);
 
   // Filter columns based on search
-  const filteredColumns = allColumns.filter(column =>
+  const filteredColumns = allColumns.filter((column) =>
     column.label.toLowerCase().includes(columnSearchTerm.toLowerCase())
   );
 
   // Calculate totals for visible columns
-  const totals = visibleColumns.reduce((acc, columnKey) => {
-    const column = allColumns.find(col => col.key === columnKey);
-    if (column && columnKey !== 'listingName' && columnKey !== 'id') {
-      acc[columnKey] = sortedData.reduce((sum, item) => {
-        const value = item[columnKey as keyof typeof item];
-        return sum + (typeof value === 'number' ? value : 0);
-      }, 0);
-    }
-    return acc;
-  }, {} as Record<string, number>);
+  const totals = visibleColumns.reduce(
+    (acc, columnKey) => {
+      const column = allColumns.find((col) => col.key === columnKey);
+      if (column && columnKey !== 'listingName' && columnKey !== 'id') {
+        acc[columnKey] = sortedData.reduce((sum, item) => {
+          const value = item[columnKey as keyof typeof item];
+          return sum + (typeof value === 'number' ? value : 0);
+        }, 0);
+      }
+      return acc;
+    },
+    {} as Record<string, number>
+  );
 
   return (
     <DashboardContent maxWidth="xl">
@@ -471,11 +463,7 @@ export function RentalActivityView() {
           <Button variant="outlined" size="small">
             MTD
           </Button>
-          <TextField
-            size="small"
-            placeholder="Check-in"
-            sx={{ minWidth: 120 }}
-          />
+          <TextField size="small" placeholder="Check-in" sx={{ minWidth: 120 }} />
           <FormControl size="small" sx={{ minWidth: 120 }}>
             <InputLabel>Status</InputLabel>
             <Select label="Status">
@@ -505,19 +493,19 @@ export function RentalActivityView() {
             <TableHead>
               <TableRow>
                 {visibleColumns.map((columnKey) => {
-                  const column = allColumns.find(col => col.key === columnKey);
+                  const column = allColumns.find((col) => col.key === columnKey);
                   if (!column) return null;
-                  
+
                   return (
-                    <TableCell 
+                    <TableCell
                       key={columnKey}
                       align={columnKey === 'listingName' ? 'left' : 'center'}
-                      sx={{ 
+                      sx={{
                         fontWeight: 600,
                         cursor: column.sortable ? 'pointer' : 'default',
                         minWidth: columnKey === 'listingName' ? 200 : 150,
                         whiteSpace: 'nowrap',
-                        '&:hover': column.sortable ? { bgcolor: 'grey.50' } : {}
+                        '&:hover': column.sortable ? { bgcolor: 'grey.50' } : {},
                       }}
                       onClick={() => column.sortable && handleSort(columnKey)}
                     >
@@ -525,13 +513,21 @@ export function RentalActivityView() {
                         {column.label}
                         {column.sortable && (
                           <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-                            <ChevronUp 
-                              size={12} 
-                              color={sortColumn === columnKey && sortDirection === 'asc' ? '#00A76F' : '#666'} 
+                            <ChevronUp
+                              size={12}
+                              color={
+                                sortColumn === columnKey && sortDirection === 'asc'
+                                  ? '#00A76F'
+                                  : '#666'
+                              }
                             />
-                            <ChevronDown 
-                              size={12} 
-                              color={sortColumn === columnKey && sortDirection === 'desc' ? '#00A76F' : '#666'} 
+                            <ChevronDown
+                              size={12}
+                              color={
+                                sortColumn === columnKey && sortDirection === 'desc'
+                                  ? '#00A76F'
+                                  : '#666'
+                              }
                             />
                           </Box>
                         )}
@@ -542,7 +538,7 @@ export function RentalActivityView() {
                 {/* Settings Column */}
                 <TableCell
                   align="center"
-                  sx={{ 
+                  sx={{
                     minWidth: 60,
                     width: 60,
                     position: 'sticky',
@@ -551,7 +547,7 @@ export function RentalActivityView() {
                     borderLeft: '1px solid',
                     borderColor: 'divider',
                     zIndex: 1,
-                    px: 0
+                    px: 0,
                   }}
                 >
                   <IconButton
@@ -572,57 +568,54 @@ export function RentalActivityView() {
             </TableHead>
             <TableBody>
               {currentData.map((item, index) => (
-                <TableRow 
-                  key={item.id} 
-                  sx={{ 
+                <TableRow
+                  key={item.id}
+                  sx={{
                     bgcolor: index % 2 === 0 ? 'white' : 'grey.50',
-                    '&:hover': { bgcolor: 'grey.100' }
+                    '&:hover': { bgcolor: 'grey.100' },
                   }}
                 >
                   {visibleColumns.map((columnKey) => {
-                    const column = allColumns.find(col => col.key === columnKey);
+                    const column = allColumns.find((col) => col.key === columnKey);
                     if (!column) return null;
-                    
+
                     const value = item[columnKey as keyof typeof item];
                     const isNumeric = typeof value === 'number';
-                    
+
                     return (
-                      <TableCell 
+                      <TableCell
                         key={columnKey}
                         align={columnKey === 'listingName' ? 'left' : 'center'}
-                        sx={{ 
+                        sx={{
                           minWidth: columnKey === 'listingName' ? 200 : 150,
-                          whiteSpace: 'nowrap'
+                          whiteSpace: 'nowrap',
                         }}
                       >
                         {columnKey === 'listingName' ? (
-                    <Typography
-                      variant="body2"
-                      sx={{ 
-                        fontWeight: 500, 
-                        cursor: 'pointer',
-                        color: 'primary.main',
-                        '&:hover': { textDecoration: 'underline' }
-                      }}
-                      onClick={() => handleListingClick(item.id)}
-                    >
-                            {value as string}
-                    </Typography>
-                        ) : (
-                          <Typography 
-                            variant="body2" 
-                            sx={{ fontWeight: isNumeric ? 500 : 400 }}
+                          <Typography
+                            variant="body2"
+                            sx={{
+                              fontWeight: 500,
+                              cursor: 'pointer',
+                              color: 'primary.main',
+                              '&:hover': { textDecoration: 'underline' },
+                            }}
+                            onClick={() => handleListingClick(item.id)}
                           >
+                            {value as string}
+                          </Typography>
+                        ) : (
+                          <Typography variant="body2" sx={{ fontWeight: isNumeric ? 500 : 400 }}>
                             {isNumeric ? `€${value.toFixed(2)}` : String(value)}
-                    </Typography>
+                          </Typography>
                         )}
-                  </TableCell>
+                      </TableCell>
                     );
                   })}
                   {/* Empty Settings Column */}
                   <TableCell
                     align="center"
-                    sx={{ 
+                    sx={{
                       minWidth: 60,
                       width: 60,
                       position: 'sticky',
@@ -631,28 +624,28 @@ export function RentalActivityView() {
                       borderLeft: '1px solid',
                       borderColor: 'divider',
                       zIndex: 1,
-                      px: 0
+                      px: 0,
                     }}
                   >
                     {/* Empty cell for settings column */}
                   </TableCell>
                 </TableRow>
               ))}
-              
+
               {/* Totals Row */}
               <TableRow sx={{ bgcolor: 'grey.100', fontWeight: 600 }}>
                 {visibleColumns.map((columnKey) => {
-                  const column = allColumns.find(col => col.key === columnKey);
+                  const column = allColumns.find((col) => col.key === columnKey);
                   if (!column) return null;
-                  
+
                   return (
-                    <TableCell 
+                    <TableCell
                       key={`total-${columnKey}`}
                       align={columnKey === 'listingName' ? 'left' : 'center'}
-                      sx={{ 
+                      sx={{
                         fontWeight: 600,
                         minWidth: columnKey === 'listingName' ? 200 : 150,
-                        whiteSpace: 'nowrap'
+                        whiteSpace: 'nowrap',
                       }}
                     >
                       {columnKey === 'listingName' ? (
@@ -674,7 +667,7 @@ export function RentalActivityView() {
                 {/* Empty Settings Column */}
                 <TableCell
                   align="center"
-                  sx={{ 
+                  sx={{
                     minWidth: 60,
                     width: 60,
                     position: 'sticky',
@@ -683,7 +676,7 @@ export function RentalActivityView() {
                     borderLeft: '1px solid',
                     borderColor: 'divider',
                     zIndex: 1,
-                    px: 0
+                    px: 0,
                   }}
                 >
                   {/* Empty cell for settings column */}
@@ -698,9 +691,9 @@ export function RentalActivityView() {
       <Paper sx={{ p: 2 }}>
         <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
           <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-          <Typography variant="body2" color="text.secondary">
+            <Typography variant="body2" color="text.secondary">
               Show
-          </Typography>
+            </Typography>
             <TextField
               size="small"
               value={itemsPerPage}
@@ -712,11 +705,21 @@ export function RentalActivityView() {
             </Typography>
           </Box>
           <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-            <Button size="small" variant="outlined">FIRST</Button>
-            <Button size="small" variant="outlined">&lt;</Button>
-            <Button size="small" variant="contained">{currentPage}</Button>
-            <Button size="small" variant="outlined">&gt;</Button>
-            <Button size="small" variant="outlined">LAST</Button>
+            <Button size="small" variant="outlined">
+              FIRST
+            </Button>
+            <Button size="small" variant="outlined">
+              &lt;
+            </Button>
+            <Button size="small" variant="contained">
+              {currentPage}
+            </Button>
+            <Button size="small" variant="outlined">
+              &gt;
+            </Button>
+            <Button size="small" variant="outlined">
+              LAST
+            </Button>
           </Box>
         </Box>
       </Paper>
@@ -755,7 +758,7 @@ export function RentalActivityView() {
             }}
             sx={{ mb: 2 }}
           />
-          
+
           {/* Column List */}
           <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
             {filteredColumns.map((column) => (
@@ -779,12 +782,12 @@ export function RentalActivityView() {
                   />
                 }
                 label={
-                  <Typography 
-                    variant="body2" 
-                    sx={{ 
+                  <Typography
+                    variant="body2"
+                    sx={{
                       fontSize: '0.875rem',
                       color: column.mandatory ? 'grey.500' : 'text.primary',
-                      fontWeight: column.mandatory ? 500 : 400
+                      fontWeight: column.mandatory ? 500 : 400,
                     }}
                   >
                     {column.label}

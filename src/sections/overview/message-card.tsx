@@ -22,7 +22,16 @@ type MessageCardProps = {
   sx?: CardProps['sx'];
 } & Omit<CardProps, 'sx' | 'variant'>;
 
-export function MessageCard({ title, value, subtitle, icon, color = 'primary', variant = 'default', sx, ...other }: MessageCardProps) {
+export function MessageCard({
+  title,
+  value,
+  subtitle,
+  icon,
+  color = 'primary',
+  variant = 'default',
+  sx,
+  ...other
+}: MessageCardProps) {
   const theme = useTheme();
 
   if (variant === 'highlight') {
@@ -46,9 +55,9 @@ export function MessageCard({ title, value, subtitle, icon, color = 'primary', v
         </Box>
 
         <Box sx={{ mb: 1, typography: 'subtitle2' }}>{title}</Box>
-        
+
         <Box sx={{ typography: 'h4', mb: 1 }}>{value}</Box>
-        
+
         {subtitle && (
           <Typography variant="body2" sx={{ color: 'rgba(255, 255, 255, 0.8)' }}>
             {subtitle}
@@ -87,14 +96,12 @@ export function MessageCard({ title, value, subtitle, icon, color = 'primary', v
       ]}
       {...other}
     >
-      <Box sx={{ width: 48, height: 48, mb: 3 }}>
-        {icon || <Box sx={{ fontSize: 24 }}>📤</Box>}
-      </Box>
+      <Box sx={{ width: 48, height: 48, mb: 3 }}>{icon || <Box sx={{ fontSize: 24 }}>📤</Box>}</Box>
 
       <Box sx={{ mb: 1, typography: 'subtitle2' }}>{title}</Box>
-      
+
       <Box sx={{ typography: 'h4', mb: 1 }}>{value}</Box>
-      
+
       {subtitle && (
         <Typography variant="body2" sx={{ color: 'text.secondary' }}>
           {subtitle}

@@ -67,7 +67,7 @@ export function AutoReviewsView() {
     if (newValue === 2) router.push('/reviews/templates');
   };
 
-  const filteredAutoReviews = mockAutoReviews.filter(review =>
+  const filteredAutoReviews = mockAutoReviews.filter((review) =>
     review.name.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
@@ -109,7 +109,7 @@ export function AutoReviewsView() {
         <Typography variant="h6" sx={{ fontWeight: 600, mb: 2 }}>
           Auto Review Names
         </Typography>
-        
+
         {/* Search Bar */}
         <TextField
           placeholder="Search by auto reviews name..."
@@ -119,7 +119,7 @@ export function AutoReviewsView() {
           InputProps={{
             startAdornment: (
               <InputAdornment position="start">
-                <Iconify icon={"eva:search-fill" as any} />
+                <Iconify icon={'eva:search-fill' as any} />
               </InputAdornment>
             ),
           }}
@@ -130,8 +130,8 @@ export function AutoReviewsView() {
       <Grid container spacing={3}>
         {filteredAutoReviews.map((autoReview) => (
           <Grid key={autoReview.id} size={{ xs: 12, sm: 6, md: 4 }}>
-            <Card 
-              sx={{ 
+            <Card
+              sx={{
                 height: '100%',
                 display: 'flex',
                 flexDirection: 'column',
@@ -161,10 +161,10 @@ export function AutoReviewsView() {
                   </Typography>
                   <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
                     {autoReview.listings.slice(0, 3).map((listing, index) => (
-                      <Typography 
-                        key={index} 
-                        variant="body2" 
-                        sx={{ 
+                      <Typography
+                        key={index}
+                        variant="body2"
+                        sx={{
                           color: 'primary.main',
                           fontWeight: 500,
                         }}
@@ -200,11 +200,11 @@ export function AutoReviewsView() {
             No auto reviews found
           </Typography>
           <Typography variant="body2" sx={{ mb: 3, color: 'text.secondary' }}>
-            {searchTerm ? 'Try adjusting your search terms' : 'Create your first auto review to get started'}
+            {searchTerm
+              ? 'Try adjusting your search terms'
+              : 'Create your first auto review to get started'}
           </Typography>
-          <Button variant="contained">
-            Create Auto Review
-          </Button>
+          <Button variant="contained">Create Auto Review</Button>
         </Box>
       )}
     </DashboardContent>

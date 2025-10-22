@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 
 import Box from '@mui/material/Box';
@@ -143,27 +142,29 @@ export function CouponsView() {
   const handleSave = () => {
     if (isEditMode && editingId) {
       // Update existing coupon
-      setCoupons(prev => prev.map(coupon => 
-        coupon.id === editingId 
-          ? { 
-              ...coupon, 
-              name: formData.name,
-              amount: formData.amount,
-              amountType: formData.amountType,
-              lengthOfStay: formData.lengthOfStay,
-              lengthOfStayValue: formData.lengthOfStayValue,
-              checkInFrom: formData.checkInFrom,
-              checkInTo: formData.checkInTo,
-              validityFrom: formData.validityFrom,
-              validityTo: formData.validityTo,
-              maxUses: formData.maxUses,
-            }
-          : coupon
-      ));
+      setCoupons((prev) =>
+        prev.map((coupon) =>
+          coupon.id === editingId
+            ? {
+                ...coupon,
+                name: formData.name,
+                amount: formData.amount,
+                amountType: formData.amountType,
+                lengthOfStay: formData.lengthOfStay,
+                lengthOfStayValue: formData.lengthOfStayValue,
+                checkInFrom: formData.checkInFrom,
+                checkInTo: formData.checkInTo,
+                validityFrom: formData.validityFrom,
+                validityTo: formData.validityTo,
+                maxUses: formData.maxUses,
+              }
+            : coupon
+        )
+      );
     } else {
       // Add new coupon
       const newCoupon = {
-        id: Math.max(...coupons.map(c => c.id), 0) + 1,
+        id: Math.max(...coupons.map((c) => c.id), 0) + 1,
         name: formData.name,
         amount: formData.amount,
         amountType: formData.amountType,
@@ -177,13 +178,13 @@ export function CouponsView() {
         currentUses: 0,
         listings: 'All listings',
       };
-      setCoupons(prev => [...prev, newCoupon]);
+      setCoupons((prev) => [...prev, newCoupon]);
     }
     handleCloseDrawer();
   };
 
   const handleEdit = (id: number) => {
-    const coupon = coupons.find(c => c.id === id);
+    const coupon = coupons.find((c) => c.id === id);
     if (coupon) {
       setIsEditMode(true);
       setEditingId(id);
@@ -210,7 +211,7 @@ export function CouponsView() {
 
   const handleConfirmDelete = () => {
     if (couponToDelete) {
-      setCoupons(prev => prev.filter(coupon => coupon.id !== couponToDelete));
+      setCoupons((prev) => prev.filter((coupon) => coupon.id !== couponToDelete));
       setDeleteDialogOpen(false);
       setCouponToDelete(null);
     }
@@ -220,7 +221,6 @@ export function CouponsView() {
     setDeleteDialogOpen(false);
     setCouponToDelete(null);
   };
-
 
   return (
     <DashboardContent maxWidth="xl">
@@ -263,34 +263,32 @@ export function CouponsView() {
                   </TableCell>
                   <TableCell>
                     <Typography variant="body2" sx={{ fontWeight: 500, color: 'success.main' }}>
-                      {coupon.amount}{coupon.amountType === 'Percentage' ? '%' : ''}
+                      {coupon.amount}
+                      {coupon.amountType === 'Percentage' ? '%' : ''}
                     </Typography>
                   </TableCell>
                   <TableCell>
                     <Typography variant="body2">
-                      {coupon.lengthOfStay} {coupon.lengthOfStayValue} night{coupon.lengthOfStayValue !== '1' ? 's' : ''}
+                      {coupon.lengthOfStay} {coupon.lengthOfStayValue} night
+                      {coupon.lengthOfStayValue !== '1' ? 's' : ''}
                     </Typography>
                   </TableCell>
                   <TableCell>
                     <Typography variant="body2">
-                      {coupon.checkInFrom && coupon.checkInTo 
+                      {coupon.checkInFrom && coupon.checkInTo
                         ? `From: ${coupon.checkInFrom} To: ${coupon.checkInTo}`
-                        : 'No dates selected'
-                      }
+                        : 'No dates selected'}
                     </Typography>
                   </TableCell>
                   <TableCell>
                     <Typography variant="body2">
-                      {coupon.validityFrom && coupon.validityTo 
+                      {coupon.validityFrom && coupon.validityTo
                         ? `From: ${coupon.validityFrom} To: ${coupon.validityTo}`
-                        : 'No dates selected'
-                      }
+                        : 'No dates selected'}
                     </Typography>
                   </TableCell>
                   <TableCell>
-                    <Typography variant="body2">
-                      {coupon.maxUses}
-                    </Typography>
+                    <Typography variant="body2">{coupon.maxUses}</Typography>
                   </TableCell>
                   <TableCell>
                     <Typography variant="body2" sx={{ fontWeight: 500 }}>
@@ -298,34 +296,32 @@ export function CouponsView() {
                     </Typography>
                   </TableCell>
                   <TableCell>
-                    <Typography variant="body2">
-                      {coupon.listings}
-                    </Typography>
+                    <Typography variant="body2">{coupon.listings}</Typography>
                   </TableCell>
                   <TableCell align="center">
                     <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
-                      <IconButton 
-                        size="small" 
+                      <IconButton
+                        size="small"
                         onClick={() => handleEdit(coupon.id)}
                         sx={{
                           color: 'text.secondary',
                           '&:hover': {
                             color: 'primary.main',
-                            bgcolor: 'primary.50'
-                          }
+                            bgcolor: 'primary.50',
+                          },
                         }}
                       >
                         <Iconify icon="solar:pen-bold" width={16} />
                       </IconButton>
-                      <IconButton 
-                        size="small" 
+                      <IconButton
+                        size="small"
                         onClick={() => handleDelete(coupon.id)}
                         sx={{
                           color: 'text.secondary',
                           '&:hover': {
                             color: 'error.main',
-                            bgcolor: 'error.50'
-                          }
+                            bgcolor: 'error.50',
+                          },
                         }}
                       >
                         <Iconify icon="solar:trash-bin-trash-bold" width={16} />
@@ -353,7 +349,9 @@ export function CouponsView() {
       >
         <Box sx={{ p: 3, height: '100%', display: 'flex', flexDirection: 'column' }}>
           {/* Header */}
-          <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 3 }}>
+          <Box
+            sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 3 }}
+          >
             <Typography variant="h6" sx={{ fontWeight: 600 }}>
               {isEditMode ? 'Edit coupon' : 'Add coupon'}
             </Typography>
@@ -552,12 +550,10 @@ export function CouponsView() {
           </Box>
 
           {/* Action Buttons */}
-          <Box sx={{ display: 'flex', gap: 2, pt: 2, borderTop: '1px solid', borderColor: 'divider' }}>
-            <Button
-              variant="outlined"
-              onClick={handleCloseDrawer}
-              sx={{ flex: 1 }}
-            >
+          <Box
+            sx={{ display: 'flex', gap: 2, pt: 2, borderTop: '1px solid', borderColor: 'divider' }}
+          >
+            <Button variant="outlined" onClick={handleCloseDrawer} sx={{ flex: 1 }}>
               Cancel
             </Button>
             <Button
@@ -573,21 +569,14 @@ export function CouponsView() {
       </Drawer>
 
       {/* Delete Confirmation Dialog */}
-      <Dialog
-        open={deleteDialogOpen}
-        onClose={handleCancelDelete}
-        maxWidth="sm"
-        fullWidth
-      >
+      <Dialog open={deleteDialogOpen} onClose={handleCancelDelete} maxWidth="sm" fullWidth>
         <DialogTitle>
           <Typography variant="h6" sx={{ fontWeight: 600 }}>
             Are you sure want to delete coupon?
           </Typography>
         </DialogTitle>
         <DialogContent>
-          <Typography variant="body1">
-            There will be no way to restore this information.
-          </Typography>
+          <Typography variant="body1">There will be no way to restore this information.</Typography>
         </DialogContent>
         <DialogActions>
           <Button onClick={handleCancelDelete} variant="outlined">

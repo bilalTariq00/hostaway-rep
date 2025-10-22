@@ -60,7 +60,7 @@ const mockExtras = [
     reservation: '',
     owner: '',
     ownerStatement: 'Via Acqua Bulicante - DF Method September [Da Pagare]',
-    amount: 900.00,
+    amount: 900.0,
     hasAttachment: true,
   },
   {
@@ -72,7 +72,7 @@ const mockExtras = [
     reservation: '',
     owner: '',
     ownerStatement: 'Circ. Casilina 151 - DF Method September [Da Pagare]',
-    amount: 1300.00,
+    amount: 1300.0,
     hasAttachment: true,
   },
   {
@@ -84,7 +84,7 @@ const mockExtras = [
     reservation: '',
     owner: '',
     ownerStatement: 'Navigli - DF Method August [Da Pubblicare]',
-    amount: 136.00,
+    amount: 136.0,
     hasAttachment: true,
   },
   {
@@ -108,7 +108,7 @@ const mockExtras = [
     reservation: '',
     owner: '',
     ownerStatement: 'DF - Elegant Roman Escape • Walk to the Colosseum May 2025',
-    amount: 120.00,
+    amount: 120.0,
     hasAttachment: true,
   },
 ];
@@ -136,7 +136,7 @@ export function ExtrasView() {
   const [importModalOpen, setImportModalOpen] = useState(false);
   const [customViewModalOpen, setCustomViewModalOpen] = useState(false);
   const [downloadAnchor, setDownloadAnchor] = useState<null | HTMLElement>(null);
-  
+
   // New state for dynamic table functionality
   const [extras, setExtras] = useState(mockExtras);
   const [editingExtra, setEditingExtra] = useState<any>(null);
@@ -146,12 +146,14 @@ export function ExtrasView() {
   const [columnSearchTerm, setColumnSearchTerm] = useState('');
   const [sortColumn, setSortColumn] = useState<string>('');
   const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('asc');
-  const [visibleColumns, setVisibleColumns] = useState(allColumns.slice(0, 8).map(col => col.key));
-  
+  const [visibleColumns, setVisibleColumns] = useState(
+    allColumns.slice(0, 8).map((col) => col.key)
+  );
+
   // Attachment dropdown state
   const [attachmentAnchor, setAttachmentAnchor] = useState<null | HTMLElement>(null);
   const [attachmentExtra, setAttachmentExtra] = useState<any>(null);
-  
+
   // Form data for sidebar
   const [formData, setFormData] = useState({
     extraName: '',
@@ -173,16 +175,16 @@ export function ExtrasView() {
 
   // Form handlers
   const handleInputChange = (field: string, value: any) => {
-    setFormData(prev => ({ ...prev, [field]: value }));
+    setFormData((prev) => ({ ...prev, [field]: value }));
   };
 
   const handleAmountChange = (delta: number) => {
-    setFormData(prev => ({ ...prev, amount: Math.max(0, prev.amount + delta) }));
+    setFormData((prev) => ({ ...prev, amount: Math.max(0, prev.amount + delta) }));
   };
 
   const handleCreateExtra = () => {
     const newExtra = {
-      id: Math.max(...extras.map(e => e.id)) + 1,
+      id: Math.max(...extras.map((e) => e.id)) + 1,
       name: formData.extraName || 'New Extra',
       date: formData.date,
       category: formData.categories,
@@ -196,14 +198,16 @@ export function ExtrasView() {
 
     if (editingExtra) {
       if (editingExtra.isDuplicating) {
-        setExtras(prev => [...prev, newExtra]);
+        setExtras((prev) => [...prev, newExtra]);
       } else {
-        setExtras(prev => prev.map(extra => 
-          extra.id === editingExtra.id ? { ...newExtra, id: editingExtra.id } : extra
-        ));
+        setExtras((prev) =>
+          prev.map((extra) =>
+            extra.id === editingExtra.id ? { ...newExtra, id: editingExtra.id } : extra
+          )
+        );
       }
     } else {
-      setExtras(prev => [...prev, newExtra]);
+      setExtras((prev) => [...prev, newExtra]);
     }
 
     setSidebarOpen(false);
@@ -272,7 +276,7 @@ export function ExtrasView() {
 
   const handleDeleteConfirm = () => {
     if (extraToDelete) {
-      setExtras(prev => prev.filter(extra => extra.id !== extraToDelete.id));
+      setExtras((prev) => prev.filter((extra) => extra.id !== extraToDelete.id));
     }
     setDeleteDialogOpen(false);
     setExtraToDelete(null);
@@ -293,19 +297,17 @@ export function ExtrasView() {
   };
 
   const handleColumnToggle = (columnKey: string) => {
-    const column = allColumns.find(col => col.key === columnKey);
+    const column = allColumns.find((col) => col.key === columnKey);
     if (column?.mandatory) return;
 
-    setVisibleColumns(prev => 
-      prev.includes(columnKey) 
-        ? prev.filter(key => key !== columnKey)
-        : [...prev, columnKey]
+    setVisibleColumns((prev) =>
+      prev.includes(columnKey) ? prev.filter((key) => key !== columnKey) : [...prev, columnKey]
     );
   };
 
   const handleSort = (columnKey: string) => {
     if (sortColumn === columnKey) {
-      setSortDirection(prev => prev === 'asc' ? 'desc' : 'asc');
+      setSortDirection((prev) => (prev === 'asc' ? 'desc' : 'asc'));
     } else {
       setSortColumn(columnKey);
       setSortDirection('asc');
@@ -329,7 +331,7 @@ export function ExtrasView() {
     input.type = 'file';
     input.multiple = true;
     input.accept = '.pdf,.doc,.docx,.jpg,.jpeg,.png,.txt';
-    
+
     input.onchange = (e) => {
       const files = (e.target as HTMLInputElement).files;
       if (files && files.length > 0) {
@@ -339,7 +341,7 @@ export function ExtrasView() {
         alert(`Successfully uploaded ${files.length} file(s) for "${attachmentExtra?.name}"`);
       }
     };
-    
+
     input.click();
     handleAttachmentClose();
   };
@@ -353,17 +355,15 @@ export function ExtrasView() {
 
   const handleSelectAll = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.checked) {
-      setSelectedExtras(extras.map(extra => extra.id));
+      setSelectedExtras(extras.map((extra) => extra.id));
     } else {
       setSelectedExtras([]);
     }
   };
 
   const handleSelectExtra = (extraId: number) => {
-    setSelectedExtras(prev => 
-      prev.includes(extraId) 
-        ? prev.filter(id => id !== extraId)
-        : [...prev, extraId]
+    setSelectedExtras((prev) =>
+      prev.includes(extraId) ? prev.filter((id) => id !== extraId) : [...prev, extraId]
     );
   };
 
@@ -396,30 +396,28 @@ export function ExtrasView() {
   };
 
   // Data processing
-  const filteredExtras = extras.filter(extra =>
+  const filteredExtras = extras.filter((extra) =>
     extra.name.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   const sortedData = [...filteredExtras].sort((a, b) => {
     if (!sortColumn) return 0;
-    
+
     const aValue = a[sortColumn as keyof typeof a];
     const bValue = b[sortColumn as keyof typeof b];
-    
+
     if (typeof aValue === 'string' && typeof bValue === 'string') {
-      return sortDirection === 'asc' 
-        ? aValue.localeCompare(bValue)
-        : bValue.localeCompare(aValue);
+      return sortDirection === 'asc' ? aValue.localeCompare(bValue) : bValue.localeCompare(aValue);
     }
-    
+
     if (typeof aValue === 'number' && typeof bValue === 'number') {
       return sortDirection === 'asc' ? aValue - bValue : bValue - aValue;
     }
-    
+
     return 0;
   });
 
-  const filteredColumns = allColumns.filter(column =>
+  const filteredColumns = allColumns.filter((column) =>
     column.label.toLowerCase().includes(columnSearchTerm.toLowerCase())
   );
 
@@ -532,57 +530,60 @@ export function ExtrasView() {
               <TableRow>
                 <TableCell padding="checkbox" sx={{ fontWeight: 600 }}>
                   <Checkbox
-                    indeterminate={selectedExtras.length > 0 && selectedExtras.length < extras.length}
+                    indeterminate={
+                      selectedExtras.length > 0 && selectedExtras.length < extras.length
+                    }
                     checked={selectedExtras.length === extras.length}
                     onChange={handleSelectAll}
                   />
                 </TableCell>
-                {allColumns.map((column) => (
-                  visibleColumns.includes(column.key) && (
-                    <TableCell 
-                      key={column.key} 
-                      sx={{ 
-                        fontWeight: 600, 
-                        minWidth: 120, 
-                        whiteSpace: 'nowrap',
-                        cursor: column.sortable ? 'pointer' : 'default',
-                        '&:hover': column.sortable ? { bgcolor: 'grey.100' } : {}
-                      }}
-                      onClick={() => column.sortable && handleSort(column.key)}
-                    >
-                      <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                        {column.label}
-                        {column.sortable && (
-                          <Box sx={{ display: 'flex', flexDirection: 'column', ml: 0.5 }}>
-                            <Box sx={{ fontSize: '10px', lineHeight: 1 }}>
-                              {sortColumn === column.key && sortDirection === 'asc' ? '▲' : '△'}
+                {allColumns.map(
+                  (column) =>
+                    visibleColumns.includes(column.key) && (
+                      <TableCell
+                        key={column.key}
+                        sx={{
+                          fontWeight: 600,
+                          minWidth: 120,
+                          whiteSpace: 'nowrap',
+                          cursor: column.sortable ? 'pointer' : 'default',
+                          '&:hover': column.sortable ? { bgcolor: 'grey.100' } : {},
+                        }}
+                        onClick={() => column.sortable && handleSort(column.key)}
+                      >
+                        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                          {column.label}
+                          {column.sortable && (
+                            <Box sx={{ display: 'flex', flexDirection: 'column', ml: 0.5 }}>
+                              <Box sx={{ fontSize: '10px', lineHeight: 1 }}>
+                                {sortColumn === column.key && sortDirection === 'asc' ? '▲' : '△'}
+                              </Box>
+                              <Box sx={{ fontSize: '10px', lineHeight: 1 }}>
+                                {sortColumn === column.key && sortDirection === 'desc' ? '▼' : '▽'}
+                              </Box>
                             </Box>
-                            <Box sx={{ fontSize: '10px', lineHeight: 1 }}>
-                              {sortColumn === column.key && sortDirection === 'desc' ? '▼' : '▽'}
-                            </Box>
-                          </Box>
-                        )}
-                      </Box>
-                    </TableCell>
-                  )
-                ))}
-                <TableCell 
-                  sx={{ 
-                    position: 'sticky', 
-                    right: 0, 
-                    bgcolor: 'background.paper', 
-                    borderLeft: '1px solid', 
+                          )}
+                        </Box>
+                      </TableCell>
+                    )
+                )}
+                <TableCell
+                  sx={{
+                    position: 'sticky',
+                    right: 0,
+                    bgcolor: 'background.paper',
+                    borderLeft: '1px solid',
                     borderColor: 'divider',
                     zIndex: 10,
-                    px: 0
+                    px: 0,
                   }}
                 >
-                  <IconButton 
-                    size="small" 
+                  <IconButton
+                    size="small"
                     onClick={handleColumnSettingsClick}
-                    sx={{ 
+                    sx={{
                       color: 'text.secondary',
-                      '&:hover': { bgcolor: 'grey.100', color: 'text.primary' }
+                      '&:hover': { bgcolor: 'grey.100', color: 'text.primary' },
                     }}
                   >
                     <Settings size={16} />
@@ -599,94 +600,98 @@ export function ExtrasView() {
                       onChange={() => handleSelectExtra(extra.id)}
                     />
                   </TableCell>
-                  {allColumns.map((column) => (
-                    visibleColumns.includes(column.key) && (
-                      <TableCell key={column.key} sx={{ minWidth: 120, whiteSpace: 'nowrap' }}>
-                        {column.key === 'name' && (
-                          <Typography 
-                            variant="body2" 
-                            sx={{ 
-                              fontWeight: 500, 
-                              color: 'primary.main', 
-                              cursor: 'pointer', 
-                              '&:hover': { color: 'primary.dark' } 
-                            }}
-                            onClick={() => handleEditExtra(extra)}
-                          >
-                      {extra.name}
-                    </Typography>
-                        )}
-                        {column.key === 'date' && (
-                          <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-                      {extra.date}
-                    </Typography>
-                        )}
-                        {column.key === 'categories' && (
-                          <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-                            —
-                          </Typography>
-                        )}
-                        {column.key === 'listing' && (
-                          <Typography 
-                            variant="body2" 
-                            sx={{ 
-                              color: 'primary.main', 
-                              cursor: 'pointer', 
-                              '&:hover': { textDecoration: 'underline' } 
-                            }}
-                            onClick={() => router.push('/listings/1')}
-                          >
-                      {extra.listing}
-                    </Typography>
-                        )}
-                        {column.key === 'reservation' && (
-                          <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-                            —
-                    </Typography>
-                        )}
-                        {column.key === 'owner' && (
-                          <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-                            —
-                    </Typography>
-                        )}
-                        {column.key === 'ownerStatement' && (
-                          <Typography 
-                            variant="body2" 
-                            sx={{ 
-                              color: 'primary.main', 
-                              cursor: 'pointer', 
-                              '&:hover': { textDecoration: 'underline' } 
-                            }}
-                          >
-                      {extra.ownerStatement}
-                    </Typography>
-                        )}
-                        {column.key === 'amount' && (
-                          <Typography variant="body2" sx={{ fontWeight: 600, color: 'primary.main' }}>
-                      €{extra.amount.toFixed(2)}
-                    </Typography>
-                        )}
-                  </TableCell>
-                    )
-                  ))}
-                  <TableCell 
-                    sx={{ 
-                      position: 'sticky', 
-                      right: 0, 
-                      bgcolor: index % 2 === 0 ? 'white' : 'grey.50', 
-                      borderLeft: '1px solid', 
+                  {allColumns.map(
+                    (column) =>
+                      visibleColumns.includes(column.key) && (
+                        <TableCell key={column.key} sx={{ minWidth: 120, whiteSpace: 'nowrap' }}>
+                          {column.key === 'name' && (
+                            <Typography
+                              variant="body2"
+                              sx={{
+                                fontWeight: 500,
+                                color: 'primary.main',
+                                cursor: 'pointer',
+                                '&:hover': { color: 'primary.dark' },
+                              }}
+                              onClick={() => handleEditExtra(extra)}
+                            >
+                              {extra.name}
+                            </Typography>
+                          )}
+                          {column.key === 'date' && (
+                            <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+                              {extra.date}
+                            </Typography>
+                          )}
+                          {column.key === 'categories' && (
+                            <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+                              —
+                            </Typography>
+                          )}
+                          {column.key === 'listing' && (
+                            <Typography
+                              variant="body2"
+                              sx={{
+                                color: 'primary.main',
+                                cursor: 'pointer',
+                                '&:hover': { textDecoration: 'underline' },
+                              }}
+                              onClick={() => router.push('/listings/1')}
+                            >
+                              {extra.listing}
+                            </Typography>
+                          )}
+                          {column.key === 'reservation' && (
+                            <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+                              —
+                            </Typography>
+                          )}
+                          {column.key === 'owner' && (
+                            <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+                              —
+                            </Typography>
+                          )}
+                          {column.key === 'ownerStatement' && (
+                            <Typography
+                              variant="body2"
+                              sx={{
+                                color: 'primary.main',
+                                cursor: 'pointer',
+                                '&:hover': { textDecoration: 'underline' },
+                              }}
+                            >
+                              {extra.ownerStatement}
+                            </Typography>
+                          )}
+                          {column.key === 'amount' && (
+                            <Typography
+                              variant="body2"
+                              sx={{ fontWeight: 600, color: 'primary.main' }}
+                            >
+                              €{extra.amount.toFixed(2)}
+                            </Typography>
+                          )}
+                        </TableCell>
+                      )
+                  )}
+                  <TableCell
+                    sx={{
+                      position: 'sticky',
+                      right: 0,
+                      bgcolor: index % 2 === 0 ? 'white' : 'grey.50',
+                      borderLeft: '1px solid',
                       borderColor: 'divider',
                       zIndex: 10,
-                      px: 0
+                      px: 0,
                     }}
                   >
                     <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
-                      <IconButton 
-                        size="small" 
+                      <IconButton
+                        size="small"
                         onClick={(e) => handleAttachmentClick(e, extra)}
-                        sx={{ 
+                        sx={{
                           color: extra.hasAttachment ? 'primary.main' : 'text.secondary',
-                          '&:hover': { bgcolor: 'grey.100' }
+                          '&:hover': { bgcolor: 'grey.100' },
                         }}
                       >
                         <Paperclip size={16} />
@@ -723,24 +728,32 @@ export function ExtrasView() {
 
       {/* Pagination */}
       <Paper sx={{ p: 2 }}>
-        <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 2 }}>
+        <Box
+          sx={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            flexWrap: 'wrap',
+            gap: 2,
+          }}
+        >
           <Typography variant="body2" color="text.secondary">
             Show {itemsPerPage} per page
           </Typography>
           <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, flexWrap: 'wrap' }}>
-            <Button 
-              size="small" 
-              variant="outlined" 
+            <Button
+              size="small"
+              variant="outlined"
               disabled={currentPage === 1}
               onClick={() => setCurrentPage(1)}
             >
               FIRST
             </Button>
-            <Button 
-              size="small" 
-              variant="outlined" 
+            <Button
+              size="small"
+              variant="outlined"
               disabled={currentPage === 1}
-              onClick={() => setCurrentPage(prev => Math.max(1, prev - 1))}
+              onClick={() => setCurrentPage((prev) => Math.max(1, prev - 1))}
             >
               &lt;
             </Button>
@@ -750,24 +763,24 @@ export function ExtrasView() {
                 <Button
                   key={pageNum}
                   size="small"
-                  variant={currentPage === pageNum ? "contained" : "outlined"}
+                  variant={currentPage === pageNum ? 'contained' : 'outlined'}
                   onClick={() => setCurrentPage(pageNum)}
                 >
                   {pageNum}
                 </Button>
               );
             })}
-            <Button 
-              size="small" 
-              variant="outlined" 
+            <Button
+              size="small"
+              variant="outlined"
               disabled={currentPage === totalPages}
-              onClick={() => setCurrentPage(prev => Math.min(totalPages, prev + 1))}
+              onClick={() => setCurrentPage((prev) => Math.min(totalPages, prev + 1))}
             >
               &gt;
             </Button>
-            <Button 
-              size="small" 
-              variant="outlined" 
+            <Button
+              size="small"
+              variant="outlined"
               disabled={currentPage === totalPages}
               onClick={() => setCurrentPage(totalPages)}
             >
@@ -791,7 +804,11 @@ export function ExtrasView() {
       >
         <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 3 }}>
           <Typography variant="h6" sx={{ fontWeight: 600 }}>
-            {editingExtra?.isDuplicating ? 'Duplicate extra' : editingExtra ? 'Edit extra' : 'Add new extra'}
+            {editingExtra?.isDuplicating
+              ? 'Duplicate extra'
+              : editingExtra
+                ? 'Edit extra'
+                : 'Add new extra'}
           </Typography>
           <IconButton onClick={handleSidebarClose}>
             <X size={20} />
@@ -836,9 +853,11 @@ export function ExtrasView() {
           />
 
           <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-            <Typography variant="body2" sx={{ minWidth: 60 }}>Amount *</Typography>
-            <IconButton 
-              size="small" 
+            <Typography variant="body2" sx={{ minWidth: 60 }}>
+              Amount *
+            </Typography>
+            <IconButton
+              size="small"
               onClick={() => handleAmountChange(-1)}
               sx={{ border: '1px solid', borderColor: 'divider' }}
             >
@@ -851,8 +870,8 @@ export function ExtrasView() {
               onChange={(e) => handleInputChange('amount', parseFloat(e.target.value) || 0)}
               sx={{ flex: 1 }}
             />
-            <IconButton 
-              size="small" 
+            <IconButton
+              size="small"
               onClick={() => handleAmountChange(1)}
               sx={{ border: '1px solid', borderColor: 'divider' }}
             >
@@ -862,7 +881,7 @@ export function ExtrasView() {
 
           <FormControl fullWidth>
             <InputLabel>Categories</InputLabel>
-            <Select 
+            <Select
               label="Categories"
               value={formData.categories}
               onChange={(e) => handleInputChange('categories', e.target.value)}
@@ -876,7 +895,7 @@ export function ExtrasView() {
 
           <FormControl fullWidth>
             <InputLabel>Listing</InputLabel>
-            <Select 
+            <Select
               label="Listing"
               value={formData.listing}
               onChange={(e) => handleInputChange('listing', e.target.value)}
@@ -891,7 +910,7 @@ export function ExtrasView() {
 
           <FormControl fullWidth>
             <InputLabel>Reservation</InputLabel>
-            <Select 
+            <Select
               label="Reservation"
               value={formData.reservation}
               onChange={(e) => handleInputChange('reservation', e.target.value)}
@@ -902,7 +921,7 @@ export function ExtrasView() {
 
           <FormControl fullWidth>
             <InputLabel>Owner</InputLabel>
-            <Select 
+            <Select
               label="Owner"
               value={formData.owner}
               onChange={(e) => handleInputChange('owner', e.target.value)}
@@ -912,11 +931,7 @@ export function ExtrasView() {
           </FormControl>
 
           <Box sx={{ display: 'flex', gap: 2, mt: 4 }}>
-            <Button
-              fullWidth
-              variant="outlined"
-              onClick={handleSidebarClose}
-            >
+            <Button fullWidth variant="outlined" onClick={handleSidebarClose}>
               Cancel
             </Button>
             <Button
@@ -957,12 +972,7 @@ export function ExtrasView() {
       <Dialog open={customViewModalOpen} onClose={handleCustomViewClose} maxWidth="sm" fullWidth>
         <DialogTitle>New Custom View</DialogTitle>
         <DialogContent>
-          <TextField
-            fullWidth
-            label="View Name"
-            placeholder="Enter view name..."
-            sx={{ mt: 2 }}
-          />
+          <TextField fullWidth label="View Name" placeholder="Enter view name..." sx={{ mt: 2 }} />
         </DialogContent>
         <DialogActions>
           <Button onClick={handleCustomViewClose}>Cancel</Button>
@@ -1065,7 +1075,8 @@ export function ExtrasView() {
         <DialogTitle>Delete Extra</DialogTitle>
         <DialogContent>
           <Typography>
-            Are you sure you want to delete &quot;{extraToDelete?.name}&quot;? This action cannot be undone.
+            Are you sure you want to delete &quot;{extraToDelete?.name}&quot;? This action cannot be
+            undone.
           </Typography>
         </DialogContent>
         <DialogActions>

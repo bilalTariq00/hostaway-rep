@@ -157,24 +157,26 @@ export function GuestbookView() {
   const handleSave = () => {
     if (isEditMode && editingId) {
       // Update existing guest
-      setGuests(prev => prev.map(guest => 
-        guest.id === editingId 
-          ? { 
-              ...guest, 
-              firstName: formData.firstName,
-              lastName: formData.lastName,
-              email: formData.email,
-              phone: formData.phone,
-              city: formData.city,
-              country: formData.country,
-              agreeToMarketing: formData.agreeToMarketing,
-            }
-          : guest
-      ));
+      setGuests((prev) =>
+        prev.map((guest) =>
+          guest.id === editingId
+            ? {
+                ...guest,
+                firstName: formData.firstName,
+                lastName: formData.lastName,
+                email: formData.email,
+                phone: formData.phone,
+                city: formData.city,
+                country: formData.country,
+                agreeToMarketing: formData.agreeToMarketing,
+              }
+            : guest
+        )
+      );
     } else {
       // Add new guest
       const newGuest = {
-        id: Math.max(...guests.map(g => g.id), 0) + 1,
+        id: Math.max(...guests.map((g) => g.id), 0) + 1,
         firstName: formData.firstName,
         lastName: formData.lastName,
         email: formData.email,
@@ -189,13 +191,13 @@ export function GuestbookView() {
         relatedProperties: 'La Dimora Del Cavaliere',
         agreeToMarketing: formData.agreeToMarketing,
       };
-      setGuests(prev => [...prev, newGuest]);
+      setGuests((prev) => [...prev, newGuest]);
     }
     handleCloseModal();
   };
 
   const handleEdit = (id: number) => {
-    const guest = guests.find(g => g.id === id);
+    const guest = guests.find((g) => g.id === id);
     if (guest) {
       setIsEditMode(true);
       setEditingId(id);
@@ -219,7 +221,7 @@ export function GuestbookView() {
 
   const handleConfirmDelete = () => {
     if (guestToDelete) {
-      setGuests(prev => prev.filter(guest => guest.id !== guestToDelete));
+      setGuests((prev) => prev.filter((guest) => guest.id !== guestToDelete));
       setDeleteDialogOpen(false);
       setGuestToDelete(null);
     }
@@ -230,10 +232,11 @@ export function GuestbookView() {
     setGuestToDelete(null);
   };
 
-  const filteredGuests = guests.filter(guest => {
-    const matchesSearch = guest.firstName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         guest.lastName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         guest.city.toLowerCase().includes(searchTerm.toLowerCase());
+  const filteredGuests = guests.filter((guest) => {
+    const matchesSearch =
+      guest.firstName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      guest.lastName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      guest.city.toLowerCase().includes(searchTerm.toLowerCase());
     const matchesCountry = !selectedCountry || guest.country === selectedCountry;
     const matchesReservation = !hasReservation || guest.reservations > 0;
     const matchesMarketing = !agreeToMarketing || guest.agreeToMarketing;
@@ -258,7 +261,7 @@ export function GuestbookView() {
             <Button variant="contained" onClick={handleOpenModal}>
               Add
             </Button>
-            <Button variant="outlined" endIcon={<Iconify icon={"eva:arrow-down-fill" as any} />}>
+            <Button variant="outlined" endIcon={<Iconify icon={'eva:arrow-down-fill' as any} />}>
               Download Report
             </Button>
           </Box>
@@ -358,19 +361,13 @@ export function GuestbookView() {
                     </Typography>
                   </TableCell>
                   <TableCell>
-                    <Typography variant="body2">
-                      {guest.email}
-                    </Typography>
+                    <Typography variant="body2">{guest.email}</Typography>
                   </TableCell>
                   <TableCell>
-                    <Typography variant="body2">
-                      {guest.phone}
-                    </Typography>
+                    <Typography variant="body2">{guest.phone}</Typography>
                   </TableCell>
                   <TableCell>
-                    <Typography variant="body2">
-                      {guest.idNumber}
-                    </Typography>
+                    <Typography variant="body2">{guest.idNumber}</Typography>
                   </TableCell>
                   <TableCell>
                     <Chip
@@ -392,14 +389,10 @@ export function GuestbookView() {
                     </Typography>
                   </TableCell>
                   <TableCell>
-                    <Typography variant="body2">
-                      {guest.city}
-                    </Typography>
+                    <Typography variant="body2">{guest.city}</Typography>
                   </TableCell>
                   <TableCell>
-                    <Typography variant="body2">
-                      {guest.country}
-                    </Typography>
+                    <Typography variant="body2">{guest.country}</Typography>
                   </TableCell>
                   <TableCell>
                     <Typography variant="body2" sx={{ fontWeight: 500 }}>
@@ -407,9 +400,7 @@ export function GuestbookView() {
                     </Typography>
                   </TableCell>
                   <TableCell>
-                    <Typography variant="body2">
-                      {guest.relatedProperties}
-                    </Typography>
+                    <Typography variant="body2">{guest.relatedProperties}</Typography>
                   </TableCell>
                   <TableCell>
                     <Chip
@@ -420,28 +411,28 @@ export function GuestbookView() {
                   </TableCell>
                   <TableCell align="center">
                     <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
-                      <IconButton 
+                      <IconButton
                         size="small"
                         onClick={() => handleEdit(guest.id)}
                         sx={{
                           color: 'text.secondary',
                           '&:hover': {
                             color: 'primary.main',
-                            bgcolor: 'primary.50'
-                          }
+                            bgcolor: 'primary.50',
+                          },
                         }}
                       >
                         <Iconify icon="solar:pen-bold" width={16} />
                       </IconButton>
-                      <IconButton 
+                      <IconButton
                         size="small"
                         onClick={() => handleDelete(guest.id)}
                         sx={{
                           color: 'text.secondary',
                           '&:hover': {
                             color: 'error.main',
-                            bgcolor: 'error.50'
-                          }
+                            bgcolor: 'error.50',
+                          },
                         }}
                       >
                         <Iconify icon="solar:trash-bin-trash-bold" width={16} />
@@ -471,12 +462,7 @@ export function GuestbookView() {
       </Paper>
 
       {/* Add/Edit Guest Modal */}
-      <Dialog
-        open={isModalOpen}
-        onClose={handleCloseModal}
-        maxWidth="sm"
-        fullWidth
-      >
+      <Dialog open={isModalOpen} onClose={handleCloseModal} maxWidth="sm" fullWidth>
         <DialogTitle>
           <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
             <Typography variant="h6" sx={{ fontWeight: 600 }}>
@@ -555,10 +541,12 @@ export function GuestbookView() {
           <Button onClick={handleCloseModal} variant="outlined">
             Cancel
           </Button>
-          <Button 
-            onClick={handleSave} 
+          <Button
+            onClick={handleSave}
             variant="contained"
-            disabled={!formData.firstName.trim() || !formData.lastName.trim() || !formData.email.trim()}
+            disabled={
+              !formData.firstName.trim() || !formData.lastName.trim() || !formData.email.trim()
+            }
           >
             {isEditMode ? 'Update' : 'Add'}
           </Button>
@@ -566,12 +554,7 @@ export function GuestbookView() {
       </Dialog>
 
       {/* Delete Confirmation Dialog */}
-      <Dialog
-        open={deleteDialogOpen}
-        onClose={handleCancelDelete}
-        maxWidth="sm"
-        fullWidth
-      >
+      <Dialog open={deleteDialogOpen} onClose={handleCancelDelete} maxWidth="sm" fullWidth>
         <DialogTitle>
           <Typography variant="h6" sx={{ fontWeight: 600 }}>
             Delete Guest

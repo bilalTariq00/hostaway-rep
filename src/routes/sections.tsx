@@ -11,6 +11,7 @@ import { AuthLayout } from 'src/layouts/auth';
 import { DashboardLayout } from 'src/layouts/dashboard';
 import { TeamDashboardLayout } from 'src/layouts/team-dashboard/layout';
 
+import { RootRedirect } from 'src/components/root-redirect';
 import { ProtectedRoute } from 'src/components/protected-route';
 
 // ----------------------------------------------------------------------
@@ -19,85 +20,345 @@ export const DashboardPage = lazy(() => import('src/pages/dashboard'));
 export const BlogPage = lazy(() => import('src/pages/blog'));
 export const UserPage = lazy(() => import('src/pages/user'));
 export const SignInPage = lazy(() => import('src/pages/sign-in'));
-export const HostawayLoginPage = lazy(() => import('src/pages/hostaway-login').then(module => ({ default: module.HostawayLogin })));
-export const HostawayRegisterPage = lazy(() => import('src/pages/hostaway-register').then(module => ({ default: module.HostawayRegister })));
+export const HostawayLoginPage = lazy(() =>
+  import('src/pages/hostaway-login').then((module) => ({ default: module.HostawayLogin }))
+);
+export const HostawayRegisterPage = lazy(() =>
+  import('src/pages/hostaway-register').then((module) => ({ default: module.HostawayRegister }))
+);
 export const ProductsPage = lazy(() => import('src/pages/products'));
 export const SettingsPage = lazy(() => import('src/pages/settings'));
 export const ReportsPage = lazy(() => import('src/pages/reports'));
 export const AnalyticsPage = lazy(() => import('src/pages/analytics'));
 export const MessagesPage = lazy(() => import('src/pages/messages'));
-export const TeamDashboardPage = lazy(() => import('src/sections/team-dashboard/view/team-dashboard-view').then(module => ({ default: module.TeamDashboardPage })));
-export const TeamAnalyticsPage = lazy(() => import('src/sections/team-dashboard/view/team-analytics-view').then(module => ({ default: module.TeamAnalyticsView })));
-export const TeamManagementPage = lazy(() => import('src/sections/team-dashboard/view/team-management-view').then(module => ({ default: module.TeamManagementView })));
-export const TeamProfilePage = lazy(() => import('src/sections/team-dashboard/view/team-profile-view').then(module => ({ default: module.TeamProfileView })));
-export const CalendarMultiPage = lazy(() => import('src/sections/calendar/view/calendar-multi-view').then(module => ({ default: module.CalendarMultiView })));
-export const CalendarMonthlyPage = lazy(() => import('src/sections/calendar/view/calendar-monthly-view').then(module => ({ default: module.CalendarMonthlyView })));
-export const CalendarYearlyPage = lazy(() => import('src/sections/calendar/view/calendar-yearly-view').then(module => ({ default: module.CalendarYearlyView })));
-export const ReservationsPage = lazy(() => import('src/sections/reservations/view/reservations-view').then(module => ({ default: module.ReservationsView })));
-export const ReservationFormPage = lazy(() => import('src/sections/reservations/view/reservation-form-view'));
-export const ReservationViewPage = lazy(() => import('src/sections/reservations/view/reservation-view'));
+export const TeamDashboardPage = lazy(() =>
+  import('src/sections/team-dashboard/view/team-dashboard-view').then((module) => ({
+    default: module.TeamDashboardPage,
+  }))
+);
+export const TeamAnalyticsPage = lazy(() =>
+  import('src/sections/team-dashboard/view/team-analytics-view').then((module) => ({
+    default: module.TeamAnalyticsView,
+  }))
+);
+export const TeamManagementPage = lazy(() =>
+  import('src/sections/team-dashboard/view/team-management-view').then((module) => ({
+    default: module.TeamManagementView,
+  }))
+);
+export const TeamProfilePage = lazy(() =>
+  import('src/sections/team-dashboard/view/team-profile-view').then((module) => ({
+    default: module.TeamProfileView,
+  }))
+);
+export const CalendarMultiPage = lazy(() =>
+  import('src/sections/calendar/view/calendar-multi-view').then((module) => ({
+    default: module.CalendarMultiView,
+  }))
+);
+export const CalendarMonthlyPage = lazy(() =>
+  import('src/sections/calendar/view/calendar-monthly-view').then((module) => ({
+    default: module.CalendarMonthlyView,
+  }))
+);
+export const CalendarYearlyPage = lazy(() =>
+  import('src/sections/calendar/view/calendar-yearly-view').then((module) => ({
+    default: module.CalendarYearlyView,
+  }))
+);
+export const ReservationsPage = lazy(() =>
+  import('src/sections/reservations/view/reservations-view').then((module) => ({
+    default: module.ReservationsView,
+  }))
+);
+export const ReservationFormPage = lazy(
+  () => import('src/sections/reservations/view/reservation-form-view')
+);
+export const ReservationViewPage = lazy(
+  () => import('src/sections/reservations/view/reservation-view')
+);
 // export const ReservationDetailPage = lazy(() => import('src/sections/reservations/view/reservation-detail-view'));
 export const UserDetailPage = lazy(() => import('src/sections/user/view/user-detail-view'));
-export const CustomFieldsPage = lazy(() => import('src/sections/reservations/view/custom-fields-view').then(module => ({ default: module.CustomFieldsView })));
-export const GuestbookPage = lazy(() => import('src/sections/reservations/view/guestbook-view').then(module => ({ default: module.GuestbookView })));
-export const CouponsPage = lazy(() => import('src/sections/reservations/view/coupons-view').then(module => ({ default: module.CouponsView })));
-export const ListingsPage = lazy(() => import('src/sections/listings/view/listings-view').then(module => ({ default: module.ListingsView })));
-export const ListingDetailPage = lazy(() => import('src/sections/listings/view/listing-detail-page'));
+export const CustomFieldsPage = lazy(() =>
+  import('src/sections/reservations/view/custom-fields-view').then((module) => ({
+    default: module.CustomFieldsView,
+  }))
+);
+export const GuestbookPage = lazy(() =>
+  import('src/sections/reservations/view/guestbook-view').then((module) => ({
+    default: module.GuestbookView,
+  }))
+);
+export const CouponsPage = lazy(() =>
+  import('src/sections/reservations/view/coupons-view').then((module) => ({
+    default: module.CouponsView,
+  }))
+);
+export const ListingsPage = lazy(() =>
+  import('src/sections/listings/view/listings-view').then((module) => ({
+    default: module.ListingsView,
+  }))
+);
+export const ListingDetailPage = lazy(
+  () => import('src/sections/listings/view/listing-detail-page')
+);
 export const ListingEditPage = lazy(() => import('src/sections/listings/view/listing-edit-page'));
-export const ListingsCustomFieldsPage = lazy(() => import('src/sections/listings/view/listings-custom-fields-view').then(module => ({ default: module.ListingsCustomFieldsView })));
-export const FinancialAnalyticsPage = lazy(() => import('src/sections/financial-reporting/view/analytics-view').then(module => ({ default: module.AnalyticsView })));
-export const RentalActivityPage = lazy(() => import('src/sections/financial-reporting/view/rental-activity-view').then(module => ({ default: module.RentalActivityView })));
-export const OccupancyReportPage = lazy(() => import('src/sections/financial-reporting/view/occupancy-report-view').then(module => ({ default: module.OccupancyReportView })));
-export const QuickBooksPage = lazy(() => import('src/sections/financial-reporting/view/quickbooks-view').then(module => ({ default: module.QuickBooksView })));
-export const ExpensesPage = lazy(() => import('src/sections/expenses/view/expenses-view').then(module => ({ default: module.ExpensesView })));
-export const ExtrasPage = lazy(() => import('src/sections/expenses/view/extras-view').then(module => ({ default: module.ExtrasView })));
-export const CategoriesPage = lazy(() => import('src/sections/expenses/view/categories-view').then(module => ({ default: module.CategoriesView })));
-export const AutomationsPage = lazy(() => import('src/sections/expenses/view/automations-view').then(module => ({ default: module.AutomationsView })));
-export const StatementsPage = lazy(() => import('src/sections/statements/view/statements-view').then(module => ({ default: module.StatementsView })));
-export const StatementEditPage = lazy(() => import('src/sections/statements/view/statement-edit-page'));
-export const AutoStatementsPage = lazy(() => import('src/sections/statements/view/auto-statements-view').then(module => ({ default: module.AutoStatementsView })));
-export const ManageTasksPage = lazy(() => import('src/sections/tasks/view/manage-tasks-view').then(module => ({ default: module.ManageTasksView })));
-export const TaskFormPage = lazy(() => import('src/sections/tasks/view/task-form-page').then(module => ({ default: module.TaskFormPage })));
-export const AutoTaskFormPage = lazy(() => import('src/sections/tasks/view/auto-task-form-page').then(module => ({ default: module.AutoTaskFormPage })));
-export const ManageAutoTasksPage = lazy(() => import('src/sections/tasks/view/manage-auto-tasks-view').then(module => ({ default: module.ManageAutoTasksView })));
-export const ChecklistTemplatesPage = lazy(() => import('src/sections/tasks/view/checklist-templates-view').then(module => ({ default: module.ChecklistTemplatesView })));
-export const ChecklistTemplateFormPage = lazy(() => import('src/sections/tasks/view/checklist-template-form-page').then(module => ({ default: module.ChecklistTemplateFormPage })));
-export const ArchivePage = lazy(() => import('src/sections/tasks/view/archive-view').then(module => ({ default: module.ArchiveView })));
-export const TasksCustomFieldsPage = lazy(() => import('src/sections/tasks/view/custom-fields-view').then(module => ({ default: module.CustomFieldsView })));
-export const ManageReviewsPage = lazy(() => import('src/sections/reviews/view/manage-reviews-view').then(module => ({ default: module.ManageReviewsView })));
-export const AutoReviewsPage = lazy(() => import('src/sections/reviews/view/auto-reviews-view').then(module => ({ default: module.AutoReviewsView })));
-export const ReviewTemplatesPage = lazy(() => import('src/sections/reviews/view/review-templates-view').then(module => ({ default: module.ReviewTemplatesView })));
-export const ReviewTemplateFormPage = lazy(() => import('src/sections/reviews/view/review-template-form-page').then(module => ({ default: module.ReviewTemplateFormPage })));
-export const ChargesPage = lazy(() => import('src/sections/guest-payments/view/charges-view').then(module => ({ default: module.ChargesView })));
-export const AutoPaymentsPage = lazy(() => import('src/sections/guest-payments/view/auto-payments-view').then(module => ({ default: module.AutoPaymentsView })));
-export const DocumentTemplatesPage = lazy(() => import('src/sections/guest-payments/view/document-templates-view').then(module => ({ default: module.DocumentTemplatesView })));
-export const SmartLocksPage = lazy(() => import('src/sections/smart-locks/view/smart-locks-view').then(module => ({ default: module.SmartLocksView })));
-export const ListingMappingPage = lazy(() => import('src/sections/channel-manager/view/listing-mapping-view').then(module => ({ default: module.ListingMappingView })));
-export const ChannelsPage = lazy(() => import('src/sections/channel-manager/view/channels-view').then(module => ({ default: module.ChannelsView })));
-export const AirbnbPage = lazy(() => import('src/sections/channel-manager/view/airbnb-view').then(module => ({ default: module.AirbnbView })));
-export const BookingPage = lazy(() => import('src/sections/channel-manager/view/booking-view').then(module => ({ default: module.BookingView })));
-export const DesignPage = lazy(() => import('src/sections/booking-engine/view/design-view').then(module => ({ default: module.DesignView })));
-export const BookingListingsPage = lazy(() => import('src/sections/booking-engine/view/listings-view').then(module => ({ default: module.ListingsView })));
-export const BookingPagesPage = lazy(() => import('src/sections/booking-engine/view/pages-view').then(module => ({ default: module.PagesView })));
-export const BookingSettingsPage = lazy(() => import('src/sections/booking-engine/view/settings-view').then(module => ({ default: module.SettingsView })));
-export const TranslationsPage = lazy(() => import('src/sections/booking-engine/view/translations-view').then(module => ({ default: module.TranslationsView })));
-export const InboxPage = lazy(() => import('src/sections/inbox/view/inbox-view').then(module => ({ default: module.InboxView })));
-export const MessageTemplatesPage = lazy(() => import('src/sections/inbox/view/message-templates-view').then(module => ({ default: module.MessageTemplatesView })));
-export const InboxAutomationsPage = lazy(() => import('src/sections/inbox/view/automations-view').then(module => ({ default: module.AutomationsView })));
-export const ManageMessagesPage = lazy(() => import('src/sections/inbox/view/manage-messages-view').then(module => ({ default: module.ManageMessagesView })));
-export const TemplateCreatePage = lazy(() => import('src/sections/inbox/view/template-create-view').then(module => ({ default: module.TemplateCreateView })));
-export const TemplateEditPage = lazy(() => import('src/sections/inbox/view/template-edit-view').then(module => ({ default: module.TemplateEditView })));
-export const TemplateGroupCreatePage = lazy(() => import('src/sections/inbox/view/template-group-create-view').then(module => ({ default: module.TemplateGroupCreateView })));
-export const TemplateGroupEditPage = lazy(() => import('src/sections/inbox/view/template-group-edit-view').then(module => ({ default: module.TemplateGroupEditView })));
-export const AutomationCreatePage = lazy(() => import('src/sections/inbox/view/automation-create-view').then(module => ({ default: module.AutomationCreateView })));
-export const AutomationEditPage = lazy(() => import('src/sections/inbox/view/automation-edit-view').then(module => ({ default: module.AutomationEditView })));
-export const MessageEditPage = lazy(() => import('src/sections/inbox/view/message-edit-view').then(module => ({ default: module.MessageEditView })));
-export const CreateAccountPage = lazy(() => import('src/pages/create-account').then(module => ({ default: module.CreateAccountPage })));
-export const UserManagementPage = lazy(() => import('src/pages/user-management').then(module => ({ default: module.UserManagementPage })));
-export const ClientManagementPage = lazy(() => import('src/pages/client-management').then(module => ({ default: module.ClientManagementPage })));
-export const SupervisorDashboardPage = lazy(() => import('src/pages/supervisor-dashboard').then(module => ({ default: module.SupervisorDashboardPage })));
-export const ManagerDashboardPage = lazy(() => import('src/pages/manager-dashboard').then(module => ({ default: module.ManagerDashboardPage })));
-export const AssociateDashboardPage = lazy(() => import('src/pages/associate-dashboard').then(module => ({ default: module.AssociateDashboardPage })));
+export const ListingsCustomFieldsPage = lazy(() =>
+  import('src/sections/listings/view/listings-custom-fields-view').then((module) => ({
+    default: module.ListingsCustomFieldsView,
+  }))
+);
+export const FinancialAnalyticsPage = lazy(() =>
+  import('src/sections/financial-reporting/view/analytics-view').then((module) => ({
+    default: module.AnalyticsView,
+  }))
+);
+export const RentalActivityPage = lazy(() =>
+  import('src/sections/financial-reporting/view/rental-activity-view').then((module) => ({
+    default: module.RentalActivityView,
+  }))
+);
+export const OccupancyReportPage = lazy(() =>
+  import('src/sections/financial-reporting/view/occupancy-report-view').then((module) => ({
+    default: module.OccupancyReportView,
+  }))
+);
+export const QuickBooksPage = lazy(() =>
+  import('src/sections/financial-reporting/view/quickbooks-view').then((module) => ({
+    default: module.QuickBooksView,
+  }))
+);
+export const ExpensesPage = lazy(() =>
+  import('src/sections/expenses/view/expenses-view').then((module) => ({
+    default: module.ExpensesView,
+  }))
+);
+export const ExtrasPage = lazy(() =>
+  import('src/sections/expenses/view/extras-view').then((module) => ({
+    default: module.ExtrasView,
+  }))
+);
+export const CategoriesPage = lazy(() =>
+  import('src/sections/expenses/view/categories-view').then((module) => ({
+    default: module.CategoriesView,
+  }))
+);
+export const AutomationsPage = lazy(() =>
+  import('src/sections/expenses/view/automations-view').then((module) => ({
+    default: module.AutomationsView,
+  }))
+);
+export const StatementsPage = lazy(() =>
+  import('src/sections/statements/view/statements-view').then((module) => ({
+    default: module.StatementsView,
+  }))
+);
+export const StatementEditPage = lazy(
+  () => import('src/sections/statements/view/statement-edit-page')
+);
+export const AutoStatementsPage = lazy(() =>
+  import('src/sections/statements/view/auto-statements-view').then((module) => ({
+    default: module.AutoStatementsView,
+  }))
+);
+export const ManageTasksPage = lazy(() =>
+  import('src/sections/tasks/view/manage-tasks-view').then((module) => ({
+    default: module.ManageTasksView,
+  }))
+);
+export const TaskFormPage = lazy(() =>
+  import('src/sections/tasks/view/task-form-page').then((module) => ({
+    default: module.TaskFormPage,
+  }))
+);
+export const AutoTaskFormPage = lazy(() =>
+  import('src/sections/tasks/view/auto-task-form-page').then((module) => ({
+    default: module.AutoTaskFormPage,
+  }))
+);
+export const ManageAutoTasksPage = lazy(() =>
+  import('src/sections/tasks/view/manage-auto-tasks-view').then((module) => ({
+    default: module.ManageAutoTasksView,
+  }))
+);
+export const ChecklistTemplatesPage = lazy(() =>
+  import('src/sections/tasks/view/checklist-templates-view').then((module) => ({
+    default: module.ChecklistTemplatesView,
+  }))
+);
+export const ChecklistTemplateFormPage = lazy(() =>
+  import('src/sections/tasks/view/checklist-template-form-page').then((module) => ({
+    default: module.ChecklistTemplateFormPage,
+  }))
+);
+export const ArchivePage = lazy(() =>
+  import('src/sections/tasks/view/archive-view').then((module) => ({ default: module.ArchiveView }))
+);
+export const TasksCustomFieldsPage = lazy(() =>
+  import('src/sections/tasks/view/custom-fields-view').then((module) => ({
+    default: module.CustomFieldsView,
+  }))
+);
+export const ManageReviewsPage = lazy(() =>
+  import('src/sections/reviews/view/manage-reviews-view').then((module) => ({
+    default: module.ManageReviewsView,
+  }))
+);
+export const AutoReviewsPage = lazy(() =>
+  import('src/sections/reviews/view/auto-reviews-view').then((module) => ({
+    default: module.AutoReviewsView,
+  }))
+);
+export const ReviewTemplatesPage = lazy(() =>
+  import('src/sections/reviews/view/review-templates-view').then((module) => ({
+    default: module.ReviewTemplatesView,
+  }))
+);
+export const ReviewTemplateFormPage = lazy(() =>
+  import('src/sections/reviews/view/review-template-form-page').then((module) => ({
+    default: module.ReviewTemplateFormPage,
+  }))
+);
+export const ChargesPage = lazy(() =>
+  import('src/sections/guest-payments/view/charges-view').then((module) => ({
+    default: module.ChargesView,
+  }))
+);
+export const AutoPaymentsPage = lazy(() =>
+  import('src/sections/guest-payments/view/auto-payments-view').then((module) => ({
+    default: module.AutoPaymentsView,
+  }))
+);
+export const DocumentTemplatesPage = lazy(() =>
+  import('src/sections/guest-payments/view/document-templates-view').then((module) => ({
+    default: module.DocumentTemplatesView,
+  }))
+);
+export const SmartLocksPage = lazy(() =>
+  import('src/sections/smart-locks/view/smart-locks-view').then((module) => ({
+    default: module.SmartLocksView,
+  }))
+);
+export const ListingMappingPage = lazy(() =>
+  import('src/sections/channel-manager/view/listing-mapping-view').then((module) => ({
+    default: module.ListingMappingView,
+  }))
+);
+export const ChannelsPage = lazy(() =>
+  import('src/sections/channel-manager/view/channels-view').then((module) => ({
+    default: module.ChannelsView,
+  }))
+);
+export const AirbnbPage = lazy(() =>
+  import('src/sections/channel-manager/view/airbnb-view').then((module) => ({
+    default: module.AirbnbView,
+  }))
+);
+export const BookingPage = lazy(() =>
+  import('src/sections/channel-manager/view/booking-view').then((module) => ({
+    default: module.BookingView,
+  }))
+);
+export const DesignPage = lazy(() =>
+  import('src/sections/booking-engine/view/design-view').then((module) => ({
+    default: module.DesignView,
+  }))
+);
+export const BookingListingsPage = lazy(() =>
+  import('src/sections/booking-engine/view/listings-view').then((module) => ({
+    default: module.ListingsView,
+  }))
+);
+export const BookingPagesPage = lazy(() =>
+  import('src/sections/booking-engine/view/pages-view').then((module) => ({
+    default: module.PagesView,
+  }))
+);
+export const BookingSettingsPage = lazy(() =>
+  import('src/sections/booking-engine/view/settings-view').then((module) => ({
+    default: module.SettingsView,
+  }))
+);
+export const TranslationsPage = lazy(() =>
+  import('src/sections/booking-engine/view/translations-view').then((module) => ({
+    default: module.TranslationsView,
+  }))
+);
+export const InboxPage = lazy(() =>
+  import('src/sections/inbox/view/inbox-view').then((module) => ({ default: module.InboxView }))
+);
+export const MessageTemplatesPage = lazy(() =>
+  import('src/sections/inbox/view/message-templates-view').then((module) => ({
+    default: module.MessageTemplatesView,
+  }))
+);
+export const InboxAutomationsPage = lazy(() =>
+  import('src/sections/inbox/view/automations-view').then((module) => ({
+    default: module.AutomationsView,
+  }))
+);
+export const ManageMessagesPage = lazy(() =>
+  import('src/sections/inbox/view/manage-messages-view').then((module) => ({
+    default: module.ManageMessagesView,
+  }))
+);
+export const TemplateCreatePage = lazy(() =>
+  import('src/sections/inbox/view/template-create-view').then((module) => ({
+    default: module.TemplateCreateView,
+  }))
+);
+export const TemplateEditPage = lazy(() =>
+  import('src/sections/inbox/view/template-edit-view').then((module) => ({
+    default: module.TemplateEditView,
+  }))
+);
+export const TemplateGroupCreatePage = lazy(() =>
+  import('src/sections/inbox/view/template-group-create-view').then((module) => ({
+    default: module.TemplateGroupCreateView,
+  }))
+);
+export const TemplateGroupEditPage = lazy(() =>
+  import('src/sections/inbox/view/template-group-edit-view').then((module) => ({
+    default: module.TemplateGroupEditView,
+  }))
+);
+export const AutomationCreatePage = lazy(() =>
+  import('src/sections/inbox/view/automation-create-view').then((module) => ({
+    default: module.AutomationCreateView,
+  }))
+);
+export const AutomationEditPage = lazy(() =>
+  import('src/sections/inbox/view/automation-edit-view').then((module) => ({
+    default: module.AutomationEditView,
+  }))
+);
+export const MessageEditPage = lazy(() =>
+  import('src/sections/inbox/view/message-edit-view').then((module) => ({
+    default: module.MessageEditView,
+  }))
+);
+export const CreateAccountPage = lazy(() =>
+  import('src/pages/create-account').then((module) => ({ default: module.CreateAccountPage }))
+);
+export const UserManagementPage = lazy(() =>
+  import('src/pages/user-management').then((module) => ({ default: module.UserManagementPage }))
+);
+export const ClientManagementPage = lazy(() =>
+  import('src/pages/client-management').then((module) => ({ default: module.ClientManagementPage }))
+);
+export const SupervisorDashboardPage = lazy(() =>
+  import('src/pages/supervisor-dashboard').then((module) => ({
+    default: module.SupervisorDashboardPage,
+  }))
+);
+export const ManagerDashboardPage = lazy(() =>
+  import('src/pages/manager-dashboard').then((module) => ({ default: module.ManagerDashboardPage }))
+);
+export const AssociateDashboardPage = lazy(() =>
+  import('src/pages/associate-dashboard').then((module) => ({
+    default: module.AssociateDashboardPage,
+  }))
+);
 export const Page404 = lazy(() => import('src/pages/page-not-found'));
 
 const renderFallback = () => (
@@ -121,6 +382,11 @@ const renderFallback = () => (
 );
 
 export const routesSection: RouteObject[] = [
+  // Root route - handles initial redirect based on auth state
+  {
+    index: true,
+    element: <RootRedirect />,
+  },
   {
     element: (
       <ProtectedRoute>
@@ -132,7 +398,7 @@ export const routesSection: RouteObject[] = [
       </ProtectedRoute>
     ),
     children: [
-      { index: true, element: <DashboardPage /> },
+      { path: 'dashboard', element: <DashboardPage /> },
       { path: 'analytics', element: <AnalyticsPage /> },
       { path: 'user', element: <UserPage /> },
       { path: 'products', element: <ProductsPage /> },
@@ -222,57 +488,57 @@ export const routesSection: RouteObject[] = [
       { path: 'inbox/template-edit/:id', element: <TemplateEditPage /> },
       { path: 'inbox/template-group-create', element: <TemplateGroupCreatePage /> },
       { path: 'inbox/template-group-edit/:id', element: <TemplateGroupEditPage /> },
-        { path: 'inbox/automation-create', element: <AutomationCreatePage /> },
-        { path: 'inbox/automation-edit/:id', element: <AutomationEditPage /> },
-        { path: 'inbox/message-edit/:id', element: <MessageEditPage /> },
-        { 
-          path: 'create-account', 
-          element: (
-            <ProtectedRoute requiredRole="user">
-              <CreateAccountPage />
-            </ProtectedRoute>
-          )
-        },
-        { 
-          path: 'user-management', 
-          element: (
-            <ProtectedRoute requiredRole="user">
-              <UserManagementPage />
-            </ProtectedRoute>
-          )
-        },
-        { 
-          path: 'client-management', 
-          element: (
-            <ProtectedRoute requiredRole="user">
-              <ClientManagementPage />
-            </ProtectedRoute>
-          )
-        },
-        { 
-          path: 'supervisor-dashboard', 
-          element: (
-            <ProtectedRoute requiredRole="supervisor">
-              <SupervisorDashboardPage />
-            </ProtectedRoute>
-          )
-        },
-        { 
-          path: 'manager-dashboard', 
-          element: (
-            <ProtectedRoute requiredRole="manager">
-              <ManagerDashboardPage />
-            </ProtectedRoute>
-          )
-        },
-        { 
-          path: 'associate-dashboard', 
-          element: (
-            <ProtectedRoute requiredRole="associate">
-              <AssociateDashboardPage />
-            </ProtectedRoute>
-          )
-        },
+      { path: 'inbox/automation-create', element: <AutomationCreatePage /> },
+      { path: 'inbox/automation-edit/:id', element: <AutomationEditPage /> },
+      { path: 'inbox/message-edit/:id', element: <MessageEditPage /> },
+      {
+        path: 'create-account',
+        element: (
+          <ProtectedRoute requiredRole="user">
+            <CreateAccountPage />
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: 'user-management',
+        element: (
+          <ProtectedRoute requiredRole="user">
+            <UserManagementPage />
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: 'client-management',
+        element: (
+          <ProtectedRoute requiredRole="user">
+            <ClientManagementPage />
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: 'supervisor-dashboard',
+        element: (
+          <ProtectedRoute requiredRole="supervisor">
+            <SupervisorDashboardPage />
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: 'manager-dashboard',
+        element: (
+          <ProtectedRoute requiredRole="manager">
+            <ManagerDashboardPage />
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: 'associate-dashboard',
+        element: (
+          <ProtectedRoute requiredRole="associate">
+            <AssociateDashboardPage />
+          </ProtectedRoute>
+        ),
+      },
     ],
   },
   {
@@ -285,12 +551,12 @@ export const routesSection: RouteObject[] = [
         </TeamDashboardLayout>
       </ProtectedRoute>
     ),
-        children: [
-          { path: 'team-dashboard', element: <TeamDashboardPage /> },
-          { path: 'team-dashboard/analytics', element: <TeamAnalyticsPage /> },
-          { path: 'team-dashboard/team', element: <TeamManagementPage /> },
-          { path: 'team-dashboard/team/:id', element: <TeamProfilePage /> },
-        ],
+    children: [
+      { path: 'team-dashboard', element: <TeamDashboardPage /> },
+      { path: 'team-dashboard/analytics', element: <TeamAnalyticsPage /> },
+      { path: 'team-dashboard/team', element: <TeamManagementPage /> },
+      { path: 'team-dashboard/team/:id', element: <TeamProfilePage /> },
+    ],
   },
   {
     path: 'sign-in',

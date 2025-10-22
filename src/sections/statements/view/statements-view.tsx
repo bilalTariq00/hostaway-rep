@@ -1,14 +1,5 @@
 import { useState } from 'react';
-import {
-  X,
-  Info,
-  Filter,
-  Pencil,
-  Search,
-  Download,
-  Settings,
-  MoreVertical,
-} from 'lucide-react';
+import { X, Info, Filter, Pencil, Search, Download, Settings, MoreVertical } from 'lucide-react';
 
 import {
   Box,
@@ -95,7 +86,7 @@ const mockStatements = [
     owners: '',
     createdBy: 'Team | Domus',
     createdOn: 'Sep 28, 2025',
-    total: 900.00,
+    total: 900.0,
   },
   {
     id: 6,
@@ -139,7 +130,7 @@ export function StatementsView() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [templateModalOpen, setTemplateModalOpen] = useState(false);
   const [actionMenuAnchor, setActionMenuAnchor] = useState<null | HTMLElement>(null);
-  
+
   // New state for dynamic table functionality
   const [statements, setStatements] = useState(mockStatements);
   const [selectedStatements, setSelectedStatements] = useState<number[]>([]);
@@ -147,8 +138,10 @@ export function StatementsView() {
   const [columnSearchTerm, setColumnSearchTerm] = useState('');
   const [sortColumn, setSortColumn] = useState<string>('');
   const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('asc');
-  const [visibleColumns, setVisibleColumns] = useState(allColumns.slice(0, 7).map(col => col.key));
-  
+  const [visibleColumns, setVisibleColumns] = useState(
+    allColumns.slice(0, 7).map((col) => col.key)
+  );
+
   // Modal states
   const [duplicateModalOpen, setDuplicateModalOpen] = useState(false);
   const [settingsModalOpen, setSettingsModalOpen] = useState(false);
@@ -156,26 +149,26 @@ export function StatementsView() {
   const [archiveModalOpen, setArchiveModalOpen] = useState(false);
   const [downloadMenuAnchor, setDownloadMenuAnchor] = useState<null | HTMLElement>(null);
   const [selectedStatement, setSelectedStatement] = useState<any>(null);
-  
+
   // Form data for modals
   const [formData, setFormData] = useState({
     statementName: '',
     assignOwner: '',
     selectWhoCanAccess: '',
   });
-  
+
   const [templateFormData, setTemplateFormData] = useState({
     template: '',
     statementName: '',
   });
-  
+
   const [duplicateFormData, setDuplicateFormData] = useState({
     statementName: '',
     assignOwner: '',
     selectOneOwnerToAutoFill: '',
     selectWhoCanAccess: '',
   });
-  
+
   const [settingsFormData, setSettingsFormData] = useState({
     statementName: '',
     assignOwner: '',
@@ -190,26 +183,30 @@ export function StatementsView() {
 
   // Form handlers
   const handleInputChange = (field: string, value: any) => {
-    setFormData(prev => ({ ...prev, [field]: value }));
+    setFormData((prev) => ({ ...prev, [field]: value }));
   };
 
   const handleTemplateInputChange = (field: string, value: any) => {
-    setTemplateFormData(prev => ({ ...prev, [field]: value }));
+    setTemplateFormData((prev) => ({ ...prev, [field]: value }));
   };
 
   const handleCreateStatement = () => {
     if (formData.statementName.trim()) {
       const newStatement = {
-        id: Math.max(...statements.map(s => s.id)) + 1,
+        id: Math.max(...statements.map((s) => s.id)) + 1,
         statementName: formData.statementName,
         status: 'DRAFT',
         dates: 'Sep 01, 2025 to Sep 30, 2025',
         owners: formData.assignOwner || '',
         createdBy: 'Team | Domus',
-        createdOn: new Date().toLocaleDateString('en-US', { month: 'short', day: '2-digit', year: 'numeric' }),
+        createdOn: new Date().toLocaleDateString('en-US', {
+          month: 'short',
+          day: '2-digit',
+          year: 'numeric',
+        }),
         total: 0,
       };
-      setStatements(prev => [...prev, newStatement]);
+      setStatements((prev) => [...prev, newStatement]);
       setSidebarOpen(false);
       setFormData({ statementName: '', assignOwner: '', selectWhoCanAccess: '' });
     }
@@ -218,16 +215,20 @@ export function StatementsView() {
   const handleCreateFromTemplate = () => {
     if (templateFormData.statementName.trim()) {
       const newStatement = {
-        id: Math.max(...statements.map(s => s.id)) + 1,
+        id: Math.max(...statements.map((s) => s.id)) + 1,
         statementName: templateFormData.statementName,
         status: 'DRAFT',
         dates: 'Sep 01, 2025 to Sep 30, 2025',
         owners: '',
         createdBy: 'Team | Domus',
-        createdOn: new Date().toLocaleDateString('en-US', { month: 'short', day: '2-digit', year: 'numeric' }),
+        createdOn: new Date().toLocaleDateString('en-US', {
+          month: 'short',
+          day: '2-digit',
+          year: 'numeric',
+        }),
         total: 0,
       };
-      setStatements(prev => [...prev, newStatement]);
+      setStatements((prev) => [...prev, newStatement]);
       setTemplateModalOpen(false);
       setTemplateFormData({ template: '', statementName: '' });
     }
@@ -307,61 +308,77 @@ export function StatementsView() {
   };
 
   const handleDuplicateFormChange = (field: string, value: any) => {
-    setDuplicateFormData(prev => ({ ...prev, [field]: value }));
+    setDuplicateFormData((prev) => ({ ...prev, [field]: value }));
   };
 
   const handleSettingsFormChange = (field: string, value: any) => {
-    setSettingsFormData(prev => ({ ...prev, [field]: value }));
+    setSettingsFormData((prev) => ({ ...prev, [field]: value }));
   };
 
   const handleCreateDuplicate = () => {
     if (duplicateFormData.statementName.trim()) {
       const newStatement = {
-        id: Math.max(...statements.map(s => s.id)) + 1,
+        id: Math.max(...statements.map((s) => s.id)) + 1,
         statementName: duplicateFormData.statementName,
         status: 'DRAFT',
         dates: 'Sep 01, 2025 to Sep 30, 2025',
         owners: duplicateFormData.assignOwner || '',
         createdBy: 'Team | Domus',
-        createdOn: new Date().toLocaleDateString('en-US', { month: 'short', day: '2-digit', year: 'numeric' }),
+        createdOn: new Date().toLocaleDateString('en-US', {
+          month: 'short',
+          day: '2-digit',
+          year: 'numeric',
+        }),
         total: 0,
       };
-      setStatements(prev => [...prev, newStatement]);
+      setStatements((prev) => [...prev, newStatement]);
       setDuplicateModalOpen(false);
-      setDuplicateFormData({ statementName: '', assignOwner: '', selectOneOwnerToAutoFill: '', selectWhoCanAccess: '' });
+      setDuplicateFormData({
+        statementName: '',
+        assignOwner: '',
+        selectOneOwnerToAutoFill: '',
+        selectWhoCanAccess: '',
+      });
     }
   };
 
   const handleSaveSettings = () => {
     if (selectedStatement && settingsFormData.statementName.trim()) {
-      setStatements(prev => prev.map(statement => 
-        statement.id === selectedStatement.id 
-          ? { ...statement, statementName: settingsFormData.statementName }
-          : statement
-      ));
+      setStatements((prev) =>
+        prev.map((statement) =>
+          statement.id === selectedStatement.id
+            ? { ...statement, statementName: settingsFormData.statementName }
+            : statement
+        )
+      );
       setSettingsModalOpen(false);
-      setSettingsFormData({ statementName: '', assignOwner: '', selectOneOwnerToAutoFill: '', selectWhoCanAccess: '' });
+      setSettingsFormData({
+        statementName: '',
+        assignOwner: '',
+        selectOneOwnerToAutoFill: '',
+        selectWhoCanAccess: '',
+      });
     }
   };
 
   const handleUnpublishConfirm = () => {
     if (selectedStatement) {
-      setStatements(prev => prev.map(statement => 
-        statement.id === selectedStatement.id 
-          ? { ...statement, status: 'DRAFT' }
-          : statement
-      ));
+      setStatements((prev) =>
+        prev.map((statement) =>
+          statement.id === selectedStatement.id ? { ...statement, status: 'DRAFT' } : statement
+        )
+      );
       setUnpublishModalOpen(false);
     }
   };
 
   const handleArchiveConfirm = () => {
     if (selectedStatement) {
-      setStatements(prev => prev.map(statement => 
-        statement.id === selectedStatement.id 
-          ? { ...statement, status: 'ARCHIVED' }
-          : statement
-      ));
+      setStatements((prev) =>
+        prev.map((statement) =>
+          statement.id === selectedStatement.id ? { ...statement, status: 'ARCHIVED' } : statement
+        )
+      );
       setArchiveModalOpen(false);
     }
   };
@@ -396,19 +413,17 @@ export function StatementsView() {
   };
 
   const handleColumnToggle = (columnKey: string) => {
-    const column = allColumns.find(col => col.key === columnKey);
+    const column = allColumns.find((col) => col.key === columnKey);
     if (column?.mandatory) return;
 
-    setVisibleColumns(prev => 
-      prev.includes(columnKey) 
-        ? prev.filter(key => key !== columnKey)
-        : [...prev, columnKey]
+    setVisibleColumns((prev) =>
+      prev.includes(columnKey) ? prev.filter((key) => key !== columnKey) : [...prev, columnKey]
     );
   };
 
   const handleSort = (columnKey: string) => {
     if (sortColumn === columnKey) {
-      setSortDirection(prev => prev === 'asc' ? 'desc' : 'asc');
+      setSortDirection((prev) => (prev === 'asc' ? 'desc' : 'asc'));
     } else {
       setSortColumn(columnKey);
       setSortDirection('asc');
@@ -417,46 +432,43 @@ export function StatementsView() {
 
   const handleSelectAll = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.checked) {
-      setSelectedStatements(statements.map(statement => statement.id));
+      setSelectedStatements(statements.map((statement) => statement.id));
     } else {
       setSelectedStatements([]);
     }
   };
 
   const handleSelectStatement = (statementId: number) => {
-    setSelectedStatements(prev => 
-      prev.includes(statementId) 
-        ? prev.filter(id => id !== statementId)
-        : [...prev, statementId]
+    setSelectedStatements((prev) =>
+      prev.includes(statementId) ? prev.filter((id) => id !== statementId) : [...prev, statementId]
     );
   };
 
   // Data processing
-  const filteredStatements = statements.filter(statement =>
-    statement.statementName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    statement.owners.toLowerCase().includes(searchTerm.toLowerCase())
+  const filteredStatements = statements.filter(
+    (statement) =>
+      statement.statementName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      statement.owners.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   const sortedData = [...filteredStatements].sort((a, b) => {
     if (!sortColumn) return 0;
-    
+
     const aValue = a[sortColumn as keyof typeof a];
     const bValue = b[sortColumn as keyof typeof b];
-    
+
     if (typeof aValue === 'string' && typeof bValue === 'string') {
-      return sortDirection === 'asc' 
-        ? aValue.localeCompare(bValue)
-        : bValue.localeCompare(aValue);
+      return sortDirection === 'asc' ? aValue.localeCompare(bValue) : bValue.localeCompare(aValue);
     }
-    
+
     if (typeof aValue === 'number' && typeof bValue === 'number') {
       return sortDirection === 'asc' ? aValue - bValue : bValue - aValue;
     }
-    
+
     return 0;
   });
 
-  const filteredColumns = allColumns.filter(column =>
+  const filteredColumns = allColumns.filter((column) =>
     column.label.toLowerCase().includes(columnSearchTerm.toLowerCase())
   );
 
@@ -539,57 +551,60 @@ export function StatementsView() {
               <TableRow>
                 <TableCell padding="checkbox" sx={{ fontWeight: 600 }}>
                   <Checkbox
-                    indeterminate={selectedStatements.length > 0 && selectedStatements.length < statements.length}
+                    indeterminate={
+                      selectedStatements.length > 0 && selectedStatements.length < statements.length
+                    }
                     checked={selectedStatements.length === statements.length}
                     onChange={handleSelectAll}
                   />
                 </TableCell>
-                {allColumns.map((column) => (
-                  visibleColumns.includes(column.key) && (
-                    <TableCell 
-                      key={column.key} 
-                      sx={{ 
-                        fontWeight: 600, 
-                        minWidth: 120, 
-                        whiteSpace: 'nowrap',
-                        cursor: column.sortable ? 'pointer' : 'default',
-                        '&:hover': column.sortable ? { bgcolor: 'grey.100' } : {}
-                      }}
-                      onClick={() => column.sortable && handleSort(column.key)}
-                    >
-                      <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                        {column.label}
-                        {column.sortable && (
-                          <Box sx={{ display: 'flex', flexDirection: 'column', ml: 0.5 }}>
-                            <Box sx={{ fontSize: '10px', lineHeight: 1 }}>
-                              {sortColumn === column.key && sortDirection === 'asc' ? '▲' : '△'}
+                {allColumns.map(
+                  (column) =>
+                    visibleColumns.includes(column.key) && (
+                      <TableCell
+                        key={column.key}
+                        sx={{
+                          fontWeight: 600,
+                          minWidth: 120,
+                          whiteSpace: 'nowrap',
+                          cursor: column.sortable ? 'pointer' : 'default',
+                          '&:hover': column.sortable ? { bgcolor: 'grey.100' } : {},
+                        }}
+                        onClick={() => column.sortable && handleSort(column.key)}
+                      >
+                        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                          {column.label}
+                          {column.sortable && (
+                            <Box sx={{ display: 'flex', flexDirection: 'column', ml: 0.5 }}>
+                              <Box sx={{ fontSize: '10px', lineHeight: 1 }}>
+                                {sortColumn === column.key && sortDirection === 'asc' ? '▲' : '△'}
+                              </Box>
+                              <Box sx={{ fontSize: '10px', lineHeight: 1 }}>
+                                {sortColumn === column.key && sortDirection === 'desc' ? '▼' : '▽'}
+                              </Box>
                             </Box>
-                            <Box sx={{ fontSize: '10px', lineHeight: 1 }}>
-                              {sortColumn === column.key && sortDirection === 'desc' ? '▼' : '▽'}
-                            </Box>
-                          </Box>
-                        )}
-                      </Box>
-                    </TableCell>
-                  )
-                ))}
-                <TableCell 
-                  sx={{ 
-                    position: 'sticky', 
-                    right: 0, 
-                    bgcolor: 'background.paper', 
-                    borderLeft: '1px solid', 
+                          )}
+                        </Box>
+                      </TableCell>
+                    )
+                )}
+                <TableCell
+                  sx={{
+                    position: 'sticky',
+                    right: 0,
+                    bgcolor: 'background.paper',
+                    borderLeft: '1px solid',
                     borderColor: 'divider',
                     zIndex: 10,
-                    px: 0
+                    px: 0,
                   }}
                 >
-                  <IconButton 
-                    size="small" 
+                  <IconButton
+                    size="small"
                     onClick={handleColumnSettingsClick}
-                    sx={{ 
+                    sx={{
                       color: 'text.secondary',
-                      '&:hover': { bgcolor: 'grey.100', color: 'text.primary' }
+                      '&:hover': { bgcolor: 'grey.100', color: 'text.primary' },
                     }}
                   >
                     <Settings size={16} />
@@ -606,91 +621,96 @@ export function StatementsView() {
                       onChange={() => handleSelectStatement(statement.id)}
                     />
                   </TableCell>
-                  {allColumns.map((column) => (
-                    visibleColumns.includes(column.key) && (
-                      <TableCell key={column.key} sx={{ minWidth: 120, whiteSpace: 'nowrap' }}>
-                        {column.key === 'statement' && (
-                          <Typography 
-                            variant="body2" 
-                            sx={{ 
-                              fontWeight: 500, 
-                              color: 'primary.main', 
-                              cursor: 'pointer', 
-                              '&:hover': { color: 'primary.dark' } 
-                            }}
-                            onClick={() => handleEditStatement(statement)}
-                          >
-                            {statement.statementName}
-                          </Typography>
-                        )}
-                        {column.key === 'status' && (
-                    <Chip
-                      label={statement.status}
-                      size="small"
-                            color={statement.status === 'PUBLISHED' ? 'success' : 'default'}
-                            sx={{ 
-                              bgcolor: statement.status === 'PUBLISHED' ? 'success.main' : 'grey.300',
-                              color: statement.status === 'PUBLISHED' ? 'white' : 'text.primary',
-                              fontWeight: 600
-                            }}
-                          />
-                        )}
-                        {column.key === 'dates' && (
-                          <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-                            {statement.dates}
-                    </Typography>
-                        )}
-                        {column.key === 'owners' && (
-                          <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-                            {statement.owners || '—'}
-                    </Typography>
-                        )}
-                        {column.key === 'createdBy' && (
-                          <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-                      {statement.createdBy}
-                    </Typography>
-                        )}
-                        {column.key === 'createdOn' && (
-                          <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-                      {statement.createdOn}
-                    </Typography>
-                        )}
-                        {column.key === 'total' && (
-                          <Typography variant="body2" sx={{ fontWeight: 600, color: 'primary.main' }}>
-                            €{statement.total.toFixed(2)}
-                    </Typography>
-                        )}
-                  </TableCell>
-                    )
-                  ))}
-                  <TableCell 
-                    sx={{ 
-                      position: 'sticky', 
-                      right: 0, 
-                      bgcolor: index % 2 === 0 ? 'white' : 'grey.50', 
-                      borderLeft: '1px solid', 
+                  {allColumns.map(
+                    (column) =>
+                      visibleColumns.includes(column.key) && (
+                        <TableCell key={column.key} sx={{ minWidth: 120, whiteSpace: 'nowrap' }}>
+                          {column.key === 'statement' && (
+                            <Typography
+                              variant="body2"
+                              sx={{
+                                fontWeight: 500,
+                                color: 'primary.main',
+                                cursor: 'pointer',
+                                '&:hover': { color: 'primary.dark' },
+                              }}
+                              onClick={() => handleEditStatement(statement)}
+                            >
+                              {statement.statementName}
+                            </Typography>
+                          )}
+                          {column.key === 'status' && (
+                            <Chip
+                              label={statement.status}
+                              size="small"
+                              color={statement.status === 'PUBLISHED' ? 'success' : 'default'}
+                              sx={{
+                                bgcolor:
+                                  statement.status === 'PUBLISHED' ? 'success.main' : 'grey.300',
+                                color: statement.status === 'PUBLISHED' ? 'white' : 'text.primary',
+                                fontWeight: 600,
+                              }}
+                            />
+                          )}
+                          {column.key === 'dates' && (
+                            <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+                              {statement.dates}
+                            </Typography>
+                          )}
+                          {column.key === 'owners' && (
+                            <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+                              {statement.owners || '—'}
+                            </Typography>
+                          )}
+                          {column.key === 'createdBy' && (
+                            <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+                              {statement.createdBy}
+                            </Typography>
+                          )}
+                          {column.key === 'createdOn' && (
+                            <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+                              {statement.createdOn}
+                            </Typography>
+                          )}
+                          {column.key === 'total' && (
+                            <Typography
+                              variant="body2"
+                              sx={{ fontWeight: 600, color: 'primary.main' }}
+                            >
+                              €{statement.total.toFixed(2)}
+                            </Typography>
+                          )}
+                        </TableCell>
+                      )
+                  )}
+                  <TableCell
+                    sx={{
+                      position: 'sticky',
+                      right: 0,
+                      bgcolor: index % 2 === 0 ? 'white' : 'grey.50',
+                      borderLeft: '1px solid',
                       borderColor: 'divider',
                       zIndex: 10,
-                      px: 0
+                      px: 0,
                     }}
                   >
                     <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
-                      <IconButton 
-                        size="small" 
+                      <IconButton
+                        size="small"
                         onClick={() => handleEditStatement(statement)}
                         sx={{ '&:hover': { bgcolor: 'primary.lighter' } }}
                       >
                         <Pencil size={16} />
                       </IconButton>
-                      <IconButton 
-                        size="small" 
+                      <IconButton
+                        size="small"
                         onClick={(e) => handleDownloadClick(e, statement)}
                         sx={{ '&:hover': { bgcolor: 'primary.lighter' } }}
                       >
                         <Download size={16} />
                       </IconButton>
-                      <IconButton 
-                        size="small" 
+                      <IconButton
+                        size="small"
                         onClick={(e) => handleActionMenuOpen(e, statement)}
                         sx={{ '&:hover': { bgcolor: 'grey.100' } }}
                       >
@@ -719,24 +739,32 @@ export function StatementsView() {
 
       {/* Pagination */}
       <Paper sx={{ p: 2 }}>
-        <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 2 }}>
+        <Box
+          sx={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            flexWrap: 'wrap',
+            gap: 2,
+          }}
+        >
           <Typography variant="body2" color="text.secondary">
             Show {itemsPerPage} per page
           </Typography>
           <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, flexWrap: 'wrap' }}>
-            <Button 
-              size="small" 
-              variant="outlined" 
+            <Button
+              size="small"
+              variant="outlined"
               disabled={currentPage === 1}
               onClick={() => setCurrentPage(1)}
             >
               FIRST
             </Button>
-            <Button 
-              size="small" 
-              variant="outlined" 
+            <Button
+              size="small"
+              variant="outlined"
               disabled={currentPage === 1}
-              onClick={() => setCurrentPage(prev => Math.max(1, prev - 1))}
+              onClick={() => setCurrentPage((prev) => Math.max(1, prev - 1))}
             >
               &lt;
             </Button>
@@ -746,24 +774,24 @@ export function StatementsView() {
                 <Button
                   key={pageNum}
                   size="small"
-                  variant={currentPage === pageNum ? "contained" : "outlined"}
+                  variant={currentPage === pageNum ? 'contained' : 'outlined'}
                   onClick={() => setCurrentPage(pageNum)}
                 >
                   {pageNum}
                 </Button>
               );
             })}
-            <Button 
-              size="small" 
-              variant="outlined" 
+            <Button
+              size="small"
+              variant="outlined"
               disabled={currentPage === totalPages}
-              onClick={() => setCurrentPage(prev => Math.min(totalPages, prev + 1))}
+              onClick={() => setCurrentPage((prev) => Math.min(totalPages, prev + 1))}
             >
               &gt;
             </Button>
-            <Button 
-              size="small" 
-              variant="outlined" 
+            <Button
+              size="small"
+              variant="outlined"
               disabled={currentPage === totalPages}
               onClick={() => setCurrentPage(totalPages)}
             >
@@ -777,32 +805,32 @@ export function StatementsView() {
       <Dialog open={sidebarOpen} onClose={handleSidebarClose} maxWidth="sm" fullWidth>
         <DialogTitle>
           <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-          <Typography variant="h6" sx={{ fontWeight: 600 }}>
+            <Typography variant="h6" sx={{ fontWeight: 600 }}>
               New statement
-          </Typography>
-          <IconButton onClick={handleSidebarClose}>
+            </Typography>
+            <IconButton onClick={handleSidebarClose}>
               <X size={20} />
-          </IconButton>
-        </Box>
+            </IconButton>
+          </Box>
         </DialogTitle>
         <DialogContent>
           <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3, mt: 2 }}>
-          <TextField
-            fullWidth
+            <TextField
+              fullWidth
               label="Statement name *"
-            placeholder="Enter statement name..."
+              placeholder="Enter statement name..."
               value={formData.statementName}
               onChange={(e) => handleInputChange('statementName', e.target.value)}
               required
-          />
+            />
 
             <Box>
               <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1 }}>
                 <Typography variant="body2">Assign owner</Typography>
                 <Info size={16} color="#666" />
               </Box>
-          <TextField
-            fullWidth
+              <TextField
+                fullWidth
                 placeholder="Select owner..."
                 value={formData.assignOwner}
                 onChange={(e) => handleInputChange('assignOwner', e.target.value)}
@@ -821,8 +849,8 @@ export function StatementsView() {
                 <Typography variant="body2">Select who can access this statement ⓘ</Typography>
                 <Info size={16} color="#666" />
               </Box>
-          <TextField
-            fullWidth
+              <TextField
+                fullWidth
                 placeholder="Team | Domus x"
                 value={formData.selectWhoCanAccess}
                 onChange={(e) => handleInputChange('selectWhoCanAccess', e.target.value)}
@@ -861,15 +889,15 @@ export function StatementsView() {
           <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3, mt: 2 }}>
             <FormControl fullWidth>
               <InputLabel>Template (Auto-statement) *</InputLabel>
-              <Select 
+              <Select
                 label="Template (Auto-statement) *"
                 value={templateFormData.template}
                 onChange={(e) => handleTemplateInputChange('template', e.target.value)}
-            >
-              <MenuItem value="monthly">Monthly Statement Template</MenuItem>
-              <MenuItem value="quarterly">Quarterly Statement Template</MenuItem>
-              <MenuItem value="yearly">Yearly Statement Template</MenuItem>
-              <MenuItem value="property">Property Statement Template</MenuItem>
+              >
+                <MenuItem value="monthly">Monthly Statement Template</MenuItem>
+                <MenuItem value="quarterly">Quarterly Statement Template</MenuItem>
+                <MenuItem value="yearly">Yearly Statement Template</MenuItem>
+                <MenuItem value="property">Property Statement Template</MenuItem>
               </Select>
             </FormControl>
             <TextField
@@ -900,12 +928,8 @@ export function StatementsView() {
           <Settings size={16} style={{ marginRight: 8 }} />
           Settings
         </MenuItem>
-        <MenuItem onClick={handleUnpublishClick}>
-          Unpublish (Draft)
-        </MenuItem>
-        <MenuItem onClick={handleDuplicateClick}>
-          Duplicate
-        </MenuItem>
+        <MenuItem onClick={handleUnpublishClick}>Unpublish (Draft)</MenuItem>
+        <MenuItem onClick={handleDuplicateClick}>Duplicate</MenuItem>
         <MenuItem onClick={handleArchiveClick} sx={{ color: 'warning.main' }}>
           Archive
         </MenuItem>
@@ -917,12 +941,8 @@ export function StatementsView() {
         open={Boolean(downloadMenuAnchor)}
         onClose={handleDownloadClose}
       >
-        <MenuItem onClick={handleDownloadPDF}>
-          Owner statement (pdf)
-        </MenuItem>
-        <MenuItem onClick={handleDownloadExcel}>
-          Excel file (xlsx)
-        </MenuItem>
+        <MenuItem onClick={handleDownloadPDF}>Owner statement (pdf)</MenuItem>
+        <MenuItem onClick={handleDownloadExcel}>Excel file (xlsx)</MenuItem>
       </Menu>
 
       {/* Column Settings Popover */}
@@ -986,7 +1006,12 @@ export function StatementsView() {
       </Popover>
 
       {/* Duplicate Statement Modal */}
-      <Dialog open={duplicateModalOpen} onClose={() => setDuplicateModalOpen(false)} maxWidth="sm" fullWidth>
+      <Dialog
+        open={duplicateModalOpen}
+        onClose={() => setDuplicateModalOpen(false)}
+        maxWidth="sm"
+        fullWidth
+      >
         <DialogTitle>
           <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
             <Typography variant="h6" sx={{ fontWeight: 600 }}>
@@ -1030,14 +1055,18 @@ export function StatementsView() {
 
             <Box>
               <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1 }}>
-                <Typography variant="body2">Select one owner to auto-fill the owner data</Typography>
+                <Typography variant="body2">
+                  Select one owner to auto-fill the owner data
+                </Typography>
                 <Info size={16} color="#666" />
               </Box>
               <TextField
                 fullWidth
                 placeholder="Select owner..."
                 value={duplicateFormData.selectOneOwnerToAutoFill}
-                onChange={(e) => handleDuplicateFormChange('selectOneOwnerToAutoFill', e.target.value)}
+                onChange={(e) =>
+                  handleDuplicateFormChange('selectOneOwnerToAutoFill', e.target.value)
+                }
                 InputProps={{
                   endAdornment: (
                     <InputAdornment position="end">
@@ -1078,7 +1107,12 @@ export function StatementsView() {
       </Dialog>
 
       {/* Statement Settings Modal */}
-      <Dialog open={settingsModalOpen} onClose={() => setSettingsModalOpen(false)} maxWidth="sm" fullWidth>
+      <Dialog
+        open={settingsModalOpen}
+        onClose={() => setSettingsModalOpen(false)}
+        maxWidth="sm"
+        fullWidth
+      >
         <DialogTitle>
           <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
             <Typography variant="h6" sx={{ fontWeight: 600 }}>
@@ -1122,14 +1156,18 @@ export function StatementsView() {
 
             <Box>
               <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1 }}>
-                <Typography variant="body2">Select one owner to auto-fill the owner data</Typography>
+                <Typography variant="body2">
+                  Select one owner to auto-fill the owner data
+                </Typography>
                 <Info size={16} color="#666" />
               </Box>
               <TextField
                 fullWidth
                 placeholder="Select owner..."
                 value={settingsFormData.selectOneOwnerToAutoFill}
-                onChange={(e) => handleSettingsFormChange('selectOneOwnerToAutoFill', e.target.value)}
+                onChange={(e) =>
+                  handleSettingsFormChange('selectOneOwnerToAutoFill', e.target.value)
+                }
                 InputProps={{
                   endAdornment: (
                     <InputAdornment position="end">
@@ -1170,7 +1208,12 @@ export function StatementsView() {
       </Dialog>
 
       {/* Unpublish Statement Modal */}
-      <Dialog open={unpublishModalOpen} onClose={() => setUnpublishModalOpen(false)} maxWidth="sm" fullWidth>
+      <Dialog
+        open={unpublishModalOpen}
+        onClose={() => setUnpublishModalOpen(false)}
+        maxWidth="sm"
+        fullWidth
+      >
         <DialogTitle>
           <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
             <Typography variant="h6" sx={{ fontWeight: 600 }}>
@@ -1183,15 +1226,13 @@ export function StatementsView() {
         </DialogTitle>
         <DialogContent>
           <Typography variant="body1" sx={{ mb: 2 }}>
-            Unpublishing a statement removes the owner&apos;s access to it in Hostaway and changes its status to Unpublish (Draft). You can re-publish it anytime when it&apos;s ready.
+            Unpublishing a statement removes the owner&apos;s access to it in Hostaway and changes
+            its status to Unpublish (Draft). You can re-publish it anytime when it&apos;s ready.
           </Typography>
           <Typography variant="body1" sx={{ mb: 2 }}>
             Are you sure you want to Unpublish (Draft) this statement now?
           </Typography>
-          <FormControlLabel
-            control={<Checkbox />}
-            label="Don't show this again"
-          />
+          <FormControlLabel control={<Checkbox />} label="Don't show this again" />
         </DialogContent>
         <DialogActions>
           <Button onClick={() => setUnpublishModalOpen(false)}>Cancel</Button>
@@ -1202,7 +1243,12 @@ export function StatementsView() {
       </Dialog>
 
       {/* Archive Statement Modal */}
-      <Dialog open={archiveModalOpen} onClose={() => setArchiveModalOpen(false)} maxWidth="sm" fullWidth>
+      <Dialog
+        open={archiveModalOpen}
+        onClose={() => setArchiveModalOpen(false)}
+        maxWidth="sm"
+        fullWidth
+      >
         <DialogTitle>
           <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
             <Typography variant="h6" sx={{ fontWeight: 600 }}>
@@ -1215,24 +1261,25 @@ export function StatementsView() {
         </DialogTitle>
         <DialogContent>
           <Typography variant="body1" sx={{ mb: 2 }}>
-            Archiving a statement removes the owner&apos;s access to it in Hostaway and updates its status to Archived. You can re-archive it back anytime when it&apos;s ready.
+            Archiving a statement removes the owner&apos;s access to it in Hostaway and updates its
+            status to Archived. You can re-archive it back anytime when it&apos;s ready.
           </Typography>
           <Typography variant="body1" sx={{ mb: 2 }}>
             Are you sure you want to archive this statement now?
           </Typography>
-          <FormControlLabel
-            control={<Checkbox />}
-            label="Don't show this again"
-          />
+          <FormControlLabel control={<Checkbox />} label="Don't show this again" />
         </DialogContent>
         <DialogActions>
           <Button onClick={() => setArchiveModalOpen(false)}>Cancel</Button>
-          <Button variant="contained" onClick={handleArchiveConfirm} sx={{ bgcolor: 'warning.main' }}>
+          <Button
+            variant="contained"
+            onClick={handleArchiveConfirm}
+            sx={{ bgcolor: 'warning.main' }}
+          >
             Archive
           </Button>
         </DialogActions>
       </Dialog>
-
     </DashboardContent>
   );
 }

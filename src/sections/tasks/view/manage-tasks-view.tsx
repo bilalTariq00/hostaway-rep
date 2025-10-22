@@ -1,10 +1,5 @@
 import { useState } from 'react';
-import {
-  Pencil,
-  Trash2,
-  MoreVertical,
-  MoreHorizontal,
-} from 'lucide-react';
+import { Pencil, Trash2, MoreVertical, MoreHorizontal } from 'lucide-react';
 
 import {
   Box,
@@ -92,7 +87,7 @@ export function ManageTasksView() {
   const [selectedTask, setSelectedTask] = useState<any>(null);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [taskToDelete, setTaskToDelete] = useState<any>(null);
-  
+
   // Filter states
   const [filters, setFilters] = useState({
     listing: '',
@@ -104,7 +99,7 @@ export function ManageTasksView() {
     fromDate: '',
     toDate: '',
   });
-  
+
   // Task management
   const [tasks, setTasks] = useState(mockTasks);
   const [sortOrder, setSortOrder] = useState('dueDate');
@@ -134,7 +129,6 @@ export function ManageTasksView() {
     router.push(`/tasks/${task.id}/edit`);
   };
 
-
   const handleDeleteTask = () => {
     setTaskToDelete(selectedTask);
     setDeleteDialogOpen(true);
@@ -143,7 +137,7 @@ export function ManageTasksView() {
 
   const handleDeleteConfirm = () => {
     if (taskToDelete) {
-      setTasks(prev => prev.filter(task => task.id !== taskToDelete.id));
+      setTasks((prev) => prev.filter((task) => task.id !== taskToDelete.id));
     }
     setDeleteDialogOpen(false);
     setTaskToDelete(null);
@@ -155,7 +149,7 @@ export function ManageTasksView() {
   };
 
   const handleFilterChange = (field: string, value: any) => {
-    setFilters(prev => ({ ...prev, [field]: value }));
+    setFilters((prev) => ({ ...prev, [field]: value }));
   };
 
   const handleFilterModalOpen = () => {
@@ -185,15 +179,16 @@ export function ManageTasksView() {
   };
 
   // Filter and sort tasks
-  const filteredTasks = tasks.filter(task => 
-    (!filters.listing || task.listing === filters.listing) &&
-    (!filters.channel || task.channel === filters.channel) &&
-    (!filters.assignee || task.assignee === filters.assignee) &&
-    (!filters.supervisor || task.supervisor === filters.supervisor) &&
-    (filters.status.length === 0 || filters.status.includes(task.status)) &&
-    (filters.priority.length === 0 || filters.priority.includes(task.priority)) &&
-    (!filters.fromDate || task.dueDate >= filters.fromDate) &&
-    (!filters.toDate || task.dueDate <= filters.toDate)
+  const filteredTasks = tasks.filter(
+    (task) =>
+      (!filters.listing || task.listing === filters.listing) &&
+      (!filters.channel || task.channel === filters.channel) &&
+      (!filters.assignee || task.assignee === filters.assignee) &&
+      (!filters.supervisor || task.supervisor === filters.supervisor) &&
+      (filters.status.length === 0 || filters.status.includes(task.status)) &&
+      (filters.priority.length === 0 || filters.priority.includes(task.priority)) &&
+      (!filters.fromDate || task.dueDate >= filters.fromDate) &&
+      (!filters.toDate || task.dueDate <= filters.toDate)
   );
 
   const sortedTasks = [...filteredTasks].sort((a, b) => {
@@ -202,8 +197,11 @@ export function ManageTasksView() {
         return new Date(a.dueDate).getTime() - new Date(b.dueDate).getTime();
       }
       case 'priority': {
-        const priorityOrder = { 'High': 3, 'Medium': 2, 'Low': 1 };
-        return priorityOrder[b.priority as keyof typeof priorityOrder] - priorityOrder[a.priority as keyof typeof priorityOrder];
+        const priorityOrder = { High: 3, Medium: 2, Low: 1 };
+        return (
+          priorityOrder[b.priority as keyof typeof priorityOrder] -
+          priorityOrder[a.priority as keyof typeof priorityOrder]
+        );
       }
       case 'status': {
         return a.status.localeCompare(b.status);
@@ -388,8 +386,8 @@ export function ManageTasksView() {
                   <TableRow key={task.id} hover>
                     <TableCell>
                       <Box>
-                        <Typography 
-                          variant="body2" 
+                        <Typography
+                          variant="body2"
                           sx={{ fontWeight: 500, cursor: 'pointer', color: 'primary.main' }}
                           onClick={() => handleEditTask(task)}
                         >
@@ -427,41 +425,31 @@ export function ManageTasksView() {
                       />
                     </TableCell>
                     <TableCell>
-                      <Typography variant="body2">
-                        {task.assignee}
-                      </Typography>
+                      <Typography variant="body2">{task.assignee}</Typography>
                     </TableCell>
                     <TableCell>
-                      <Typography variant="body2">
-                        {task.supervisor}
-                      </Typography>
+                      <Typography variant="body2">{task.supervisor}</Typography>
                     </TableCell>
                     <TableCell>
-                      <Typography variant="body2">
-                        {task.dueDate}
-                      </Typography>
+                      <Typography variant="body2">{task.dueDate}</Typography>
                     </TableCell>
                     <TableCell>
-                      <Typography variant="body2">
-                        {task.channel}
-                      </Typography>
+                      <Typography variant="body2">{task.channel}</Typography>
                     </TableCell>
                     <TableCell>
-                      <Typography variant="body2">
-                        {task.listing}
-                      </Typography>
+                      <Typography variant="body2">{task.listing}</Typography>
                     </TableCell>
                     <TableCell align="center">
                       <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
-                        <IconButton 
-                          size="small" 
+                        <IconButton
+                          size="small"
                           onClick={() => handleEditTask(task)}
                           sx={{ '&:hover': { bgcolor: 'primary.lighter' } }}
                         >
                           <Pencil size={16} />
                         </IconButton>
-                        <IconButton 
-                          size="small" 
+                        <IconButton
+                          size="small"
                           onClick={(e) => handleActionMenuOpen(e, task)}
                           sx={{ '&:hover': { bgcolor: 'grey.100' } }}
                         >
@@ -486,22 +474,22 @@ export function ManageTasksView() {
           <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
             <Typography variant="body2" color="text.secondary">
               {startIndex + 1}-{Math.min(endIndex, sortedTasks.length)} of {sortedTasks.length}
-          </Typography>
+            </Typography>
             <Box sx={{ display: 'flex', gap: 0.5 }}>
-            <Button
+              <Button
                 size="small"
                 disabled={currentPage === 1}
                 onClick={() => setCurrentPage(currentPage - 1)}
               >
                 Previous
-            </Button>
-            <Button
+              </Button>
+              <Button
                 size="small"
                 disabled={currentPage === totalPages}
                 onClick={() => setCurrentPage(currentPage + 1)}
               >
                 Next
-            </Button>
+              </Button>
             </Box>
           </Box>
         </Box>
@@ -515,8 +503,8 @@ export function ManageTasksView() {
             <Box sx={{ minWidth: 200, flex: '1 1 200px' }}>
               <FormControl fullWidth>
                 <InputLabel>Status</InputLabel>
-                <Select 
-                  label="Status" 
+                <Select
+                  label="Status"
                   multiple
                   value={filters.status}
                   onChange={(e) => handleFilterChange('status', e.target.value)}
@@ -530,8 +518,8 @@ export function ManageTasksView() {
             <Box sx={{ minWidth: 200, flex: '1 1 200px' }}>
               <FormControl fullWidth>
                 <InputLabel>Priority</InputLabel>
-                <Select 
-                  label="Priority" 
+                <Select
+                  label="Priority"
                   multiple
                   value={filters.priority}
                   onChange={(e) => handleFilterChange('priority', e.target.value)}
@@ -594,7 +582,8 @@ export function ManageTasksView() {
         <DialogTitle>Delete Task</DialogTitle>
         <DialogContent>
           <Typography>
-            Are you sure you want to delete &quot;{taskToDelete?.title}&quot;? This action cannot be undone.
+            Are you sure you want to delete &quot;{taskToDelete?.title}&quot;? This action cannot be
+            undone.
           </Typography>
         </DialogContent>
         <DialogActions>
@@ -607,4 +596,3 @@ export function ManageTasksView() {
     </DashboardContent>
   );
 }
-

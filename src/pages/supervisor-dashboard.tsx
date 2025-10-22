@@ -57,11 +57,26 @@ export function SupervisorDashboardPage() {
       // Load clients and properties from assigned users
       const clients = JSON.parse(localStorage.getItem('clients') || '[]');
       const properties = [
-        { id: '305034', name: 'La Dimora Del Cavaliere', location: 'Anguillara Sabazia, Italy', clientId: 'client1' },
+        {
+          id: '305034',
+          name: 'La Dimora Del Cavaliere',
+          location: 'Anguillara Sabazia, Italy',
+          clientId: 'client1',
+        },
         { id: '305035', name: 'Navigli', location: 'Milano, Italy', clientId: 'client1' },
         { id: '305225', name: 'Polacchi42', location: 'Roma, Italy', clientId: 'client2' },
-        { id: '305421', name: 'Superattico - Via Del Corso 43', location: 'Roma, Italy', clientId: 'client2' },
-        { id: '306532', name: 'Montecatini Terme', location: 'Montecatini Terme, Italy', clientId: 'client3' },
+        {
+          id: '305421',
+          name: 'Superattico - Via Del Corso 43',
+          location: 'Roma, Italy',
+          clientId: 'client2',
+        },
+        {
+          id: '306532',
+          name: 'Montecatini Terme',
+          location: 'Montecatini Terme, Italy',
+          clientId: 'client3',
+        },
         { id: '306533', name: 'Tuscany Villa', location: 'Florence, Italy', clientId: 'client3' },
         { id: '306534', name: 'Coastal Retreat', location: 'Amalfi, Italy', clientId: 'client4' },
       ];
@@ -69,7 +84,7 @@ export function SupervisorDashboardPage() {
       // Get unique clients from assigned users
       const userClientIds = new Set<string>();
       users.forEach((u: User) => {
-        u.assignedClients?.forEach(clientId => userClientIds.add(clientId));
+        u.assignedClients?.forEach((clientId) => userClientIds.add(clientId));
       });
 
       const userClients = clients.filter((c: Client) => userClientIds.has(c.id));
@@ -78,7 +93,7 @@ export function SupervisorDashboardPage() {
       // Get properties from assigned clients
       const userPropertyIds = new Set<string>();
       users.forEach((u: User) => {
-        u.assignedProperties?.forEach(propertyId => userPropertyIds.add(propertyId));
+        u.assignedProperties?.forEach((propertyId) => userPropertyIds.add(propertyId));
       });
 
       const userProperties = properties.filter((p: Property) => userPropertyIds.has(p.id));
@@ -88,19 +103,27 @@ export function SupervisorDashboardPage() {
 
   const getStatusColor = (status?: string) => {
     switch (status) {
-      case 'active': return 'success';
-      case 'inactive': return 'warning';
-      case 'suspended': return 'error';
-      default: return 'default';
+      case 'active':
+        return 'success';
+      case 'inactive':
+        return 'warning';
+      case 'suspended':
+        return 'error';
+      default:
+        return 'default';
     }
   };
 
   const getStatusLabel = (status?: string) => {
     switch (status) {
-      case 'active': return 'Active';
-      case 'inactive': return 'Inactive';
-      case 'suspended': return 'Suspended';
-      default: return 'Active';
+      case 'active':
+        return 'Active';
+      case 'inactive':
+        return 'Inactive';
+      case 'suspended':
+        return 'Suspended';
+      default:
+        return 'Active';
     }
   };
 
@@ -111,7 +134,8 @@ export function SupervisorDashboardPage() {
           Supervisor Dashboard
         </Typography>
         <Typography variant="body2" color="text.secondary">
-          Welcome back, {user?.name}! Here&apos;s an overview of your assigned resources and team performance.
+          Welcome back, {user?.name}! Here&apos;s an overview of your assigned resources and team
+          performance.
         </Typography>
       </Box>
 
@@ -197,20 +221,24 @@ export function SupervisorDashboardPage() {
             <CardHeader title="Assigned Associates" />
             <CardContent>
               {assignedUsers.length === 0 ? (
-                <Typography variant="body2" color="text.secondary" sx={{ textAlign: 'center', py: 2 }}>
+                <Typography
+                  variant="body2"
+                  color="text.secondary"
+                  sx={{ textAlign: 'center', py: 2 }}
+                >
                   No associates assigned yet
                 </Typography>
               ) : (
                 <Stack spacing={2}>
                   {assignedUsers.map((associate) => (
                     <Box key={associate.id} sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-                      <Avatar 
-                        sx={{ 
+                      <Avatar
+                        sx={{
                           bgcolor: associate.avatar ? 'transparent' : 'primary.main',
                           backgroundImage: associate.avatar ? `url(${associate.avatar})` : 'none',
                           backgroundSize: 'cover',
                           backgroundPosition: 'center',
-                          backgroundRepeat: 'no-repeat'
+                          backgroundRepeat: 'no-repeat',
                         }}
                       >
                         {!associate.avatar && associate.name.charAt(0).toUpperCase()}
@@ -240,7 +268,11 @@ export function SupervisorDashboardPage() {
             <CardHeader title="Managed Clients" />
             <CardContent>
               {assignedClients.length === 0 ? (
-                <Typography variant="body2" color="text.secondary" sx={{ textAlign: 'center', py: 2 }}>
+                <Typography
+                  variant="body2"
+                  color="text.secondary"
+                  sx={{ textAlign: 'center', py: 2 }}
+                >
                   No clients managed yet
                 </Typography>
               ) : (
@@ -275,7 +307,11 @@ export function SupervisorDashboardPage() {
             <CardHeader title="Properties Overview" />
             <CardContent>
               {assignedProperties.length === 0 ? (
-                <Typography variant="body2" color="text.secondary" sx={{ textAlign: 'center', py: 2 }}>
+                <Typography
+                  variant="body2"
+                  color="text.secondary"
+                  sx={{ textAlign: 'center', py: 2 }}
+                >
                   No properties assigned yet
                 </Typography>
               ) : (
@@ -293,7 +329,11 @@ export function SupervisorDashboardPage() {
                           <Typography variant="caption" color="text.secondary">
                             {property.location}
                           </Typography>
-                          <Typography variant="caption" color="text.secondary" sx={{ display: 'block' }}>
+                          <Typography
+                            variant="caption"
+                            color="text.secondary"
+                            sx={{ display: 'block' }}
+                          >
                             ID: {property.id}
                           </Typography>
                         </CardContent>
@@ -315,23 +355,41 @@ export function SupervisorDashboardPage() {
                 <Box>
                   <Stack direction="row" justifyContent="space-between" sx={{ mb: 1 }}>
                     <Typography variant="body2">Response Rate</Typography>
-                    <Typography variant="body2" sx={{ fontWeight: 600 }}>94%</Typography>
+                    <Typography variant="body2" sx={{ fontWeight: 600 }}>
+                      94%
+                    </Typography>
                   </Stack>
-                  <LinearProgress variant="determinate" value={94} sx={{ height: 8, borderRadius: 4 }} />
+                  <LinearProgress
+                    variant="determinate"
+                    value={94}
+                    sx={{ height: 8, borderRadius: 4 }}
+                  />
                 </Box>
                 <Box>
                   <Stack direction="row" justifyContent="space-between" sx={{ mb: 1 }}>
                     <Typography variant="body2">Task Completion</Typography>
-                    <Typography variant="body2" sx={{ fontWeight: 600 }}>87%</Typography>
+                    <Typography variant="body2" sx={{ fontWeight: 600 }}>
+                      87%
+                    </Typography>
                   </Stack>
-                  <LinearProgress variant="determinate" value={87} sx={{ height: 8, borderRadius: 4 }} />
+                  <LinearProgress
+                    variant="determinate"
+                    value={87}
+                    sx={{ height: 8, borderRadius: 4 }}
+                  />
                 </Box>
                 <Box>
                   <Stack direction="row" justifyContent="space-between" sx={{ mb: 1 }}>
                     <Typography variant="body2">Client Satisfaction</Typography>
-                    <Typography variant="body2" sx={{ fontWeight: 600 }}>92%</Typography>
+                    <Typography variant="body2" sx={{ fontWeight: 600 }}>
+                      92%
+                    </Typography>
                   </Stack>
-                  <LinearProgress variant="determinate" value={92} sx={{ height: 8, borderRadius: 4 }} />
+                  <LinearProgress
+                    variant="determinate"
+                    value={92}
+                    sx={{ height: 8, borderRadius: 4 }}
+                  />
                 </Box>
               </Stack>
             </CardContent>
@@ -350,7 +408,9 @@ export function SupervisorDashboardPage() {
                   </Avatar>
                   <Box sx={{ flex: 1 }}>
                     <Typography variant="body2">Task completed by John Doe</Typography>
-                    <Typography variant="caption" color="text.secondary">2 hours ago</Typography>
+                    <Typography variant="caption" color="text.secondary">
+                      2 hours ago
+                    </Typography>
                   </Box>
                 </Box>
                 <Divider />
@@ -360,7 +420,9 @@ export function SupervisorDashboardPage() {
                   </Avatar>
                   <Box sx={{ flex: 1 }}>
                     <Typography variant="body2">New client assigned</Typography>
-                    <Typography variant="caption" color="text.secondary">4 hours ago</Typography>
+                    <Typography variant="caption" color="text.secondary">
+                      4 hours ago
+                    </Typography>
                   </Box>
                 </Box>
                 <Divider />
@@ -370,7 +432,9 @@ export function SupervisorDashboardPage() {
                   </Avatar>
                   <Box sx={{ flex: 1 }}>
                     <Typography variant="body2">Performance report generated</Typography>
-                    <Typography variant="caption" color="text.secondary">1 day ago</Typography>
+                    <Typography variant="caption" color="text.secondary">
+                      1 day ago
+                    </Typography>
                   </Box>
                 </Box>
               </Stack>

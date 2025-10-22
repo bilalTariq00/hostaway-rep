@@ -90,7 +90,7 @@ export function TranslationsView() {
   };
 
   const handleTranslationChange = (field: string, value: string) => {
-    setTranslations(prev => ({
+    setTranslations((prev) => ({
       ...prev,
       [selectedPage]: {
         ...prev[selectedPage as keyof typeof prev],
@@ -119,7 +119,7 @@ export function TranslationsView() {
         <Typography variant="h4" sx={{ fontWeight: 600, mb: 2 }}>
           Booking Engine
         </Typography>
-        
+
         <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 3 }}>
           <Typography variant="body1" color="text.secondary">
             Your Webpage is published on Domusferiae.holdayfuture.com
@@ -141,7 +141,10 @@ export function TranslationsView() {
         <Box sx={{ flex: 1, maxWidth: 300 }}>
           <Card sx={{ mb: 3 }}>
             <CardContent>
-              <Typography variant="h6" sx={{ fontWeight: 600, mb: 2, display: 'flex', alignItems: 'center', gap: 1 }}>
+              <Typography
+                variant="h6"
+                sx={{ fontWeight: 600, mb: 2, display: 'flex', alignItems: 'center', gap: 1 }}
+              >
                 <FileText size={20} />
                 Page Content
               </Typography>
@@ -164,10 +167,13 @@ export function TranslationsView() {
 
           <Card>
             <CardContent>
-                <Typography variant="h6" sx={{ fontWeight: 600, mb: 2, display: 'flex', alignItems: 'center', gap: 1 }}>
-                  <Languages size={20} />
-                  Language
-                </Typography>
+              <Typography
+                variant="h6"
+                sx={{ fontWeight: 600, mb: 2, display: 'flex', alignItems: 'center', gap: 1 }}
+              >
+                <Languages size={20} />
+                Language
+              </Typography>
               <FormControl fullWidth>
                 <InputLabel>Select Language</InputLabel>
                 <Select
@@ -193,10 +199,21 @@ export function TranslationsView() {
         <Box sx={{ flex: 1 }}>
           <Card>
             <CardContent>
-              <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
-                <Typography variant="h6" sx={{ fontWeight: 600, display: 'flex', alignItems: 'center', gap: 1 }}>
+              <Box
+                sx={{
+                  display: 'flex',
+                  justifyContent: 'space-between',
+                  alignItems: 'center',
+                  mb: 3,
+                }}
+              >
+                <Typography
+                  variant="h6"
+                  sx={{ fontWeight: 600, display: 'flex', alignItems: 'center', gap: 1 }}
+                >
                   <Globe size={20} />
-                  {pageTranslations.find(p => p.id === selectedPage)?.name} - {languages.find(l => l.code === selectedLanguage)?.name}
+                  {pageTranslations.find((p) => p.id === selectedPage)?.name} -{' '}
+                  {languages.find((l) => l.code === selectedLanguage)?.name}
                 </Typography>
                 <Button variant="outlined" size="small">
                   Save Changes
@@ -238,7 +255,9 @@ export function TranslationsView() {
                       <TextField
                         fullWidth
                         value={currentTranslations.searchPlaceholder || ''}
-                        onChange={(e) => handleTranslationChange('searchPlaceholder', e.target.value)}
+                        onChange={(e) =>
+                          handleTranslationChange('searchPlaceholder', e.target.value)
+                        }
                         placeholder="Enter search placeholder text"
                       />
                     </Box>
@@ -312,21 +331,13 @@ export function TranslationsView() {
                       <Typography variant="subtitle1" sx={{ fontWeight: 600, mb: 1 }}>
                         Page Title
                       </Typography>
-                      <TextField
-                        fullWidth
-                        placeholder="Enter page title"
-                      />
+                      <TextField fullWidth placeholder="Enter page title" />
                     </Box>
                     <Box>
                       <Typography variant="subtitle1" sx={{ fontWeight: 600, mb: 1 }}>
                         Page Content
                       </Typography>
-                      <TextField
-                        fullWidth
-                        multiline
-                        rows={4}
-                        placeholder="Enter page content"
-                      />
+                      <TextField fullWidth multiline rows={4} placeholder="Enter page content" />
                     </Box>
                     <Box>
                       <Typography variant="subtitle1" sx={{ fontWeight: 600, mb: 1 }}>
@@ -344,13 +355,18 @@ export function TranslationsView() {
               </Box>
 
               {/* Action Buttons */}
-              <Box sx={{ display: 'flex', gap: 2, mt: 4, pt: 3, borderTop: '1px solid', borderColor: 'divider' }}>
-                <Button variant="outlined">
-                  Reset to Default
-                </Button>
-                <Button variant="contained">
-                  Save Translation
-                </Button>
+              <Box
+                sx={{
+                  display: 'flex',
+                  gap: 2,
+                  mt: 4,
+                  pt: 3,
+                  borderTop: '1px solid',
+                  borderColor: 'divider',
+                }}
+              >
+                <Button variant="outlined">Reset to Default</Button>
+                <Button variant="contained">Save Translation</Button>
                 <Button variant="outlined" startIcon={<Globe size={16} />}>
                   Preview Page
                 </Button>

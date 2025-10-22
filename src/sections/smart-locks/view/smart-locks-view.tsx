@@ -19,7 +19,8 @@ export function SmartLocksView() {
           sx={{
             width: '100%',
             height: { xs: 250, sm: 350, md: 400 },
-            backgroundImage: 'url("https://images.unsplash.com/photo-1558618666-fcd25c85cd64?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80")',
+            backgroundImage:
+              'url("https://images.unsplash.com/photo-1558618666-fcd25c85cd64?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80")',
             backgroundSize: 'cover',
             backgroundPosition: 'center',
             borderRadius: 2,
@@ -42,27 +43,27 @@ export function SmartLocksView() {
         </Box>
 
         {/* Main Message */}
-        <Typography 
-          variant="h5" 
-          sx={{ 
-            fontWeight: 600, 
+        <Typography
+          variant="h5"
+          sx={{
+            fontWeight: 600,
             color: '#000000',
             textAlign: 'left',
-            fontSize: { xs: '1.5rem', md: '1.75rem' }
+            fontSize: { xs: '1.5rem', md: '1.75rem' },
           }}
         >
           Your Smart locks & devices are not currently connected
         </Typography>
-        
+
         {/* Sub Message */}
-        <Typography 
-          variant="body1" 
-          sx={{ 
+        <Typography
+          variant="body1"
+          sx={{
             color: '#000000',
             textAlign: 'left',
             fontSize: '1rem',
             maxWidth: 500,
-            lineHeight: 1.5
+            lineHeight: 1.5,
           }}
         >
           Please contact the account holder to enable Smart Locks.

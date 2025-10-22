@@ -66,16 +66,16 @@ export function BookingDetailsModal({ booking, open, onClose }: BookingDetailsMo
           <Typography variant="h6">Booking Details</Typography>
           <Box sx={{ display: 'flex', gap: 1 }}>
             <IconButton size="small">
-              <Iconify icon={"eva:share-fill" as any} width={20} />
+              <Iconify icon={'eva:share-fill' as any} width={20} />
             </IconButton>
             <IconButton size="small">
-              <Iconify icon={"eva:message-circle-fill" as any} width={20} />
+              <Iconify icon={'eva:message-circle-fill' as any} width={20} />
             </IconButton>
             <IconButton size="small">
-              <Iconify icon={"eva:edit-fill" as any} width={20} />
+              <Iconify icon={'eva:edit-fill' as any} width={20} />
             </IconButton>
             <IconButton size="small" onClick={onClose}>
-              <Iconify icon={"eva:close-fill" as any} width={20} />
+              <Iconify icon={'eva:close-fill' as any} width={20} />
             </IconButton>
           </Box>
         </Box>
@@ -85,10 +85,7 @@ export function BookingDetailsModal({ booking, open, onClose }: BookingDetailsMo
         {/* Guest Information */}
         <Box sx={{ mb: 3 }}>
           <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2 }}>
-            <Avatar
-              src="/assets/images/avatar/avatar-1.webp"
-              sx={{ width: 60, height: 60 }}
-            >
+            <Avatar src="/assets/images/avatar/avatar-1.webp" sx={{ width: 60, height: 60 }}>
               JD
             </Avatar>
             <Box>
@@ -101,7 +98,7 @@ export function BookingDetailsModal({ booking, open, onClose }: BookingDetailsMo
               </Box>
             </Box>
           </Box>
-          
+
           <Typography variant="body2" color="text.secondary">
             {booking.nights} nights • {booking.guests} guests
           </Typography>
@@ -214,9 +211,7 @@ export function BookingDetailsModal({ booking, open, onClose }: BookingDetailsMo
           <Button variant="outlined" onClick={onClose}>
             Close
           </Button>
-          <Button variant="contained">
-            Edit Booking
-          </Button>
+          <Button variant="contained">Edit Booking</Button>
         </Box>
       </DialogContent>
     </Dialog>

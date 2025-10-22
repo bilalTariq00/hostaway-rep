@@ -99,7 +99,7 @@ export function DetailedMessageCard({
             </ListItem>
           ))}
         </List>
-        
+
         {totalPages > 1 && (
           <Box sx={{ display: 'flex', justifyContent: 'center', mt: 2 }}>
             <Pagination
@@ -112,14 +112,17 @@ export function DetailedMessageCard({
                 '& .MuiPaginationItem-root': {
                   color: variant === 'last1' ? 'rgba(255, 255, 255, 0.8)' : 'text.secondary',
                   '&.Mui-selected': {
-                    backgroundColor: variant === 'last1' ? 'rgba(255, 255, 255, 0.2)' : 'primary.main',
+                    backgroundColor:
+                      variant === 'last1' ? 'rgba(255, 255, 255, 0.2)' : 'primary.main',
                     color: variant === 'last1' ? 'white' : 'primary.contrastText',
                     '&:hover': {
-                      backgroundColor: variant === 'last1' ? 'rgba(255, 255, 255, 0.3)' : 'primary.dark',
+                      backgroundColor:
+                        variant === 'last1' ? 'rgba(255, 255, 255, 0.3)' : 'primary.dark',
                     },
                   },
                   '&:hover': {
-                    backgroundColor: variant === 'last1' ? 'rgba(255, 255, 255, 0.1)' : 'action.hover',
+                    backgroundColor:
+                      variant === 'last1' ? 'rgba(255, 255, 255, 0.1)' : 'action.hover',
                   },
                 },
               }}
@@ -147,7 +150,8 @@ export function DetailedMessageCard({
             fontWeight: 600,
           }}
         >
-          {profitLoss.isPositive ? '+' : ''}{profitLoss.value}%
+          {profitLoss.isPositive ? '+' : ''}
+          {profitLoss.value}%
         </Typography>
       </Box>
     );
@@ -180,7 +184,7 @@ export function DetailedMessageCard({
             </Typography>
             <Tooltip title={`Information about ${title}`}>
               <IconButton size="small" sx={{ p: 0.5, color: 'inherit' }}>
-                <Iconify icon={"eva:info-outline" as any} width={16} />
+                <Iconify icon={'eva:info-outline' as any} width={16} />
               </IconButton>
             </Tooltip>
           </Box>
@@ -247,7 +251,7 @@ export function DetailedMessageCard({
           </Typography>
           <Tooltip title={`Information about ${title}`}>
             <IconButton size="small" sx={{ p: 0.5 }}>
-              <Iconify icon={"eva:info-outline" as any} width={16} />
+              <Iconify icon={'eva:info-outline' as any} width={16} />
             </IconButton>
           </Tooltip>
         </Box>

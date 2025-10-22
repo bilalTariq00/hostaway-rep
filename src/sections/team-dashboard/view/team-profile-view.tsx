@@ -1,19 +1,19 @@
 import React, { useState } from 'react';
 import { useParams, useNavigate } from 'react-router';
-import { 
+import {
   Mail,
   User,
-  Heart, 
+  Heart,
   Share,
   MapPin,
-  Twitter, 
-  Facebook, 
+  Twitter,
+  Facebook,
   Linkedin,
   Briefcase,
   Instagram,
   MoreVertical,
   GraduationCap,
-  MessageCircle
+  MessageCircle,
 } from 'lucide-react';
 
 import Box from '@mui/material/Box';
@@ -47,25 +47,27 @@ const teamMembers = [
     education: 'Studied at Nikolaus - Leuschke',
     avatar: 'JF',
     bannerColor: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-    about: 'Tart I love sugar plum I love oat cake. Sweet roll caramels I love jujubes. Topping cake wafer..',
+    about:
+      'Tart I love sugar plum I love oat cake. Sweet roll caramels I love jujubes. Topping cake wafer..',
     social: {
       facebook: 'https://www.facebook.com/frankie',
       instagram: 'https://www.instagram.com/frankie',
       linkedin: 'https://www.linkedin.com/in/frankie',
-      twitter: 'https://www.twitter.com/frankie'
+      twitter: 'https://www.twitter.com/frankie',
     },
     stats: {
       followers: 1947,
       following: 9124,
-      posts: 156
+      posts: 156,
     },
     recentPost: {
-      content: 'The sun slowly set over the horizon, painting the sky in vibrant hues of orange and pink.',
+      content:
+        'The sun slowly set over the horizon, painting the sky in vibrant hues of orange and pink.',
       image: '/assets/team-post-image.jpg',
       likes: 20,
       comments: 5,
-      date: '15 Oct 2025'
-    }
+      date: '15 Oct 2025',
+    },
   },
   {
     id: '2',
@@ -78,25 +80,27 @@ const teamMembers = [
     education: 'Studied at MIT',
     avatar: 'HS',
     bannerColor: 'linear-gradient(135deg, #f093fb 0%, #f5576c 100%)',
-    about: 'Passionate about technology and innovation. Leading teams to create amazing products that make a difference.',
+    about:
+      'Passionate about technology and innovation. Leading teams to create amazing products that make a difference.',
     social: {
       facebook: 'https://www.facebook.com/harrison',
       instagram: 'https://www.instagram.com/harrison',
       linkedin: 'https://www.linkedin.com/in/harrison',
-      twitter: 'https://www.twitter.com/harrison'
+      twitter: 'https://www.twitter.com/harrison',
     },
     stats: {
       followers: 6980,
       following: 8490,
-      posts: 203
+      posts: 203,
     },
     recentPost: {
-      content: 'Just finished an amazing project with the team! The collaboration and creativity were incredible.',
+      content:
+        'Just finished an amazing project with the team! The collaboration and creativity were incredible.',
       image: '/assets/team-post-image2.jpg',
       likes: 45,
       comments: 12,
-      date: '12 Oct 2025'
-    }
+      date: '12 Oct 2025',
+    },
   },
   {
     id: '3',
@@ -109,26 +113,28 @@ const teamMembers = [
     education: 'Studied at University of Toronto',
     avatar: 'RC',
     bannerColor: 'linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)',
-    about: 'Full-stack developer with a passion for clean code and user experience. Always learning new technologies.',
+    about:
+      'Full-stack developer with a passion for clean code and user experience. Always learning new technologies.',
     social: {
       facebook: 'https://www.facebook.com/reece',
       instagram: 'https://www.instagram.com/reece',
       linkedin: 'https://www.linkedin.com/in/reece',
-      twitter: 'https://www.twitter.com/reece'
+      twitter: 'https://www.twitter.com/reece',
     },
     stats: {
       followers: 8490,
       following: 2030,
-      posts: 336
+      posts: 336,
     },
     recentPost: {
-      content: 'Debugging is like being a detective in a crime movie where you are also the murderer.',
+      content:
+        'Debugging is like being a detective in a crime movie where you are also the murderer.',
       image: '/assets/team-post-image3.jpg',
       likes: 67,
       comments: 23,
-      date: '10 Oct 2025'
-    }
-  }
+      date: '10 Oct 2025',
+    },
+  },
 ];
 
 export function TeamProfileView() {
@@ -138,7 +144,7 @@ export function TeamProfileView() {
   const [newPost, setNewPost] = useState(''); // Post content state - updated
 
   // Find the team member by ID
-  const member = teamMembers.find(m => m.id === id) || teamMembers[0];
+  const member = teamMembers.find((m) => m.id === id) || teamMembers[0];
 
   const handleBack = () => {
     navigate('/team-dashboard/team');
@@ -160,17 +166,17 @@ export function TeamProfileView() {
     <Container maxWidth="xl">
       {/* Breadcrumbs */}
       <Breadcrumbs sx={{ mb: 3 }}>
-        <Link 
-          color="inherit" 
-          href="#" 
+        <Link
+          color="inherit"
+          href="#"
           onClick={() => navigate('/team-dashboard')}
           sx={{ textDecoration: 'none', '&:hover': { textDecoration: 'underline' } }}
         >
           Dashboard
         </Link>
-        <Link 
-          color="inherit" 
-          href="#" 
+        <Link
+          color="inherit"
+          href="#"
           onClick={() => navigate('/team-dashboard/team')}
           sx={{ textDecoration: 'none', '&:hover': { textDecoration: 'underline' } }}
         >
@@ -181,14 +187,16 @@ export function TeamProfileView() {
 
       {/* Profile Header */}
       <Card sx={{ mb: 3, overflow: 'hidden' }}>
-        <Box sx={{ 
-          height: 200, 
-          position: 'relative',
-          display: 'flex',
-          alignItems: 'flex-end',
-          p: 3
-        }}>
-          <img 
+        <Box
+          sx={{
+            height: 200,
+            position: 'relative',
+            display: 'flex',
+            alignItems: 'flex-end',
+            p: 3,
+          }}
+        >
+          <img
             src="https://pub-c5e31b5cdafb419fb247a8ac2e78df7a.r2.dev/public/assets/images/mock/cover/cover-4.webp"
             alt="Cover"
             style={{
@@ -198,20 +206,20 @@ export function TeamProfileView() {
               width: '100%',
               height: '100%',
               objectFit: 'cover',
-              zIndex: 0
+              zIndex: 0,
             }}
           />
-          <Avatar 
-            src={_myAccount.photoURL} 
+          <Avatar
+            src={_myAccount.photoURL}
             alt={member.name}
-            sx={{ 
-              width: 120, 
-              height: 120, 
+            sx={{
+              width: 120,
+              height: 120,
               border: '4px solid white',
               mb: -6,
               ml: 2,
               position: 'relative',
-              zIndex: 1
+              zIndex: 1,
             }}
           >
             {member.name.charAt(0).toUpperCase()}
@@ -229,9 +237,9 @@ export function TeamProfileView() {
         {/* Navigation Tabs */}
         <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
           <Tabs value={activeTab} onChange={handleTabChange} sx={{ px: 3 }}>
-            <Tab 
-              icon={<User size={20} />} 
-              label="Profile" 
+            <Tab
+              icon={<User size={20} />}
+              label="Profile"
               iconPosition="start"
               sx={{ textTransform: 'none', fontWeight: 600 }}
             />
@@ -262,7 +270,7 @@ export function TeamProfileView() {
             <Typography variant="body2" color="text.secondary" sx={{ mb: 3 }}>
               {member.about}
             </Typography>
-            
+
             <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
               <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
                 <MapPin size={16} color="#000" />
@@ -274,7 +282,9 @@ export function TeamProfileView() {
               </Box>
               <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
                 <Briefcase size={16} color="#000" />
-                <Typography variant="body2">{member.role} at {member.company}</Typography>
+                <Typography variant="body2">
+                  {member.role} at {member.company}
+                </Typography>
               </Box>
               <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
                 <GraduationCap size={16} color="#000" />
@@ -330,40 +340,40 @@ export function TeamProfileView() {
               placeholder="Share what you are thinking here..."
               sx={{ mb: 2 }}
             />
-            
+
             <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
               <Box sx={{ display: 'flex', gap: 2 }}>
-                <Button 
-                  variant="contained" 
+                <Button
+                  variant="contained"
                   size="small"
-                  sx={{ 
-                    bgcolor: '#4CAF50', 
+                  sx={{
+                    bgcolor: '#4CAF50',
                     '&:hover': { bgcolor: '#45a049' },
-                    textTransform: 'none'
+                    textTransform: 'none',
                   }}
                 >
                   Image/Video
                 </Button>
-                <Button 
-                  variant="contained" 
+                <Button
+                  variant="contained"
                   size="small"
-                  sx={{ 
-                    bgcolor: '#FF9800', 
+                  sx={{
+                    bgcolor: '#FF9800',
                     '&:hover': { bgcolor: '#f57c00' },
-                    textTransform: 'none'
+                    textTransform: 'none',
                   }}
                 >
                   Streaming
                 </Button>
               </Box>
-              <Button 
-                variant="contained" 
-                onClick={handlePost} 
+              <Button
+                variant="contained"
+                onClick={handlePost}
                 disabled={!newPost.trim()}
-                sx={{ 
-                  bgcolor: '#424242', 
+                sx={{
+                  bgcolor: '#424242',
                   '&:hover': { bgcolor: '#303030' },
-                  textTransform: 'none'
+                  textTransform: 'none',
                 }}
               >
                 Post
@@ -373,13 +383,11 @@ export function TeamProfileView() {
 
           {/* Recent Post Card */}
           <Card sx={{ p: 3 }}>
-            <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
+            <Box
+              sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}
+            >
               <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-                <Avatar 
-                  src={_myAccount.photoURL} 
-                  alt={member.name}
-                  sx={{ width: 40, height: 40 }}
-                >
+                <Avatar src={_myAccount.photoURL} alt={member.name} sx={{ width: 40, height: 40 }}>
                   {member.name.charAt(0).toUpperCase()}
                 </Avatar>
                 <Box>
@@ -395,32 +403,32 @@ export function TeamProfileView() {
                 <MoreVertical size={16} />
               </IconButton>
             </Box>
-            
+
             <Typography variant="body1" sx={{ mb: 2 }}>
               {member.recentPost.content}
             </Typography>
-            
+
             {/* Post Image */}
-            <Box 
-              sx={{ 
-                height: 200, 
-                borderRadius: 1, 
+            <Box
+              sx={{
+                height: 200,
+                borderRadius: 1,
                 mb: 2,
                 overflow: 'hidden',
-                background: 'linear-gradient(135deg, #ff7e5f 0%, #feb47b 100%)'
+                background: 'linear-gradient(135deg, #ff7e5f 0%, #feb47b 100%)',
               }}
             >
-              <img 
+              <img
                 src="https://pub-c5e31b5cdafb419fb247a8ac2e78df7a.r2.dev/public/assets/images/mock/cover/cover-1.webp"
                 alt="Post"
                 style={{
                   width: '100%',
                   height: '100%',
-                  objectFit: 'cover'
+                  objectFit: 'cover',
                 }}
               />
             </Box>
-            
+
             {/* Engagement */}
             <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2 }}>
               <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
@@ -439,14 +447,12 @@ export function TeamProfileView() {
                 <Share size={16} color="#666" />
               </Box>
             </Box>
-            
+
             <Divider sx={{ my: 2 }} />
-            
+
             {/* Comments */}
             <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-              <Avatar sx={{ width: 32, height: 32, bgcolor: 'secondary.main' }}>
-                LD
-              </Avatar>
+              <Avatar sx={{ width: 32, height: 32, bgcolor: 'secondary.main' }}>LD</Avatar>
               <Box sx={{ flex: 1 }}>
                 <Typography variant="body2" sx={{ fontWeight: 600 }}>
                   Lainey Davidson

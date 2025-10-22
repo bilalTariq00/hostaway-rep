@@ -83,7 +83,8 @@ const mockReviews = [
     status: 'Published',
     schedule: '2 day checklist',
     triggerEvent: '2 days after check-out',
-    overallReview: 'El apartamento esta muy bien ubicado con muchos bares cerca, y bien equipado. Tuvimos un problema con el aire acondicionicionado y Manu... More',
+    overallReview:
+      'El apartamento esta muy bien ubicado con muchos bares cerca, y bien equipado. Tuvimos un problema con el aire acondicionicionado y Manu... More',
     rating: 5,
   },
   {
@@ -119,7 +120,8 @@ const mockReviews = [
     status: 'Pending',
     schedule: '',
     triggerEvent: '',
-    overallReview: 'La casa perfecta para una estancia de vacaciones en Milán, cerca del transporte público, acogedora y muy bonita, muy cómoda para ... More',
+    overallReview:
+      'La casa perfecta para una estancia de vacaciones en Milán, cerca del transporte público, acogedora y muy bonita, muy cómoda para ... More',
     rating: 5,
   },
 ];
@@ -138,7 +140,7 @@ export function ManageReviewsView() {
   const [tags, setTags] = useState('');
   const [origin, setOrigin] = useState('');
   const [settingsAnchor, setSettingsAnchor] = useState<null | HTMLElement>(null);
-  
+
   // Column visibility state
   const [visibleColumns, setVisibleColumns] = useState({
     guestName: true,
@@ -191,9 +193,9 @@ export function ManageReviewsView() {
   };
 
   const handleColumnToggle = (column: string) => {
-    setVisibleColumns(prev => ({
+    setVisibleColumns((prev) => ({
       ...prev,
-      [column]: !prev[column as keyof typeof prev]
+      [column]: !prev[column as keyof typeof prev],
     }));
   };
 
@@ -205,28 +207,28 @@ export function ManageReviewsView() {
     router.push(`/listings/${listingId}`);
   };
 
-
   const totalPages = Math.ceil(mockReviews.length / rowsPerPage);
   const startIndex = currentPage * rowsPerPage;
   const endIndex = startIndex + rowsPerPage;
   const currentReviews = mockReviews.slice(startIndex, endIndex);
 
-  const renderStars = (rating: number) => Array.from({ length: 5 }, (_, index) => (
-    <Box
-      key={index}
-      component="span"
-      sx={{
-        color: index < rating ? '#ffc107' : '#e0e0e0',
-        fontSize: 16,
-        display: 'inline-block',
-        width: 16,
-        height: 16,
-        '&::before': {
-          content: '"★"',
-        },
-      }}
-    />
-  ));
+  const renderStars = (rating: number) =>
+    Array.from({ length: 5 }, (_, index) => (
+      <Box
+        key={index}
+        component="span"
+        sx={{
+          color: index < rating ? '#ffc107' : '#e0e0e0',
+          fontSize: 16,
+          display: 'inline-block',
+          width: 16,
+          height: 16,
+          '&::before': {
+            content: '"★"',
+          },
+        }}
+      />
+    ));
 
   return (
     <DashboardContent maxWidth="xl">
@@ -239,7 +241,7 @@ export function ManageReviewsView() {
           <Button
             variant="outlined"
             onClick={handleDownloadMenuOpen}
-            startIcon={<Iconify icon={"eva:download-fill" as any} />}
+            startIcon={<Iconify icon={'eva:download-fill' as any} />}
           >
             Download Report
           </Button>
@@ -298,11 +300,7 @@ export function ManageReviewsView() {
           <Grid size={{ xs: 12, sm: 6, md: 2 }}>
             <FormControl fullWidth size="small">
               <InputLabel>Status</InputLabel>
-              <Select
-                value={status}
-                label="Status"
-                onChange={(e) => setStatus(e.target.value)}
-              >
+              <Select value={status} label="Status" onChange={(e) => setStatus(e.target.value)}>
                 <MenuItem value="">All Status</MenuItem>
                 <MenuItem value="published">Published</MenuItem>
                 <MenuItem value="pending">Pending</MenuItem>
@@ -314,11 +312,7 @@ export function ManageReviewsView() {
           <Grid size={{ xs: 12, sm: 6, md: 2 }}>
             <FormControl fullWidth size="small">
               <InputLabel>Guest</InputLabel>
-              <Select
-                value={guest}
-                label="Guest"
-                onChange={(e) => setGuest(e.target.value)}
-              >
+              <Select value={guest} label="Guest" onChange={(e) => setGuest(e.target.value)}>
                 <MenuItem value="">All Guests</MenuItem>
                 <MenuItem value="john">John Smith</MenuItem>
                 <MenuItem value="sarah">Sarah Johnson</MenuItem>
@@ -331,11 +325,7 @@ export function ManageReviewsView() {
           <Grid size={{ xs: 12, sm: 6, md: 2 }}>
             <FormControl fullWidth size="small">
               <InputLabel>Listing</InputLabel>
-              <Select
-                value={listing}
-                label="Listing"
-                onChange={(e) => setListing(e.target.value)}
-              >
+              <Select value={listing} label="Listing" onChange={(e) => setListing(e.target.value)}>
                 <MenuItem value="">All Listings</MenuItem>
                 <MenuItem value="villa">Villa Del Sol</MenuItem>
                 <MenuItem value="navigli">Navigli Apartment</MenuItem>
@@ -347,11 +337,7 @@ export function ManageReviewsView() {
           <Grid size={{ xs: 12, sm: 6, md: 2 }}>
             <FormControl fullWidth size="small">
               <InputLabel>Tags</InputLabel>
-              <Select
-                value={tags}
-                label="Tags"
-                onChange={(e) => setTags(e.target.value)}
-              >
+              <Select value={tags} label="Tags" onChange={(e) => setTags(e.target.value)}>
                 <MenuItem value="">All Tags</MenuItem>
                 <MenuItem value="positive">Positive</MenuItem>
                 <MenuItem value="negative">Negative</MenuItem>
@@ -363,11 +349,7 @@ export function ManageReviewsView() {
           <Grid size={{ xs: 12, sm: 6, md: 2 }}>
             <FormControl fullWidth size="small">
               <InputLabel>Origin</InputLabel>
-              <Select
-                value={origin}
-                label="Origin"
-                onChange={(e) => setOrigin(e.target.value)}
-              >
+              <Select value={origin} label="Origin" onChange={(e) => setOrigin(e.target.value)}>
                 <MenuItem value="">All Origins</MenuItem>
                 <MenuItem value="direct">Direct</MenuItem>
                 <MenuItem value="ota">OTA</MenuItem>
@@ -380,7 +362,7 @@ export function ManageReviewsView() {
             <Button
               variant="outlined"
               onClick={handleResetFilters}
-              startIcon={<Iconify icon={"eva:refresh-fill" as any} />}
+              startIcon={<Iconify icon={'eva:refresh-fill' as any} />}
               fullWidth
             >
               Reset
@@ -392,46 +374,57 @@ export function ManageReviewsView() {
       {/* Reviews Table */}
       <Paper sx={{ mb: 3 }}>
         {/* Table Header with Settings */}
-        <Box sx={{ p: 2, borderBottom: 1, borderColor: 'divider', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+        <Box
+          sx={{
+            p: 2,
+            borderBottom: 1,
+            borderColor: 'divider',
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+          }}
+        >
           <Typography variant="h6">Reviews Table</Typography>
           <Button
             variant="outlined"
             size="small"
-            startIcon={<Iconify icon={"eva:settings-fill" as any} />}
+            startIcon={<Iconify icon={'eva:settings-fill' as any} />}
             onClick={handleSettingsOpen}
           >
             Column Settings
           </Button>
         </Box>
-        <TableContainer sx={{ 
-          maxHeight: 600, 
-          overflowX: 'auto', 
-          overflowY: 'auto',
-          scrollBehavior: 'smooth',
-          '&::-webkit-scrollbar': {
-            width: '8px',
-            height: '8px',
-          },
-          '&::-webkit-scrollbar-track': {
-            background: '#f1f1f1',
-            borderRadius: '4px',
-          },
-          '&::-webkit-scrollbar-thumb': {
-            background: '#c1c1c1',
-            borderRadius: '4px',
-            '&:hover': {
-              background: '#a8a8a8',
+        <TableContainer
+          sx={{
+            maxHeight: 600,
+            overflowX: 'auto',
+            overflowY: 'auto',
+            scrollBehavior: 'smooth',
+            '&::-webkit-scrollbar': {
+              width: '8px',
+              height: '8px',
             },
-          },
-        }}>
-          <Table 
-            stickyHeader 
-            sx={{ 
-              '& .MuiTableHead-root': { 
-                position: 'sticky', 
-                top: 0, 
+            '&::-webkit-scrollbar-track': {
+              background: '#f1f1f1',
+              borderRadius: '4px',
+            },
+            '&::-webkit-scrollbar-thumb': {
+              background: '#c1c1c1',
+              borderRadius: '4px',
+              '&:hover': {
+                background: '#a8a8a8',
+              },
+            },
+          }}
+        >
+          <Table
+            stickyHeader
+            sx={{
+              '& .MuiTableHead-root': {
+                position: 'sticky',
+                top: 0,
                 zIndex: 2,
-                backgroundColor: 'background.paper'
+                backgroundColor: 'background.paper',
               },
               '& .MuiTableCell-root': {
                 whiteSpace: 'nowrap',
@@ -448,31 +441,47 @@ export function ManageReviewsView() {
             <TableHead>
               <TableRow>
                 {visibleColumns.guestName && (
-                  <TableCell sx={{ 
-                    position: 'sticky', 
-                    left: 0, 
-                    bgcolor: 'background.paper', 
-                    zIndex: 3, 
-                    minWidth: 150,
-                    borderRight: '1px solid',
-                    borderColor: 'divider'
-                  }}>
-                  Guest Name
-                </TableCell>
+                  <TableCell
+                    sx={{
+                      position: 'sticky',
+                      left: 0,
+                      bgcolor: 'background.paper',
+                      zIndex: 3,
+                      minWidth: 150,
+                      borderRight: '1px solid',
+                      borderColor: 'divider',
+                    }}
+                  >
+                    Guest Name
+                  </TableCell>
                 )}
-                {visibleColumns.reservationId && <TableCell sx={{ minWidth: 120 }}>Reservation ID</TableCell>}
-                {visibleColumns.externalReservationId && <TableCell sx={{ minWidth: 200 }}>External Reservation ID</TableCell>}
-                {visibleColumns.listingName && <TableCell sx={{ minWidth: 120 }}>Listing Name</TableCell>}
-                {visibleColumns.listingExternalName && <TableCell sx={{ minWidth: 250 }}>Listing External Name</TableCell>}
-                {visibleColumns.listingId && <TableCell sx={{ minWidth: 100 }}>Listing ID</TableCell>}
+                {visibleColumns.reservationId && (
+                  <TableCell sx={{ minWidth: 120 }}>Reservation ID</TableCell>
+                )}
+                {visibleColumns.externalReservationId && (
+                  <TableCell sx={{ minWidth: 200 }}>External Reservation ID</TableCell>
+                )}
+                {visibleColumns.listingName && (
+                  <TableCell sx={{ minWidth: 120 }}>Listing Name</TableCell>
+                )}
+                {visibleColumns.listingExternalName && (
+                  <TableCell sx={{ minWidth: 250 }}>Listing External Name</TableCell>
+                )}
+                {visibleColumns.listingId && (
+                  <TableCell sx={{ minWidth: 100 }}>Listing ID</TableCell>
+                )}
                 {visibleColumns.channel && <TableCell sx={{ minWidth: 100 }}>Channel</TableCell>}
                 {visibleColumns.origin && <TableCell sx={{ minWidth: 80 }}>Origin</TableCell>}
                 {visibleColumns.checkIn && <TableCell sx={{ minWidth: 150 }}>Check-in</TableCell>}
                 {visibleColumns.checkOut && <TableCell sx={{ minWidth: 150 }}>Check-out</TableCell>}
                 {visibleColumns.status && <TableCell sx={{ minWidth: 120 }}>Status</TableCell>}
                 {visibleColumns.schedule && <TableCell sx={{ minWidth: 120 }}>Schedule</TableCell>}
-                {visibleColumns.triggerEvent && <TableCell sx={{ minWidth: 150 }}>Trigger Event</TableCell>}
-                {visibleColumns.overallReview && <TableCell sx={{ minWidth: 300 }}>Overall Review</TableCell>}
+                {visibleColumns.triggerEvent && (
+                  <TableCell sx={{ minWidth: 150 }}>Trigger Event</TableCell>
+                )}
+                {visibleColumns.overallReview && (
+                  <TableCell sx={{ minWidth: 300 }}>Overall Review</TableCell>
+                )}
                 {visibleColumns.rating && <TableCell sx={{ minWidth: 100 }}>Rating</TableCell>}
               </TableRow>
             </TableHead>
@@ -480,106 +489,99 @@ export function ManageReviewsView() {
               {currentReviews.map((review) => (
                 <TableRow key={review.id} hover>
                   {visibleColumns.guestName && (
-                    <TableCell sx={{ 
-                      position: 'sticky', 
-                      left: 0, 
-                      bgcolor: 'background.paper', 
-                      zIndex: 2,
-                      borderRight: '1px solid',
-                      borderColor: 'divider'
-                    }}>
-                      <Typography variant="body2" sx={{ fontWeight: 500, color: 'primary.main', cursor: 'pointer' }}>
-                      {review.guestName}
-                    </Typography>
-                  </TableCell>
+                    <TableCell
+                      sx={{
+                        position: 'sticky',
+                        left: 0,
+                        bgcolor: 'background.paper',
+                        zIndex: 2,
+                        borderRight: '1px solid',
+                        borderColor: 'divider',
+                      }}
+                    >
+                      <Typography
+                        variant="body2"
+                        sx={{ fontWeight: 500, color: 'primary.main', cursor: 'pointer' }}
+                      >
+                        {review.guestName}
+                      </Typography>
+                    </TableCell>
                   )}
                   {visibleColumns.reservationId && (
-                  <TableCell sx={{ minWidth: 120 }}>
-                      <Typography 
-                        variant="body2" 
+                    <TableCell sx={{ minWidth: 120 }}>
+                      <Typography
+                        variant="body2"
                         sx={{ color: 'primary.main', cursor: 'pointer' }}
                         onClick={() => handleReservationClick(review.reservationId)}
                       >
-                      {review.reservationId}
-                    </Typography>
-                  </TableCell>
+                        {review.reservationId}
+                      </Typography>
+                    </TableCell>
                   )}
                   {visibleColumns.externalReservationId && (
-                  <TableCell sx={{ minWidth: 200 }}>
-                    <Typography variant="body2">
-                      {review.externalReservationId}
-                    </Typography>
-                  </TableCell>
+                    <TableCell sx={{ minWidth: 200 }}>
+                      <Typography variant="body2">{review.externalReservationId}</Typography>
+                    </TableCell>
                   )}
                   {visibleColumns.listingName && (
-                  <TableCell sx={{ minWidth: 120 }}>
-                      <Typography 
-                        variant="body2" 
+                    <TableCell sx={{ minWidth: 120 }}>
+                      <Typography
+                        variant="body2"
                         sx={{ color: 'primary.main', cursor: 'pointer' }}
                         onClick={() => handleListingClick(review.listingId)}
                       >
-                      {review.listingName}
-                    </Typography>
-                  </TableCell>
+                        {review.listingName}
+                      </Typography>
+                    </TableCell>
                   )}
                   {visibleColumns.listingExternalName && (
-                  <TableCell sx={{ minWidth: 250 }}>
-                      <Typography 
-                        variant="body2" 
+                    <TableCell sx={{ minWidth: 250 }}>
+                      <Typography
+                        variant="body2"
                         sx={{ color: 'primary.main', cursor: 'pointer' }}
                         onClick={() => handleListingClick(review.listingId)}
                       >
-                      {review.listingExternalName}
-                    </Typography>
-                  </TableCell>
+                        {review.listingExternalName}
+                      </Typography>
+                    </TableCell>
                   )}
                   {visibleColumns.listingId && (
-                  <TableCell sx={{ minWidth: 100 }}>
-                    <Typography variant="body2">
-                      {review.listingId}
-                    </Typography>
-                  </TableCell>
+                    <TableCell sx={{ minWidth: 100 }}>
+                      <Typography variant="body2">{review.listingId}</Typography>
+                    </TableCell>
                   )}
                   {visibleColumns.channel && (
-                  <TableCell sx={{ minWidth: 100 }}>
+                    <TableCell sx={{ minWidth: 100 }}>
                       <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
                         <Box
                           sx={{
                             width: 8,
                             height: 8,
                             borderRadius: '50%',
-                            bgcolor: review.channel === 'Airbnb' ? 'error.main' : 'primary.main'
+                            bgcolor: review.channel === 'Airbnb' ? 'error.main' : 'primary.main',
                           }}
                         />
-                        <Typography variant="body2">
-                          {review.channel}
-                        </Typography>
+                        <Typography variant="body2">{review.channel}</Typography>
                       </Box>
-                  </TableCell>
+                    </TableCell>
                   )}
                   {visibleColumns.origin && (
-                  <TableCell sx={{ minWidth: 80 }}>
-                    <Typography variant="body2">
-                      {review.origin}
-                    </Typography>
-                  </TableCell>
+                    <TableCell sx={{ minWidth: 80 }}>
+                      <Typography variant="body2">{review.origin}</Typography>
+                    </TableCell>
                   )}
                   {visibleColumns.checkIn && (
-                  <TableCell sx={{ minWidth: 150 }}>
-                    <Typography variant="body2">
-                      {review.checkIn}
-                    </Typography>
-                  </TableCell>
+                    <TableCell sx={{ minWidth: 150 }}>
+                      <Typography variant="body2">{review.checkIn}</Typography>
+                    </TableCell>
                   )}
                   {visibleColumns.checkOut && (
-                  <TableCell sx={{ minWidth: 150 }}>
-                    <Typography variant="body2">
-                      {review.checkOut}
-                    </Typography>
-                  </TableCell>
+                    <TableCell sx={{ minWidth: 150 }}>
+                      <Typography variant="body2">{review.checkOut}</Typography>
+                    </TableCell>
                   )}
                   {visibleColumns.status && (
-                  <TableCell sx={{ minWidth: 120 }}>
+                    <TableCell sx={{ minWidth: 120 }}>
                       <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
                         {review.status === 'Published' ? (
                           <Box
@@ -592,7 +594,7 @@ export function ManageReviewsView() {
                               alignItems: 'center',
                               justifyContent: 'center',
                               color: 'white',
-                              fontSize: '12px'
+                              fontSize: '12px',
                             }}
                           >
                             ✓
@@ -603,32 +605,26 @@ export function ManageReviewsView() {
                               width: 16,
                               height: 16,
                               borderRadius: '50%',
-                              bgcolor: 'warning.main'
+                              bgcolor: 'warning.main',
                             }}
                           />
                         ) : null}
-                        <Typography variant="body2">
-                          {review.status}
-                        </Typography>
+                        <Typography variant="body2">{review.status}</Typography>
                       </Box>
-                  </TableCell>
+                    </TableCell>
                   )}
                   {visibleColumns.schedule && (
-                  <TableCell sx={{ minWidth: 120 }}>
-                    <Typography variant="body2">
-                        {review.schedule || '-'}
-                    </Typography>
-                  </TableCell>
+                    <TableCell sx={{ minWidth: 120 }}>
+                      <Typography variant="body2">{review.schedule || '-'}</Typography>
+                    </TableCell>
                   )}
                   {visibleColumns.triggerEvent && (
-                  <TableCell sx={{ minWidth: 150 }}>
-                    <Typography variant="body2">
-                        {review.triggerEvent || '-'}
-                    </Typography>
-                  </TableCell>
+                    <TableCell sx={{ minWidth: 150 }}>
+                      <Typography variant="body2">{review.triggerEvent || '-'}</Typography>
+                    </TableCell>
                   )}
                   {visibleColumns.overallReview && (
-                  <TableCell sx={{ minWidth: 300 }}>
+                    <TableCell sx={{ minWidth: 300 }}>
                       <Typography variant="body2" sx={{ maxWidth: 300 }}>
                         {review.overallReview}
                         {review.overallReview.includes('More') && (
@@ -640,11 +636,11 @@ export function ManageReviewsView() {
                     </TableCell>
                   )}
                   {visibleColumns.rating && (
-                  <TableCell sx={{ minWidth: 100 }}>
+                    <TableCell sx={{ minWidth: 100 }}>
                       <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
                         {renderStars(review.rating)}
-                    </Box>
-                  </TableCell>
+                      </Box>
+                    </TableCell>
                   )}
                 </TableRow>
               ))}
@@ -675,15 +671,15 @@ export function ManageReviewsView() {
         onClose={handleDownloadMenuClose}
       >
         <MenuItem onClick={handleDownloadMenuClose}>
-          <Iconify icon={"eva:file-text-fill" as any} sx={{ mr: 1 }} />
+          <Iconify icon={'eva:file-text-fill' as any} sx={{ mr: 1 }} />
           Export to Excel
         </MenuItem>
         <MenuItem onClick={handleDownloadMenuClose}>
-          <Iconify icon={"eva:file-pdf-fill" as any} sx={{ mr: 1 }} />
+          <Iconify icon={'eva:file-pdf-fill' as any} sx={{ mr: 1 }} />
           Export to PDF
         </MenuItem>
         <MenuItem onClick={handleDownloadMenuClose}>
-          <Iconify icon={"eva:file-csv-fill" as any} sx={{ mr: 1 }} />
+          <Iconify icon={'eva:file-csv-fill' as any} sx={{ mr: 1 }} />
           Export to CSV
         </MenuItem>
       </Menu>
@@ -709,7 +705,15 @@ export function ManageReviewsView() {
           <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
             Select which columns to display in the table
           </Typography>
-          <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1, maxHeight: 300, overflowY: 'auto' }}>
+          <Box
+            sx={{
+              display: 'flex',
+              flexDirection: 'column',
+              gap: 1,
+              maxHeight: 300,
+              overflowY: 'auto',
+            }}
+          >
             {Object.entries(visibleColumns).map(([key, value]) => {
               const columnLabels: { [key: string]: string } = {
                 guestName: 'Guest Name',
@@ -728,7 +732,7 @@ export function ManageReviewsView() {
                 overallReview: 'Overall Review',
                 rating: 'Rating',
               };
-              
+
               return (
                 <FormControlLabel
                   key={key}

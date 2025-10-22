@@ -49,22 +49,13 @@ export default function MessagesPage() {
           <List>
             {messages.map((msg) => (
               <ListItem key={msg.id} divider>
-                <Avatar sx={{ mr: 2 }}>
-                  {msg.sender.charAt(0)}
-                </Avatar>
+                <Avatar sx={{ mr: 2 }}>{msg.sender.charAt(0)}</Avatar>
                 <ListItemText
                   primary={
                     <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                      <Typography variant="subtitle2">
-                        {msg.sender}
-                      </Typography>
+                      <Typography variant="subtitle2">{msg.sender}</Typography>
                       {msg.unread && (
-                        <Chip 
-                          label="New" 
-                          size="small" 
-                          color="primary" 
-                          variant="filled"
-                        />
+                        <Chip label="New" size="small" color="primary" variant="filled" />
                       )}
                     </Box>
                   }

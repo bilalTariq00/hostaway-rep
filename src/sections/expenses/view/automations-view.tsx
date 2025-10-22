@@ -1,13 +1,5 @@
 import { useState } from 'react';
-import {
-  X,
-  Copy,
-  Info,
-  Play,
-  Filter,
-  Pencil,
-  Search,
-} from 'lucide-react';
+import { X, Copy, Info, Play, Filter, Pencil, Search } from 'lucide-react';
 
 import {
   Box,
@@ -76,13 +68,13 @@ export function AutomationsView() {
   const [searchTerm, setSearchTerm] = useState('');
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [actionMenuAnchor, setActionMenuAnchor] = useState<null | HTMLElement>(null);
-  
+
   // New state for automation management
   const [automations, setAutomations] = useState(mockAutomations);
   const [editingAutomation, setEditingAutomation] = useState<any>(null);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [automationToDelete, setAutomationToDelete] = useState<any>(null);
-  
+
   // Form data for sidebar
   const [formData, setFormData] = useState({
     type: 'Expense',
@@ -106,17 +98,17 @@ export function AutomationsView() {
 
   // Form handlers
   const handleInputChange = (field: string, value: any) => {
-    setFormData(prev => ({ ...prev, [field]: value }));
+    setFormData((prev) => ({ ...prev, [field]: value }));
   };
 
   const handleAmountChange = (delta: number) => {
-    setFormData(prev => ({ ...prev, amount: Math.max(0, prev.amount + delta) }));
+    setFormData((prev) => ({ ...prev, amount: Math.max(0, prev.amount + delta) }));
   };
 
   const handleCreateAutomation = () => {
     if (formData.name.trim()) {
       const newAutomation = {
-        id: Math.max(...automations.map(a => a.id)) + 1,
+        id: Math.max(...automations.map((a) => a.id)) + 1,
         name: formData.name,
         description: formData.description,
         trigger: `${formData.repeatEvery} ${formData.repeatPeriod}`,
@@ -127,14 +119,18 @@ export function AutomationsView() {
 
       if (editingAutomation) {
         if (editingAutomation.isDuplicating) {
-          setAutomations(prev => [...prev, newAutomation]);
+          setAutomations((prev) => [...prev, newAutomation]);
         } else {
-          setAutomations(prev => prev.map(automation => 
-            automation.id === editingAutomation.id ? { ...newAutomation, id: editingAutomation.id } : automation
-          ));
+          setAutomations((prev) =>
+            prev.map((automation) =>
+              automation.id === editingAutomation.id
+                ? { ...newAutomation, id: editingAutomation.id }
+                : automation
+            )
+          );
         }
       } else {
-        setAutomations(prev => [...prev, newAutomation]);
+        setAutomations((prev) => [...prev, newAutomation]);
       }
 
       setSidebarOpen(false);
@@ -229,7 +225,9 @@ export function AutomationsView() {
 
   const handleDeleteConfirm = () => {
     if (automationToDelete) {
-      setAutomations(prev => prev.filter(automation => automation.id !== automationToDelete.id));
+      setAutomations((prev) =>
+        prev.filter((automation) => automation.id !== automationToDelete.id)
+      );
     }
     setDeleteDialogOpen(false);
     setAutomationToDelete(null);
@@ -249,16 +247,19 @@ export function AutomationsView() {
   };
 
   const handleStatusToggle = (automationId: number) => {
-    setAutomations(prev => prev.map(automation => 
-      automation.id === automationId 
-        ? { ...automation, status: automation.status === 'Active' ? 'Inactive' : 'Active' }
-        : automation
-    ));
+    setAutomations((prev) =>
+      prev.map((automation) =>
+        automation.id === automationId
+          ? { ...automation, status: automation.status === 'Active' ? 'Inactive' : 'Active' }
+          : automation
+      )
+    );
   };
 
-  const filteredAutomations = automations.filter(automation =>
-    automation.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    automation.description.toLowerCase().includes(searchTerm.toLowerCase())
+  const filteredAutomations = automations.filter(
+    (automation) =>
+      automation.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      automation.description.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   const totalPages = Math.ceil(filteredAutomations.length / itemsPerPage);
@@ -357,18 +358,10 @@ export function AutomationsView() {
                     </Typography>
                   </TableCell>
                   <TableCell>
-                    <Chip
-                      label={automation.trigger}
-                      size="small"
-                      color="info"
-                    />
+                    <Chip label={automation.trigger} size="small" color="info" />
                   </TableCell>
                   <TableCell>
-                    <Chip
-                      label={automation.action}
-                      size="small"
-                      color="primary"
-                    />
+                    <Chip label={automation.action} size="small" color="primary" />
                   </TableCell>
                   <TableCell>
                     <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
@@ -391,29 +384,29 @@ export function AutomationsView() {
                   </TableCell>
                   <TableCell align="center">
                     <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
-                      <IconButton 
-                        size="small" 
+                      <IconButton
+                        size="small"
                         onClick={() => handleStatusToggle(automation.id)}
                         sx={{ '&:hover': { bgcolor: 'success.lighter' } }}
                       >
                         <Play size={16} />
                       </IconButton>
-                      <IconButton 
-                        size="small" 
+                      <IconButton
+                        size="small"
                         onClick={() => handleDuplicateAutomation(automation)}
                         sx={{ '&:hover': { bgcolor: 'primary.lighter' } }}
                       >
                         <Copy size={16} />
                       </IconButton>
-                      <IconButton 
-                        size="small" 
+                      <IconButton
+                        size="small"
                         onClick={() => handleEditAutomation(automation)}
                         sx={{ '&:hover': { bgcolor: 'primary.lighter' } }}
                       >
                         <Pencil size={16} />
                       </IconButton>
-                      <IconButton 
-                        size="small" 
+                      <IconButton
+                        size="small"
                         onClick={() => handleDeleteClick(automation)}
                         sx={{ '&:hover': { bgcolor: 'error.lighter' } }}
                       >
@@ -457,7 +450,11 @@ export function AutomationsView() {
       >
         <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 3 }}>
           <Typography variant="h6" sx={{ fontWeight: 600 }}>
-            {editingAutomation?.isDuplicating ? 'Duplicate automation' : editingAutomation ? 'Edit automation' : 'Add new automation'}
+            {editingAutomation?.isDuplicating
+              ? 'Duplicate automation'
+              : editingAutomation
+                ? 'Edit automation'
+                : 'Add new automation'}
           </Typography>
           <IconButton onClick={handleSidebarClose}>
             <X size={20} />
@@ -500,7 +497,7 @@ export function AutomationsView() {
 
           <FormControl fullWidth>
             <InputLabel>Categories</InputLabel>
-            <Select 
+            <Select
               label="Categories"
               value={formData.categories}
               onChange={(e) => handleInputChange('categories', e.target.value)}
@@ -513,9 +510,11 @@ export function AutomationsView() {
           </FormControl>
 
           <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-            <Typography variant="body2" sx={{ minWidth: 60 }}>Amount *</Typography>
-            <IconButton 
-              size="small" 
+            <Typography variant="body2" sx={{ minWidth: 60 }}>
+              Amount *
+            </Typography>
+            <IconButton
+              size="small"
               onClick={() => handleAmountChange(-1)}
               sx={{ border: '1px solid', borderColor: 'divider' }}
             >
@@ -531,7 +530,9 @@ export function AutomationsView() {
           </Box>
 
           <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-            <Typography variant="body2" sx={{ minWidth: 100 }}>Repeat every *</Typography>
+            <Typography variant="body2" sx={{ minWidth: 100 }}>
+              Repeat every *
+            </Typography>
             <TextField
               size="small"
               type="number"
@@ -540,7 +541,7 @@ export function AutomationsView() {
               sx={{ width: 80 }}
             />
             <FormControl sx={{ minWidth: 120 }}>
-              <Select 
+              <Select
                 value={formData.repeatPeriod}
                 onChange={(e) => handleInputChange('repeatPeriod', e.target.value)}
                 size="small"
@@ -554,7 +555,9 @@ export function AutomationsView() {
           </Box>
 
           <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-            <Typography variant="body2" sx={{ minWidth: 100 }}>Repeat on *</Typography>
+            <Typography variant="body2" sx={{ minWidth: 100 }}>
+              Repeat on *
+            </Typography>
             <TextField
               size="small"
               type="number"
@@ -569,7 +572,10 @@ export function AutomationsView() {
           </Box>
 
           <Box>
-            <Typography variant="body2" sx={{ mb: 1, display: 'flex', alignItems: 'center', gap: 1 }}>
+            <Typography
+              variant="body2"
+              sx={{ mb: 1, display: 'flex', alignItems: 'center', gap: 1 }}
+            >
               Expense applies to
               <Info size={16} color="#666" />
             </Typography>
@@ -584,7 +590,7 @@ export function AutomationsView() {
 
           <FormControl fullWidth>
             <InputLabel>Listing(s)</InputLabel>
-            <Select 
+            <Select
               label="Listing(s)"
               value={formData.listings}
               onChange={(e) => handleInputChange('listings', e.target.value)}
@@ -597,11 +603,7 @@ export function AutomationsView() {
           </FormControl>
 
           <Box sx={{ display: 'flex', gap: 2, mt: 4 }}>
-            <Button
-              fullWidth
-              variant="outlined"
-              onClick={handleSidebarClose}
-            >
+            <Button fullWidth variant="outlined" onClick={handleSidebarClose}>
               Cancel
             </Button>
             <Button
@@ -610,7 +612,11 @@ export function AutomationsView() {
               onClick={handleCreateAutomation}
               sx={{ bgcolor: 'primary.main', '&:hover': { bgcolor: 'primary.dark' } }}
             >
-              {editingAutomation?.isDuplicating ? 'Duplicate' : editingAutomation ? 'Update' : 'Create'}
+              {editingAutomation?.isDuplicating
+                ? 'Duplicate'
+                : editingAutomation
+                  ? 'Update'
+                  : 'Create'}
             </Button>
           </Box>
         </Box>
@@ -621,7 +627,8 @@ export function AutomationsView() {
         <DialogTitle>Delete Automation</DialogTitle>
         <DialogContent>
           <Typography>
-            Are you sure you want to delete &quot;{automationToDelete?.name}&quot;? This action cannot be undone.
+            Are you sure you want to delete &quot;{automationToDelete?.name}&quot;? This action
+            cannot be undone.
           </Typography>
         </DialogContent>
         <DialogActions>

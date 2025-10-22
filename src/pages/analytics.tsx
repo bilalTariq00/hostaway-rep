@@ -29,54 +29,78 @@ export default function AnalyticsPage() {
 
   // Mock data for invoices
   const invoiceData = [
-    { id: 'INV-1990', category: 'Android', price: '$83.74', status: 'Paid', statusColor: 'success' },
-    { id: 'INV-1991', category: 'Mac', price: '$97.14', status: 'Out of date', statusColor: 'error' },
-    { id: 'INV-1992', category: 'Windows', price: '$68.71', status: 'Progress', statusColor: 'warning' },
-    { id: 'INV-1993', category: 'Android', price: '$85.21', status: 'Paid', statusColor: 'success' },
+    {
+      id: 'INV-1990',
+      category: 'Android',
+      price: '$83.74',
+      status: 'Paid',
+      statusColor: 'success',
+    },
+    {
+      id: 'INV-1991',
+      category: 'Mac',
+      price: '$97.14',
+      status: 'Out of date',
+      statusColor: 'error',
+    },
+    {
+      id: 'INV-1992',
+      category: 'Windows',
+      price: '$68.71',
+      status: 'Progress',
+      statusColor: 'warning',
+    },
+    {
+      id: 'INV-1993',
+      category: 'Android',
+      price: '$85.21',
+      status: 'Paid',
+      statusColor: 'success',
+    },
     { id: 'INV-1994', category: 'Mac', price: '$52.17', status: 'Paid', statusColor: 'success' },
   ];
 
   // Mock data for applications
   const applicationData = [
-    { 
-      name: 'Microsoft office 365', 
-      icon: '📊', 
-      price: 'Free', 
-      downloads: '9.91k', 
-      size: '9.68 Mb', 
-      rating: '4.8' 
+    {
+      name: 'Microsoft office 365',
+      icon: '📊',
+      price: 'Free',
+      downloads: '9.91k',
+      size: '9.68 Mb',
+      rating: '4.8',
     },
-    { 
-      name: 'Opera', 
-      icon: '🔴', 
-      price: 'Free', 
-      downloads: '8.12k', 
-      size: '8.45 Mb', 
-      rating: '4.6' 
+    {
+      name: 'Opera',
+      icon: '🔴',
+      price: 'Free',
+      downloads: '8.12k',
+      size: '8.45 Mb',
+      rating: '4.6',
     },
-    { 
-      name: 'Adobe acrobat reader DC', 
-      icon: '🔴', 
-      price: '$68.71', 
-      downloads: '9.12k', 
-      size: '8.91 Mb', 
-      rating: '4.7' 
+    {
+      name: 'Adobe acrobat reader DC',
+      icon: '🔴',
+      price: '$68.71',
+      downloads: '9.12k',
+      size: '8.91 Mb',
+      rating: '4.7',
     },
-    { 
-      name: 'Joplin', 
-      icon: '🔵', 
-      price: 'Free', 
-      downloads: '6.98k', 
-      size: '6.82 Mb', 
-      rating: '4.5' 
+    {
+      name: 'Joplin',
+      icon: '🔵',
+      price: 'Free',
+      downloads: '6.98k',
+      size: '6.82 Mb',
+      rating: '4.5',
     },
-    { 
-      name: 'Topaz photo AI', 
-      icon: '💎', 
-      price: '$52.17', 
-      downloads: '8.49k', 
-      size: '8.29 Mb', 
-      rating: '4.9' 
+    {
+      name: 'Topaz photo AI',
+      icon: '💎',
+      price: '$52.17',
+      downloads: '8.49k',
+      size: '8.29 Mb',
+      rating: '4.9',
     },
   ];
 
@@ -131,8 +155,8 @@ export default function AnalyticsPage() {
                         <TableCell>{invoice.category}</TableCell>
                         <TableCell>{invoice.price}</TableCell>
                         <TableCell>
-                          <Chip 
-                            label={invoice.status} 
+                          <Chip
+                            label={invoice.status}
                             color={invoice.statusColor as any}
                             size="small"
                             sx={{ borderRadius: 2 }}
@@ -166,13 +190,11 @@ export default function AnalyticsPage() {
                   <Tab label="Top 30 days" />
                   <Tab label="All times" />
                 </Tabs>
-                
+
                 <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
                   {applicationData.map((app, index) => (
                     <Box key={index} sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-                      <Avatar sx={{ width: 40, height: 40, fontSize: '1.2rem' }}>
-                        {app.icon}
-                      </Avatar>
+                      <Avatar sx={{ width: 40, height: 40, fontSize: '1.2rem' }}>{app.icon}</Avatar>
                       <Box sx={{ flex: 1 }}>
                         <Typography variant="body2" sx={{ fontWeight: 500 }}>
                           {app.name}
@@ -187,7 +209,14 @@ export default function AnalyticsPage() {
                           <Typography variant="caption">{app.downloads}</Typography>
                         </Box>
                         <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
-                          <Box sx={{ width: 8, height: 8, backgroundColor: 'grey.400', borderRadius: 1 }} />
+                          <Box
+                            sx={{
+                              width: 8,
+                              height: 8,
+                              backgroundColor: 'grey.400',
+                              borderRadius: 1,
+                            }}
+                          />
                           <Typography variant="caption">{app.size}</Typography>
                         </Box>
                         <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
@@ -236,9 +265,7 @@ export default function AnalyticsPage() {
                 <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
                   {authorData.map((author, index) => (
                     <Box key={index} sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-                      <Avatar sx={{ width: 32, height: 32 }}>
-                        {author.avatar}
-                      </Avatar>
+                      <Avatar sx={{ width: 32, height: 32 }}>{author.avatar}</Avatar>
                       <Typography variant="body2" sx={{ flex: 1 }}>
                         {author.name}
                       </Typography>
@@ -258,8 +285,23 @@ export default function AnalyticsPage() {
           <Grid size={{ xs: 12, md: 4 }}>
             <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2, height: '100%' }}>
               {/* Conversion Card */}
-              <Card sx={{ flex: 1, background: 'linear-gradient(135deg, #4caf50 0%, #2e7d32 100%)', color: 'white' }}>
-                <CardContent sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', height: '100%', position: 'relative' }}>
+              <Card
+                sx={{
+                  flex: 1,
+                  background: 'linear-gradient(135deg, #4caf50 0%, #2e7d32 100%)',
+                  color: 'white',
+                }}
+              >
+                <CardContent
+                  sx={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    height: '100%',
+                    position: 'relative',
+                  }}
+                >
                   <Box sx={{ position: 'absolute', top: 16, right: 16, opacity: 0.1 }}>
                     <Calendar size={40} />
                   </Box>
@@ -268,11 +310,11 @@ export default function AnalyticsPage() {
                     value={48}
                     size={80}
                     thickness={4}
-                    sx={{ 
+                    sx={{
                       color: 'rgba(255,255,255,0.3)',
                       '& .MuiCircularProgress-circle': {
                         strokeLinecap: 'round',
-                      }
+                      },
                     }}
                   />
                   <Typography variant="h3" sx={{ mt: 2, fontWeight: 700 }}>
@@ -285,8 +327,23 @@ export default function AnalyticsPage() {
               </Card>
 
               {/* Applications Card */}
-              <Card sx={{ flex: 1, background: 'linear-gradient(135deg, #2196f3 0%, #1565c0 100%)', color: 'white' }}>
-                <CardContent sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', height: '100%', position: 'relative' }}>
+              <Card
+                sx={{
+                  flex: 1,
+                  background: 'linear-gradient(135deg, #2196f3 0%, #1565c0 100%)',
+                  color: 'white',
+                }}
+              >
+                <CardContent
+                  sx={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    height: '100%',
+                    position: 'relative',
+                  }}
+                >
                   <Box sx={{ position: 'absolute', top: 16, right: 16, opacity: 0.1 }}>
                     <MessageSquare size={40} />
                   </Box>
@@ -295,11 +352,11 @@ export default function AnalyticsPage() {
                     value={75}
                     size={80}
                     thickness={4}
-                    sx={{ 
+                    sx={{
                       color: 'rgba(255,255,255,0.3)',
                       '& .MuiCircularProgress-circle': {
                         strokeLinecap: 'round',
-                      }
+                      },
                     }}
                   />
                   <Typography variant="h3" sx={{ mt: 2, fontWeight: 700 }}>

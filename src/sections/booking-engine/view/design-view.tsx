@@ -61,7 +61,7 @@ export function DesignView() {
         <Typography variant="h4" sx={{ fontWeight: 600, mb: 2 }}>
           Booking Engine
         </Typography>
-        
+
         <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 3 }}>
           <Typography variant="body1" color="text.secondary">
             Your Webpage is published on Domusferiae.holdayfuture.com
@@ -90,7 +90,10 @@ export function DesignView() {
         <Box sx={{ flex: 1, maxWidth: 400 }}>
           <Card sx={{ mb: 3 }}>
             <CardContent>
-              <Typography variant="h6" sx={{ fontWeight: 600, mb: 2, display: 'flex', alignItems: 'center', gap: 1 }}>
+              <Typography
+                variant="h6"
+                sx={{ fontWeight: 600, mb: 2, display: 'flex', alignItems: 'center', gap: 1 }}
+              >
                 <Upload size={20} />
                 Background Image
               </Typography>
@@ -102,7 +105,10 @@ export function DesignView() {
 
           <Card sx={{ mb: 3 }}>
             <CardContent>
-              <Typography variant="h6" sx={{ fontWeight: 600, mb: 2, display: 'flex', alignItems: 'center', gap: 1 }}>
+              <Typography
+                variant="h6"
+                sx={{ fontWeight: 600, mb: 2, display: 'flex', alignItems: 'center', gap: 1 }}
+              >
                 <SettingsIcon size={20} />
                 Search Bar Settings
               </Typography>
@@ -120,7 +126,10 @@ export function DesignView() {
 
           <Card sx={{ mb: 3 }}>
             <CardContent>
-              <Typography variant="h6" sx={{ fontWeight: 600, mb: 2, display: 'flex', alignItems: 'center', gap: 1 }}>
+              <Typography
+                variant="h6"
+                sx={{ fontWeight: 600, mb: 2, display: 'flex', alignItems: 'center', gap: 1 }}
+              >
                 <Palette size={20} />
                 Colors
               </Typography>
@@ -140,11 +149,7 @@ export function DesignView() {
                         borderColor: 'divider',
                       }}
                     />
-                    <TextField
-                      size="small"
-                      value={field.value}
-                      sx={{ flex: 1 }}
-                    />
+                    <TextField size="small" value={field.value} sx={{ flex: 1 }} />
                   </Box>
                 </Box>
               ))}
@@ -153,7 +158,10 @@ export function DesignView() {
 
           <Card sx={{ mb: 3 }}>
             <CardContent>
-              <Typography variant="h6" sx={{ fontWeight: 600, mb: 2, display: 'flex', alignItems: 'center', gap: 1 }}>
+              <Typography
+                variant="h6"
+                sx={{ fontWeight: 600, mb: 2, display: 'flex', alignItems: 'center', gap: 1 }}
+              >
                 <Type size={20} />
                 Font Options
               </Typography>
@@ -190,7 +198,10 @@ export function DesignView() {
 
           <Card>
             <CardContent>
-              <Typography variant="h6" sx={{ fontWeight: 600, mb: 2, display: 'flex', alignItems: 'center', gap: 1 }}>
+              <Typography
+                variant="h6"
+                sx={{ fontWeight: 600, mb: 2, display: 'flex', alignItems: 'center', gap: 1 }}
+              >
                 <SettingsIcon size={20} />
                 Elements
               </Typography>
@@ -221,8 +232,18 @@ export function DesignView() {
         <Box sx={{ flex: 1 }}>
           <Card sx={{ height: 'fit-content', position: 'sticky', top: 20 }}>
             <CardContent>
-              <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
-                <Typography variant="h6" sx={{ fontWeight: 600, display: 'flex', alignItems: 'center', gap: 1 }}>
+              <Box
+                sx={{
+                  display: 'flex',
+                  justifyContent: 'space-between',
+                  alignItems: 'center',
+                  mb: 2,
+                }}
+              >
+                <Typography
+                  variant="h6"
+                  sx={{ fontWeight: 600, display: 'flex', alignItems: 'center', gap: 1 }}
+                >
                   <Eye size={20} />
                   Preview
                 </Typography>
@@ -235,7 +256,7 @@ export function DesignView() {
                   View Live
                 </Button>
               </Box>
-              
+
               {/* Preview Content */}
               <Box
                 sx={{

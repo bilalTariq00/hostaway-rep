@@ -109,7 +109,6 @@ export function CustomFieldsView() {
     router.push('/tasks/manage-tasks');
   };
 
-
   const handleAddCustomField = () => {
     setIsEditMode(false);
     setFormData({
@@ -132,7 +131,6 @@ export function CustomFieldsView() {
     });
     setSidebarOpen(true);
   };
-
 
   const handleDeleteConfirm = () => {
     if (selectedField) {
@@ -161,28 +159,28 @@ export function CustomFieldsView() {
   };
 
   const handleFormChange = (field: string, value: any) => {
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
       [field]: value,
     }));
   };
 
   const handleAddOption = () => {
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
       options: [...prev.options, ''],
     }));
   };
 
   const handleOptionChange = (index: number, value: string) => {
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
-      options: prev.options.map((option, i) => i === index ? value : option),
+      options: prev.options.map((option, i) => (i === index ? value : option)),
     }));
   };
 
   const handleRemoveOption = (index: number) => {
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
       options: prev.options.filter((_, i) => i !== index),
     }));
@@ -198,7 +196,7 @@ export function CustomFieldsView() {
               name: formData.name,
               type: formData.type,
               public: formData.public,
-              options: formData.options.filter(option => option.trim() !== ''),
+              options: formData.options.filter((option) => option.trim() !== ''),
             }
           : field
       );
@@ -211,14 +209,14 @@ export function CustomFieldsView() {
         name: formData.name,
         type: formData.type,
         public: formData.public,
-        options: formData.options.filter(option => option.trim() !== ''),
+        options: formData.options.filter((option) => option.trim() !== ''),
         createdAt: new Date().toISOString().split('T')[0],
       };
       const updatedFields = [...customFields, newField];
       localStorage.setItem('customFields', JSON.stringify(updatedFields));
       setCustomFields(updatedFields);
     }
-    
+
     handleSidebarClose();
   };
 
@@ -230,7 +228,7 @@ export function CustomFieldsView() {
     setCustomFields(updatedFields);
   };
 
-  const filteredFields = customFields.filter(field =>
+  const filteredFields = customFields.filter((field) =>
     field.name.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
@@ -245,7 +243,7 @@ export function CustomFieldsView() {
       <Box sx={{ mb: 3 }}>
         <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2 }}>
           <IconButton onClick={handleBackToTasks}>
-            <Iconify icon={"eva:arrow-back-fill" as any} />
+            <Iconify icon={'eva:arrow-back-fill' as any} />
           </IconButton>
           <Typography variant="h4" sx={{ fontWeight: 600 }}>
             Custom Fields
@@ -261,7 +259,7 @@ export function CustomFieldsView() {
             InputProps={{
               startAdornment: (
                 <InputAdornment position="start">
-                  <Iconify icon={"eva:search-fill" as any} />
+                  <Iconify icon={'eva:search-fill' as any} />
                 </InputAdornment>
               ),
             }}
@@ -295,9 +293,7 @@ export function CustomFieldsView() {
                     </Typography>
                   </TableCell>
                   <TableCell>
-                    <Typography variant="body2">
-                      {field.type}
-                    </Typography>
+                    <Typography variant="body2">{field.type}</Typography>
                   </TableCell>
                   <TableCell>
                     <Switch
@@ -310,13 +306,17 @@ export function CustomFieldsView() {
                     {field.options.length > 0 ? (
                       <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
                         {field.options.slice(0, 2).map((option: string, index: number) => (
-                          <Typography key={index} variant="caption" sx={{ 
-                            bgcolor: 'grey.100', 
-                            px: 1, 
-                            py: 0.5, 
-                            borderRadius: 1,
-                            fontSize: '0.75rem'
-                          }}>
+                          <Typography
+                            key={index}
+                            variant="caption"
+                            sx={{
+                              bgcolor: 'grey.100',
+                              px: 1,
+                              py: 0.5,
+                              borderRadius: 1,
+                              fontSize: '0.75rem',
+                            }}
+                          >
                             {option}
                           </Typography>
                         ))}
@@ -339,20 +339,17 @@ export function CustomFieldsView() {
                   </TableCell>
                   <TableCell align="center">
                     <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
-                      <IconButton 
-                        size="small" 
-                        onClick={() => handleEditField(field)}
-                      >
-                        <Iconify icon={"eva:edit-fill" as any} width={16} />
+                      <IconButton size="small" onClick={() => handleEditField(field)}>
+                        <Iconify icon={'eva:edit-fill' as any} width={16} />
                       </IconButton>
-                      <IconButton 
-                        size="small" 
+                      <IconButton
+                        size="small"
                         onClick={() => {
                           setSelectedField(field);
                           setDeleteDialogOpen(true);
                         }}
                       >
-                        <Iconify icon={"eva:trash-2-fill" as any} width={16} />
+                        <Iconify icon={'eva:trash-2-fill' as any} width={16} />
                       </IconButton>
                     </Box>
                   </TableCell>
@@ -395,7 +392,7 @@ export function CustomFieldsView() {
             {isEditMode ? 'Edit Custom Field' : 'Add Custom Field'}
           </Typography>
           <IconButton onClick={handleSidebarClose}>
-            <Iconify icon={"eva:close-fill" as any} />
+            <Iconify icon={'eva:close-fill' as any} />
           </IconButton>
         </Box>
 
@@ -410,7 +407,7 @@ export function CustomFieldsView() {
 
           <FormControl fullWidth>
             <InputLabel>Field Type</InputLabel>
-            <Select 
+            <Select
               label="Field Type"
               value={formData.type}
               onChange={(e) => handleFormChange('type', e.target.value)}
@@ -429,7 +426,7 @@ export function CustomFieldsView() {
 
           <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
             <Typography variant="body2">Public Field</Typography>
-            <Switch 
+            <Switch
               checked={formData.public}
               onChange={(e) => handleFormChange('public', e.target.checked)}
             />
@@ -448,19 +445,19 @@ export function CustomFieldsView() {
                   value={option}
                   onChange={(e) => handleOptionChange(index, e.target.value)}
                 />
-                <IconButton 
-                  size="small" 
+                <IconButton
+                  size="small"
                   onClick={() => handleRemoveOption(index)}
                   sx={{ color: 'error.main' }}
                 >
-                  <Iconify icon={"eva:close-fill" as any} width={16} />
+                  <Iconify icon={'eva:close-fill' as any} width={16} />
                 </IconButton>
               </Box>
             ))}
-            <Button 
-              variant="outlined" 
-              size="small" 
-              startIcon={<Iconify icon={"eva:plus-fill" as any} />}
+            <Button
+              variant="outlined"
+              size="small"
+              startIcon={<Iconify icon={'eva:plus-fill' as any} />}
               onClick={handleAddOption}
             >
               Add Option
@@ -468,18 +465,10 @@ export function CustomFieldsView() {
           </Box>
 
           <Box sx={{ display: 'flex', gap: 2, mt: 4 }}>
-            <Button
-              fullWidth
-              variant="outlined"
-              onClick={handleSidebarClose}
-            >
+            <Button fullWidth variant="outlined" onClick={handleSidebarClose}>
               Cancel
             </Button>
-            <Button
-              fullWidth
-              variant="contained"
-              onClick={handleSaveField}
-            >
+            <Button fullWidth variant="contained" onClick={handleSaveField}>
               {isEditMode ? 'Update Field' : 'Add Field'}
             </Button>
           </Box>
@@ -491,7 +480,8 @@ export function CustomFieldsView() {
         <DialogTitle>Delete Custom Field?</DialogTitle>
         <DialogContent>
           <Typography>
-            Are you sure you want to delete &quot;{selectedField?.name}&quot;? This action cannot be undone.
+            Are you sure you want to delete &quot;{selectedField?.name}&quot;? This action cannot be
+            undone.
           </Typography>
         </DialogContent>
         <DialogActions>
@@ -504,4 +494,3 @@ export function CustomFieldsView() {
     </DashboardContent>
   );
 }
-

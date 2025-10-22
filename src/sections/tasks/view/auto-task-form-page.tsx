@@ -1,12 +1,6 @@
 import { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import {
-  X,
-  Info,
-  Plus,
-  Save,
-  ArrowLeft,
-} from 'lucide-react';
+import { X, Info, Plus, Save, ArrowLeft } from 'lucide-react';
 
 import {
   Box,
@@ -49,7 +43,7 @@ export function AutoTaskFormPage() {
   const navigate = useNavigate();
   const isEdit = Boolean(id);
   const isDuplicate = window.location.pathname.includes('/duplicate');
-  
+
   // Load existing auto-tasks from localStorage
   const loadAutoTasks = () => {
     const tasksData = localStorage.getItem('autoTasks');
@@ -58,38 +52,41 @@ export function AutoTaskFormPage() {
     }
     return [];
   };
-  
+
   const existingTasks = loadAutoTasks();
   const foundAutoTask = existingTasks.find((task: any) => task.id === parseInt(id || '0'));
-  
-  const initialData = isEdit && foundAutoTask ? {
-    title: foundAutoTask.name || '',
-    event: foundAutoTask.startingEvent || 'Check-in',
-    startsAtValue: 0,
-    startsAtUnit: 'Hours',
-    startsAtTiming: 'At',
-    startsAtEvent: foundAutoTask.startingEvent || 'Check-in',
-    shouldEndByValue: 0,
-    shouldEndByUnit: 'Hours',
-    shouldEndByTiming: 'At',
-    shouldEndByEvent: 'Check-out',
-    description: foundAutoTask.description || '',
-    checklistTemplate: 'Checklist template',
-    attachments: [],
-    addAutomaticallyNewListings: false,
-    active: foundAutoTask.status === 'Active',
-    assignee: 'Assignee user',
-    supervisor: 'Supervisor user',
-    group: 'User group',
-    category: '',
-    channel: foundAutoTask.linkedChannel || 'Channel',
-    cost: '',
-    costCurrency: 'Cost currency',
-    costDescription: '',
-    autoGenerateExpense: false,
-    createTasksForExistingReservations: true,
-    selectedListings: [],
-  } : {};
+
+  const initialData =
+    isEdit && foundAutoTask
+      ? {
+          title: foundAutoTask.name || '',
+          event: foundAutoTask.startingEvent || 'Check-in',
+          startsAtValue: 0,
+          startsAtUnit: 'Hours',
+          startsAtTiming: 'At',
+          startsAtEvent: foundAutoTask.startingEvent || 'Check-in',
+          shouldEndByValue: 0,
+          shouldEndByUnit: 'Hours',
+          shouldEndByTiming: 'At',
+          shouldEndByEvent: 'Check-out',
+          description: foundAutoTask.description || '',
+          checklistTemplate: 'Checklist template',
+          attachments: [],
+          addAutomaticallyNewListings: false,
+          active: foundAutoTask.status === 'Active',
+          assignee: 'Assignee user',
+          supervisor: 'Supervisor user',
+          group: 'User group',
+          category: '',
+          channel: foundAutoTask.linkedChannel || 'Channel',
+          cost: '',
+          costCurrency: 'Cost currency',
+          costDescription: '',
+          autoGenerateExpense: false,
+          createTasksForExistingReservations: true,
+          selectedListings: [],
+        }
+      : {};
 
   const [formData, setFormData] = useState({
     title: initialData.title || '',
@@ -117,7 +114,7 @@ export function AutoTaskFormPage() {
     costDescription: initialData.costDescription || '',
     autoGenerateExpense: initialData.autoGenerateExpense || false,
     createTasksForExistingReservations: initialData.createTasksForExistingReservations || true,
-    selectedListings: initialData.selectedListings || [] as string[],
+    selectedListings: initialData.selectedListings || ([] as string[]),
   });
 
   const [listingSearch, setListingSearch] = useState('');
@@ -132,24 +129,24 @@ export function AutoTaskFormPage() {
       ...prev,
       selectedListings: prev.selectedListings.includes(listingId)
         ? prev.selectedListings.filter((itemId: string) => itemId !== listingId)
-        : [...prev.selectedListings, listingId]
+        : [...prev.selectedListings, listingId],
     }));
   };
 
   const handleSelectAllListings = () => {
-    const allListingIds = mockListings.map(listing => listing.id);
+    const allListingIds = mockListings.map((listing) => listing.id);
     setFormData((prev) => ({
       ...prev,
-      selectedListings: prev.selectedListings.length === allListingIds.length ? [] : allListingIds
+      selectedListings: prev.selectedListings.length === allListingIds.length ? [] : allListingIds,
     }));
   };
 
   const handleSaveAutoTask = () => {
     console.log('Saving auto-task:', formData);
-    
+
     // Get existing auto-tasks from localStorage or use mock data
     const tasksData = JSON.parse(localStorage.getItem('autoTasks') || '[]');
-    
+
     if (isDuplicate) {
       // Create a new auto-task with the duplicated data
       const newAutoTask = {
@@ -158,25 +155,33 @@ export function AutoTaskFormPage() {
         startingEvent: formData.event,
         dueBefore: `${formData.shouldEndByValue} ${formData.shouldEndByUnit.toLowerCase()}`,
         linkedChannel: formData.channel,
-        linkedListing: formData.selectedListings.length > 0 ? mockListings.find(l => l.id === formData.selectedListings[0])?.name || 'Multiple Listings' : 'No Listing',
+        linkedListing:
+          formData.selectedListings.length > 0
+            ? mockListings.find((l) => l.id === formData.selectedListings[0])?.name ||
+              'Multiple Listings'
+            : 'No Listing',
         status: formData.active ? 'Active' : 'Inactive',
         description: formData.description,
       };
-      
+
       const updatedAutoTasks = [...tasksData, newAutoTask];
       localStorage.setItem('autoTasks', JSON.stringify(updatedAutoTasks));
       console.log('Created duplicate auto-task:', newAutoTask);
     } else if (isEdit && id) {
       // Update existing auto-task
-      const updatedAutoTasks = tasksData.map((task: any) => 
-        task.id === parseInt(id) 
+      const updatedAutoTasks = tasksData.map((task: any) =>
+        task.id === parseInt(id)
           ? {
               ...task,
               name: formData.title,
               startingEvent: formData.event,
               dueBefore: `${formData.shouldEndByValue} ${formData.shouldEndByUnit.toLowerCase()}`,
               linkedChannel: formData.channel,
-              linkedListing: formData.selectedListings.length > 0 ? mockListings.find(l => l.id === formData.selectedListings[0])?.name || 'Multiple Listings' : 'No Listing',
+              linkedListing:
+                formData.selectedListings.length > 0
+                  ? mockListings.find((l) => l.id === formData.selectedListings[0])?.name ||
+                    'Multiple Listings'
+                  : 'No Listing',
               status: formData.active ? 'Active' : 'Inactive',
               description: formData.description,
             }
@@ -192,27 +197,34 @@ export function AutoTaskFormPage() {
         startingEvent: formData.event,
         dueBefore: `${formData.shouldEndByValue} ${formData.shouldEndByUnit.toLowerCase()}`,
         linkedChannel: formData.channel,
-        linkedListing: formData.selectedListings.length > 0 ? mockListings.find(l => l.id === formData.selectedListings[0])?.name || 'Multiple Listings' : 'No Listing',
+        linkedListing:
+          formData.selectedListings.length > 0
+            ? mockListings.find((l) => l.id === formData.selectedListings[0])?.name ||
+              'Multiple Listings'
+            : 'No Listing',
         status: formData.active ? 'Active' : 'Inactive',
         description: formData.description,
       };
-      
+
       const updatedAutoTasks = [...tasksData, newAutoTask];
       localStorage.setItem('autoTasks', JSON.stringify(updatedAutoTasks));
       console.log('Created new auto-task:', newAutoTask);
     }
-    
+
     navigate('/tasks/manage-auto-tasks');
   };
 
-  const filteredListings = mockListings.filter(listing =>
+  const filteredListings = mockListings.filter((listing) =>
     listing.name.toLowerCase().includes(listingSearch.toLowerCase())
   );
 
   return (
     <DashboardContent maxWidth="xl">
       <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 3 }}>
-        <Button startIcon={<ArrowLeft size={16} />} onClick={() => navigate('/tasks/manage-auto-tasks')}>
+        <Button
+          startIcon={<ArrowLeft size={16} />}
+          onClick={() => navigate('/tasks/manage-auto-tasks')}
+        >
           Back to auto-tasks
         </Button>
         <Button variant="contained" onClick={handleSaveAutoTask} startIcon={<Save size={16} />}>
@@ -239,7 +251,7 @@ export function AutoTaskFormPage() {
             <Typography variant="h6" sx={{ fontWeight: 600, mb: 2 }}>
               Schedule
             </Typography>
-            
+
             {/* Event */}
             <Box sx={{ mb: 3 }}>
               <Typography variant="body2" sx={{ mb: 1, fontWeight: 500 }}>
@@ -276,7 +288,9 @@ export function AutoTaskFormPage() {
                 <TextField
                   type="number"
                   value={formData.startsAtValue}
-                  onChange={(e) => handleInputChange('startsAtValue', parseInt(e.target.value) || 0)}
+                  onChange={(e) =>
+                    handleInputChange('startsAtValue', parseInt(e.target.value) || 0)
+                  }
                   sx={{ width: 80 }}
                 />
                 <Box sx={{ display: 'flex', gap: 0.5 }}>
@@ -335,7 +349,9 @@ export function AutoTaskFormPage() {
                 <TextField
                   type="number"
                   value={formData.shouldEndByValue}
-                  onChange={(e) => handleInputChange('shouldEndByValue', parseInt(e.target.value) || 0)}
+                  onChange={(e) =>
+                    handleInputChange('shouldEndByValue', parseInt(e.target.value) || 0)
+                  }
                   sx={{ width: 80 }}
                 />
                 <Box sx={{ display: 'flex', gap: 0.5 }}>
@@ -447,7 +463,7 @@ export function AutoTaskFormPage() {
                 <Info size={16} />
               </Tooltip>
             </Box>
-            
+
             <TextField
               fullWidth
               placeholder="Type to search listing..."
@@ -455,7 +471,7 @@ export function AutoTaskFormPage() {
               onChange={(e) => setListingSearch(e.target.value)}
               sx={{ mb: 2 }}
             />
-            
+
             <FormControl fullWidth sx={{ mb: 2 }}>
               <InputLabel>Select tags</InputLabel>
               <Select
@@ -470,12 +486,18 @@ export function AutoTaskFormPage() {
                 <MenuItem value="business">Business</MenuItem>
               </Select>
             </FormControl>
-            
+
             <Button variant="contained" onClick={handleSelectAllListings} sx={{ mb: 2 }}>
               Select all
             </Button>
-            
-            <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: 2 }}>
+
+            <Box
+              sx={{
+                display: 'grid',
+                gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))',
+                gap: 2,
+              }}
+            >
               {filteredListings.map((listing) => (
                 <Card key={listing.id} sx={{ position: 'relative' }}>
                   <CardContent sx={{ p: 2 }}>
@@ -659,7 +681,9 @@ export function AutoTaskFormPage() {
               control={
                 <Checkbox
                   checked={formData.createTasksForExistingReservations}
-                  onChange={(e) => handleInputChange('createTasksForExistingReservations', e.target.checked)}
+                  onChange={(e) =>
+                    handleInputChange('createTasksForExistingReservations', e.target.checked)
+                  }
                 />
               }
               label="Create tasks from this auto-task for existing reservations"

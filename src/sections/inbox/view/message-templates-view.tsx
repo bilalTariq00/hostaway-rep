@@ -86,7 +86,7 @@ export function MessageTemplatesView() {
       const parsedTemplates = JSON.parse(savedTemplates);
       // Sort by ID (which is timestamp) to show newest first
       const sortedTemplates = parsedTemplates.sort((a: any, b: any) => b.id - a.id);
-      setTemplates(prev => [...sortedTemplates, ...prev]);
+      setTemplates((prev) => [...sortedTemplates, ...prev]);
     }
 
     const savedGroups = localStorage.getItem('templateGroups');
@@ -94,7 +94,7 @@ export function MessageTemplatesView() {
       const parsedGroups = JSON.parse(savedGroups);
       // Sort by ID (which is timestamp) to show newest first
       const sortedGroups = parsedGroups.sort((a: any, b: any) => b.id - a.id);
-      setGroups(prev => [...sortedGroups, ...prev]);
+      setGroups((prev) => [...sortedGroups, ...prev]);
     }
   }, []);
 
@@ -102,7 +102,7 @@ export function MessageTemplatesView() {
   useEffect(() => {
     // Only save to localStorage if we have templates (avoid saving on initial load)
     if (templates.length > 0) {
-      const savedTemplates = templates.filter(t => t.id > 1000); // Only save user-created templates (IDs > 1000)
+      const savedTemplates = templates.filter((t) => t.id > 1000); // Only save user-created templates (IDs > 1000)
       localStorage.setItem('messageTemplates', JSON.stringify(savedTemplates));
     }
   }, [templates]);
@@ -111,7 +111,7 @@ export function MessageTemplatesView() {
   useEffect(() => {
     // Only save to localStorage if we have groups (avoid saving on initial load)
     if (groups.length > 0) {
-      const savedGroups = groups.filter(g => g.id > 1000); // Only save user-created groups (IDs > 1000)
+      const savedGroups = groups.filter((g) => g.id > 1000); // Only save user-created groups (IDs > 1000)
       localStorage.setItem('templateGroups', JSON.stringify(savedGroups));
     }
   }, [groups]);
@@ -142,7 +142,7 @@ export function MessageTemplatesView() {
 
   const confirmGroupDelete = () => {
     if (groupToDelete) {
-      setGroups(prev => prev.filter(group => group.id !== groupToDelete));
+      setGroups((prev) => prev.filter((group) => group.id !== groupToDelete));
       setGroupDeleteDialogOpen(false);
       setGroupToDelete(null);
     }
@@ -166,8 +166,8 @@ export function MessageTemplatesView() {
   const confirmDelete = () => {
     if (templateToDelete) {
       // Update state - useEffect will handle localStorage update
-      setTemplates(prev => prev.filter(template => template.id !== templateToDelete));
-      
+      setTemplates((prev) => prev.filter((template) => template.id !== templateToDelete));
+
       setDeleteDialogOpen(false);
       setTemplateToDelete(null);
     }
@@ -177,7 +177,6 @@ export function MessageTemplatesView() {
     setDeleteDialogOpen(false);
     setTemplateToDelete(null);
   };
-
 
   // Pagination logic
   const totalPages = Math.ceil(templates.length / itemsPerPage);
@@ -209,15 +208,13 @@ export function MessageTemplatesView() {
       {/* Message Templates Section */}
       <Card sx={{ mb: 4 }}>
         <CardContent>
-          <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
+          <Box
+            sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}
+          >
             <Typography variant="h6" sx={{ fontWeight: 600 }}>
               Message Templates
             </Typography>
-            <Button
-              variant="contained"
-              startIcon={<Plus size={16} />}
-              onClick={handleAddTemplate}
-            >
+            <Button variant="contained" startIcon={<Plus size={16} />} onClick={handleAddTemplate}>
               Add New Template
             </Button>
           </Box>
@@ -248,7 +245,7 @@ export function MessageTemplatesView() {
                             height: 8,
                             borderRadius: 1,
                             bgcolor: template.color,
-                            border: '1px solid #e0e0e0'
+                            border: '1px solid #e0e0e0',
                           }}
                         />
                       )}
@@ -271,9 +268,7 @@ export function MessageTemplatesView() {
                     </Box>
                   </TableCell>
                   <TableCell>
-                    <Typography variant="body2">
-                      {template.listings} listings
-                    </Typography>
+                    <Typography variant="body2">{template.listings} listings</Typography>
                   </TableCell>
                   <TableCell>
                     <Box sx={{ display: 'flex', gap: 0.5, flexWrap: 'wrap' }}>
@@ -296,28 +291,27 @@ export function MessageTemplatesView() {
                   </TableCell>
                   <TableCell>
                     <Box sx={{ display: 'flex', gap: 1 }}>
-                      <IconButton 
-                        size="small" 
+                      <IconButton
+                        size="small"
                         color="primary"
                         onClick={() => handleEditTemplate(template.id)}
                       >
                         <Edit size={16} />
                       </IconButton>
-                      <IconButton 
-                        size="small" 
+                      <IconButton
+                        size="small"
                         color="error"
                         onClick={() => handleDeleteTemplate(template.id)}
                       >
                         <Trash2 size={16} />
                       </IconButton>
-                   
                     </Box>
                   </TableCell>
                 </TableRow>
               ))}
             </TableBody>
           </Table>
-          
+
           {/* Pagination */}
           {totalPages > 1 && (
             <Box sx={{ display: 'flex', justifyContent: 'center', mt: 3 }}>
@@ -338,23 +332,29 @@ export function MessageTemplatesView() {
       {/* Message Template Groups Section */}
       <Card>
         <CardContent>
-          <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
+          <Box
+            sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}
+          >
             <Typography variant="h6" sx={{ fontWeight: 600 }}>
               Message Template Groups
             </Typography>
-            <Button
-              variant="outlined"
-              startIcon={<Plus size={16} />}
-              onClick={handleAddGroup}
-            >
+            <Button variant="outlined" startIcon={<Plus size={16} />} onClick={handleAddGroup}>
               Add New Group
             </Button>
           </Box>
 
-          <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(250px, 1fr))', gap: 2 }}>
+          <Box
+            sx={{
+              display: 'grid',
+              gridTemplateColumns: 'repeat(auto-fill, minmax(250px, 1fr))',
+              gap: 2,
+            }}
+          >
             {groups.map((group) => (
               <Card key={group.id} variant="outlined" sx={{ p: 2 }}>
-                <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <Box
+                  sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}
+                >
                   <Box>
                     <Typography variant="subtitle1" sx={{ fontWeight: 600, mb: 0.5 }}>
                       {group.name}
@@ -364,15 +364,15 @@ export function MessageTemplatesView() {
                     </Typography>
                   </Box>
                   <Box sx={{ display: 'flex', gap: 0.5 }}>
-                    <IconButton 
-                      size="small" 
+                    <IconButton
+                      size="small"
                       color="primary"
                       onClick={() => handleEditGroup(group.id)}
                     >
                       <Edit size={16} />
                     </IconButton>
-                    <IconButton 
-                      size="small" 
+                    <IconButton
+                      size="small"
                       color="error"
                       onClick={() => handleDeleteGroup(group.id)}
                     >
@@ -387,12 +387,7 @@ export function MessageTemplatesView() {
       </Card>
 
       {/* Delete Confirmation Modal */}
-      <Dialog
-        open={deleteDialogOpen}
-        onClose={cancelDelete}
-        maxWidth="sm"
-        fullWidth
-      >
+      <Dialog open={deleteDialogOpen} onClose={cancelDelete} maxWidth="sm" fullWidth>
         <DialogTitle sx={{ pb: 1 }}>
           <Typography variant="h6" sx={{ fontWeight: 600 }}>
             Delete Template
@@ -407,11 +402,7 @@ export function MessageTemplatesView() {
           </Typography>
         </DialogContent>
         <DialogActions sx={{ p: 3, pt: 1 }}>
-          <Button
-            variant="outlined"
-            onClick={cancelDelete}
-            sx={{ mr: 1 }}
-          >
+          <Button variant="outlined" onClick={cancelDelete} sx={{ mr: 1 }}>
             Cancel
           </Button>
           <Button
@@ -420,7 +411,7 @@ export function MessageTemplatesView() {
             onClick={confirmDelete}
             sx={{
               bgcolor: 'error.main',
-              '&:hover': { bgcolor: 'error.dark' }
+              '&:hover': { bgcolor: 'error.dark' },
             }}
           >
             Delete Template
@@ -429,12 +420,7 @@ export function MessageTemplatesView() {
       </Dialog>
 
       {/* Group Delete Confirmation Modal */}
-      <Dialog
-        open={groupDeleteDialogOpen}
-        onClose={cancelGroupDelete}
-        maxWidth="sm"
-        fullWidth
-      >
+      <Dialog open={groupDeleteDialogOpen} onClose={cancelGroupDelete} maxWidth="sm" fullWidth>
         <DialogTitle sx={{ pb: 1 }}>
           <Typography variant="h6" sx={{ fontWeight: 600 }}>
             Delete Template Group
@@ -445,15 +431,12 @@ export function MessageTemplatesView() {
             Are you sure you want to delete this template group? This action cannot be undone.
           </Typography>
           <Typography variant="body2" color="text.secondary">
-            The template group will be permanently removed from your account and cannot be recovered.
+            The template group will be permanently removed from your account and cannot be
+            recovered.
           </Typography>
         </DialogContent>
         <DialogActions sx={{ p: 3, pt: 1 }}>
-          <Button
-            variant="outlined"
-            onClick={cancelGroupDelete}
-            sx={{ mr: 1 }}
-          >
+          <Button variant="outlined" onClick={cancelGroupDelete} sx={{ mr: 1 }}>
             Cancel
           </Button>
           <Button
@@ -462,7 +445,7 @@ export function MessageTemplatesView() {
             onClick={confirmGroupDelete}
             sx={{
               bgcolor: 'error.main',
-              '&:hover': { bgcolor: 'error.dark' }
+              '&:hover': { bgcolor: 'error.dark' },
             }}
           >
             Delete Group

@@ -89,7 +89,7 @@ export function ReservationsView() {
   };
 
   const handleRemoveFilter = (filterToRemove: string) => {
-    setActiveFilters(activeFilters.filter(filter => filter !== filterToRemove));
+    setActiveFilters(activeFilters.filter((filter) => filter !== filterToRemove));
   };
 
   const getStatusColor = (status: string) => {
@@ -105,7 +105,7 @@ export function ReservationsView() {
     }
   };
 
-  const filteredReservations = reservations.filter(reservation =>
+  const filteredReservations = reservations.filter((reservation) =>
     reservation.guestName.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
@@ -135,7 +135,7 @@ export function ReservationsView() {
             <Button
               variant="outlined"
               onClick={handleDownloadClick}
-              endIcon={<Iconify icon={"eva:arrow-down-fill" as any} />}
+              endIcon={<Iconify icon={'eva:arrow-down-fill' as any} />}
             >
               Download Guest Data
             </Button>
@@ -148,13 +148,8 @@ export function ReservationsView() {
               <MenuItem onClick={handleDownloadClose}>Export Excel</MenuItem>
               <MenuItem onClick={handleDownloadClose}>Download Report</MenuItem>
             </Menu>
-            <Button variant="outlined">
-              Import
-            </Button>
-            <Button 
-              variant="contained"
-              onClick={() => router.push('/reservations/new')}
-            >
+            <Button variant="outlined">Import</Button>
+            <Button variant="contained" onClick={() => router.push('/reservations/new')}>
               Add Reservation
             </Button>
           </Box>
@@ -168,7 +163,7 @@ export function ReservationsView() {
             <Button
               variant="outlined"
               onClick={handleFilterClick}
-              startIcon={<Iconify icon={"eva:funnel-fill" as any} />}
+              startIcon={<Iconify icon={'eva:funnel-fill' as any} />}
               sx={{ position: 'relative' }}
             >
               Filter
@@ -189,11 +184,7 @@ export function ReservationsView() {
                 />
               )}
             </Button>
-            <Menu
-              anchorEl={filterAnchor}
-              open={Boolean(filterAnchor)}
-              onClose={handleFilterClose}
-            >
+            <Menu anchorEl={filterAnchor} open={Boolean(filterAnchor)} onClose={handleFilterClose}>
               <MenuItem onClick={handleFilterClose}>Status</MenuItem>
               <MenuItem onClick={handleFilterClose}>Date Range</MenuItem>
               <MenuItem onClick={handleFilterClose}>Property</MenuItem>
@@ -257,26 +248,26 @@ export function ReservationsView() {
             </TableHead>
             <TableBody>
               {currentReservations.map((reservation) => (
-                <TableRow 
+                <TableRow
                   key={reservation.id}
-                  sx={{ 
+                  sx={{
                     cursor: 'pointer',
                     '&:hover': {
-                      bgcolor: 'action.hover'
-                    }
+                      bgcolor: 'action.hover',
+                    },
                   }}
                   onClick={() => router.push(`/reservations/${reservation.id}`)}
                 >
                   <TableCell>
-                    <Typography 
-                      variant="body2" 
-                      sx={{ 
+                    <Typography
+                      variant="body2"
+                      sx={{
                         fontWeight: 500,
                         color: 'primary.main',
                         cursor: 'pointer',
                         '&:hover': {
-                          textDecoration: 'underline'
-                        }
+                          textDecoration: 'underline',
+                        },
                       }}
                       onClick={(e) => {
                         e.stopPropagation();
@@ -299,19 +290,13 @@ export function ReservationsView() {
                     />
                   </TableCell>
                   <TableCell>
-                    <Typography variant="body2">
-                      {reservation.property}
-                    </Typography>
+                    <Typography variant="body2">{reservation.property}</Typography>
                   </TableCell>
                   <TableCell>
-                    <Typography variant="body2">
-                      {reservation.nights}
-                    </Typography>
+                    <Typography variant="body2">{reservation.nights}</Typography>
                   </TableCell>
                   <TableCell>
-                    <Typography variant="body2">
-                      {reservation.guests}
-                    </Typography>
+                    <Typography variant="body2">{reservation.guests}</Typography>
                   </TableCell>
                   <TableCell>
                     <Typography variant="body2" sx={{ fontWeight: 500 }}>
@@ -320,7 +305,7 @@ export function ReservationsView() {
                   </TableCell>
                   <TableCell align="center">
                     <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
-                      <IconButton 
+                      <IconButton
                         size="small"
                         onClick={(e) => {
                           e.stopPropagation();
@@ -330,13 +315,13 @@ export function ReservationsView() {
                           color: 'text.secondary',
                           '&:hover': {
                             color: 'primary.main',
-                            bgcolor: 'primary.50'
-                          }
+                            bgcolor: 'primary.50',
+                          },
                         }}
                       >
                         <Iconify icon="solar:pen-bold" width={16} />
                       </IconButton>
-                      <IconButton 
+                      <IconButton
                         size="small"
                         onClick={(e) => {
                           e.stopPropagation();
@@ -346,13 +331,13 @@ export function ReservationsView() {
                           color: 'text.secondary',
                           '&:hover': {
                             color: 'primary.main',
-                            bgcolor: 'primary.50'
-                          }
+                            bgcolor: 'primary.50',
+                          },
                         }}
                       >
-                        <Iconify icon={"eva:message-circle-fill" as any} width={16} />
+                        <Iconify icon={'eva:message-circle-fill' as any} width={16} />
                       </IconButton>
-                      <IconButton 
+                      <IconButton
                         size="small"
                         onClick={(e) => {
                           e.stopPropagation();
@@ -362,24 +347,24 @@ export function ReservationsView() {
                           color: 'text.secondary',
                           '&:hover': {
                             color: 'primary.main',
-                            bgcolor: 'primary.50'
-                          }
+                            bgcolor: 'primary.50',
+                          },
                         }}
                       >
-                        <Iconify icon={"eva:calendar-fill" as any} width={16} />
+                        <Iconify icon={'eva:calendar-fill' as any} width={16} />
                       </IconButton>
-                      <IconButton 
+                      <IconButton
                         size="small"
                         onClick={(e) => handleActionMenuClick(e, reservation)}
                         sx={{
                           color: 'text.secondary',
                           '&:hover': {
                             color: 'primary.main',
-                            bgcolor: 'primary.50'
-                          }
+                            bgcolor: 'primary.50',
+                          },
                         }}
                       >
-                        <Iconify icon={"eva:more-vertical-fill" as any} width={16} />
+                        <Iconify icon={'eva:more-vertical-fill' as any} width={16} />
                       </IconButton>
                     </Box>
                   </TableCell>

@@ -1,14 +1,5 @@
 import { useState } from 'react';
-import {
-  X,
-  Info,
-  Play,
-  Filter,
-  Pencil,
-  Search,
-  Settings,
-  MoreVertical,
-} from 'lucide-react';
+import { X, Info, Play, Filter, Pencil, Search, Settings, MoreVertical } from 'lucide-react';
 
 import {
   Box,
@@ -53,7 +44,7 @@ const mockAutoStatements = [
     status: 'Active',
     lastGenerated: '2024-01-31',
     nextGeneration: '2024-02-29',
-    total: 12500.00,
+    total: 12500.0,
   },
   {
     id: 2,
@@ -64,7 +55,7 @@ const mockAutoStatements = [
     status: 'Active',
     lastGenerated: '2024-01-31',
     nextGeneration: '2024-04-30',
-    total: 37500.00,
+    total: 37500.0,
   },
   {
     id: 3,
@@ -75,7 +66,7 @@ const mockAutoStatements = [
     status: 'Inactive',
     lastGenerated: '2024-01-28',
     nextGeneration: '2024-02-04',
-    total: 3200.00,
+    total: 3200.0,
   },
   {
     id: 4,
@@ -86,7 +77,7 @@ const mockAutoStatements = [
     status: 'Active',
     lastGenerated: '2024-01-31',
     nextGeneration: '2024-02-29',
-    total: 8750.00,
+    total: 8750.0,
   },
 ];
 
@@ -107,7 +98,7 @@ export function AutoStatementsView() {
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage] = useState(50);
   const [searchTerm, setSearchTerm] = useState('');
-  
+
   // New state for dynamic table functionality
   const [autoStatements, setAutoStatements] = useState(mockAutoStatements);
   const [selectedAutoStatements, setSelectedAutoStatements] = useState<number[]>([]);
@@ -115,13 +106,15 @@ export function AutoStatementsView() {
   const [columnSearchTerm, setColumnSearchTerm] = useState('');
   const [sortColumn, setSortColumn] = useState<string>('');
   const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('asc');
-  const [visibleColumns, setVisibleColumns] = useState(allColumns.slice(0, 7).map(col => col.key));
-  
+  const [visibleColumns, setVisibleColumns] = useState(
+    allColumns.slice(0, 7).map((col) => col.key)
+  );
+
   // Modal states
   const [addModalOpen, setAddModalOpen] = useState(false);
   const [actionMenuAnchor, setActionMenuAnchor] = useState<null | HTMLElement>(null);
   const [selectedAutoStatement, setSelectedAutoStatement] = useState<any>(null);
-  
+
   // Form data for modal
   const [formData, setFormData] = useState({
     autoStatementName: '',
@@ -166,13 +159,13 @@ export function AutoStatementsView() {
   };
 
   const handleFormChange = (field: string, value: any) => {
-    setFormData(prev => ({ ...prev, [field]: value }));
+    setFormData((prev) => ({ ...prev, [field]: value }));
   };
 
   const handleCreateAutoStatement = () => {
     if (formData.autoStatementName.trim()) {
       const newAutoStatement = {
-        id: Math.max(...autoStatements.map(s => s.id)) + 1,
+        id: Math.max(...autoStatements.map((s) => s.id)) + 1,
         autoStatementName: formData.autoStatementName,
         description: formData.description,
         frequency: 'Monthly',
@@ -182,17 +175,19 @@ export function AutoStatementsView() {
         nextGeneration: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
         total: 0,
       };
-      setAutoStatements(prev => [...prev, newAutoStatement]);
+      setAutoStatements((prev) => [...prev, newAutoStatement]);
       handleModalClose();
     }
   };
 
   const handleStatusToggle = (autoStatementId: number) => {
-    setAutoStatements(prev => prev.map(autoStatement => 
-      autoStatement.id === autoStatementId 
-        ? { ...autoStatement, status: autoStatement.status === 'Active' ? 'Inactive' : 'Active' }
-        : autoStatement
-    ));
+    setAutoStatements((prev) =>
+      prev.map((autoStatement) =>
+        autoStatement.id === autoStatementId
+          ? { ...autoStatement, status: autoStatement.status === 'Active' ? 'Inactive' : 'Active' }
+          : autoStatement
+      )
+    );
   };
 
   const handleColumnSettingsClick = (event: React.MouseEvent<HTMLElement>) => {
@@ -204,10 +199,8 @@ export function AutoStatementsView() {
   };
 
   const handleColumnToggle = (columnKey: string) => {
-    setVisibleColumns(prev => 
-      prev.includes(columnKey) 
-        ? prev.filter(col => col !== columnKey)
-        : [...prev, columnKey]
+    setVisibleColumns((prev) =>
+      prev.includes(columnKey) ? prev.filter((col) => col !== columnKey) : [...prev, columnKey]
     );
   };
 
@@ -222,7 +215,7 @@ export function AutoStatementsView() {
 
   const handleSelectAll = (checked: boolean) => {
     if (checked) {
-      setSelectedAutoStatements(filteredAutoStatements.map(autoStatement => autoStatement.id));
+      setSelectedAutoStatements(filteredAutoStatements.map((autoStatement) => autoStatement.id));
     } else {
       setSelectedAutoStatements([]);
     }
@@ -230,38 +223,40 @@ export function AutoStatementsView() {
 
   const handleSelectAutoStatement = (autoStatementId: number, checked: boolean) => {
     if (checked) {
-      setSelectedAutoStatements(prev => [...prev, autoStatementId]);
+      setSelectedAutoStatements((prev) => [...prev, autoStatementId]);
     } else {
-      setSelectedAutoStatements(prev => prev.filter(id => id !== autoStatementId));
+      setSelectedAutoStatements((prev) => prev.filter((id) => id !== autoStatementId));
     }
   };
 
   // Filter and sort auto-statements
-  const filteredAutoStatements = autoStatements.filter(autoStatement =>
-    autoStatement.autoStatementName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    autoStatement.owner.toLowerCase().includes(searchTerm.toLowerCase())
+  const filteredAutoStatements = autoStatements.filter(
+    (autoStatement) =>
+      autoStatement.autoStatementName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      autoStatement.owner.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   const sortedAutoStatements = [...filteredAutoStatements].sort((a, b) => {
     if (!sortColumn) return 0;
-    
+
     const aValue = a[sortColumn as keyof typeof a];
     const bValue = b[sortColumn as keyof typeof b];
-    
+
     if (typeof aValue === 'string' && typeof bValue === 'string') {
-      return sortDirection === 'asc' 
-        ? aValue.localeCompare(bValue)
-        : bValue.localeCompare(aValue);
+      return sortDirection === 'asc' ? aValue.localeCompare(bValue) : bValue.localeCompare(aValue);
     }
-    
+
     if (typeof aValue === 'number' && typeof bValue === 'number') {
       return sortDirection === 'asc' ? aValue - bValue : bValue - aValue;
     }
-    
+
     return 0;
   });
 
-  const totalAmount = filteredAutoStatements.reduce((sum, autoStatement) => sum + autoStatement.total, 0);
+  const totalAmount = filteredAutoStatements.reduce(
+    (sum, autoStatement) => sum + autoStatement.total,
+    0
+  );
   const totalPages = Math.ceil(sortedAutoStatements.length / itemsPerPage);
   const startIndex = (currentPage - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
@@ -341,14 +336,20 @@ export function AutoStatementsView() {
               <TableRow>
                 <TableCell padding="checkbox">
                   <Checkbox
-                    checked={selectedAutoStatements.length === currentAutoStatements.length && currentAutoStatements.length > 0}
-                    indeterminate={selectedAutoStatements.length > 0 && selectedAutoStatements.length < currentAutoStatements.length}
+                    checked={
+                      selectedAutoStatements.length === currentAutoStatements.length &&
+                      currentAutoStatements.length > 0
+                    }
+                    indeterminate={
+                      selectedAutoStatements.length > 0 &&
+                      selectedAutoStatements.length < currentAutoStatements.length
+                    }
                     onChange={(e) => handleSelectAll(e.target.checked)}
                   />
                 </TableCell>
                 {allColumns.map((column) => {
                   if (!visibleColumns.includes(column.key)) return null;
-                  
+
                   return (
                     <TableCell
                       key={column.key}
@@ -372,26 +373,28 @@ export function AutoStatementsView() {
                     </TableCell>
                   );
                 })}
-                <TableCell 
-                  align="center" 
-                  sx={{ 
-                    position: 'sticky', 
-                    right: 0, 
+                <TableCell
+                  align="center"
+                  sx={{
+                    position: 'sticky',
+                    right: 0,
                     bgcolor: 'background.paper',
                     borderLeft: '1px solid',
                     borderColor: 'divider',
                     minWidth: 120,
-                    fontWeight: 600
+                    fontWeight: 600,
                   }}
                 >
-                  <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 1 }}>
+                  <Box
+                    sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 1 }}
+                  >
                     Actions
-                    <IconButton 
-                      size="small" 
+                    <IconButton
+                      size="small"
                       onClick={handleColumnSettingsClick}
-                      sx={{ 
+                      sx={{
                         ml: 1,
-                        '&:hover': { bgcolor: 'grey.100' }
+                        '&:hover': { bgcolor: 'grey.100' },
                       }}
                     >
                       <Settings size={16} />
@@ -402,50 +405,49 @@ export function AutoStatementsView() {
             </TableHead>
             <TableBody>
               {currentAutoStatements.map((autoStatement) => (
-                <TableRow 
+                <TableRow
                   key={autoStatement.id}
                   hover
-                  sx={{ 
+                  sx={{
                     '&:hover': { bgcolor: 'grey.50' },
                     ...(selectedAutoStatements.includes(autoStatement.id) && {
                       bgcolor: 'primary.lighter',
-                      '&:hover': { bgcolor: 'primary.lighter' }
-                    })
+                      '&:hover': { bgcolor: 'primary.lighter' },
+                    }),
                   }}
                 >
                   <TableCell padding="checkbox">
                     <Checkbox
                       checked={selectedAutoStatements.includes(autoStatement.id)}
-                      onChange={(e) => handleSelectAutoStatement(autoStatement.id, e.target.checked)}
+                      onChange={(e) =>
+                        handleSelectAutoStatement(autoStatement.id, e.target.checked)
+                      }
                     />
                   </TableCell>
-                  
+
                   {visibleColumns.includes('autoStatement') && (
                     <TableCell>
-                      <Typography variant="body2" sx={{ color: 'primary.main', cursor: 'pointer', fontWeight: 500 }}>
+                      <Typography
+                        variant="body2"
+                        sx={{ color: 'primary.main', cursor: 'pointer', fontWeight: 500 }}
+                      >
                         {autoStatement.autoStatementName}
                       </Typography>
                     </TableCell>
                   )}
-                  
+
                   {visibleColumns.includes('frequency') && (
                     <TableCell>
-                      <Chip
-                        label={autoStatement.frequency}
-                        size="small"
-                        color="info"
-                      />
+                      <Chip label={autoStatement.frequency} size="small" color="info" />
                     </TableCell>
                   )}
-                  
+
                   {visibleColumns.includes('owner') && (
                     <TableCell>
-                      <Typography variant="body2">
-                        {autoStatement.owner}
-                      </Typography>
+                      <Typography variant="body2">{autoStatement.owner}</Typography>
                     </TableCell>
                   )}
-                  
+
                   {visibleColumns.includes('status') && (
                     <TableCell>
                       <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
@@ -462,23 +464,19 @@ export function AutoStatementsView() {
                       </Box>
                     </TableCell>
                   )}
-                  
+
                   {visibleColumns.includes('lastGenerated') && (
                     <TableCell>
-                      <Typography variant="body2">
-                        {autoStatement.lastGenerated}
-                      </Typography>
+                      <Typography variant="body2">{autoStatement.lastGenerated}</Typography>
                     </TableCell>
                   )}
-                  
+
                   {visibleColumns.includes('nextGeneration') && (
                     <TableCell>
-                      <Typography variant="body2">
-                        {autoStatement.nextGeneration}
-                      </Typography>
+                      <Typography variant="body2">{autoStatement.nextGeneration}</Typography>
                     </TableCell>
                   )}
-                  
+
                   {visibleColumns.includes('total') && (
                     <TableCell align="right">
                       <Typography variant="body2" sx={{ fontWeight: 600 }}>
@@ -486,33 +484,27 @@ export function AutoStatementsView() {
                       </Typography>
                     </TableCell>
                   )}
-                  
-                  <TableCell 
+
+                  <TableCell
                     align="center"
-                    sx={{ 
-                      position: 'sticky', 
-                      right: 0, 
+                    sx={{
+                      position: 'sticky',
+                      right: 0,
                       bgcolor: 'background.paper',
                       borderLeft: '1px solid',
                       borderColor: 'divider',
-                      px: 0
+                      px: 0,
                     }}
                   >
                     <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
-                      <IconButton 
-                        size="small" 
-                        sx={{ '&:hover': { bgcolor: 'primary.lighter' } }}
-                      >
+                      <IconButton size="small" sx={{ '&:hover': { bgcolor: 'primary.lighter' } }}>
                         <Pencil size={16} />
                       </IconButton>
-                      <IconButton 
-                        size="small" 
-                        sx={{ '&:hover': { bgcolor: 'primary.lighter' } }}
-                      >
+                      <IconButton size="small" sx={{ '&:hover': { bgcolor: 'primary.lighter' } }}>
                         <Play size={16} />
                       </IconButton>
-                      <IconButton 
-                        size="small" 
+                      <IconButton
+                        size="small"
                         onClick={(e) => handleActionMenuOpen(e, autoStatement)}
                         sx={{ '&:hover': { bgcolor: 'grey.100' } }}
                       >
@@ -547,7 +539,8 @@ export function AutoStatementsView() {
           </Typography>
           <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
             <Typography variant="body2" color="text.secondary">
-              {startIndex + 1}-{Math.min(endIndex, sortedAutoStatements.length)} of {sortedAutoStatements.length}
+              {startIndex + 1}-{Math.min(endIndex, sortedAutoStatements.length)} of{' '}
+              {sortedAutoStatements.length}
             </Typography>
             <Box sx={{ display: 'flex', gap: 0.5 }}>
               <Button
@@ -629,7 +622,9 @@ export function AutoStatementsView() {
 
             <Box>
               <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1 }}>
-                <Typography variant="body2">Select who can access statements created from this auto-statement</Typography>
+                <Typography variant="body2">
+                  Select who can access statements created from this auto-statement
+                </Typography>
                 <Info size={16} color="#666" />
               </Box>
               <TextField
@@ -666,9 +661,7 @@ export function AutoStatementsView() {
           <Pencil size={16} style={{ marginRight: 8 }} />
           Edit
         </MenuItem>
-        <MenuItem onClick={handleActionMenuClose}>
-          Duplicate
-        </MenuItem>
+        <MenuItem onClick={handleActionMenuClose}>Duplicate</MenuItem>
         <MenuItem onClick={handleActionMenuClose}>
           <Play size={16} style={{ marginRight: 8 }} />
           Run Now
@@ -712,7 +705,7 @@ export function AutoStatementsView() {
           />
           <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
             {allColumns
-              .filter(column => 
+              .filter((column) =>
                 column.label.toLowerCase().includes(columnSearchTerm.toLowerCase())
               )
               .map((column) => (
@@ -728,7 +721,6 @@ export function AutoStatementsView() {
           </Box>
         </Box>
       </Popover>
-
     </DashboardContent>
   );
 }
