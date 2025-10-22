@@ -34,6 +34,7 @@ import { useRouter } from 'src/routes/hooks';
 import { DashboardContent } from 'src/layouts/dashboard';
 
 import { RealmChat } from 'src/components/chat';
+import { ResponseRateDisplay } from 'src/components/response-rate';
 
 // This data is now handled by the useMessages hook
 
@@ -901,6 +902,12 @@ export function InboxView() {
                   Payout sum: €451.39
                 </Typography>
               </Box>
+
+              {/* Response Rate Display */}
+              <ResponseRateDisplay 
+                conversationId={selectedConversationId} 
+                sx={{ mt: 2 }}
+              />
 
               {/* Help Widget */}
               {showHelpWidget && (

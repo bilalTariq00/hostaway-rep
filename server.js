@@ -23,6 +23,62 @@ const io = new Server(server, {
 const connectedUsers = new Map();
 const userPresence = new Map(); // userId -> { status: 'online'|'offline', lastSeen: timestamp }
 
+// Response rate tracking
+const pendingMessages = new Map(); // messageId -> { senderId, receiverId, sentAt, conversationId }
+const responseStats = new Map(); // conversationId -> { totalSent: number, totalResponses: number, responseRate: number }
+const responseTimeWindow = 5 * 60 * 1000; // 5 minutes in milliseconds
+
+// Helper function to check if a message is a response to a pending message
+function checkIfResponse(newMessage, conversationId) {
+  const conversationPendingMessages = Array.from(pendingMessages.values())
+    .filter(msg => msg.conversationId === conversationId && msg.receiverId === newMessage.senderId);
+  
+  for (const pendingMsg of conversationPendingMessages) {
+    const timeDiff = newMessage.sentAt - pendingMsg.sentAt;
+    if (timeDiff > 0 && timeDiff <= responseTimeWindow) {
+      return {
+        isResponse: true,
+        originalMessageId: pendingMsg.messageId,
+        responseTime: timeDiff
+      };
+    }
+  }
+  return { isResponse: false };
+}
+
+// Helper function to update response statistics
+function updateResponseStats(conversationId, isResponse = false) {
+  if (!responseStats.has(conversationId)) {
+    responseStats.set(conversationId, { totalSent: 0, totalResponses: 0, responseRate: 0 });
+  }
+  
+  const stats = responseStats.get(conversationId);
+  stats.totalSent++;
+  
+  if (isResponse) {
+    stats.totalResponses++;
+  }
+  
+  stats.responseRate = (stats.totalResponses / stats.totalSent) * 100;
+  
+  console.log(`📊 [RESPONSE STATS] Conversation ${conversationId}: ${stats.totalResponses}/${stats.totalSent} responses (${stats.responseRate.toFixed(1)}%)`);
+  
+  return stats;
+}
+
+// Helper function to clean up old pending messages
+function cleanupOldPendingMessages() {
+  const now = Date.now();
+  for (const [messageId, message] of pendingMessages.entries()) {
+    if (now - message.sentAt > responseTimeWindow) {
+      pendingMessages.delete(messageId);
+    }
+  }
+}
+
+// Clean up old messages every minute
+setInterval(cleanupOldPendingMessages, 60 * 1000);
+
 io.on('connection', (socket) => {
   console.log('User connected:', socket.id);
 
@@ -104,6 +160,9 @@ io.on('connection', (socket) => {
     const { messageId, senderId, receiverId, message, sentAt, conversationId } = data;
     const receivedAt = Date.now();
     
+    // Check if this is a response to a previous message
+    const responseCheck = checkIfResponse({ senderId, sentAt }, conversationId);
+    
     console.log(`📤 [SERVER] Message received:`, {
       messageId,
       senderId,
@@ -112,8 +171,30 @@ io.on('connection', (socket) => {
       conversationId,
       sentAt: new Date(sentAt).toLocaleTimeString(),
       receivedAt: new Date(receivedAt).toLocaleTimeString(),
-      processingTime: `${receivedAt - sentAt}ms`
+      processingTime: `${receivedAt - sentAt}ms`,
+      isResponse: responseCheck.isResponse,
+      responseTime: responseCheck.isResponse ? `${responseCheck.responseTime}ms` : 'N/A'
     });
+    
+    // Update response statistics
+    if (conversationId) {
+      const stats = updateResponseStats(conversationId, responseCheck.isResponse);
+      
+      // If this is a response, remove the original pending message
+      if (responseCheck.isResponse) {
+        pendingMessages.delete(responseCheck.originalMessageId);
+        console.log(`🔄 [RESPONSE] Message ${messageId} is a response to ${responseCheck.originalMessageId} (${responseCheck.responseTime}ms)`);
+      } else {
+        // Store this message as pending for potential responses
+        pendingMessages.set(messageId, {
+          senderId,
+          receiverId,
+          sentAt,
+          conversationId
+        });
+        console.log(`⏳ [PENDING] Message ${messageId} stored as pending for responses`);
+      }
+    }
     
     // Confirm message delivery to sender
     socket.emit('message:confirm', {
@@ -199,6 +280,49 @@ io.on('connection', (socket) => {
       connectedUsers.delete(socket.id);
     }
     console.log('User disconnected:', socket.id);
+  });
+});
+
+// API endpoint to get response rate statistics
+app.get('/api/response-stats', (req, res) => {
+  const stats = {};
+  for (const [conversationId, data] of responseStats.entries()) {
+    stats[conversationId] = {
+      ...data,
+      pendingMessages: Array.from(pendingMessages.values())
+        .filter(msg => msg.conversationId === conversationId).length
+    };
+  }
+  
+  res.json({
+    success: true,
+    data: stats,
+    timestamp: new Date().toISOString()
+  });
+});
+
+// API endpoint to get response stats for a specific conversation
+app.get('/api/response-stats/:conversationId', (req, res) => {
+  const { conversationId } = req.params;
+  const stats = responseStats.get(conversationId);
+  
+  if (!stats) {
+    return res.status(404).json({
+      success: false,
+      message: 'Conversation not found'
+    });
+  }
+  
+  const pendingCount = Array.from(pendingMessages.values())
+    .filter(msg => msg.conversationId === conversationId).length;
+  
+  res.json({
+    success: true,
+    data: {
+      ...stats,
+      pendingMessages: pendingCount
+    },
+    timestamp: new Date().toISOString()
   });
 });
 
