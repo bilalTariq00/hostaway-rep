@@ -18,7 +18,6 @@ export interface ChatMessage {
 export interface ChatState {
   messages: ChatMessage[];
   isConnected: boolean;
-  isLoading: boolean;
   error: string | null;
 }
 
@@ -39,7 +38,6 @@ export function useChat(conversationId?: string, currentUserId?: string) {
   
   // State management with optimized updates
   const [messages, setMessages] = useState<ChatMessage[]>([]);
-  const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   
   // Refs for performance optimization
@@ -277,7 +275,6 @@ export function useChat(conversationId?: string, currentUserId?: string) {
     // State
     messages,
     isConnected,
-    isLoading,
     error,
     
     // Actions

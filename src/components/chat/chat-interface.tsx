@@ -6,7 +6,6 @@ import Alert from '@mui/material/Alert';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import IconButton from '@mui/material/IconButton';
-import LinearProgress from '@mui/material/LinearProgress';
 
 import { useChat } from 'src/hooks/use-chat';
 
@@ -31,7 +30,6 @@ export function ChatInterface({
   const {
     messages,
     isConnected,
-    isLoading,
     error,
     sendMessage,
     clearMessages,
@@ -145,16 +143,6 @@ export function ChatInterface({
           </Button>
         </Box>
       </Box>
-
-      {/* Loading indicator */}
-      {isLoading && (
-        <LinearProgress
-          sx={{
-            height: 2,
-            backgroundColor: 'transparent',
-          }}
-        />
-      )}
 
       {/* Error display */}
       {error && (

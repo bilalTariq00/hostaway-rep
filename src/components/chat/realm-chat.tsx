@@ -8,8 +8,8 @@ import {
   Search,
   WifiOff,
   Paperclip,
-  MoreVertical,
   ChevronLeft,
+  MoreVertical,
   ChevronRight,
 } from 'lucide-react';
 
