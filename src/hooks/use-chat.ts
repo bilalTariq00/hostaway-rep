@@ -33,7 +33,7 @@ export interface ChatActions {
 // Global conversation storage to maintain separate message histories
 const conversationMessages = new Map<string, ChatMessage[]>();
 
-export function useChat(conversationId?: string, currentUserId?: string) {
+export function useChat(conversationId?: string, currentUserId?: string, initialMessages?: ChatMessage[]) {
   const { socket, isConnected, emit, on, off } = useSocket();
   
   // State management with optimized updates
@@ -45,14 +45,24 @@ export function useChat(conversationId?: string, currentUserId?: string) {
   const messageIdCounter = useRef(0);
   const pendingMessages = useRef<Map<string, ChatMessage>>(new Map());
 
-  // Load conversation-specific messages
+  // Load conversation-specific messages or initial messages
   useEffect(() => {
     if (conversationId) {
       const conversationMsgs = conversationMessages.get(conversationId) || [];
-      setMessages(conversationMsgs);
-      console.log(`📱 [${conversationId}] Loaded ${conversationMsgs.length} messages for conversation`);
+      if (conversationMsgs.length > 0) {
+        setMessages(conversationMsgs);
+        console.log(`📱 [${conversationId}] Loaded ${conversationMsgs.length} messages for conversation`);
+      } else if (initialMessages && initialMessages.length > 0) {
+        // Load initial messages if no conversation messages exist
+        setMessages(initialMessages);
+        conversationMessages.set(conversationId, initialMessages);
+        console.log(`📱 [${conversationId}] Loaded ${initialMessages.length} initial messages for conversation`);
+      } else {
+        setMessages([]);
+        console.log(`📱 [${conversationId}] No messages found for conversation`);
+      }
     }
-  }, [conversationId]);
+  }, [conversationId, initialMessages]);
 
   // Generate unique message ID
   const generateMessageId = useCallback(() => `msg_${Date.now()}_${++messageIdCounter.current}`, []);

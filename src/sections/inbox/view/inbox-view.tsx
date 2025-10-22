@@ -62,60 +62,261 @@ export function InboxView() {
 // Chat functionality is now handled by RealmChat component
   
   // Mock conversations data for the sidebar (you can replace this with real data)
-  const conversations = [
+  const [conversations, setConversations] = useState([
     {
       id: '1',
       name: 'Polina',
       origin: 'Airbnb',
       avatar: 'P',
-      lastMessage: 'Hello! I wanted to check if it would be possible to check in early?',
+      lastMessage: 'Hi! Can I check in at 2 PM instead of 3 PM?',
       timestamp: '19:36',
       unread: true,
       status: 'active',
       bookingDates: '27 Oct 25 → 01 Nov 25',
       propertyName: 'Elegant 2BR Apt | Balcony, AC, Near',
       statusIcon: 'hourglass',
+      initialMessages: [
+        {
+          id: 'msg-1-1',
+          senderId: '1',
+          message: 'Hi! Can I check in at 2 PM instead of 3 PM?',
+          sentAt: Date.now() - 3600000, // 1 hour ago
+          isOwn: false,
+        },
+      ],
     },
     {
       id: '2',
       name: 'Alexandra Kirkland',
       origin: 'Airbnb',
       avatar: 'A',
-      lastMessage: 'Thank you for the wonderful stay! The apartment was perfect.',
+      lastMessage: 'You: Perfect! The WiFi password is on the fridge',
       timestamp: '19:22',
       unread: false,
       status: 'active',
       bookingDates: '15 Nov 25 → 20 Nov 25',
       propertyName: 'Modern Studio in City Center',
       statusIcon: 'read',
+      initialMessages: [
+        {
+          id: 'msg-2-1',
+          senderId: '2',
+          message: 'Thank you for the wonderful stay! The apartment was perfect.',
+          sentAt: Date.now() - 7200000, // 2 hours ago
+          isOwn: false,
+        },
+        {
+          id: 'msg-2-2',
+          senderId: 'host',
+          message: 'Perfect! The WiFi password is on the fridge',
+          sentAt: Date.now() - 3600000, // 1 hour ago
+          isOwn: true,
+        },
+      ],
     },
     {
       id: '3',
       name: 'Monica Dovarch',
       origin: 'Booking.com',
       avatar: 'https://images.unsplash.com/photo-1494790108755-2616b612b786?w=40&h=40&fit=crop&crop=face',
-      lastMessage: 'Is there parking available at the property?',
+      lastMessage: 'Thanks! Is there a coffee machine?',
       timestamp: '18:45',
       unread: true,
       status: 'active',
       bookingDates: '05 Dec 25 → 10 Dec 25',
       propertyName: 'Luxury Penthouse with View',
       statusIcon: 'unread',
+      initialMessages: [
+        {
+          id: 'msg-3-1',
+          senderId: '3',
+          message: 'Is there parking available at the property?',
+          sentAt: Date.now() - 10800000, // 3 hours ago
+          isOwn: false,
+        },
+        {
+          id: 'msg-3-2',
+          senderId: 'host',
+          message: 'Yes, there is free parking in the garage.',
+          sentAt: Date.now() - 9000000, // 2.5 hours ago
+          isOwn: true,
+        },
+        {
+          id: 'msg-3-3',
+          senderId: '3',
+          message: 'Thanks! Is there a coffee machine?',
+          sentAt: Date.now() - 7200000, // 2 hours ago
+          isOwn: false,
+        },
+      ],
     },
     {
       id: '4',
       name: 'Yury Burman',
       origin: 'Airbnb',
       avatar: 'Y',
-      lastMessage: 'Can we check in early tomorrow? We arrive at 10 AM.',
+      lastMessage: 'jgjkg',
       timestamp: '17:30',
       unread: false,
       status: 'active',
       bookingDates: '22 Dec 25 → 28 Dec 25',
       propertyName: 'Cozy Apartment Near Metro',
       statusIcon: 'read',
+      initialMessages: [
+        {
+          id: 'msg-4-1',
+          senderId: '4',
+          message: 'Can we check in early tomorrow? We arrive at 10 AM.',
+          sentAt: Date.now() - 14400000, // 4 hours ago
+          isOwn: false,
+        },
+        {
+          id: 'msg-4-2',
+          senderId: 'host',
+          message: 'Yes, early check-in is available. I\'ll send you the key code.',
+          sentAt: Date.now() - 12600000, // 3.5 hours ago
+          isOwn: true,
+        },
+        {
+          id: 'msg-4-3',
+          senderId: '4',
+          message: 'jgjkg',
+          sentAt: Date.now() - 10800000, // 3 hours ago
+          isOwn: false,
+        },
+      ],
     },
-  ];
+    {
+      id: '5',
+      name: 'Sarah Johnson',
+      origin: 'Airbnb',
+      avatar: 'S',
+      lastMessage: 'You: The key is under the flower pot',
+      timestamp: '16:15',
+      unread: false,
+      status: 'active',
+      bookingDates: '30 Nov 25 → 05 Dec 25',
+      propertyName: 'Downtown Loft with City View',
+      statusIcon: 'read',
+      initialMessages: [
+        {
+          id: 'msg-5-1',
+          senderId: '5',
+          message: 'Where can I find the key for check-in?',
+          sentAt: Date.now() - 18000000, // 5 hours ago
+          isOwn: false,
+        },
+        {
+          id: 'msg-5-2',
+          senderId: 'host',
+          message: 'The key is under the flower pot',
+          sentAt: Date.now() - 16200000, // 4.5 hours ago
+          isOwn: true,
+        },
+      ],
+    },
+    {
+      id: '6',
+      name: 'Michael Chen',
+      origin: 'Booking.com',
+      avatar: 'M',
+      lastMessage: 'Is the heating working properly?',
+      timestamp: '15:42',
+      unread: true,
+      status: 'active',
+      bookingDates: '12 Dec 25 → 18 Dec 25',
+      propertyName: 'Modern 1BR Near University',
+      statusIcon: 'unread',
+      initialMessages: [
+        {
+          id: 'msg-6-1',
+          senderId: '6',
+          message: 'Is the heating working properly?',
+          sentAt: Date.now() - 21600000, // 6 hours ago
+          isOwn: false,
+        },
+      ],
+    },
+    {
+      id: '7',
+      name: 'Emma Wilson',
+      origin: 'Airbnb',
+      avatar: 'E',
+      lastMessage: 'You: Check-out is at 11 AM. Have a great trip!',
+      timestamp: '14:20',
+      unread: false,
+      status: 'active',
+      bookingDates: '08 Nov 25 → 12 Nov 25',
+      propertyName: 'Charming Studio in Historic District',
+      statusIcon: 'read',
+      initialMessages: [
+        {
+          id: 'msg-7-1',
+          senderId: '7',
+          message: 'What time is check-out?',
+          sentAt: Date.now() - 25200000, // 7 hours ago
+          isOwn: false,
+        },
+        {
+          id: 'msg-7-2',
+          senderId: 'host',
+          message: 'Check-out is at 11 AM. Have a great trip!',
+          sentAt: Date.now() - 23400000, // 6.5 hours ago
+          isOwn: true,
+        },
+      ],
+    },
+    {
+      id: '8',
+      name: 'David Rodriguez',
+      origin: 'Airbnb',
+      avatar: 'D',
+      lastMessage: 'Can you recommend good restaurants nearby?',
+      timestamp: '13:55',
+      unread: true,
+      status: 'active',
+      bookingDates: '25 Dec 25 → 02 Jan 26',
+      propertyName: 'Luxury Penthouse with Terrace',
+      statusIcon: 'unread',
+      initialMessages: [
+        {
+          id: 'msg-8-1',
+          senderId: '8',
+          message: 'Can you recommend good restaurants nearby?',
+          sentAt: Date.now() - 28800000, // 8 hours ago
+          isOwn: false,
+        },
+      ],
+    },
+    {
+      id: '9',
+      name: 'Lisa Thompson',
+      origin: 'Airbnb',
+      avatar: 'L',
+      lastMessage: '', // No messages yet
+      timestamp: '12:30',
+      unread: false,
+      status: 'active',
+      bookingDates: '15 Jan 26 → 20 Jan 26',
+      propertyName: 'Modern Studio Downtown',
+      statusIcon: 'read',
+      initialMessages: [], // No initial messages
+    },
+    {
+      id: '10',
+      name: 'James Wilson',
+      origin: 'Booking.com',
+      avatar: 'J',
+      lastMessage: '', // No messages yet
+      timestamp: '11:15',
+      unread: false,
+      status: 'active',
+      bookingDates: '28 Jan 26 → 02 Feb 26',
+      propertyName: 'Cozy Cabin Retreat',
+      statusIcon: 'read',
+      initialMessages: [], // No initial messages
+    },
+  ]);
 
   const handleTabChange = (event: React.SyntheticEvent, newValue: string) => {
     setSelectedTab(newValue);
@@ -127,6 +328,22 @@ export function InboxView() {
   const handleConversationSelect = (conversationId: string) => {
     setSelectedConversationId(conversationId);
     // Messages will be automatically loaded by the useChat hook
+  };
+
+  // Function to update the last message in conversation list
+  const updateLastMessage = (conversationId: string, message: string, isOwn: boolean) => {
+    setConversations(prev => prev.map(conv => {
+      if (conv.id === conversationId) {
+        const displayMessage = isOwn ? `You: ${message}` : message;
+        return {
+          ...conv,
+          lastMessage: displayMessage,
+          timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+          unread: !isOwn, // Mark as unread if it's not our own message
+        };
+      }
+      return conv;
+    }));
   };
 
   // Message sending is now handled by RealmChat component
@@ -430,19 +647,21 @@ export function InboxView() {
                         </Typography>
                       </Box>
 
-                      <Typography
-                        variant="body2"
-                        sx={{
-                          fontSize: '0.8rem',
-                          overflow: 'hidden',
-                          textOverflow: 'ellipsis',
-                          whiteSpace: 'nowrap',
-                          fontWeight: conversation.unread ? 500 : 400,
-                          color: conversation.unread ? '#1a1a1a' : '#6c757d',
-                        }}
-                      >
-                        {conversation.lastMessage}
-                      </Typography>
+                      {conversation.lastMessage && (
+                        <Typography
+                          variant="body2"
+                          sx={{
+                            fontSize: '0.8rem',
+                            overflow: 'hidden',
+                            textOverflow: 'ellipsis',
+                            whiteSpace: 'nowrap',
+                            fontWeight: conversation.unread ? 500 : 400,
+                            color: conversation.unread ? '#1a1a1a' : '#6c757d',
+                          }}
+                        >
+                          {conversation.lastMessage}
+                        </Typography>
+                      )}
                     </Box>
                   </Box>
                 </Box>
@@ -474,6 +693,8 @@ export function InboxView() {
                 sx={{ flex: 1 }}
                 onToggleSidebar={handleHideDetails}
                 isSidebarOpen={showHelpWidget}
+                initialMessages={selectedConversation?.initialMessages || []}
+                onMessageSent={updateLastMessage}
               />
             </>
           ) : (

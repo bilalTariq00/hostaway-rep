@@ -34,6 +34,14 @@ interface RealmChatProps {
   sx?: object;
   onToggleSidebar?: () => void;
   isSidebarOpen?: boolean;
+  initialMessages?: Array<{
+    id: string;
+    senderId: string;
+    message: string;
+    sentAt: number;
+    isOwn: boolean;
+  }>;
+  onMessageSent?: (conversationId: string, message: string, isOwn: boolean) => void;
 }
 
 export function RealmChat({
@@ -45,6 +53,8 @@ export function RealmChat({
   sx,
   onToggleSidebar,
   isSidebarOpen = true,
+  initialMessages = [],
+  onMessageSent,
 }: RealmChatProps) {
   const [message, setMessage] = useState('');
   const [isTyping, setIsTyping] = useState(false);
@@ -52,7 +62,17 @@ export function RealmChat({
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const typingTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
-  const { messages, sendMessage, isConnected, error, emitTyping } = useChat(conversationId, currentUserId);
+  // Convert initial messages to ChatMessage format
+  const convertedInitialMessages = initialMessages.map(msg => ({
+    id: msg.id,
+    senderId: msg.senderId,
+    receiverId,
+    message: msg.message,
+    sentAt: msg.sentAt,
+    isOwn: msg.isOwn,
+  }));
+
+  const { messages, sendMessage, isConnected, error, emitTyping } = useChat(conversationId, currentUserId, convertedInitialMessages);
 
   // Auto-scroll to bottom when new messages arrive
   useEffect(() => {
@@ -60,6 +80,21 @@ export function RealmChat({
       messagesEndRef.current.scrollIntoView({ behavior: 'smooth' });
     }
   }, [messages]);
+
+  // Listen for new incoming messages (not initial messages)
+  const [lastMessageCount, setLastMessageCount] = useState(0);
+  
+  useEffect(() => {
+    if (messages.length > lastMessageCount && messages.length > 0) {
+      const newMessage = messages[messages.length - 1];
+      // Only update if it's a new message (not from initial messages)
+      if (newMessage.id.startsWith('msg_') && onMessageSent) {
+        console.log(`📱 [${conversationId}] New message received:`, newMessage.message);
+        onMessageSent(conversationId, newMessage.message, newMessage.isOwn);
+      }
+      setLastMessageCount(messages.length);
+    }
+  }, [messages.length, conversationId, onMessageSent, lastMessageCount, messages]);
 
   // Handle typing indicator
   const handleTyping = (isTypingStatus: boolean) => {
@@ -95,6 +130,12 @@ export function RealmChat({
   const handleSendMessage = () => {
     if (message.trim() && isConnected) {
       sendMessage(message.trim(), receiverId);
+      
+      // Notify parent component about the new message
+      if (onMessageSent) {
+        onMessageSent(conversationId, message.trim(), true);
+      }
+      
       setMessage('');
       setIsTyping(false);
       handleTyping(false);
