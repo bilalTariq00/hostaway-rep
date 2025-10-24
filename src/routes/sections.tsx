@@ -347,6 +347,9 @@ export const UserManagementPage = lazy(() =>
 export const ClientManagementPage = lazy(() =>
   import('src/pages/client-management').then((module) => ({ default: module.ClientManagementPage }))
 );
+export const SuperAdminAnalyticsPage = lazy(() =>
+  import('src/pages/super-admin-analytics').then((module) => ({ default: module.SuperAdminAnalyticsPage }))
+);
 export const SupervisorDashboardPage = lazy(() =>
   import('src/pages/supervisor-dashboard').then((module) => ({
     default: module.SupervisorDashboardPage,
@@ -514,6 +517,14 @@ export const routesSection: RouteObject[] = [
         element: (
           <ProtectedRoute requiredRole="super-admin">
             <ClientManagementPage />
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: 'super-admin-analytics',
+        element: (
+          <ProtectedRoute requiredRole="super-admin">
+            <SuperAdminAnalyticsPage />
           </ProtectedRoute>
         ),
       },

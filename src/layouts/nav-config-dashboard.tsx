@@ -322,6 +322,12 @@ export const navData = [
     roles: ['user', 'super-admin'], // Only super admin can see this
   },
   {
+    title: 'Performance Analytics',
+    path: '/super-admin-analytics',
+    icon: icon('ic-analytics'),
+    roles: ['super-admin'], // Only super admin can see this
+  },
+  {
     title: 'Supervisor Dashboard',
     path: '/supervisor-dashboard',
     icon: icon('ic-user'),

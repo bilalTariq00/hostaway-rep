@@ -10,6 +10,7 @@ import { ThemeProvider } from 'src/theme/theme-provider';
 import { SocketProvider } from 'src/contexts/socket-context';
 import { HostawayProvider } from 'src/contexts/hostaway-context';
 import { ReservationsProvider } from 'src/contexts/reservations-context';
+import { MessageQualityProvider } from 'src/contexts/message-quality-context';
 
 import { Iconify } from 'src/components/iconify';
 
@@ -43,14 +44,16 @@ export default function App({ children }: AppProps) {
 
   return (
     <ThemeProvider>
-      <SocketProvider>
-        <HostawayProvider>
-          <ReservationsProvider>
-            {children}
-            {githubButton()}
-          </ReservationsProvider>
-        </HostawayProvider>
-      </SocketProvider>
+      <MessageQualityProvider>
+        <SocketProvider>
+          <HostawayProvider>
+            <ReservationsProvider>
+              {children}
+              {githubButton()}
+            </ReservationsProvider>
+          </HostawayProvider>
+        </SocketProvider>
+      </MessageQualityProvider>
     </ThemeProvider>
   );
 }

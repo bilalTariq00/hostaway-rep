@@ -23,6 +23,10 @@ import Typography from '@mui/material/Typography';
 
 import { useChat } from 'src/hooks/use-chat';
 
+import { useMessageQuality } from 'src/contexts/message-quality-context';
+
+import { QualityIndicator } from 'src/components/quality-indicator';
+
 // ----------------------------------------------------------------------
 
 interface RealmChatProps {
@@ -59,8 +63,11 @@ export function RealmChat({
   const [message, setMessage] = useState('');
   const [isTyping, setIsTyping] = useState(false);
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
+  const [lastGuestMessageTime, setLastGuestMessageTime] = useState<number | null>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const typingTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+
+  const { recordMessage } = useMessageQuality();
 
   // Convert initial messages to ChatMessage format
   const convertedInitialMessages = initialMessages.map(msg => ({
@@ -90,6 +97,12 @@ export function RealmChat({
       // Only update if it's a new message (not from initial messages)
       if (newMessage.id.startsWith('msg_') && onMessageSent) {
         console.log(`📱 [${conversationId}] New message received:`, newMessage.message);
+        
+        // Track guest messages for response time calculation
+        if (!newMessage.isOwn) {
+          setLastGuestMessageTime(Date.now());
+        }
+        
         onMessageSent(conversationId, newMessage.message, newMessage.isOwn);
       }
       setLastMessageCount(messages.length);
@@ -129,16 +142,41 @@ export function RealmChat({
 
   const handleSendMessage = () => {
     if (message.trim() && isConnected) {
-      sendMessage(message.trim(), receiverId);
+      const messageText = message.trim();
+      const currentTime = Date.now();
+      
+      // Calculate response time if there was a previous guest message
+      const responseTimeMs = lastGuestMessageTime ? currentTime - lastGuestMessageTime : 0;
+      
+      // Record the message with quality metrics
+      recordMessage({
+        id: `msg_${currentTime}`,
+        conversationId,
+        workerId: currentUserId,
+        workerName: 'Current User', // This should come from auth context
+        workerRole: 'associate', // This should come from auth context
+        message: messageText,
+        sentAt: new Date(currentTime),
+        responseTimeMs,
+        guestMessage: 'Previous guest message', // This should be tracked properly
+        guestMessageTime: lastGuestMessageTime ? new Date(lastGuestMessageTime) : undefined
+      });
+      
+      sendMessage(messageText, receiverId);
       
       // Notify parent component about the new message
       if (onMessageSent) {
-        onMessageSent(conversationId, message.trim(), true);
+        onMessageSent(conversationId, messageText, true);
       }
       
       setMessage('');
       setIsTyping(false);
       handleTyping(false);
+      
+      // Reset guest message time after responding
+      if (lastGuestMessageTime) {
+        setLastGuestMessageTime(null);
+      }
     }
   };
 
@@ -364,6 +402,22 @@ export function RealmChat({
                       >
                         ⚡ {formatResponseTime(msg.responseTime)}
                       </Typography>
+                    )}
+                    {/* Add quality indicator for own messages */}
+                    {isOwn && (
+                      <QualityIndicator 
+                        qualityMetrics={{
+                          responseTimeMs: msg.responseTime ? msg.responseTime * 1000 : 0,
+                          responseTimeScore: 85,
+                          sentimentScore: 80,
+                          completenessScore: 90,
+                          grammarScore: 85,
+                          templateComplianceScore: 75,
+                          overallScore: 83,
+                          qualityGrade: 'good'
+                        }}
+                        size="small"
+                      />
                     )}
                   </Box>
                 </Box>
