@@ -32,6 +32,7 @@ import CardContent from '@mui/material/CardContent';
 import CircularProgress from '@mui/material/CircularProgress';
 
 import { DashboardContent } from 'src/layouts/dashboard';
+import { useHostaway } from 'src/contexts/hostaway-context';
 
 // ----------------------------------------------------------------------
 
@@ -153,11 +154,33 @@ export function OverviewAnalyticsView() {
   const [guestPage, setGuestPage] = useState(1);
   const guestsPerPage = 5;
 
+  // Get Hostaway data
+  const { 
+    reservations, 
+    properties, 
+    hasCredentials,
+    isSuperAdmin 
+  } = useHostaway();
+
+  // Transform Hostaway reservations to match the expected format
+  const transformedGuests = reservations.map((reservation, index) => ({
+    id: reservation.id.toString(),
+    name: reservation.guestName,
+    status: reservation.status === 'confirmed' ? 'Checking out' : reservation.status,
+    checkIn: new Date(reservation.checkIn).toLocaleDateString('en-US', { month: 'short', day: 'numeric' }),
+    checkOut: new Date(reservation.checkOut).toLocaleDateString('en-US', { month: 'short', day: 'numeric' }),
+    statusColor: reservation.status === 'confirmed' ? 'success' : 'info',
+    hasCheckedOut: reservation.status === 'completed',
+  }));
+
+  // Use Hostaway data if user is super admin and has credentials, otherwise fall back to mock data
+  const displayGuests = isSuperAdmin && hasCredentials && transformedGuests.length > 0 ? transformedGuests : guestData;
+
   // Pagination logic
-  const totalPages = Math.ceil(guestData.length / guestsPerPage);
+  const totalPages = Math.ceil(displayGuests.length / guestsPerPage);
   const startIndex = (guestPage - 1) * guestsPerPage;
   const endIndex = startIndex + guestsPerPage;
-  const currentGuests = guestData.slice(startIndex, endIndex);
+  const currentGuests = displayGuests.slice(startIndex, endIndex);
 
   const handleGuestPageChange = (event: React.ChangeEvent<unknown>, value: number) => {
     setGuestPage(value);
@@ -885,50 +908,56 @@ export function OverviewAnalyticsView() {
             <CardHeader title="Top Performing Properties" />
             <CardContent>
               <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
-                {[
+                {(isSuperAdmin && hasCredentials && properties.length > 0 ? properties : [
                   {
+                    id: 1,
                     name: 'Luxury Villa Rome',
-                    image:
-                      'https://pub-c5e31b5cdafb419fb247a8ac2e78df7a.r2.dev/public/assets/images/mock/cover/cover-5.webp',
-                    revenue: '$12,450',
-                    bookings: '24',
+                    images: ['https://pub-c5e31b5cdafb419fb247a8ac2e78df7a.r2.dev/public/assets/images/mock/cover/cover-5.webp'],
+                    basePrice: 12450,
+                    currency: 'USD',
                   },
                   {
+                    id: 2,
                     name: 'Modern Apartment Milan',
-                    image:
-                      'https://pub-c5e31b5cdafb419fb247a8ac2e78df7a.r2.dev/public/assets/images/mock/cover/cover-6.webp',
-                    revenue: '$8,920',
-                    bookings: '18',
+                    images: ['https://pub-c5e31b5cdafb419fb247a8ac2e78df7a.r2.dev/public/assets/images/mock/cover/cover-6.webp'],
+                    basePrice: 8920,
+                    currency: 'USD',
                   },
                   {
+                    id: 3,
                     name: 'Cozy Studio Florence',
-                    image:
-                      'https://pub-c5e31b5cdafb419fb247a8ac2e78df7a.r2.dev/public/assets/images/mock/cover/cover-4.webp',
-                    revenue: '$6,750',
-                    bookings: '15',
+                    images: ['https://pub-c5e31b5cdafb419fb247a8ac2e78df7a.r2.dev/public/assets/images/mock/cover/cover-4.webp'],
+                    basePrice: 6750,
+                    currency: 'USD',
                   },
                   {
+                    id: 4,
                     name: 'Beach House Naples',
-                    image:
-                      'https://pub-c5e31b5cdafb419fb247a8ac2e78df7a.r2.dev/public/assets/images/mock/cover/cover-5.webp',
-                    revenue: '$5,680',
-                    bookings: '12',
+                    images: ['https://pub-c5e31b5cdafb419fb247a8ac2e78df7a.r2.dev/public/assets/images/mock/cover/cover-5.webp'],
+                    basePrice: 5680,
+                    currency: 'USD',
                   },
                   {
+                    id: 5,
                     name: 'Mountain Cabin Turin',
-                    image:
-                      'https://pub-c5e31b5cdafb419fb247a8ac2e78df7a.r2.dev/public/assets/images/mock/cover/cover-6.webp',
-                    revenue: '$4,320',
-                    bookings: '9',
+                    images: ['https://pub-c5e31b5cdafb419fb247a8ac2e78df7a.r2.dev/public/assets/images/mock/cover/cover-6.webp'],
+                    basePrice: 4320,
+                    currency: 'USD',
                   },
-                ].map((property, index) => (
+                ]).map((property, index) => {
+                  // Calculate bookings count from reservations
+                  const propertyReservations = reservations.filter(r => r.propertyId === property.id);
+                  const bookingsCount = propertyReservations.length;
+                  const totalRevenue = propertyReservations.reduce((sum, r) => sum + r.totalPrice, 0);
+                  
+                  return (
                   <Box key={index} sx={{ display: 'flex', alignItems: 'center', gap: 2, py: 1 }}>
                     <Box
                       sx={{
                         width: 40,
                         height: 40,
                         borderRadius: 2,
-                        backgroundImage: `url('${property.image}')`,
+                        backgroundImage: `url('${property.images?.[0] || '/assets/images/product/product-1.webp'}')`,
                         backgroundSize: 'cover',
                         backgroundPosition: 'center',
                         backgroundRepeat: 'no-repeat',
@@ -942,14 +971,15 @@ export function OverviewAnalyticsView() {
                         {property.name}
                       </Typography>
                       <Typography variant="caption" color="text.secondary">
-                        {property.bookings} bookings
+                        {bookingsCount} bookings
                       </Typography>
                     </Box>
                     <Typography variant="body2" sx={{ fontWeight: 600, color: '#4caf50' }}>
-                      {property.revenue}
+                      ${totalRevenue > 0 ? totalRevenue : property.basePrice}
                     </Typography>
                   </Box>
-                ))}
+                  );
+                })}
               </Box>
             </CardContent>
           </Card>

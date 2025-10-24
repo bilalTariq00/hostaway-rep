@@ -303,7 +303,7 @@ export const navData = [
     title: 'Create Account',
     path: '/create-account',
     icon: icon('ic-user'),
-    roles: ['user'], // Only super admin (user role) can see this
+    roles: ['user', 'super-admin'], // Only super admin can see this
     badge: {
       text: 'New',
       color: '#FF8537',
@@ -313,13 +313,13 @@ export const navData = [
     title: 'User Management',
     path: '/user-management',
     icon: icon('ic-user'),
-    roles: ['user'], // Only super admin (user role) can see this
+    roles: ['user', 'super-admin'], // Only super admin can see this
   },
   {
     title: 'Client Management',
     path: '/client-management',
     icon: icon('ic-user'),
-    roles: ['user'], // Only super admin (user role) can see this
+    roles: ['user', 'super-admin'], // Only super admin can see this
   },
   {
     title: 'Supervisor Dashboard',

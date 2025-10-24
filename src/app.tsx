@@ -8,6 +8,7 @@ import { usePathname } from 'src/routes/hooks';
 
 import { ThemeProvider } from 'src/theme/theme-provider';
 import { SocketProvider } from 'src/contexts/socket-context';
+import { HostawayProvider } from 'src/contexts/hostaway-context';
 import { ReservationsProvider } from 'src/contexts/reservations-context';
 
 import { Iconify } from 'src/components/iconify';
@@ -43,10 +44,12 @@ export default function App({ children }: AppProps) {
   return (
     <ThemeProvider>
       <SocketProvider>
-        <ReservationsProvider>
-          {children}
-          {githubButton()}
-        </ReservationsProvider>
+        <HostawayProvider>
+          <ReservationsProvider>
+            {children}
+            {githubButton()}
+          </ReservationsProvider>
+        </HostawayProvider>
       </SocketProvider>
     </ThemeProvider>
   );

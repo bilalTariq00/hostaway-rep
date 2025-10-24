@@ -1,4 +1,6 @@
-import { useState, useContext, createContext, type ReactNode } from 'react';
+import { useState, useEffect, useContext, createContext, useCallback, type ReactNode } from 'react';
+
+import { useHostaway } from './hostaway-context';
 
 export interface Reservation {
   id: number;
@@ -73,6 +75,46 @@ const initialReservations: Reservation[] = [
 
 export function ReservationsProvider({ children }: { children: ReactNode }) {
   const [reservations, setReservations] = useState<Reservation[]>(initialReservations);
+  const { reservations: hostawayReservations, properties: hostawayProperties, hasCredentials, isSuperAdmin } = useHostaway();
+
+  // Transform Hostaway data to match our Reservation interface
+  const transformHostawayReservations = useCallback((): Reservation[] => {
+    // Only show Hostaway data if user is super admin and has credentials
+    if (!isSuperAdmin || !hasCredentials || !hostawayReservations.length) {
+      return initialReservations;
+    }
+
+    return hostawayReservations.map((hostawayReservation) => {
+      const property = hostawayProperties.find(p => p.id === hostawayReservation.propertyId);
+      const checkInDate = new Date(hostawayReservation.checkIn);
+      const checkOutDate = new Date(hostawayReservation.checkOut);
+      const nights = Math.ceil((checkOutDate.getTime() - checkInDate.getTime()) / (1000 * 60 * 60 * 24));
+
+      return {
+        id: hostawayReservation.id,
+        guestName: hostawayReservation.guestName,
+        checkInDate: hostawayReservation.checkIn,
+        checkOutDate: hostawayReservation.checkOut,
+        status: hostawayReservation.status === 'confirmed' ? 'Confirmed' : 
+                hostawayReservation.status === 'pending' ? 'Pending' : 
+                hostawayReservation.status === 'cancelled' ? 'Cancelled' : 'Inquiry',
+        property: property?.name || hostawayReservation.propertyName || 'Unknown Property',
+        nights,
+        guests: hostawayReservation.guests,
+        totalAmount: hostawayReservation.totalPrice,
+        email: hostawayReservation.guestEmail,
+        phone: '', // Hostaway API doesn't provide phone in reservations
+        channel: hostawayReservation.source,
+        notes: '', // Hostaway API doesn't provide notes in reservations
+      };
+    });
+  }, [isSuperAdmin, hasCredentials, hostawayReservations, hostawayProperties]);
+
+  // Update reservations when Hostaway data changes
+  useEffect(() => {
+    const transformedReservations = transformHostawayReservations();
+    setReservations(transformedReservations);
+  }, [transformHostawayReservations]);
 
   const addReservation = (reservation: Omit<Reservation, 'id'>) => {
     const newReservation: Reservation = {

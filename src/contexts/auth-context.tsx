@@ -5,7 +5,7 @@ import React, { useState, useEffect, useContext, createContext } from 'react';
 
 // ----------------------------------------------------------------------
 
-export type UserRole = 'user' | 'team' | 'associate' | 'supervisor' | 'manager';
+export type UserRole = 'user' | 'team' | 'associate' | 'supervisor' | 'manager' | 'super-admin';
 
 export interface User {
   id: string;
@@ -77,7 +77,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
           id: '1',
           email: 'admin@hostaway.com',
           name: 'Super Admin',
-          role: 'user',
+          role: 'super-admin',
           avatar: undefined,
         };
       }

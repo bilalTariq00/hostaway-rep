@@ -24,12 +24,14 @@ import {
 import { useRouter } from 'src/routes/hooks';
 
 import { DashboardContent } from 'src/layouts/dashboard';
+import { useHostaway } from 'src/contexts/hostaway-context';
 import { useReservations } from 'src/contexts/reservations-context';
 
 export default function ReservationView() {
   const router = useRouter();
   const { reservationId } = useParams<{ reservationId?: string }>();
   const { reservations } = useReservations();
+  const { reservations: hostawayReservations, properties: hostawayProperties, hasCredentials } = useHostaway();
 
   const [expandedSections, setExpandedSections] = useState<Record<string, boolean>>({
     basicInfo: true,
@@ -57,6 +59,12 @@ export default function ReservationView() {
 
   // Find the reservation
   const reservation = reservations.find((r) => r.id.toString() === reservationId);
+  
+  // Find corresponding Hostaway data if available
+  const hostawayReservation = hasCredentials ? 
+    hostawayReservations.find((r) => r.id.toString() === reservationId) : null;
+  const hostawayProperty = hostawayReservation && hasCredentials ? 
+    hostawayProperties.find((p) => p.id === hostawayReservation.propertyId) : null;
 
   const handleBack = () => {
     router.push('/reservations');
@@ -81,32 +89,32 @@ export default function ReservationView() {
     );
   }
 
-  // Mock data for demonstration - in real app this would come from the reservation
+  // Enhanced data using Hostaway data when available, fallback to mock data
   const formData = {
     // Guest Information
-    name: reservation.guestName || 'Paula',
-    guestFirstName: reservation.guestName?.split(' ')[0] || 'Paula',
-    guestLastName: reservation.guestName?.split(' ').slice(1).join(' ') || 'Guest last name',
-    email: reservation.email || 'Email',
+    name: hostawayReservation?.guestName || reservation.guestName || 'Paula',
+    guestFirstName: (hostawayReservation?.guestName || reservation.guestName || 'Paula').split(' ')[0],
+    guestLastName: (hostawayReservation?.guestName || reservation.guestName || 'Paula').split(' ').slice(1).join(' ') || 'Guest last name',
+    email: hostawayReservation?.guestEmail || reservation.email || 'Email',
     phone: reservation.phone || '',
     phoneCountry: '+1',
     guestCountry: 'US',
     guestCity: 'City',
     guestLanguage: 'en',
-    currency: 'eur',
-    channel: reservation.channel || 'Airbnb',
-    hostawayReservationId: '43591387',
+    currency: hostawayReservation?.currency || 'eur',
+    channel: hostawayReservation?.source || reservation.channel || 'Airbnb',
+    hostawayReservationId: hostawayReservation?.id.toString() || '43591387',
     channelReservationId: '363365-thread-2195871272-5441115527-2025-08-17-125-4',
-    listing: reservation.property || 'Via di Acqua Bullicante 113 (363365)',
+    listing: hostawayProperty?.name || reservation.property || 'Via di Acqua Bullicante 113 (363365)',
     guestPhoto: null as File | null,
 
     // Reservation Details
-    checkInDate: reservation.checkInDate || '2025-08-17',
+    checkInDate: hostawayReservation?.checkIn || reservation.checkInDate || '2025-08-17',
     checkInTime: '15:00',
-    checkOutDate: reservation.checkOutDate || '2025-12-20',
+    checkOutDate: hostawayReservation?.checkOut || reservation.checkOutDate || '2025-12-20',
     checkOutTime: '10:00',
     numberOfNights: reservation.nights || 125,
-    numberOfGuests: reservation.guests || 4,
+    numberOfGuests: hostawayReservation?.guests || reservation.guests || 4,
     children: 0,
     infants: 0,
     pets: 0,
@@ -123,7 +131,7 @@ export default function ReservationView() {
     synced: 'yes',
     instantBooked: 'no',
     channelActive: 'yes',
-    status: reservation.status || 'inquiry',
+    status: hostawayReservation?.status || reservation.status || 'inquiry',
     commissionBooking: '0',
     importMethod: 'threadsImport',
 

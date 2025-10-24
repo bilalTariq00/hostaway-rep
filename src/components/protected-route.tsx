@@ -7,7 +7,7 @@ import { useAuth } from 'src/contexts/auth-context';
 
 interface ProtectedRouteProps {
   children: React.ReactNode;
-  requiredRole?: 'user' | 'team' | 'associate' | 'supervisor' | 'manager';
+  requiredRole?: 'user' | 'team' | 'associate' | 'supervisor' | 'manager' | 'super-admin';
 }
 
 export function ProtectedRoute({ children, requiredRole }: ProtectedRouteProps) {
@@ -21,8 +21,8 @@ export function ProtectedRoute({ children, requiredRole }: ProtectedRouteProps) 
         return;
       }
 
-      if (requiredRole && user.role !== requiredRole && user.role !== 'user') {
-        // Super admin (user role) can access all pages
+      if (requiredRole && user.role !== requiredRole && user.role !== 'user' && user.role !== 'super-admin') {
+        // Super admin can access all pages, regular user can access user-required pages
         // Redirect to appropriate dashboard based on user role
         if (user.role === 'team') {
           navigate('/team-dashboard');
@@ -56,7 +56,7 @@ export function ProtectedRoute({ children, requiredRole }: ProtectedRouteProps) 
     return null;
   }
 
-  if (requiredRole && user.role !== requiredRole && user.role !== 'user') {
+  if (requiredRole && user.role !== requiredRole && user.role !== 'user' && user.role !== 'super-admin') {
     return null;
   }
 

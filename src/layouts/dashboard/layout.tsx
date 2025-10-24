@@ -1,3 +1,4 @@
+/* eslint-disable perfectionist/sort-imports */
 import type { Breakpoint } from '@mui/material/styles';
 
 import { merge } from 'es-toolkit';
@@ -13,12 +14,12 @@ import { useSidebar, SidebarProvider } from 'src/contexts/sidebar-context';
 
 import { NavMobile, NavDesktop } from './nav';
 import { layoutClasses } from '../core/classes';
-import { _account } from '../nav-config-account';
 import { dashboardLayoutVars } from './css-vars';
 import { MainSection } from '../core/main-section';
 import { Searchbar } from '../components/searchbar';
-import { _workspaces } from '../nav-config-workspace';
 import { MenuButton } from '../components/menu-button';
+import { _workspaces } from '../nav-config-workspace';
+import { _account, filterAccountItemsByRole } from '../nav-config-account';
 import { HeaderSection } from '../core/header-section';
 import { LayoutSection } from '../core/layout-section';
 import { SidebarToggle } from '../components/sidebar-toggle';
@@ -55,6 +56,7 @@ function DashboardLayoutContent({
 
   // Filter navigation data based on user role
   const filteredNavData = user ? filterNavItemsByRole(navData, user.role) : navData;
+  const filteredAccountData = user ? filterAccountItemsByRole(_account, user.role) : _account;
   const { collapsed } = useSidebar();
 
   const { value: open, onFalse: onClose, onTrue: onOpen } = useBoolean();
@@ -114,7 +116,7 @@ function DashboardLayoutContent({
           <NotificationsPopover data={_notifications} />
 
           {/** @slot Account drawer */}
-          <AccountPopover data={_account} />
+          <AccountPopover data={filteredAccountData} />
         </Box>
       ),
     };

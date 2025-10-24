@@ -496,7 +496,7 @@ export const routesSection: RouteObject[] = [
       {
         path: 'create-account',
         element: (
-          <ProtectedRoute requiredRole="user">
+          <ProtectedRoute requiredRole="super-admin">
             <CreateAccountPage />
           </ProtectedRoute>
         ),
@@ -504,7 +504,7 @@ export const routesSection: RouteObject[] = [
       {
         path: 'user-management',
         element: (
-          <ProtectedRoute requiredRole="user">
+          <ProtectedRoute requiredRole="super-admin">
             <UserManagementPage />
           </ProtectedRoute>
         ),
@@ -512,7 +512,7 @@ export const routesSection: RouteObject[] = [
       {
         path: 'client-management',
         element: (
-          <ProtectedRoute requiredRole="user">
+          <ProtectedRoute requiredRole="super-admin">
             <ClientManagementPage />
           </ProtectedRoute>
         ),

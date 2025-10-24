@@ -12,6 +12,7 @@ import IconButton from '@mui/material/IconButton';
 import InputAdornment from '@mui/material/InputAdornment';
 
 import { useAuth } from 'src/contexts/auth-context';
+import { hostawayApi } from 'src/services/hostaway-api';
 
 export function HostawayRegister() {
   const navigate = useNavigate();
@@ -21,6 +22,8 @@ export function HostawayRegister() {
     lastName: '',
     email: '',
     password: '',
+    hostawayApiKey: '',
+    hostawayAccountId: '',
   });
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState('');
@@ -40,11 +43,24 @@ export function HostawayRegister() {
           id: Date.now().toString(),
           email: formData.email,
           name: `${formData.firstName} ${formData.lastName}`,
-          role: 'user', // Default to user role for new registrations
+          role: formData.hostawayApiKey && formData.hostawayAccountId ? 'super-admin' : 'user',
+          hostawayApiKey: formData.hostawayApiKey,
+          hostawayAccountId: formData.hostawayAccountId,
         };
 
         // Store user data
         localStorage.setItem('user', JSON.stringify(userData));
+        
+        // Store Hostaway credentials separately for security
+        if (formData.hostawayApiKey && formData.hostawayAccountId) {
+          const hostawayCredentials = {
+            apiKey: formData.hostawayApiKey,
+            accountId: formData.hostawayAccountId,
+            userId: userData.id,
+          };
+          localStorage.setItem('hostawayCredentials', JSON.stringify(hostawayCredentials));
+          hostawayApi.setCredentials(hostawayCredentials);
+        }
 
         console.log('Registration successful, navigating to dashboard...');
         navigate('/dashboard', { replace: true });
@@ -246,6 +262,57 @@ export function HostawayRegister() {
                 ),
               }}
             />
+
+            {/* Hostaway API Credentials Section */}
+            <Box sx={{ mb: 3 }}>
+              <Typography variant="h6" sx={{ mb: 2, color: '#333', fontWeight: 600 }}>
+                Hostaway Integration (Optional)
+              </Typography>
+              <Typography variant="body2" sx={{ mb: 2, color: 'text.secondary' }}>
+                Connect your Hostaway account to sync your property data
+              </Typography>
+              
+              <TextField
+                fullWidth
+                label="Hostaway API Key"
+                type="password"
+                value={formData.hostawayApiKey}
+                onChange={handleChange('hostawayApiKey')}
+                placeholder="Enter your Hostaway API key"
+                sx={{
+                  mb: 2,
+                  '& .MuiOutlinedInput-root': {
+                    borderRadius: 2,
+                    bgcolor: 'white',
+                  },
+                  '& .MuiInputLabel-root': {
+                    color: 'text.secondary',
+                  },
+                }}
+              />
+              
+              <TextField
+                fullWidth
+                label="Hostaway Account ID"
+                value={formData.hostawayAccountId}
+                onChange={handleChange('hostawayAccountId')}
+                placeholder="Enter your Hostaway Account ID"
+                sx={{
+                  mb: 2,
+                  '& .MuiOutlinedInput-root': {
+                    borderRadius: 2,
+                    bgcolor: 'white',
+                  },
+                  '& .MuiInputLabel-root': {
+                    color: 'text.secondary',
+                  },
+                }}
+              />
+              
+              <Typography variant="caption" sx={{ color: 'text.secondary', fontSize: '12px' }}>
+                You can find these in your Hostaway account → Settings → API
+              </Typography>
+            </Box>
 
             <Button
               type="submit"
