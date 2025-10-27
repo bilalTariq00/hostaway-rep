@@ -8,8 +8,14 @@ import {
   MessageSquare,
   Target,
   TrendingUp,
+  TrendingDown,
   Users,
   Zap,
+  BarChart,
+  PieChart,
+  LineChart,
+  Calendar,
+  Bell,
 } from 'lucide-react';
 
 import Box from '@mui/material/Box';
@@ -46,6 +52,28 @@ interface WorkerDetailViewProps {
 
 function WorkerDetailView({ worker, onBack }: WorkerDetailViewProps) {
   const theme = useTheme();
+  
+  // Generate mock weekly performance data
+  const weeklyPerformance = [
+    { week: 'Week 1', quality: 75, responses: 20 },
+    { week: 'Week 2', quality: 82, responses: 25 },
+    { week: 'Week 3', quality: 78, responses: 18 },
+    { week: 'Week 4', quality: 88, responses: 22 },
+    { week: 'Week 5', quality: 85, responses: 24 },
+    { week: 'Week 6', quality: 90, responses: 28 },
+  ];
+
+  const dailyActivity = [
+    { day: 'Mon', messages: 8, avgResponseTime: 12 },
+    { day: 'Tue', messages: 12, avgResponseTime: 10 },
+    { day: 'Wed', messages: 10, avgResponseTime: 14 },
+    { day: 'Thu', messages: 15, avgResponseTime: 9 },
+    { day: 'Fri', messages: 18, avgResponseTime: 8 },
+    { day: 'Sat', messages: 6, avgResponseTime: 15 },
+    { day: 'Sun', messages: 5, avgResponseTime: 16 },
+  ];
+
+  const hourDistribution = [2, 1, 1, 0, 0, 3, 8, 12, 15, 18, 20, 22, 25, 28, 30, 28, 24, 20, 15, 12, 8, 5, 3, 2];
   
   // Chart options for worker detail view
   const workerQualityChartOptions = useChart({
@@ -96,6 +124,113 @@ function WorkerDetailView({ worker, onBack }: WorkerDetailViewProps) {
         colors: ['#4caf50', '#8bc34a', '#ff9800', '#f44336'],
       },
       formatter: (val: number) => val.toString(),
+    },
+  });
+
+  const weeklyTrendOptions = useChart({
+    colors: [theme.palette.primary.main, theme.palette.warning.main],
+    xaxis: {
+      categories: weeklyPerformance.map(w => w.week),
+      labels: {
+        style: {
+          fontSize: '12px',
+          fontWeight: 600,
+        },
+      },
+    },
+    yaxis: [
+      {
+        title: {
+          text: 'Quality Score (%)',
+          style: { fontSize: '12px', fontWeight: 600 },
+        },
+        min: 0,
+        max: 100,
+      },
+      {
+        opposite: true,
+        title: {
+          text: 'Messages',
+          style: { fontSize: '12px', fontWeight: 600 },
+        },
+      },
+    ],
+    legend: {
+      show: true,
+      position: 'top',
+      horizontalAlign: 'right',
+    },
+    tooltip: {
+      shared: true,
+      intersect: false,
+    },
+    stroke: {
+      width: [3, 2],
+      curve: 'smooth',
+    },
+    markers: {
+      size: 5,
+    },
+  });
+
+  const dailyActivityOptions = useChart({
+    colors: [theme.palette.success.main, theme.palette.info.main],
+    xaxis: {
+      categories: dailyActivity.map(d => d.day),
+      labels: { style: { fontSize: '12px', fontWeight: 600 } },
+    },
+    yaxis: [
+      {
+        title: { text: 'Messages', style: { fontSize: '12px', fontWeight: 600 } },
+        min: 0,
+      },
+      {
+        opposite: true,
+        title: { text: 'Response Time (min)', style: { fontSize: '12px', fontWeight: 600 } },
+      },
+    ],
+    legend: {
+      show: true,
+      position: 'top',
+    },
+    tooltip: {
+      shared: true,
+      intersect: false,
+    },
+    stroke: {
+      width: 3,
+      curve: 'smooth',
+    },
+  });
+
+  const hourlyDistributionOptions = useChart({
+    colors: [theme.palette.primary.main],
+    xaxis: {
+      categories: Array.from({ length: 24 }, (_, i) => `${i}:00`),
+      labels: {
+        rotate: -90,
+        style: { fontSize: '10px', fontWeight: 600 },
+      },
+    },
+    yaxis: {
+      title: {
+        text: 'Messages',
+        style: { fontSize: '12px', fontWeight: 600 },
+      },
+      min: 0,
+    },
+    tooltip: {
+      y: { formatter: (value: number) => `${value} messages` },
+    },
+    plotOptions: {
+      bar: {
+        horizontal: false,
+        columnWidth: '70%',
+        borderRadius: 4,
+      },
+    },
+    dataLabels: {
+      enabled: false,
     },
   });
   
@@ -239,18 +374,94 @@ function WorkerDetailView({ worker, onBack }: WorkerDetailViewProps) {
         </Grid>
       </Grid>
 
-      {/* Professional Charts Section */}
-      <Grid container spacing={3} sx={{ mb: 4 }}>
+      {/* Performance Insights Cards */}
+      <Card sx={{ mb: 3, borderRadius: 2, overflow: 'hidden' }}>
+        <CardHeader
+          title={
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+              <BarChart size={20} color={theme.palette.primary.main} />
+              <Typography variant="h6" sx={{ fontWeight: 600 }}>
+                Performance Insights
+              </Typography>
+            </Box>
+          }
+        />
+        <CardContent sx={{ p: 3 }}>
+          <Grid container spacing={2}>
+            <Grid size={{ xs: 12, sm: 6, md: 3 }}>
+              <Box sx={{ p: 2, borderRadius: 2, bgcolor: alpha(theme.palette.success.main, 0.05), border: `1px solid ${alpha(theme.palette.success.main, 0.1)}` }}>
+                <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1 }}>
+                  <CheckCircle size={16} color={theme.palette.success.main} />
+                  <Typography variant="subtitle2" sx={{ fontWeight: 600, color: 'success.main' }}>
+                    Strengths
+                  </Typography>
+                </Box>
+                <Typography variant="body2" color="text.secondary">
+                  {worker.averageQualityScore >= 80 ? 'Consistently high quality responses' :
+                   worker.averageQualityScore >= 60 ? 'Good overall performance' : 'Room for improvement'}
+                </Typography>
+              </Box>
+            </Grid>
+            <Grid size={{ xs: 12, sm: 6, md: 3 }}>
+              <Box sx={{ p: 2, borderRadius: 2, bgcolor: alpha(theme.palette.warning.main, 0.05), border: `1px solid ${alpha(theme.palette.warning.main, 0.1)}` }}>
+                <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1 }}>
+                  <AlertTriangle size={16} color={theme.palette.warning.main} />
+                  <Typography variant="subtitle2" sx={{ fontWeight: 600, color: 'warning.main' }}>
+                    Areas for Improvement
+                  </Typography>
+                </Box>
+                <Typography variant="body2" color="text.secondary">
+                  {worker.averageResponseTime > 1800000 ? 'Response time could be faster' :
+                   worker.averageQualityScore < 70 ? 'Focus on message quality' : 'Maintain current performance'}
+                </Typography>
+              </Box>
+            </Grid>
+            <Grid size={{ xs: 12, sm: 6, md: 3 }}>
+              <Box sx={{ p: 2, borderRadius: 2, bgcolor: alpha(theme.palette.info.main, 0.05), border: `1px solid ${alpha(theme.palette.info.main, 0.1)}` }}>
+                <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1 }}>
+                  <TrendingUp size={16} color={theme.palette.info.main} />
+                  <Typography variant="subtitle2" sx={{ fontWeight: 600, color: 'info.main' }}>
+                    Recommendations
+                  </Typography>
+                </Box>
+                <Typography variant="body2" color="text.secondary">
+                  {worker.averageQualityScore >= 80 && worker.averageResponseTime < 900000 ? 
+                    'Excellent performance! Consider mentoring others.' :
+                    'Continue focusing on quality and response time balance.'}
+                </Typography>
+              </Box>
+            </Grid>
+            <Grid size={{ xs: 12, sm: 6, md: 3 }}>
+              <Box sx={{ p: 2, borderRadius: 2, bgcolor: alpha(theme.palette.primary.main, 0.05), border: `1px solid ${alpha(theme.palette.primary.main, 0.1)}` }}>
+                <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1 }}>
+                  <Activity size={16} color={theme.palette.primary.main} />
+                  <Typography variant="subtitle2" sx={{ fontWeight: 600, color: 'primary.main' }}>
+                    Activity Status
+                  </Typography>
+                </Box>
+                <Typography variant="body2" color="text.secondary">
+                  Active worker with consistent engagement
+                </Typography>
+              </Box>
+            </Grid>
+          </Grid>
+        </CardContent>
+      </Card>
+
         {/* Quality Breakdown Chart */}
+      <Grid container spacing={3} sx={{ mb: 4 }}>
         <Grid size={{ xs: 12, md: 8 }}>
           <Card sx={{ borderRadius: 2, overflow: 'hidden', height: '100%' }}>
             <CardHeader
               title={
+                <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                  <BarChart size={20} color={theme.palette.primary.main} />
                 <Typography variant="h6" sx={{ fontWeight: 600 }}>
                   Quality Breakdown
                 </Typography>
+                </Box>
               }
-              subheader="Detailed performance metrics"
+              subheader="Detailed performance metrics by quality category"
             />
             <CardContent sx={{ p: 3 }}>
               <Chart
@@ -273,83 +484,384 @@ function WorkerDetailView({ worker, onBack }: WorkerDetailViewProps) {
           </Card>
         </Grid>
 
-        {/* Performance Insights */}
+        {/* Quality Distribution Donut */}
         <Grid size={{ xs: 12, md: 4 }}>
           <Card sx={{ borderRadius: 2, overflow: 'hidden', height: '100%' }}>
             <CardHeader
               title={
+                <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                  <PieChart size={20} color={theme.palette.primary.main} />
                 <Typography variant="h6" sx={{ fontWeight: 600 }}>
-                  Performance Insights
+                    Quality Distribution
                 </Typography>
+                </Box>
               }
+              subheader="Overall quality breakdown"
             />
             <CardContent sx={{ p: 3 }}>
-              <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
-                <Box
-                  sx={{
-                    p: 2,
-                    borderRadius: 2,
-                    backgroundColor: alpha(theme.palette.success.main, 0.05),
-                    border: `1px solid ${alpha(theme.palette.success.main, 0.1)}`,
-                  }}
-                >
-                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1 }}>
-                    <CheckCircle size={16} color={theme.palette.success.main} />
-                    <Typography variant="subtitle2" sx={{ fontWeight: 600, color: 'success.main' }}>
-                      Strengths
-                    </Typography>
-                  </Box>
-                  <Typography variant="body2" color="text.secondary">
-                    {worker.averageQualityScore >= 80 ? 'Consistently high quality responses' :
-                     worker.averageQualityScore >= 60 ? 'Good overall performance' : 'Room for improvement'}
-                  </Typography>
-                </Box>
-
-                <Box
-                  sx={{
-                    p: 2,
-                    borderRadius: 2,
-                    backgroundColor: alpha(theme.palette.warning.main, 0.05),
-                    border: `1px solid ${alpha(theme.palette.warning.main, 0.1)}`,
-                  }}
-                >
-                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1 }}>
-                    <AlertTriangle size={16} color={theme.palette.warning.main} />
-                    <Typography variant="subtitle2" sx={{ fontWeight: 600, color: 'warning.main' }}>
-                      Areas for Improvement
-                    </Typography>
-                  </Box>
-                  <Typography variant="body2" color="text.secondary">
-                    {worker.averageResponseTime > 1800000 ? 'Response time could be faster' :
-                     worker.averageQualityScore < 70 ? 'Focus on message quality' : 'Maintain current performance'}
-                  </Typography>
-                </Box>
-
-                <Box
-                  sx={{
-                    p: 2,
-                    borderRadius: 2,
-                    backgroundColor: alpha(theme.palette.info.main, 0.05),
-                    border: `1px solid ${alpha(theme.palette.info.main, 0.1)}`,
-                  }}
-                >
-                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1 }}>
-                    <TrendingUp size={16} color={theme.palette.info.main} />
-                    <Typography variant="subtitle2" sx={{ fontWeight: 600, color: 'info.main' }}>
-                      Recommendations
-                    </Typography>
-                  </Box>
-                  <Typography variant="body2" color="text.secondary">
-                    {worker.averageQualityScore >= 80 && worker.averageResponseTime < 900000 ? 
-                      'Excellent performance! Consider mentoring others.' :
-                      'Continue focusing on quality and response time balance.'}
-                  </Typography>
-                </Box>
-              </Box>
+              <Chart
+                type="donut"
+                series={[
+                  worker.excellentResponses,
+                  worker.goodResponses,
+                  worker.averageResponses,
+                  worker.poorResponses
+                ]}
+                options={{
+                  colors: ['#4caf50', '#8bc34a', '#ff9800', '#f44336'],
+                  labels: ['Excellent', 'Good', 'Average', 'Poor'],
+                  legend: {
+                    position: 'bottom',
+                    fontSize: '14px',
+                    fontWeight: 500,
+                  },
+                  plotOptions: {
+                    pie: {
+                      donut: {
+                        size: '70%',
+                        labels: {
+                          show: true,
+                          total: {
+                            show: true,
+                            label: 'Total',
+                            fontSize: '16px',
+                            fontWeight: 600,
+                            formatter: () => worker.totalMessages.toString(),
+                          },
+                        },
+                      },
+                    },
+                  },
+                  tooltip: {
+                    y: {
+                      formatter: (value: number) => {
+                        const percentage = Math.round((value / worker.totalMessages) * 100);
+                        return `${value} (${percentage}%)`;
+                      },
+                    },
+                  },
+                  dataLabels: {
+                    enabled: false,
+                  },
+                }}
+                sx={{ height: 300 }}
+              />
             </CardContent>
           </Card>
         </Grid>
       </Grid>
+
+      {/* Weekly Performance Trend */}
+      <Grid container spacing={3} sx={{ mb: 4 }}>
+        <Grid size={{ xs: 12 }}>
+          <Card sx={{ borderRadius: 2, overflow: 'hidden' }}>
+            <CardHeader
+              title={
+                <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                  <LineChart size={20} color={theme.palette.primary.main} />
+                  <Typography variant="h6" sx={{ fontWeight: 600 }}>
+                    Weekly Performance Trend
+                    </Typography>
+                  </Box>
+              }
+              subheader="Quality and activity trends over the past 6 weeks"
+            />
+            <CardContent sx={{ p: 3 }}>
+              <Chart
+                type="line"
+                series={[
+                  {
+                    name: 'Quality Score (%)',
+                    type: 'line',
+                    data: weeklyPerformance.map(w => w.quality),
+                  },
+                  {
+                    name: 'Messages Sent',
+                    type: 'column',
+                    data: weeklyPerformance.map(w => w.responses),
+                  },
+                ]}
+                options={weeklyTrendOptions}
+                sx={{ height: 350 }}
+              />
+            </CardContent>
+          </Card>
+        </Grid>
+      </Grid>
+
+      {/* Daily Activity and Hourly Distribution */}
+      <Grid container spacing={3} sx={{ mb: 4 }}>
+        <Grid size={{ xs: 12, md: 6 }}>
+          <Card sx={{ borderRadius: 2, overflow: 'hidden', height: '100%' }}>
+            <CardHeader
+              title={
+                <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                  <Calendar size={20} color={theme.palette.primary.main} />
+                  <Typography variant="h6" sx={{ fontWeight: 600 }}>
+                    Daily Activity
+                  </Typography>
+                </Box>
+              }
+              subheader="Message volume and response time by day"
+            />
+            <CardContent sx={{ p: 3 }}>
+              <Chart
+                type="line"
+                series={[
+                  {
+                    name: 'Messages Sent',
+                    type: 'column',
+                    data: dailyActivity.map(d => d.messages),
+                  },
+                  {
+                    name: 'Avg Response Time (min)',
+                    type: 'line',
+                    data: dailyActivity.map(d => d.avgResponseTime),
+                  },
+                ]}
+                options={dailyActivityOptions}
+                sx={{ height: 300 }}
+              />
+            </CardContent>
+          </Card>
+        </Grid>
+
+        <Grid size={{ xs: 12, md: 6 }}>
+          <Card sx={{ borderRadius: 2, overflow: 'hidden', height: '100%' }}>
+            <CardHeader
+              title={
+                <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                  <Clock size={20} color={theme.palette.primary.main} />
+                  <Typography variant="h6" sx={{ fontWeight: 600 }}>
+                    Hourly Activity Distribution
+                    </Typography>
+                  </Box>
+              }
+              subheader="Message activity throughout the day"
+            />
+            <CardContent sx={{ p: 3 }}>
+              <Chart
+                type="bar"
+                series={[
+                  {
+                    name: 'Messages',
+                    data: hourDistribution,
+                  },
+                ]}
+                options={hourlyDistributionOptions}
+                sx={{ height: 300 }}
+              />
+            </CardContent>
+          </Card>
+        </Grid>
+      </Grid>
+
+      {/* Additional Metrics Cards */}
+      <Grid container spacing={3} sx={{ mb: 4 }}>
+        <Grid size={{ xs: 12, sm: 6, md: 3 }}>
+          <Card sx={{ borderRadius: 2, overflow: 'hidden', height: '100%' }}>
+            <CardContent sx={{ p: 3 }}>
+              <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 2 }}>
+                <Typography variant="body2" color="text.secondary" sx={{ fontWeight: 500 }}>
+                  Best Quality Day
+                  </Typography>
+                <Box sx={{ p: 1, bgcolor: alpha(theme.palette.success.main, 0.1), borderRadius: 1 }}>
+                  <Award size={20} color={theme.palette.success.main} />
+                </Box>
+              </Box>
+              <Typography variant="h4" sx={{ fontWeight: 700, color: 'text.primary', mb: 1 }}>
+                {dailyActivity.reduce((max, day) => day.messages > max.messages ? day : max).day}
+              </Typography>
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                <TrendingUp size={16} color={theme.palette.success.main} />
+                <Typography variant="caption" color="success.main" sx={{ fontWeight: 600 }}>
+                  {Math.max(...dailyActivity.map(d => d.messages))} messages
+                </Typography>
+              </Box>
+            </CardContent>
+          </Card>
+        </Grid>
+
+        <Grid size={{ xs: 12, sm: 6, md: 3 }}>
+          <Card sx={{ borderRadius: 2, overflow: 'hidden', height: '100%' }}>
+            <CardContent sx={{ p: 3 }}>
+              <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 2 }}>
+                <Typography variant="body2" color="text.secondary" sx={{ fontWeight: 500 }}>
+                  Fastest Response Day
+                </Typography>
+                <Box sx={{ p: 1, bgcolor: alpha(theme.palette.info.main, 0.1), borderRadius: 1 }}>
+                  <Zap size={20} color={theme.palette.info.main} />
+                </Box>
+              </Box>
+              <Typography variant="h4" sx={{ fontWeight: 700, color: 'text.primary', mb: 1 }}>
+                {dailyActivity.reduce((min, day) => day.avgResponseTime < min.avgResponseTime ? day : min).day}
+              </Typography>
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                    <TrendingUp size={16} color={theme.palette.info.main} />
+                <Typography variant="caption" color="info.main" sx={{ fontWeight: 600 }}>
+                  {Math.min(...dailyActivity.map(d => d.avgResponseTime))} min avg
+                    </Typography>
+                  </Box>
+            </CardContent>
+          </Card>
+        </Grid>
+
+        <Grid size={{ xs: 12, sm: 6, md: 3 }}>
+          <Card sx={{ borderRadius: 2, overflow: 'hidden', height: '100%' }}>
+            <CardContent sx={{ p: 3 }}>
+              <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 2 }}>
+                <Typography variant="body2" color="text.secondary" sx={{ fontWeight: 500 }}>
+                  Peak Activity Hour
+                  </Typography>
+                <Box sx={{ p: 1, bgcolor: alpha(theme.palette.warning.main, 0.1), borderRadius: 1 }}>
+                  <Activity size={20} color={theme.palette.warning.main} />
+                </Box>
+              </Box>
+              <Typography variant="h4" sx={{ fontWeight: 700, color: 'text.primary', mb: 1 }}>
+                {hourDistribution.indexOf(Math.max(...hourDistribution))}:00
+              </Typography>
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                <Bell size={16} color={theme.palette.warning.main} />
+                <Typography variant="caption" color="warning.main" sx={{ fontWeight: 600 }}>
+                  {Math.max(...hourDistribution)} messages
+                </Typography>
+              </Box>
+            </CardContent>
+          </Card>
+        </Grid>
+
+        <Grid size={{ xs: 12, sm: 6, md: 3 }}>
+          <Card sx={{ borderRadius: 2, overflow: 'hidden', height: '100%' }}>
+            <CardContent sx={{ p: 3 }}>
+              <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 2 }}>
+                <Typography variant="body2" color="text.secondary" sx={{ fontWeight: 500 }}>
+                  Consistency Score
+                </Typography>
+                <Box sx={{ p: 1, bgcolor: alpha(theme.palette.primary.main, 0.1), borderRadius: 1 }}>
+                  <Target size={20} color={theme.palette.primary.main} />
+                </Box>
+              </Box>
+              <Typography variant="h4" sx={{ fontWeight: 700, color: 'text.primary', mb: 1 }}>
+                92%
+              </Typography>
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                <CheckCircle size={16} color={theme.palette.primary.main} />
+                <Typography variant="caption" color="primary.main" sx={{ fontWeight: 600 }}>
+                  Highly consistent
+                </Typography>
+              </Box>
+            </CardContent>
+          </Card>
+      </Grid>
+      </Grid>
+
+      {/* Activity Summary Table */}
+      <Card sx={{ borderRadius: 2, overflow: 'hidden', mb: 4 }}>
+        <CardHeader
+          title={
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+              <Activity size={20} color={theme.palette.primary.main} />
+              <Typography variant="h6" sx={{ fontWeight: 600 }}>
+                Weekly Activity Summary
+              </Typography>
+            </Box>
+          }
+          subheader="Detailed breakdown of weekly performance"
+        />
+        <CardContent sx={{ p: 0 }}>
+          <TableContainer>
+            <Table>
+              <TableHead>
+                <TableRow sx={{ backgroundColor: alpha(theme.palette.grey[500], 0.04) }}>
+                  <TableCell sx={{ fontWeight: 600, color: 'text.primary', py: 2 }}>Week</TableCell>
+                  <TableCell sx={{ fontWeight: 600, color: 'text.primary', py: 2 }}>Quality Score</TableCell>
+                  <TableCell sx={{ fontWeight: 600, color: 'text.primary', py: 2 }}>Messages</TableCell>
+                  <TableCell sx={{ fontWeight: 600, color: 'text.primary', py: 2 }}>Progress</TableCell>
+                  <TableCell sx={{ fontWeight: 600, color: 'text.primary', py: 2 }}>Status</TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {weeklyPerformance.map((week, index) => (
+                  <TableRow 
+                    key={index}
+                    hover
+                    sx={{ 
+                      '&:nth-of-type(even)': { 
+                        backgroundColor: alpha(theme.palette.grey[500], 0.02) 
+                      },
+                      '&:hover': {
+                        backgroundColor: alpha(theme.palette.primary.main, 0.04),
+                      }
+                    }}
+                  >
+                    <TableCell sx={{ py: 2 }}>
+                      <Typography variant="body2" sx={{ fontWeight: 600 }}>
+                        {week.week}
+                      </Typography>
+                    </TableCell>
+                    <TableCell sx={{ py: 2 }}>
+                      <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+                        <Box sx={{ width: 100 }}>
+                          <LinearProgress 
+                            variant="determinate" 
+                            value={week.quality} 
+                            sx={{ 
+                              height: 8, 
+                              borderRadius: 4,
+                              bgcolor: alpha(theme.palette.grey[300], 0.3),
+                              '& .MuiLinearProgress-bar': {
+                                bgcolor: week.quality >= 80 ? theme.palette.success.main :
+                                        week.quality >= 60 ? theme.palette.warning.main : theme.palette.error.main,
+                              },
+                            }}
+                          />
+                        </Box>
+                        <Typography variant="body2" sx={{ fontWeight: 600, minWidth: 40 }}>
+                          {week.quality}%
+                        </Typography>
+                      </Box>
+                    </TableCell>
+                    <TableCell sx={{ py: 2 }}>
+                      <Typography variant="body2" sx={{ fontWeight: 600 }}>
+                        {week.responses}
+                      </Typography>
+                    </TableCell>
+                    <TableCell sx={{ py: 2 }}>
+                      {week.quality > weeklyPerformance[index - 1]?.quality && index > 0 ? (
+                        <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
+                          <TrendingUp size={16} color={theme.palette.success.main} />
+                          <Typography variant="body2" color="success.main" sx={{ fontWeight: 600 }}>
+                            +{week.quality - weeklyPerformance[index - 1].quality}%
+                          </Typography>
+                        </Box>
+                      ) : index > 0 && week.quality < weeklyPerformance[index - 1]?.quality ? (
+                        <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
+                          <TrendingDown size={16} color={theme.palette.error.main} />
+                          <Typography variant="body2" color="error.main" sx={{ fontWeight: 600 }}>
+                            {week.quality - weeklyPerformance[index - 1].quality}%
+                          </Typography>
+                        </Box>
+                      ) : (
+                        <Typography variant="body2" color="text.secondary" sx={{ fontWeight: 600 }}>
+                          Stable
+                        </Typography>
+                      )}
+                    </TableCell>
+                    <TableCell sx={{ py: 2 }}>
+                      <Chip 
+                        label={week.quality >= 85 ? 'Excellent' : week.quality >= 70 ? 'Good' : 'Fair'} 
+                        size="small" 
+                        color={week.quality >= 85 ? 'success' : week.quality >= 70 ? 'warning' : 'default'}
+                        sx={{ fontWeight: 600 }}
+                      />
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </TableContainer>
+        </CardContent>
+      </Card>
     </DashboardContent>
   );
 }
