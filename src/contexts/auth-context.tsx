@@ -3,6 +3,8 @@ import type { ReactNode } from 'react';
 import { useNavigate } from 'react-router';
 import React, { useState, useEffect, useContext, createContext } from 'react';
 
+import { API_URL } from 'src/config/environment';
+
 // ----------------------------------------------------------------------
 
 export type UserRole = 'user' | 'team' | 'associate' | 'supervisor' | 'manager' | 'super-admin';
@@ -54,7 +56,6 @@ export function AuthProvider({ children }: AuthProviderProps) {
         }
 
         // Verify token with backend
-        const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001';
         try {
           const response = await fetch(`${API_URL}/api/auth/me`, {
             method: 'GET',
@@ -114,7 +115,6 @@ export function AuthProvider({ children }: AuthProviderProps) {
 
     try {
       // Login via API - ONLY users in database can login
-      const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001';
       const response = await fetch(`${API_URL}/api/auth/login`, {
         method: 'POST',
         headers: {
@@ -174,7 +174,6 @@ export function AuthProvider({ children }: AuthProviderProps) {
         throw new Error('Not authenticated');
       }
 
-      const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001';
       const response = await fetch(`${API_URL}/api/auth/register`, {
         method: 'POST',
         headers: {
@@ -210,7 +209,6 @@ export function AuthProvider({ children }: AuthProviderProps) {
         throw new Error('Not authenticated');
       }
 
-      const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001';
       const response = await fetch(`${API_URL}/api/auth/update-profile`, {
         method: 'PUT',
         headers: {
