@@ -26,16 +26,60 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 // Enable CORS for all origins
-app.use(cors({
-  origin: [
-    "http://localhost:3039",
-    "http://localhost:5173", // Vite dev server
-    "https://material-kit-react-main.vercel.app", // Your Vercel URL (update after deployment)
-    /\.vercel\.app$/ // Allow all Vercel preview deployments
-  ],
-  methods: ["GET", "POST", "PUT", "DELETE", "PATCH"],
-  credentials: true
-}));
+const corsOptions = {
+  origin: function (origin, callback) {
+    // Allow requests with no origin (like mobile apps or curl requests)
+    if (!origin) return callback(null, true);
+    
+    const allowedOrigins = [
+      "http://localhost:3039",
+      "http://localhost:5173", // Vite dev server
+      "https://material-kit-react-main.vercel.app", // Your Vercel URL (update after deployment)
+      /\.vercel\.app$/ // Allow all Vercel preview deployments
+    ];
+    
+    // Check if origin matches any allowed pattern
+    const isAllowed = allowedOrigins.some(allowed => {
+      if (typeof allowed === 'string') {
+        return origin === allowed;
+      } else if (allowed instanceof RegExp) {
+        return allowed.test(origin);
+      }
+      return false;
+    });
+    
+    if (isAllowed) {
+      callback(null, true);
+    } else {
+      console.log(`⚠️  CORS blocked origin: ${origin}`);
+      // Temporarily allow all origins for debugging - restrict in production
+      callback(null, true);
+    }
+  },
+  methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
+  allowedHeaders: ["Content-Type", "Authorization", "X-Requested-With"],
+  credentials: true,
+  preflightContinue: false,
+  optionsSuccessStatus: 204
+};
+
+app.use(cors(corsOptions));
+
+// Handle preflight requests explicitly for all routes
+app.options('*', (req, res) => {
+  const origin = req.headers.origin;
+  console.log(`🔍 OPTIONS preflight request from: ${origin}`);
+  console.log(`   Path: ${req.path}`);
+  console.log(`   Method: ${req.method}`);
+  
+  // Allow any origin for OPTIONS (browser will enforce actual request)
+  res.header('Access-Control-Allow-Origin', origin || '*');
+  res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, PATCH, OPTIONS');
+  res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-Requested-With');
+  res.header('Access-Control-Allow-Credentials', 'true');
+  res.header('Access-Control-Max-Age', '86400'); // 24 hours
+  res.sendStatus(204);
+});
 
 const io = new Server(server, {
   cors: {

@@ -8,3 +8,8 @@ uploads/
 **/firebase-adminsdk-*.json
 **/*-firebase-adminsdk-*.json
 **/service-account*.json
+
+# Build output
+dist/
+build/
+out/
