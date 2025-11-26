@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Star, Users, MapPin, Building2, BarChart3, DollarSign } from 'lucide-react';
+import { Star, Users, MapPin, Target, BarChart3, Building2, DollarSign } from 'lucide-react';
 
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
@@ -8,13 +8,18 @@ import Grid from '@mui/material/Grid';
 import Stack from '@mui/material/Stack';
 import Avatar from '@mui/material/Avatar';
 import Divider from '@mui/material/Divider';
+import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 import CardHeader from '@mui/material/CardHeader';
+import IconButton from '@mui/material/IconButton';
 import CardContent from '@mui/material/CardContent';
+import { alpha, useTheme } from '@mui/material/styles';
 import LinearProgress from '@mui/material/LinearProgress';
 
 import { DashboardContent } from 'src/layouts/dashboard';
+import { useRatings } from 'src/contexts/ratings-context';
 import { useAuth, type User } from 'src/contexts/auth-context';
+import { useMessageQuality } from 'src/contexts/message-quality-context';
 
 // Client interface
 interface Client {
@@ -42,10 +47,43 @@ interface Property {
 }
 
 export function ManagerDashboardPage() {
+  const theme = useTheme();
   const { user } = useAuth();
+  const { getAllWorkersPerformance } = useMessageQuality();
+  const { addRating } = useRatings();
+  const [ratings, setRatings] = useState<Record<string, number>>({});
+  const [feedback, setFeedback] = useState<Record<string, string>>({});
   const [assignedUsers, setAssignedUsers] = useState<User[]>([]);
   const [assignedClients, setAssignedClients] = useState<Client[]>([]);
   const [assignedProperties, setAssignedProperties] = useState<Property[]>([]);
+
+  const handleRatingClick = (workerId: string, workerName: string, starValue: number) => {
+    setRatings((prev) => ({ ...prev, [workerId]: starValue }));
+    if (user) {
+      addRating({
+        workerId,
+        workerName,
+        ratedBy: user.id,
+        ratedByName: user.name,
+        rating: starValue,
+        feedback: feedback[workerId],
+      });
+    }
+  };
+
+  const handleFeedbackChange = (workerId: string, value: string, workerName: string) => {
+    setFeedback((prev) => ({ ...prev, [workerId]: value }));
+    if (user && ratings[workerId]) {
+      addRating({
+        workerId,
+        workerName,
+        ratedBy: user.id,
+        ratedByName: user.name,
+        rating: ratings[workerId],
+        feedback: value,
+      });
+    }
+  };
 
   useEffect(() => {
     if (user?.assignedUsers) {
@@ -522,6 +560,231 @@ export function ManagerDashboardPage() {
                   </Box>
                 </Box>
               </Stack>
+            </CardContent>
+          </Card>
+        </Grid>
+
+        {/* Performance Overview & Rating */}
+        <Grid size={{ xs: 12 }}>
+          <Card sx={{ borderRadius: 2, overflow: 'hidden' }}>
+            <CardHeader
+              title={
+                <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                  <Target size={20} color={theme.palette.primary.main} />
+                  <Typography variant="h6" sx={{ fontWeight: 600 }}>
+                    Performance Overview & Rating
+                  </Typography>
+                </Box>
+              }
+              subheader="Rate your team members and provide feedback"
+            />
+            <CardContent sx={{ p: 3 }}>
+              <Grid container spacing={3}>
+                {assignedUsers.map((member) => {
+                  // Get performance data for this member
+                  const allWorkers = getAllWorkersPerformance();
+                  const teamMember = allWorkers.find(w => w.workerName === member.name);
+
+                  if (!teamMember) {
+                    // No performance data yet
+                    return (
+                      <Grid size={{ xs: 12, md: 6 }} key={member.id}>
+                        <Card
+                          sx={{
+                            border: `1px solid ${alpha(theme.palette.grey[500], 0.2)}`,
+                            bgcolor: 'background.paper',
+                          }}
+                        >
+                          <CardContent sx={{ p: 3 }}>
+                            <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
+                              <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+                                <Avatar
+                                  sx={{
+                                    width: 48,
+                                    height: 48,
+                                    bgcolor: theme.palette.primary.main,
+                                    fontWeight: 600,
+                                  }}
+                                >
+                                  {member.name.charAt(0)}
+                                </Avatar>
+                                <Box>
+                                  <Typography variant="subtitle1" sx={{ fontWeight: 600 }}>
+                                    {member.name}
+                                  </Typography>
+                                  <Typography variant="caption" color="text.secondary">
+                                    {member.email}
+                                  </Typography>
+                                </Box>
+                              </Box>
+                              <Chip label="No Data Yet" size="small" color="default" sx={{ fontWeight: 600 }} />
+                            </Box>
+                            <Typography variant="body2" color="text.secondary" sx={{ textAlign: 'center', py: 2 }}>
+                              No performance data available
+                            </Typography>
+                            <Box sx={{ mt: 2, pt: 2, borderTop: `1px solid ${alpha(theme.palette.grey[500], 0.2)}` }}>
+                              <Typography variant="caption" sx={{ fontWeight: 600, mb: 1, display: 'block' }}>
+                                Your Rating
+                              </Typography>
+                              <Box sx={{ display: 'flex', gap: 1 }}>
+                                {[1, 2, 3, 4, 5].map((star) => (
+                                  <IconButton
+                                    key={star}
+                                    size="small"
+                                    onClick={() => handleRatingClick(member.name, member.name, star)}
+                                    sx={{
+                                      color: ratings[member.name] >= star ? theme.palette.warning.main : theme.palette.grey[400],
+                                      '&:hover': {
+                                        color: theme.palette.warning.main,
+                                      },
+                                    }}
+                                  >
+                                    ★
+                                  </IconButton>
+                                ))}
+                              </Box>
+                            </Box>
+                          </CardContent>
+                        </Card>
+                      </Grid>
+                    );
+                  }
+
+                  const isBelowAverage = teamMember.averageQualityScore < 70;
+                  const isAverage = teamMember.averageQualityScore >= 70 && teamMember.averageQualityScore < 80;
+                  const isAboveAverage = teamMember.averageQualityScore >= 80;
+
+                  return (
+                    <Grid size={{ xs: 12, md: 6 }} key={member.id}>
+                      <Card
+                        sx={{
+                          border: isBelowAverage
+                            ? `2px solid ${theme.palette.error.main}`
+                            : `1px solid ${alpha(theme.palette.grey[500], 0.2)}`,
+                          bgcolor: isBelowAverage ? alpha(theme.palette.error.main, 0.05) : 'background.paper',
+                        }}
+                      >
+                        <CardContent sx={{ p: 3 }}>
+                          <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
+                            <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+                              <Avatar
+                                sx={{
+                                  width: 48,
+                                  height: 48,
+                                  bgcolor: theme.palette.primary.main,
+                                  fontWeight: 600,
+                                }}
+                              >
+                                {member.name.charAt(0)}
+                              </Avatar>
+                              <Box>
+                                <Typography variant="subtitle1" sx={{ fontWeight: 600 }}>
+                                  {member.name}
+                                </Typography>
+                                <Typography variant="caption" color="text.secondary">
+                                  {teamMember.totalMessages} messages • Avg: {Math.round(teamMember.averageQualityScore)}%
+                                </Typography>
+                              </Box>
+                            </Box>
+                            <Chip
+                              label={isAboveAverage ? 'Excellent' : isAverage ? 'Good' : 'Needs Improvement'}
+                              size="small"
+                              color={isAboveAverage ? 'success' : isAverage ? 'warning' : 'error'}
+                              sx={{ fontWeight: 600 }}
+                            />
+                          </Box>
+
+                          {/* Performance Stats */}
+                          <Box sx={{ mb: 2 }}>
+                            <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 1 }}>
+                              <Typography variant="caption" color="text.secondary">
+                                Quality Score
+                              </Typography>
+                              <Typography variant="caption" sx={{ fontWeight: 600 }}>
+                                {Math.round(teamMember.averageQualityScore)}%
+                              </Typography>
+                            </Box>
+                            <LinearProgress
+                              variant="determinate"
+                              value={teamMember.averageQualityScore}
+                              sx={{
+                                height: 8,
+                                borderRadius: 2,
+                                bgcolor: alpha(theme.palette.grey[300], 0.3),
+                                '& .MuiLinearProgress-bar': {
+                                  bgcolor: isAboveAverage
+                                    ? theme.palette.success.main
+                                    : isAverage
+                                    ? theme.palette.warning.main
+                                    : theme.palette.error.main,
+                                },
+                              }}
+                            />
+                          </Box>
+
+                          <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 2 }}>
+                            <Typography variant="caption" color="text.secondary">
+                              Response Time: {Math.round(teamMember.averageResponseTime / (1000 * 60))}m
+                            </Typography>
+                            <Typography variant="caption" color="text.secondary">
+                              Messages: {teamMember.totalMessages}
+                            </Typography>
+                          </Box>
+
+                          {/* Rating Section */}
+                          <Box sx={{ mt: 2, pt: 2, borderTop: `1px solid ${alpha(theme.palette.grey[500], 0.2)}` }}>
+                            <Typography variant="caption" sx={{ fontWeight: 600, mb: 1, display: 'block' }}>
+                              Your Rating
+                            </Typography>
+                            <Box sx={{ display: 'flex', gap: 1 }}>
+                              {[1, 2, 3, 4, 5].map((star) => (
+                                <IconButton
+                                  key={star}
+                                  size="small"
+                                  onClick={() => handleRatingClick(teamMember.workerId, teamMember.workerName, star)}
+                                  sx={{
+                                    color: ratings[teamMember.workerId] >= star ? theme.palette.warning.main : theme.palette.grey[400],
+                                    '&:hover': {
+                                      color: theme.palette.warning.main,
+                                    },
+                                  }}
+                                >
+                                  ★
+                                </IconButton>
+                              ))}
+                            </Box>
+                          </Box>
+
+                          {/* Notes Section for Below Average Performance */}
+                          {isBelowAverage && (
+                            <Box sx={{ mt: 2, pt: 2, borderTop: `1px solid ${alpha(theme.palette.error.main, 0.3)}` }}>
+                              <Typography variant="caption" sx={{ fontWeight: 600, mb: 1, display: 'block', color: 'error.main' }}>
+                                Improvement Notes (Required)
+                              </Typography>
+                              <Box sx={{ width: '100%' }}>
+                                <TextField
+                                  fullWidth
+                                  multiline
+                                  rows={2}
+                                  placeholder="Add notes for improvement..."
+                                  size="small"
+                                  value={feedback[teamMember.workerId] || ''}
+                                  onChange={(e) => handleFeedbackChange(teamMember.workerId, e.target.value, teamMember.workerName)}
+                                  sx={{
+                                    '& .MuiOutlinedInput-root': {
+                                      fontSize: '0.875rem',
+                                    },
+                                  }}
+                                />
+                              </Box>
+                            </Box>
+                          )}
+                        </CardContent>
+                      </Card>
+                    </Grid>
+                  );
+                })}
+              </Grid>
             </CardContent>
           </Card>
         </Grid>

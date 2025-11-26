@@ -8,11 +8,14 @@ import { usePathname } from 'src/routes/hooks';
 
 import { ThemeProvider } from 'src/theme/theme-provider';
 import { SocketProvider } from 'src/contexts/socket-context';
+import { RatingsProvider } from 'src/contexts/ratings-context';
 import { HostawayProvider } from 'src/contexts/hostaway-context';
 import { ReservationsProvider } from 'src/contexts/reservations-context';
+import { NotificationProvider } from 'src/contexts/notification-context';
 import { MessageQualityProvider } from 'src/contexts/message-quality-context';
 
 import { Iconify } from 'src/components/iconify';
+import { GlobalNotificationManager } from 'src/components/global-notification-manager';
 
 // ----------------------------------------------------------------------
 
@@ -44,16 +47,21 @@ export default function App({ children }: AppProps) {
 
   return (
     <ThemeProvider>
-      <MessageQualityProvider>
-        <SocketProvider>
-          <HostawayProvider>
-            <ReservationsProvider>
-              {children}
-              {githubButton()}
-            </ReservationsProvider>
-          </HostawayProvider>
-        </SocketProvider>
-      </MessageQualityProvider>
+      <NotificationProvider>
+        <RatingsProvider>
+          <SocketProvider>
+            <HostawayProvider>
+              <ReservationsProvider>
+                <MessageQualityProvider>
+                  <GlobalNotificationManager />
+                  {children}
+                  {githubButton()}
+                </MessageQualityProvider>
+              </ReservationsProvider>
+            </HostawayProvider>
+          </SocketProvider>
+        </RatingsProvider>
+      </NotificationProvider>
     </ThemeProvider>
   );
 }

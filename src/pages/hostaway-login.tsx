@@ -20,8 +20,8 @@ import { useAuth } from 'src/contexts/auth-context';
 export function HostawayLogin() {
   const navigate = useNavigate();
   const { login, isLoading } = useAuth();
-  const [email, setEmail] = useState('demo@hostaway.com');
-  const [password, setPassword] = useState('password123');
+  const [email, setEmail] = useState('superadmin@hostaway.com');
+  const [password, setPassword] = useState('superadmin123');
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState('');
 

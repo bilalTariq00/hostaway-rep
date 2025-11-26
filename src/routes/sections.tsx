@@ -350,6 +350,13 @@ export const ClientManagementPage = lazy(() =>
 export const SuperAdminAnalyticsPage = lazy(() =>
   import('src/pages/super-admin-analytics').then((module) => ({ default: module.SuperAdminAnalyticsPage }))
 );
+
+export const AdminWarningsPage = lazy(() =>
+  import('src/pages/admin-warnings').then((module) => ({ default: module.AdminWarningsPage }))
+);
+export const NotificationTestPage = lazy(() =>
+  import('src/pages/notification-test').then((module) => ({ default: module.NotificationTestPage }))
+);
 export const SupervisorDashboardPage = lazy(() =>
   import('src/pages/supervisor-dashboard').then((module) => ({
     default: module.SupervisorDashboardPage,
@@ -527,6 +534,18 @@ export const routesSection: RouteObject[] = [
             <SuperAdminAnalyticsPage />
           </ProtectedRoute>
         ),
+      },
+      {
+        path: 'admin-warnings',
+        element: (
+          <ProtectedRoute requiredRole="super-admin">
+            <AdminWarningsPage />
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: 'notification-test',
+        element: <NotificationTestPage />,
       },
       {
         path: 'supervisor-dashboard',

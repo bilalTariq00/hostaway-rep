@@ -1,16 +1,16 @@
 import React, { useState } from 'react';
 import {
-  Activity,
+  Zap,
   Award,
+  Clock,
+  Users,
+  Target,
+  Activity,
   BarChart,
   Calendar,
-  CheckCircle,
-  Clock,
-  MessageSquare,
-  Target,
   TrendingUp,
-  Users,
-  Zap,
+  CheckCircle,
+  MessageSquare,
 } from 'lucide-react';
 
 import Box from '@mui/material/Box';
@@ -33,6 +33,7 @@ import TableContainer from '@mui/material/TableContainer';
 import LinearProgress from '@mui/material/LinearProgress';
 
 import { DashboardContent } from 'src/layouts/dashboard';
+import { useRatings } from 'src/contexts/ratings-context';
 import { useHostaway } from 'src/contexts/hostaway-context';
 import { useMessageQuality } from 'src/contexts/message-quality-context';
 
@@ -335,25 +336,25 @@ function WorkerDetailView({ worker, onBack }: WorkerDetailViewProps) {
 
       {/* Performance Breakdown Chart - Line & Bar Combination */}
       <Card sx={{ mb: 3, borderRadius: 2, overflow: 'hidden' }}>
-        <CardHeader
-          title={
+            <CardHeader
+              title={
             <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
               <BarChart size={20} color={theme.palette.primary.main} />
-              <Typography variant="h6" sx={{ fontWeight: 600 }}>
+                <Typography variant="h6" sx={{ fontWeight: 600 }}>
                 Performance Breakdown
-              </Typography>
+                </Typography>
             </Box>
-          }
+              }
           subheader="Detailed quality metrics across different categories"
-        />
-        <CardContent sx={{ p: 3 }}>
-          <Chart
-            type="bar"
-            series={[
-              {
+            />
+            <CardContent sx={{ p: 3 }}>
+              <Chart
+                type="bar"
+                series={[
+                  {
                 name: 'Performance Score (%)',
                 type: 'column',
-                data: [
+                    data: [
                   { x: 'Response Time', y: avgResponseTimeScore, fillColor: theme.palette.primary.main },
                   { x: 'Sentiment', y: avgSentimentScore, fillColor: theme.palette.success.main },
                   { x: 'Completeness', y: avgCompletenessScore, fillColor: theme.palette.info.main },
@@ -544,8 +545,8 @@ function WorkerDetailView({ worker, onBack }: WorkerDetailViewProps) {
               <strong>Colors:</strong> Each metric has its own color - Response Time (Blue), Sentiment (Green), Completeness (Teal), Grammar (Orange), Template (Purple)
             </Typography>
           </Box>
-        </CardContent>
-      </Card>
+            </CardContent>
+          </Card>
 
       {/* Properties & Clients Assigned (for Associates) */}
       {worker.role === 'associate' && (
@@ -556,9 +557,9 @@ function WorkerDetailView({ worker, onBack }: WorkerDetailViewProps) {
               title={
                 <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
                   <Calendar size={20} color={theme.palette.primary.main} />
-                  <Typography variant="h6" sx={{ fontWeight: 600 }}>
+                <Typography variant="h6" sx={{ fontWeight: 600 }}>
                     Assigned Properties
-                  </Typography>
+                </Typography>
                 </Box>
               }
               subheader={`${properties.length} properties available to manage`}
@@ -579,7 +580,7 @@ function WorkerDetailView({ worker, onBack }: WorkerDetailViewProps) {
                       <TableRow 
                         key={property.id}
                         hover
-                        sx={{ 
+                  sx={{
                           '&:nth-of-type(even)': { 
                             backgroundColor: alpha(theme.palette.grey[500], 0.02) 
                           },
@@ -588,12 +589,12 @@ function WorkerDetailView({ worker, onBack }: WorkerDetailViewProps) {
                         <TableCell>
                           <Typography variant="subtitle2" sx={{ fontWeight: 600 }}>
                             {property.name}
-                          </Typography>
+                    </Typography>
                         </TableCell>
                         <TableCell>
-                          <Typography variant="body2" color="text.secondary">
+                  <Typography variant="body2" color="text.secondary">
                             {property.city}, {property.country}
-                          </Typography>
+                  </Typography>
                         </TableCell>
                         <TableCell>
                           <Chip 
@@ -652,7 +653,7 @@ function WorkerDetailView({ worker, onBack }: WorkerDetailViewProps) {
                         <TableRow 
                           key={guest.id}
                           hover
-                          sx={{ 
+                  sx={{
                             '&:nth-of-type(even)': { 
                               backgroundColor: alpha(theme.palette.grey[500], 0.02) 
                             },
@@ -673,11 +674,11 @@ function WorkerDetailView({ worker, onBack }: WorkerDetailViewProps) {
                               </Avatar>
                               <Typography variant="subtitle2" sx={{ fontWeight: 600 }}>
                                 {guest.firstName} {guest.lastName}
-                              </Typography>
-                            </Box>
+                    </Typography>
+                  </Box>
                           </TableCell>
                           <TableCell>
-                            <Typography variant="body2" color="text.secondary">
+                  <Typography variant="body2" color="text.secondary">
                               {guest.email}
                             </Typography>
                           </TableCell>
@@ -827,6 +828,7 @@ function WorkerDetailView({ worker, onBack }: WorkerDetailViewProps) {
 export function SuperAdminAnalyticsPage() {
   const theme = useTheme();
   const { getAllWorkersPerformance, getRolePerformance, performanceStats } = useMessageQuality();
+  const { getWorkerRatings } = useRatings();
   const [selectedRole, setSelectedRole] = useState<'associate' | 'supervisor' | 'manager' | 'all'>('all');
   const [selectedWorker, setSelectedWorker] = useState<any>(null);
   const [selectedTimeframe, setSelectedTimeframe] = useState('monthly');
@@ -1330,6 +1332,7 @@ export function SuperAdminAnalyticsPage() {
                   <TableCell sx={{ fontWeight: 600, color: 'text.primary', py: 2 }}>Quality Score</TableCell>
                   <TableCell sx={{ fontWeight: 600, color: 'text.primary', py: 2 }}>Response Time</TableCell>
                   <TableCell sx={{ fontWeight: 600, color: 'text.primary', py: 2 }}>Messages</TableCell>
+                  <TableCell sx={{ fontWeight: 600, color: 'text.primary', py: 2 }}>Manager Rating</TableCell>
                   <TableCell sx={{ fontWeight: 600, color: 'text.primary', py: 2 }}>Quality Breakdown</TableCell>
                   <TableCell sx={{ fontWeight: 600, color: 'text.primary', py: 2 }}>Actions</TableCell>
                 </TableRow>
@@ -1414,6 +1417,39 @@ export function SuperAdminAnalyticsPage() {
                       <Typography variant="body2" sx={{ fontWeight: 600 }}>
                         {worker.totalMessages}
                       </Typography>
+                    </TableCell>
+                    <TableCell sx={{ py: 2 }}>
+                      {(() => {
+                        const ratings = getWorkerRatings(worker.workerId);
+                        const latestRating = ratings.sort((a, b) => b.timestamp.getTime() - a.timestamp.getTime())[0];
+                        if (!latestRating) {
+                          return (
+                            <Typography variant="body2" color="text.secondary">
+                              No rating
+                            </Typography>
+                          );
+                        }
+                        return (
+                          <Box>
+                            <Box sx={{ display: 'flex', gap: 0.5, mb: 0.5 }}>
+                              {[1, 2, 3, 4, 5].map((star) => (
+                                <Box
+                                  key={star}
+                                  sx={{
+                                    fontSize: '0.875rem',
+                                    color: latestRating.rating >= star ? theme.palette.warning.main : theme.palette.grey[300],
+                                  }}
+                                >
+                                  ★
+                                </Box>
+                              ))}
+                            </Box>
+                            <Typography variant="caption" color="text.secondary">
+                              by {latestRating.ratedByName}
+                            </Typography>
+                          </Box>
+                        );
+                      })()}
                     </TableCell>
                     <TableCell sx={{ py: 2 }}>
                       <Box sx={{ display: 'flex', gap: 0.5, flexWrap: 'wrap' }}>

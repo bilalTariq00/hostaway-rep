@@ -1,6 +1,8 @@
 import { useRef, useState, useEffect, useCallback } from 'react';
 
+import { useAuth } from 'src/contexts/auth-context';
 import { useSocket } from 'src/contexts/socket-context';
+import { useNotifications } from 'src/contexts/notification-context';
 
 // ----------------------------------------------------------------------
 
@@ -35,6 +37,11 @@ const conversationMessages = new Map<string, ChatMessage[]>();
 
 export function useChat(conversationId?: string, currentUserId?: string, initialMessages?: ChatMessage[]) {
   const { socket, isConnected, emit, on, off } = useSocket();
+  const { sendMessageNotification, sendReminderNotification } = useNotifications();
+  const { user } = useAuth();
+  
+  // Track unread messages for reminder notifications
+  const unreadMessagesTimers = useRef<Map<string, NodeJS.Timeout>>(new Map());
   
   // State management with optimized updates
   const [messages, setMessages] = useState<ChatMessage[]>([]);
@@ -200,12 +207,66 @@ export function useChat(conversationId?: string, currentUserId?: string, initial
       return updatedMessages;
     });
 
+    // Send push notification if message is not from current user
+    if (!newMessage.isOwn && user) {
+      const senderName = data.senderId !== (currentUserId || 'current-user') ? 'Guest' : 'Team Member';
+      const receiverId = data.receiverId || data.senderId;
+      
+      // Notify the receiver of the message
+      if (data.receiverId && data.receiverId !== data.senderId) {
+        sendMessageNotification(data.receiverId, senderName, data.message, conversationId || '');
+      }
+      
+      // Notify manager/supervisor if associate receives a message
+      // Get assigned manager/supervisor from user data (assuming receiver is an associate)
+      if (user.id === data.receiverId) {
+        if (user.assignedManager) {
+          sendMessageNotification(user.assignedManager, senderName, data.message, conversationId || '');
+        }
+        if (user.assignedSupervisor) {
+          sendMessageNotification(user.assignedSupervisor, senderName, data.message, conversationId || '');
+        }
+      }
+      
+      // Set up 5-minute reminder timer
+      if (conversationId) {
+        // Clear any existing timer for this conversation
+        const existingTimer = unreadMessagesTimers.current.get(conversationId);
+        if (existingTimer) {
+          clearTimeout(existingTimer);
+        }
+        
+        // Set new timer for 5 minutes (300000 ms)
+        const reminderTimer = setTimeout(() => {
+          // Check if user still hasn't responded (last message should still be from sender)
+          const lastMsg = lastMessageRef.current;
+          if (lastMsg && !lastMsg.isOwn && lastMsg.id === data.messageId) {
+            if (user && user.id === data.receiverId) {
+              sendReminderNotification(user.id, senderName, conversationId);
+            }
+          }
+          unreadMessagesTimers.current.delete(conversationId);
+        }, 5 * 60 * 1000); // 5 minutes
+        
+        unreadMessagesTimers.current.set(conversationId, reminderTimer);
+      }
+    }
+
     // Update pending message if it exists (confirmation)
     if (pendingMessages.current.has(data.messageId)) {
       pendingMessages.current.delete(data.messageId);
       console.log(`✅ [${conversationId}] Message ${data.messageId} confirmed and removed from pending`);
     }
-  }, [calculateResponseTime, currentUserId, conversationId]);
+    
+    // Clear reminder timer if user responded
+    if (newMessage.isOwn && conversationId) {
+      const timer = unreadMessagesTimers.current.get(conversationId);
+      if (timer) {
+        clearTimeout(timer);
+        unreadMessagesTimers.current.delete(conversationId);
+      }
+    }
+  }, [calculateResponseTime, currentUserId, conversationId, sendMessageNotification, sendReminderNotification, user]);
 
   // Handle message confirmation from server
   const handleMessageConfirmation = useCallback((data: {
@@ -259,6 +320,9 @@ export function useChat(conversationId?: string, currentUserId?: string, initial
   // Cleanup on unmount
   useEffect(() => () => {
       pendingMessages.current.clear();
+      // Clear all reminder timers
+      unreadMessagesTimers.current.forEach((timer) => clearTimeout(timer));
+      unreadMessagesTimers.current.clear();
     }, []);
 
   // Update connection status

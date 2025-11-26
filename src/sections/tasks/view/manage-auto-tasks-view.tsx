@@ -20,53 +20,10 @@ import DialogContent from '@mui/material/DialogContent';
 
 import { useRouter } from 'src/routes/hooks';
 
+import { API_URL } from 'src/config/environment';
 import { DashboardContent } from 'src/layouts/dashboard';
 
 import { Iconify } from 'src/components/iconify';
-
-// Mock data for auto-tasks
-const mockAutoTasks = [
-  {
-    id: 1,
-    name: 'Daily Property Check',
-    startingEvent: 'Check-in',
-    dueBefore: '2 hours',
-    linkedChannel: 'Airbnb',
-    linkedListing: 'Villa Del Sol',
-    status: 'Active',
-    description: 'Perform daily inspection of property condition',
-  },
-  {
-    id: 2,
-    name: 'Guest Welcome Package',
-    startingEvent: 'Booking Confirmed',
-    dueBefore: '24 hours',
-    linkedChannel: 'Booking.com',
-    linkedListing: 'Navigli Apartment',
-    status: 'Active',
-    description: 'Prepare and deliver welcome package to guests',
-  },
-  {
-    id: 3,
-    name: 'Post-Checkout Cleanup',
-    startingEvent: 'Check-out',
-    dueBefore: '4 hours',
-    linkedChannel: 'Direct',
-    linkedListing: 'Polacchi42',
-    status: 'Inactive',
-    description: 'Clean and prepare property for next guests',
-  },
-  {
-    id: 4,
-    name: 'Maintenance Alert',
-    startingEvent: 'Issue Reported',
-    dueBefore: '1 hour',
-    linkedChannel: 'Airbnb',
-    linkedListing: 'Superattico - Via Del C...',
-    status: 'Active',
-    description: 'Address maintenance issues immediately',
-  },
-];
 
 export function ManageAutoTasksView() {
   const router = useRouter();
@@ -76,20 +33,41 @@ export function ManageAutoTasksView() {
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [autoTaskToDelete, setAutoTaskToDelete] = useState<any>(null);
 
-  // Load auto-tasks from localStorage or use mock data
-  const loadAutoTasks = () => {
-    const savedAutoTasks = localStorage.getItem('autoTasks');
-    if (savedAutoTasks) {
-      return JSON.parse(savedAutoTasks);
-    }
-    return mockAutoTasks;
-  };
+  const [autoTasks, setAutoTasks] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
 
-  const [autoTasks, setAutoTasks] = useState(loadAutoTasks());
-
-  // Refresh auto-tasks when component mounts (when returning from form)
+  // Fetch auto-tasks from backend
   useEffect(() => {
-    setAutoTasks(loadAutoTasks());
+    const fetchAutoTasks = async () => {
+      setLoading(true);
+      try {
+        const token = localStorage.getItem('authToken');
+        if (!token) {
+          setLoading(false);
+          return;
+        }
+
+        const response = await fetch(`${API_URL}/api/auto-tasks?limit=1000`, {
+          method: 'GET',
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+
+        if (response.ok) {
+          const data = await response.json();
+          if (data.success && data.data) {
+            setAutoTasks(data.data);
+          }
+        }
+      } catch (error) {
+        console.error('Error fetching auto-tasks:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchAutoTasks();
   }, []);
 
   const handleTabChange = (event: React.SyntheticEvent, newValue: number) => {
@@ -114,11 +92,11 @@ export function ManageAutoTasksView() {
   };
 
   const handleEditAutoTask = (autoTask: any) => {
-    router.push(`/tasks/auto-tasks/${autoTask.id}/edit`);
+    router.push(`/tasks/auto-tasks/${autoTask._id || autoTask.id}/edit`);
   };
 
   const handleDuplicateAutoTask = (autoTask: any) => {
-    router.push(`/tasks/auto-tasks/${autoTask.id}/duplicate`);
+    router.push(`/tasks/auto-tasks/${autoTask._id || autoTask.id}/duplicate`);
   };
 
   const handleDeleteAutoTask = (autoTask: any) => {
@@ -127,14 +105,36 @@ export function ManageAutoTasksView() {
     handleActionMenuClose();
   };
 
-  const handleDeleteConfirm = () => {
+  const handleDeleteConfirm = async () => {
     if (autoTaskToDelete) {
-      const updatedAutoTasks = autoTasks.filter((task: any) => task.id !== autoTaskToDelete.id);
-      setAutoTasks(updatedAutoTasks);
-      localStorage.setItem('autoTasks', JSON.stringify(updatedAutoTasks));
-      setDeleteDialogOpen(false);
-      setAutoTaskToDelete(null);
+      try {
+        const token = localStorage.getItem('authToken');
+        if (!token) {
+          alert('Not authenticated');
+          return;
+        }
+
+        const response = await fetch(`${API_URL}/api/auto-tasks/${autoTaskToDelete._id || autoTaskToDelete.id}`, {
+          method: 'DELETE',
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+
+        if (response.ok) {
+          // Refresh auto-tasks list
+          setAutoTasks((prev) => prev.filter((task: any) => (task._id || task.id) !== (autoTaskToDelete._id || autoTaskToDelete.id)));
+        } else {
+          const data = await response.json();
+          alert(data.message || 'Failed to delete auto-task');
+        }
+      } catch (error) {
+        console.error('Error deleting auto-task:', error);
+        alert('Failed to delete auto-task');
+      }
     }
+    setDeleteDialogOpen(false);
+    setAutoTaskToDelete(null);
   };
 
   const handleDeleteCancel = () => {
@@ -142,14 +142,44 @@ export function ManageAutoTasksView() {
     setAutoTaskToDelete(null);
   };
 
-  const handleStatusToggle = (autoTaskId: number) => {
-    const updatedAutoTasks = autoTasks.map((task: any) =>
-      task.id === autoTaskId
-        ? { ...task, status: task.status === 'Active' ? 'Inactive' : 'Active' }
-        : task
-    );
-    setAutoTasks(updatedAutoTasks);
-    localStorage.setItem('autoTasks', JSON.stringify(updatedAutoTasks));
+  const handleStatusToggle = async (autoTask: any) => {
+    try {
+      const token = localStorage.getItem('authToken');
+      if (!token) {
+        alert('Not authenticated');
+        return;
+      }
+
+      const newStatus = autoTask.status === 'Active' ? 'Inactive' : 'Active';
+      const response = await fetch(`${API_URL}/api/auto-tasks/${autoTask._id || autoTask.id}/toggle-status`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({ status: newStatus }),
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        if (data.success) {
+          // Update local state
+          setAutoTasks((prev) =>
+            prev.map((task: any) =>
+              (task._id || task.id) === (autoTask._id || autoTask.id)
+                ? { ...task, status: newStatus }
+                : task
+            )
+          );
+        }
+      } else {
+        const errorData = await response.json();
+        alert(errorData.message || 'Failed to toggle status');
+      }
+    } catch (error) {
+      console.error('Error toggling status:', error);
+      alert('Failed to toggle status');
+    }
   };
 
   return (
@@ -192,9 +222,30 @@ export function ManageAutoTasksView() {
       </Box>
 
       {/* Auto-tasks Cards */}
-      <Grid container spacing={3}>
-        {autoTasks.map((autoTask: any) => (
-          <Grid key={autoTask.id} size={{ xs: 12, sm: 6, md: 4 }}>
+      {loading ? (
+        <Box sx={{ textAlign: 'center', py: 4 }}>
+          <Typography variant="body2" color="text.secondary">
+            Loading auto-tasks...
+          </Typography>
+        </Box>
+      ) : autoTasks.length === 0 ? (
+        <Card>
+          <CardContent sx={{ textAlign: 'center', py: 4 }}>
+            <Typography variant="h6" sx={{ mb: 2, color: 'text.secondary' }}>
+              No auto-tasks found
+            </Typography>
+            <Typography variant="body2" sx={{ mb: 3, color: 'text.secondary' }}>
+              Get started by creating your first auto-task
+            </Typography>
+            <Button variant="contained" onClick={handleAddAutoTask}>
+              Add Auto-task
+            </Button>
+          </CardContent>
+        </Card>
+      ) : (
+        <Grid container spacing={3}>
+          {autoTasks.map((autoTask: any) => (
+            <Grid key={autoTask._id || autoTask.id} size={{ xs: 12, sm: 6, md: 4 }}>
             <Card
               sx={{
                 height: '100%',
@@ -221,7 +272,7 @@ export function ManageAutoTasksView() {
                   <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
                     <Switch
                       checked={autoTask.status === 'Active'}
-                      onChange={() => handleStatusToggle(autoTask.id)}
+                      onChange={() => handleStatusToggle(autoTask)}
                       size="small"
                     />
                     <IconButton size="small" onClick={(e) => handleActionMenuOpen(e, autoTask)}>
@@ -240,7 +291,7 @@ export function ManageAutoTasksView() {
                       Starting Event:
                     </Typography>
                     <Typography variant="caption" sx={{ fontWeight: 500 }}>
-                      {autoTask.startingEvent}
+                      {autoTask.startingEvent || '-'}
                     </Typography>
                   </Box>
 
@@ -249,25 +300,33 @@ export function ManageAutoTasksView() {
                       Due Before:
                     </Typography>
                     <Typography variant="caption" sx={{ fontWeight: 500 }}>
-                      {autoTask.dueBefore}
+                      {autoTask.shouldEndByValue && autoTask.shouldEndByUnit
+                        ? `${autoTask.shouldEndByValue} ${autoTask.shouldEndByUnit}`
+                        : autoTask.dueBefore || '-'}
                     </Typography>
                   </Box>
 
-                  <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
-                    <Typography variant="caption" color="text.secondary">
-                      Linked Channel:
-                    </Typography>
-                    <Chip label={autoTask.linkedChannel} size="small" color="primary" />
-                  </Box>
+                  {autoTask.linkedChannel && (
+                    <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
+                      <Typography variant="caption" color="text.secondary">
+                        Linked Channel:
+                      </Typography>
+                      <Chip label={autoTask.linkedChannel} size="small" color="primary" />
+                    </Box>
+                  )}
 
-                  <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
-                    <Typography variant="caption" color="text.secondary">
-                      Linked Listing:
-                    </Typography>
-                    <Typography variant="caption" sx={{ fontWeight: 500 }}>
-                      {autoTask.linkedListing}
-                    </Typography>
-                  </Box>
+                  {autoTask.linkedListing && (
+                    <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
+                      <Typography variant="caption" color="text.secondary">
+                        Linked Listing:
+                      </Typography>
+                      <Typography variant="caption" sx={{ fontWeight: 500 }}>
+                        {typeof autoTask.linkedListing === 'string'
+                          ? autoTask.linkedListing
+                          : autoTask.linkedListing?.name || 'Multiple Listings'}
+                      </Typography>
+                    </Box>
+                  )}
                 </Box>
 
                 <Box sx={{ display: 'flex', justifyContent: 'flex-end', gap: 1, mt: 2 }}>
@@ -289,7 +348,8 @@ export function ManageAutoTasksView() {
             </Card>
           </Grid>
         ))}
-      </Grid>
+        </Grid>
+      )}
 
       {/* Action Menu */}
       <Menu

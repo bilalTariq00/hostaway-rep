@@ -23,85 +23,10 @@ import DialogActions from '@mui/material/DialogActions';
 
 import { useRouter } from 'src/routes/hooks';
 
+import { API_URL } from 'src/config/environment';
 import { DashboardContent } from 'src/layouts/dashboard';
 
 import { Iconify } from 'src/components/iconify';
-
-// Mock data for checklist templates
-const mockChecklistTemplates = [
-  {
-    id: 1,
-    name: 'Property Inspection Checklist',
-    tasks: [
-      'Check all lights and switches',
-      'Test air conditioning',
-      'Inspect bathroom fixtures',
-      'Check kitchen appliances',
-      'Verify internet connection',
-      'Test door locks and keys',
-    ],
-  },
-  {
-    id: 2,
-    name: 'Guest Welcome Checklist',
-    tasks: [
-      'Prepare welcome package',
-      'Set up guest information folder',
-      'Check cleanliness standards',
-      'Verify amenities are working',
-      'Prepare local recommendations',
-      'Set up contact information',
-    ],
-  },
-  {
-    id: 3,
-    name: 'Post-Checkout Cleanup',
-    tasks: [
-      'Remove all trash',
-      'Clean all surfaces',
-      'Wash and replace linens',
-      'Restock amenities',
-      'Check for damages',
-      'Prepare for next guests',
-    ],
-  },
-  {
-    id: 4,
-    name: 'Maintenance Checklist',
-    tasks: [
-      'Check HVAC system',
-      'Inspect plumbing',
-      'Test electrical outlets',
-      'Check smoke detectors',
-      'Inspect exterior areas',
-      'Document any issues',
-    ],
-  },
-  {
-    id: 5,
-    name: 'Emergency Preparedness',
-    tasks: [
-      'Check emergency contacts',
-      'Verify first aid kit',
-      'Test emergency lighting',
-      'Check fire extinguishers',
-      'Review evacuation procedures',
-      'Update emergency information',
-    ],
-  },
-  {
-    id: 6,
-    name: 'Seasonal Maintenance',
-    tasks: [
-      'Check heating system',
-      'Inspect windows and doors',
-      'Clean gutters',
-      'Check outdoor furniture',
-      'Prepare for weather changes',
-      'Update seasonal amenities',
-    ],
-  },
-];
 
 export function ChecklistTemplatesView() {
   const router = useRouter();
@@ -111,18 +36,40 @@ export function ChecklistTemplatesView() {
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [duplicateDialogOpen, setDuplicateDialogOpen] = useState(false);
   const [checklistTemplates, setChecklistTemplates] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
 
-  // Load checklist templates from localStorage
-  const loadChecklistTemplates = () => {
-    const savedTemplates = localStorage.getItem('checklistTemplates');
-    if (savedTemplates) {
-      return JSON.parse(savedTemplates);
-    }
-    return mockChecklistTemplates;
-  };
-
+  // Fetch checklist templates from backend
   useEffect(() => {
-    setChecklistTemplates(loadChecklistTemplates());
+    const fetchTemplates = async () => {
+      setLoading(true);
+      try {
+        const token = localStorage.getItem('authToken');
+        if (!token) {
+          setLoading(false);
+          return;
+        }
+
+        const response = await fetch(`${API_URL}/api/checklist-templates?limit=1000`, {
+          method: 'GET',
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+
+        if (response.ok) {
+          const data = await response.json();
+          if (data.success && data.data) {
+            setChecklistTemplates(data.data);
+          }
+        }
+      } catch (error) {
+        console.error('Error fetching checklist templates:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchTemplates();
   }, []);
 
   const handleTabChange = (event: React.SyntheticEvent, newValue: number) => {
@@ -148,7 +95,7 @@ export function ChecklistTemplatesView() {
 
   const handleEditTemplate = () => {
     if (selectedTemplate) {
-      router.push(`/tasks/checklist-templates/${selectedTemplate.id}/edit`);
+      router.push(`/tasks/checklist-templates/${selectedTemplate._id || selectedTemplate.id}/edit`);
     }
     handleActionMenuClose();
   };
@@ -160,7 +107,7 @@ export function ChecklistTemplatesView() {
 
   const handleDuplicateConfirm = () => {
     if (selectedTemplate) {
-      router.push(`/tasks/checklist-templates/${selectedTemplate.id}/duplicate`);
+      router.push(`/tasks/checklist-templates/${selectedTemplate._id || selectedTemplate.id}/duplicate`);
     }
     setDuplicateDialogOpen(false);
     setSelectedTemplate(null);
@@ -176,14 +123,33 @@ export function ChecklistTemplatesView() {
     handleActionMenuClose();
   };
 
-  const handleDeleteConfirm = () => {
+  const handleDeleteConfirm = async () => {
     if (selectedTemplate) {
-      const templatesData = loadChecklistTemplates();
-      const updatedTemplates = templatesData.filter(
-        (template: any) => template.id !== selectedTemplate.id
-      );
-      localStorage.setItem('checklistTemplates', JSON.stringify(updatedTemplates));
-      setChecklistTemplates(updatedTemplates);
+      try {
+        const token = localStorage.getItem('authToken');
+        if (!token) {
+          alert('Not authenticated');
+          return;
+        }
+
+        const response = await fetch(`${API_URL}/api/checklist-templates/${selectedTemplate._id || selectedTemplate.id}`, {
+          method: 'DELETE',
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+
+        if (response.ok) {
+          // Refresh templates list
+          setChecklistTemplates((prev) => prev.filter((template: any) => (template._id || template.id) !== (selectedTemplate._id || selectedTemplate.id)));
+        } else {
+          const data = await response.json();
+          alert(data.message || 'Failed to delete template');
+        }
+      } catch (error) {
+        console.error('Error deleting template:', error);
+        alert('Failed to delete template');
+      }
     }
     setDeleteDialogOpen(false);
     setSelectedTemplate(null);
@@ -234,9 +200,30 @@ export function ChecklistTemplatesView() {
       </Box>
 
       {/* Checklist Templates Grid */}
-      <Grid container spacing={3}>
-        {checklistTemplates.map((template) => (
-          <Grid key={template.id} size={{ xs: 12, sm: 6, md: 4 }}>
+      {loading ? (
+        <Box sx={{ textAlign: 'center', py: 4 }}>
+          <Typography variant="body2" color="text.secondary">
+            Loading checklist templates...
+          </Typography>
+        </Box>
+      ) : checklistTemplates.length === 0 ? (
+        <Card>
+          <CardContent sx={{ textAlign: 'center', py: 4 }}>
+            <Typography variant="h6" sx={{ mb: 2, color: 'text.secondary' }}>
+              No checklist templates found
+            </Typography>
+            <Typography variant="body2" sx={{ mb: 3, color: 'text.secondary' }}>
+              Get started by creating your first checklist template
+            </Typography>
+            <Button variant="contained" onClick={handleAddTemplate}>
+              Add Checklist Template
+            </Button>
+          </CardContent>
+        </Card>
+      ) : (
+        <Grid container spacing={3}>
+          {checklistTemplates.map((template) => (
+            <Grid key={template._id || template.id} size={{ xs: 12, sm: 6, md: 4 }}>
             <Card
               sx={{
                 height: '100%',
@@ -265,7 +252,7 @@ export function ChecklistTemplatesView() {
                 </Box>
 
                 <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
-                  {template.tasks.length} tasks to complete
+                  {Array.isArray(template.tasks) ? template.tasks.length : 0} tasks to complete
                 </Typography>
 
                 <Box sx={{ flex: 1 }}>
@@ -273,21 +260,26 @@ export function ChecklistTemplatesView() {
                     Tasks we have to do:
                   </Typography>
                   <List dense sx={{ maxHeight: 200, overflow: 'auto' }}>
-                    {template.tasks.slice(0, 4).map((task: string, index: number) => (
-                      <ListItem key={index} sx={{ py: 0.5, px: 0 }}>
-                        <ListItemIcon sx={{ minWidth: 32 }}>
-                          <Checkbox size="small" disabled sx={{ p: 0.5 }} />
-                        </ListItemIcon>
-                        <ListItemText
-                          primary={
-                            <Typography variant="body2" sx={{ fontSize: '0.875rem' }}>
-                              {task}
-                            </Typography>
-                          }
-                        />
-                      </ListItem>
-                    ))}
-                    {template.tasks.length > 4 && (
+                    {Array.isArray(template.tasks)
+                      ? template.tasks.slice(0, 4).map((task: any, index: number) => {
+                          const taskText = typeof task === 'string' ? task : task.item || '';
+                          return (
+                            <ListItem key={index} sx={{ py: 0.5, px: 0 }}>
+                              <ListItemIcon sx={{ minWidth: 32 }}>
+                                <Checkbox size="small" disabled sx={{ p: 0.5 }} />
+                              </ListItemIcon>
+                              <ListItemText
+                                primary={
+                                  <Typography variant="body2" sx={{ fontSize: '0.875rem' }}>
+                                    {taskText}
+                                  </Typography>
+                                }
+                              />
+                            </ListItem>
+                          );
+                        })
+                      : null}
+                    {Array.isArray(template.tasks) && template.tasks.length > 4 && (
                       <ListItem sx={{ py: 0.5, px: 0 }}>
                         <ListItemText
                           primary={
@@ -304,7 +296,7 @@ export function ChecklistTemplatesView() {
                 <Box sx={{ display: 'flex', justifyContent: 'flex-end', gap: 1, mt: 2 }}>
                   <IconButton
                     size="small"
-                    onClick={() => router.push(`/tasks/checklist-templates/${template.id}/edit`)}
+                    onClick={() => router.push(`/tasks/checklist-templates/${template._id || template.id}/edit`)}
                   >
                     <Iconify icon={'eva:edit-fill' as any} width={16} />
                   </IconButton>
@@ -332,7 +324,8 @@ export function ChecklistTemplatesView() {
             </Card>
           </Grid>
         ))}
-      </Grid>
+        </Grid>
+      )}
 
       {/* Action Menu */}
       <Menu

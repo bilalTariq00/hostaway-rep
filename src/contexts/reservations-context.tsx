@@ -1,4 +1,4 @@
-import { useState, useEffect, useContext, createContext, useCallback, type ReactNode } from 'react';
+import { useState, useEffect, useContext, useCallback, createContext, type ReactNode } from 'react';
 
 import { useHostaway } from './hostaway-context';
 

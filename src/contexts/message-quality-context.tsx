@@ -1,4 +1,4 @@
-import { useState, useEffect, createContext, useContext, useCallback, type ReactNode } from 'react';
+import { useState, useEffect, useContext, useCallback, createContext, type ReactNode } from 'react';
 
 // ----------------------------------------------------------------------
 
@@ -302,40 +302,179 @@ export function MessageQualityProvider({ children }: MessageQualityProviderProps
         conversationId: 'conv-1',
         workerId: 'worker-1',
         workerName: 'Sarah Johnson',
-        workerRole: 'associate',
+        workerRole: 'associate' as const,
         message: 'Thank you for your message! Yes, early check-in is available. I\'ll send you the key code shortly.',
-        sentAt: new Date(Date.now() - 300000), // 5 minutes ago
-        responseTimeMs: 8 * 60 * 1000, // 8 minutes
+        sentAt: new Date(Date.now() - 300000),
+        responseTimeMs: 8 * 60 * 1000,
         guestMessage: 'Can we check in early tomorrow?',
-        guestMessageTime: new Date(Date.now() - 480000) // 8 minutes ago
+        guestMessageTime: new Date(Date.now() - 480000)
       },
       {
         id: '2',
-        conversationId: 'conv-2',
-        workerId: 'worker-2',
-        workerName: 'Mike Wilson',
-        workerRole: 'supervisor',
-        message: 'Hi! The WiFi password is on the fridge. Let me know if you need anything else.',
-        sentAt: new Date(Date.now() - 600000), // 10 minutes ago
-        responseTimeMs: 15 * 60 * 1000, // 15 minutes
-        guestMessage: 'What\'s the WiFi password?',
-        guestMessageTime: new Date(Date.now() - 900000) // 15 minutes ago
+        conversationId: 'conv-1',
+        workerId: 'worker-1',
+        workerName: 'Sarah Johnson',
+        workerRole: 'associate' as const,
+        message: 'Great! I\'ve updated your reservation. Check-in is now scheduled for 2 PM instead of 3 PM.',
+        sentAt: new Date(Date.now() - 200000),
+        responseTimeMs: 5 * 60 * 1000,
+        guestMessage: 'Thanks! What time should we arrive?',
+        guestMessageTime: new Date(Date.now() - 260000)
       },
       {
         id: '3',
+        conversationId: 'conv-2',
+        workerId: 'worker-1',
+        workerName: 'Sarah Johnson',
+        workerRole: 'associate' as const,
+        message: 'Yes, parking is available and it\'s free for all guests. You can park right in front of the building.',
+        sentAt: new Date(Date.now() - 600000),
+        responseTimeMs: 12 * 60 * 1000,
+        guestMessage: 'Is parking available at the property?',
+        guestMessageTime: new Date(Date.now() - 720000)
+      },
+      {
+        id: '4',
         conversationId: 'conv-3',
+        workerId: 'worker-2',
+        workerName: 'Mike Wilson',
+        workerRole: 'supervisor' as const,
+        message: 'Hi! The WiFi password is on the fridge. Let me know if you need anything else.',
+        sentAt: new Date(Date.now() - 900000),
+        responseTimeMs: 15 * 60 * 1000,
+        guestMessage: 'What\'s the WiFi password?',
+        guestMessageTime: new Date(Date.now() - 1050000)
+      },
+      {
+        id: '5',
+        conversationId: 'conv-3',
+        workerId: 'worker-2',
+        workerName: 'Mike Wilson',
+        workerRole: 'supervisor' as const,
+        message: 'The property is in a quiet residential area. There are grocery stores within walking distance.',
+        sentAt: new Date(Date.now() - 1200000),
+        responseTimeMs: 20 * 60 * 1000,
+        guestMessage: 'What\'s the neighborhood like?',
+        guestMessageTime: new Date(Date.now() - 1400000)
+      },
+      {
+        id: '6',
+        conversationId: 'conv-4',
         workerId: 'worker-3',
         workerName: 'Lisa Brown',
-        workerRole: 'manager',
+        workerRole: 'manager' as const,
         message: 'Perfect! Check-out is at 11 AM. Have a great trip!',
-        sentAt: new Date(Date.now() - 900000), // 15 minutes ago
-        responseTimeMs: 25 * 60 * 1000, // 25 minutes
+        sentAt: new Date(Date.now() - 1500000),
+        responseTimeMs: 25 * 60 * 1000,
         guestMessage: 'What time is check-out?',
-        guestMessageTime: new Date(Date.now() - 1500000) // 25 minutes ago
+        guestMessageTime: new Date(Date.now() - 1720000)
+      },
+      {
+        id: '7',
+        conversationId: 'conv-5',
+        workerId: 'worker-1',
+        workerName: 'Sarah Johnson',
+        workerRole: 'associate' as const,
+        message: 'Late check-out until 1 PM can be arranged for an additional $30. Would you like me to set that up?',
+        sentAt: new Date(Date.now() - 1800000),
+        responseTimeMs: 10 * 60 * 1000,
+        guestMessage: 'Can we check out later?',
+        guestMessageTime: new Date(Date.now() - 1900000)
       }
     ];
 
-    sampleMessages.forEach(msg => recordMessage(msg));
+    // Load additional sample messages with diverse performance data
+    const additionalSampleMessages = [
+      // John Doe - Good performer
+      {
+        id: '8',
+        conversationId: 'conv-6',
+        workerId: 'john-doe',
+        workerName: 'John Doe',
+        workerRole: 'associate' as const,
+        message: 'Hello! Welcome to our property. We\'re excited to have you stay with us.',
+        sentAt: new Date(Date.now() - 3600000),
+        responseTimeMs: 5 * 60 * 1000,
+        guestMessage: 'We just arrived, where do we park?',
+        guestMessageTime: new Date(Date.now() - 3650000)
+      },
+      {
+        id: '9',
+        conversationId: 'conv-7',
+        workerId: 'john-doe',
+        workerName: 'John Doe',
+        workerRole: 'associate' as const,
+        message: 'There are extra towels in the closet. Let me know if you need anything else!',
+        sentAt: new Date(Date.now() - 7200000),
+        responseTimeMs: 7 * 60 * 1000,
+        guestMessage: 'Are there extra towels?',
+        guestMessageTime: new Date(Date.now() - 7270000)
+      },
+      // Jane Smith - Excellent performer
+      {
+        id: '10',
+        conversationId: 'conv-8',
+        workerId: 'jane-smith',
+        workerName: 'Jane Smith',
+        workerRole: 'associate' as const,
+        message: 'Absolutely! I\'ll coordinate with housekeeping to ensure everything is ready by 2 PM.',
+        sentAt: new Date(Date.now() - 10800000),
+        responseTimeMs: 3 * 60 * 1000,
+        guestMessage: 'Can we check in early at 2 PM?',
+        guestMessageTime: new Date(Date.now() - 10830000)
+      },
+      {
+        id: '11',
+        conversationId: 'conv-9',
+        workerId: 'jane-smith',
+        workerName: 'Jane Smith',
+        workerRole: 'associate' as const,
+        message: 'Yes, the hot tub is available 24/7 and ready to use. The controls are in the deck area.',
+        sentAt: new Date(Date.now() - 14400000),
+        responseTimeMs: 4 * 60 * 1000,
+        guestMessage: 'Is the hot tub working?',
+        guestMessageTime: new Date(Date.now() - 14440000)
+      },
+      {
+        id: '12',
+        conversationId: 'conv-10',
+        workerId: 'jane-smith',
+        workerName: 'Jane Smith',
+        workerRole: 'associate' as const,
+        message: 'There are several great restaurants within 5 minutes. I can send you some recommendations!',
+        sentAt: new Date(Date.now() - 18000000),
+        responseTimeMs: 6 * 60 * 1000,
+        guestMessage: 'Any good restaurants nearby?',
+        guestMessageTime: new Date(Date.now() - 18060000)
+      },
+      // Robert Davis - Needs improvement
+      {
+        id: '13',
+        conversationId: 'conv-11',
+        workerId: 'robert-davis',
+        workerName: 'Robert Davis',
+        workerRole: 'associate' as const,
+        message: 'WiFi password is 12345678.',
+        sentAt: new Date(Date.now() - 21600000),
+        responseTimeMs: 45 * 60 * 1000,
+        guestMessage: 'What is the WiFi password?',
+        guestMessageTime: new Date(Date.now() - 22050000)
+      },
+      {
+        id: '14',
+        conversationId: 'conv-12',
+        workerId: 'robert-davis',
+        workerName: 'Robert Davis',
+        workerRole: 'associate' as const,
+        message: 'Check out is at 11',
+        sentAt: new Date(Date.now() - 25200000),
+        responseTimeMs: 60 * 60 * 1000,
+        guestMessage: 'What time is check out?',
+        guestMessageTime: new Date(Date.now() - 25800000)
+      }
+    ];
+
+    [...sampleMessages, ...additionalSampleMessages].forEach(msg => recordMessage(msg));
   }, [recordMessage]);
 
   const value: MessageQualityContextType = {

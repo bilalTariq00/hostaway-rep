@@ -15,56 +15,10 @@ import FormControlLabel from '@mui/material/FormControlLabel';
 
 import { useRouter } from 'src/routes/hooks';
 
+import { API_URL } from 'src/config/environment';
 import { DashboardContent } from 'src/layouts/dashboard';
 
 import { Iconify } from 'src/components/iconify';
-
-// Mock data for checklist templates
-const mockChecklistTemplates = [
-  {
-    id: 1,
-    name: 'Property Inspection Checklist',
-    description:
-      'This is an example checklist template for property inspection tasks. Feel free to edit the items below.',
-    tasks: [
-      'Check all lights and switches',
-      'Test air conditioning',
-      'Inspect bathroom fixtures',
-      'Check kitchen appliances',
-      'Verify internet connection',
-      'Test door locks and keys',
-    ],
-    active: true,
-  },
-  {
-    id: 2,
-    name: 'Guest Welcome Checklist',
-    description: 'This checklist ensures all guest welcome procedures are completed properly.',
-    tasks: [
-      'Prepare welcome package',
-      'Set up guest information folder',
-      'Check cleanliness standards',
-      'Verify amenities are working',
-      'Prepare local recommendations',
-      'Set up contact information',
-    ],
-    active: true,
-  },
-  {
-    id: 3,
-    name: 'Post-Checkout Cleanup',
-    description: 'Complete cleanup checklist after guest checkout.',
-    tasks: [
-      'Remove all trash',
-      'Clean all surfaces',
-      'Wash and replace linens',
-      'Restock amenities',
-      'Check for damages',
-      'Prepare for next guests',
-    ],
-    active: false,
-  },
-];
 
 export function ChecklistTemplateFormPage() {
   const router = useRouter();
@@ -82,36 +36,55 @@ export function ChecklistTemplateFormPage() {
 
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
 
-  // Load existing checklist template data for edit/duplicate modes
+  // Fetch checklist template from backend for edit/view/duplicate
   useEffect(() => {
-    const loadChecklistTemplates = () => {
-      const savedTemplates = localStorage.getItem('checklistTemplates');
-      if (savedTemplates) {
-        return JSON.parse(savedTemplates);
+    const fetchTemplate = async () => {
+      if (!id || (!isEdit && !isDuplicate)) return;
+
+      try {
+        const token = localStorage.getItem('authToken');
+        if (!token) return;
+
+        const response = await fetch(`${API_URL}/api/checklist-templates/${id}`, {
+          method: 'GET',
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+
+        if (response.ok) {
+          const data = await response.json();
+          if (data.success && data.data) {
+            const template = data.data;
+            
+            // Convert tasks from objects to strings if needed
+            const taskItems = Array.isArray(template.tasks)
+              ? template.tasks.map((task: any) => (typeof task === 'string' ? task : task.item || ''))
+              : [];
+
+            if (isEdit) {
+              setFormData({
+                name: template.name || '',
+                description: template.description || '',
+                tasks: taskItems,
+                active: template.isActive !== false,
+              });
+            } else if (isDuplicate) {
+              setFormData({
+                name: `${template.name || ''} (Copy)`,
+                description: template.description || '',
+                tasks: taskItems,
+                active: template.isActive !== false,
+              });
+            }
+          }
+        }
+      } catch (error) {
+        console.error('Error fetching checklist template:', error);
       }
-      return mockChecklistTemplates;
     };
 
-    const existingTemplates = loadChecklistTemplates();
-    const foundTemplate = existingTemplates.find(
-      (template: any) => template.id === parseInt(id || '0')
-    );
-
-    if (isEdit && foundTemplate) {
-      setFormData({
-        name: foundTemplate.name || '',
-        description: foundTemplate.description || '',
-        tasks: foundTemplate.tasks || [],
-        active: foundTemplate.active || false,
-      });
-    } else if (isDuplicate && foundTemplate) {
-      setFormData({
-        name: `${foundTemplate.name} (Copy)`,
-        description: foundTemplate.description || '',
-        tasks: foundTemplate.tasks || [],
-        active: foundTemplate.active || false,
-      });
-    }
+    fetchTemplate();
   }, [id, isEdit, isDuplicate]);
 
   const handleInputChange = (field: string, value: any) => {
@@ -142,61 +115,101 @@ export function ChecklistTemplateFormPage() {
     }));
   };
 
-  const handleSaveTemplate = () => {
-    const templatesData = JSON.parse(
-      localStorage.getItem('checklistTemplates') || JSON.stringify(mockChecklistTemplates)
-    );
+  const handleSaveTemplate = async () => {
+    try {
+      const token = localStorage.getItem('authToken');
+      if (!token) {
+        alert('Not authenticated');
+        return;
+      }
 
-    if (isDuplicate) {
-      const newTemplate = {
-        id: Date.now(),
+      // Prepare template data
+      const templateData: any = {
         name: formData.name,
-        description: formData.description,
-        tasks: formData.tasks.filter((task) => task.trim() !== ''),
-        active: formData.active,
+        description: formData.description || '',
+        tasks: formData.tasks
+          .filter((task) => task.trim() !== '')
+          .map((task, index) => ({
+            item: task,
+            order: index,
+          })),
+        isActive: formData.active,
+        category: '', // Can be added to form later if needed
       };
-      const updatedTemplates = [...templatesData, newTemplate];
-      localStorage.setItem('checklistTemplates', JSON.stringify(updatedTemplates));
-    } else if (isEdit && id) {
-      const updatedTemplates = templatesData.map((template: any) =>
-        template.id === parseInt(id)
-          ? {
-              ...template,
-              name: formData.name,
-              description: formData.description,
-              tasks: formData.tasks.filter((task) => task.trim() !== ''),
-              active: formData.active,
-            }
-          : template
-      );
-      localStorage.setItem('checklistTemplates', JSON.stringify(updatedTemplates));
-    } else {
-      const newTemplate = {
-        id: Date.now(),
-        name: formData.name,
-        description: formData.description,
-        tasks: formData.tasks.filter((task) => task.trim() !== ''),
-        active: formData.active,
-      };
-      const updatedTemplates = [...templatesData, newTemplate];
-      localStorage.setItem('checklistTemplates', JSON.stringify(updatedTemplates));
+
+      let response;
+      if (isEdit && id) {
+        // Update existing template
+        response = await fetch(`${API_URL}/api/checklist-templates/${id}`, {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify(templateData),
+        });
+      } else {
+        // Create new template (including duplicate)
+        response = await fetch(`${API_URL}/api/checklist-templates`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify(templateData),
+        });
+      }
+
+      if (response.ok) {
+        const data = await response.json();
+        if (data.success) {
+          router.push('/tasks/checklist-templates');
+        } else {
+          alert(data.message || 'Failed to save template');
+        }
+      } else {
+        const errorData = await response.json().catch(() => ({ message: 'Failed to save template' }));
+        alert(errorData.message || 'Failed to save template');
+      }
+    } catch (error) {
+      console.error('Error saving checklist template:', error);
+      alert('Failed to save template. Please try again.');
     }
-
-    router.push('/tasks/checklist-templates');
   };
 
-  const handleDeleteTemplate = () => {
-    if (id) {
-      const templatesData = JSON.parse(
-        localStorage.getItem('checklistTemplates') || JSON.stringify(mockChecklistTemplates)
-      );
-      const updatedTemplates = templatesData.filter(
-        (template: any) => template.id !== parseInt(id)
-      );
-      localStorage.setItem('checklistTemplates', JSON.stringify(updatedTemplates));
+  const handleDeleteTemplate = async () => {
+    if (!id) {
+      setDeleteDialogOpen(false);
+      return;
     }
+
+    try {
+      const token = localStorage.getItem('authToken');
+      if (!token) {
+        alert('Not authenticated');
+        setDeleteDialogOpen(false);
+        return;
+      }
+
+      const response = await fetch(`${API_URL}/api/checklist-templates/${id}`, {
+        method: 'DELETE',
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      if (response.ok) {
+        router.push('/tasks/checklist-templates');
+      } else {
+        const data = await response.json();
+        alert(data.message || 'Failed to delete template');
+      }
+    } catch (error) {
+      console.error('Error deleting template:', error);
+      alert('Failed to delete template');
+    }
+    
     setDeleteDialogOpen(false);
-    router.push('/tasks/checklist-templates');
   };
 
   const getPageTitle = () => {

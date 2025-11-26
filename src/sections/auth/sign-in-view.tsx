@@ -40,7 +40,7 @@ export function SignInView() {
         fullWidth
         name="email"
         label="Email address"
-        defaultValue="hello@gmail.com"
+        defaultValue="superadmin@hostaway.com"
         sx={{ mb: 3 }}
         slotProps={{
           inputLabel: { shrink: true },
@@ -55,7 +55,7 @@ export function SignInView() {
         fullWidth
         name="password"
         label="Password"
-        defaultValue="@demo1234"
+        defaultValue="superadmin123"
         type={showPassword ? 'text' : 'password'}
         slotProps={{
           inputLabel: { shrink: true },
@@ -123,19 +123,13 @@ export function SignInView() {
             <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
               <Chip label="Super Admin" color="error" size="small" />
               <Typography variant="body2" sx={{ fontFamily: 'monospace' }}>
-                admin@hostaway.com / admin123
+                superadmin@hostaway.com / superadmin123
               </Typography>
             </Box>
             <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
               <Chip label="Manager" color="warning" size="small" />
               <Typography variant="body2" sx={{ fontFamily: 'monospace' }}>
                 manager@hostaway.com / manager123
-              </Typography>
-            </Box>
-            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-              <Chip label="Supervisor" color="info" size="small" />
-              <Typography variant="body2" sx={{ fontFamily: 'monospace' }}>
-                supervisor@hostaway.com / supervisor123
               </Typography>
             </Box>
             <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>

@@ -1,7 +1,7 @@
 import type { MessageQualityMetrics } from 'src/contexts/message-quality-context';
 
 import React from 'react';
-import { AlertCircle, CheckCircle, Clock, TrendingUp } from 'lucide-react';
+import { Clock, TrendingUp, AlertCircle, CheckCircle } from 'lucide-react';
 
 import Box from '@mui/material/Box';
 import Chip from '@mui/material/Chip';

@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { X, Info, Plus, Save, ArrowLeft } from 'lucide-react';
 
@@ -20,6 +20,7 @@ import {
   FormControlLabel,
 } from '@mui/material';
 
+import { API_URL } from 'src/config/environment';
 import { DashboardContent } from 'src/layouts/dashboard';
 
 // Mock listings data
@@ -44,81 +45,177 @@ export function AutoTaskFormPage() {
   const isEdit = Boolean(id);
   const isDuplicate = window.location.pathname.includes('/duplicate');
 
-  // Load existing auto-tasks from localStorage
-  const loadAutoTasks = () => {
-    const tasksData = localStorage.getItem('autoTasks');
-    if (tasksData) {
-      return JSON.parse(tasksData);
-    }
-    return [];
-  };
+  // Fetch auto-task from backend for edit/view/duplicate
+  useEffect(() => {
+    const fetchAutoTask = async () => {
+      if (!id || (!isEdit && !isDuplicate)) return;
 
-  const existingTasks = loadAutoTasks();
-  const foundAutoTask = existingTasks.find((task: any) => task.id === parseInt(id || '0'));
+      try {
+        const token = localStorage.getItem('authToken');
+        if (!token) return;
 
-  const initialData =
-    isEdit && foundAutoTask
-      ? {
-          title: foundAutoTask.name || '',
-          event: foundAutoTask.startingEvent || 'Check-in',
+        const response = await fetch(`${API_URL}/api/auto-tasks/${id}`, {
+          method: 'GET',
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+
+        if (response.ok) {
+          const data = await response.json();
+          if (data.success && data.data) {
+            const autoTask = data.data;
+            
+            setFormData({
+              title: autoTask.name || '',
+              event: autoTask.startingEvent || 'Check-in',
+              startsAtValue: autoTask.startsAtValue || 0,
+              startsAtUnit: autoTask.startsAtUnit || 'Hours',
+              startsAtTiming: autoTask.startsAtTiming || 'At',
+              startsAtEvent: autoTask.startsAtEvent || autoTask.startingEvent || 'Check-in',
+              shouldEndByValue: autoTask.shouldEndByValue || 0,
+              shouldEndByUnit: autoTask.shouldEndByUnit || 'Hours',
+              shouldEndByTiming: autoTask.shouldEndByTiming || 'At',
+              shouldEndByEvent: autoTask.shouldEndByEvent || 'Check-out',
+              description: autoTask.description || '',
+              checklistTemplate: autoTask.checklistTemplateId?._id?.toString() || autoTask.checklistTemplateId?.toString() || '',
+              attachments: autoTask.attachments || [],
+              addAutomaticallyNewListings: autoTask.addAutomaticallyNewListings || false,
+              active: autoTask.status === 'Active',
+              assignee: autoTask.assignee?._id?.toString() || autoTask.assignee?.toString() || '',
+              supervisor: autoTask.supervisor?._id?.toString() || autoTask.supervisor?.toString() || '',
+              group: autoTask.group || '',
+              category: autoTask.category || '',
+              channel: autoTask.linkedChannel || '',
+              cost: autoTask.cost?.toString() || '',
+              costCurrency: autoTask.costCurrency || 'USD',
+              costDescription: autoTask.costDescription || '',
+              autoGenerateExpense: autoTask.autoGenerateExpense || false,
+              createTasksForExistingReservations: autoTask.createTasksForExistingReservations !== false,
+              selectedListings: Array.isArray(autoTask.linkedListings) 
+                ? autoTask.linkedListings.map((l: any) => typeof l === 'string' ? l : l._id?.toString() || l.toString())
+                : (autoTask.linkedListing ? [autoTask.linkedListing] : []),
+            });
+
+            if (isDuplicate) {
+              setFormData((prev) => ({
+                ...prev,
+                title: `${prev.title} (Copy)`,
+              }));
+            }
+          }
+        }
+      } catch (error) {
+        console.error('Error fetching auto-task:', error);
+      }
+    };
+
+    fetchAutoTask();
+  }, [id, isEdit, isDuplicate]);
+
+  const [formData, setFormData] = useState({
+    title: '',
+    event: 'Check-in',
           startsAtValue: 0,
           startsAtUnit: 'Hours',
           startsAtTiming: 'At',
-          startsAtEvent: foundAutoTask.startingEvent || 'Check-in',
+    startsAtEvent: 'Check-in',
           shouldEndByValue: 0,
           shouldEndByUnit: 'Hours',
           shouldEndByTiming: 'At',
           shouldEndByEvent: 'Check-out',
-          description: foundAutoTask.description || '',
-          checklistTemplate: 'Checklist template',
+    description: '',
+    checklistTemplate: '',
           attachments: [],
           addAutomaticallyNewListings: false,
-          active: foundAutoTask.status === 'Active',
-          assignee: 'Assignee user',
-          supervisor: 'Supervisor user',
-          group: 'User group',
+    active: false,
+    assignee: '',
+    supervisor: '',
+    group: '',
           category: '',
-          channel: foundAutoTask.linkedChannel || 'Channel',
+    channel: '',
           cost: '',
-          costCurrency: 'Cost currency',
+    costCurrency: 'USD',
           costDescription: '',
           autoGenerateExpense: false,
           createTasksForExistingReservations: true,
-          selectedListings: [],
-        }
-      : {};
-
-  const [formData, setFormData] = useState({
-    title: initialData.title || '',
-    event: initialData.event || 'Check-in',
-    startsAtValue: initialData.startsAtValue || 0,
-    startsAtUnit: initialData.startsAtUnit || 'Hours',
-    startsAtTiming: initialData.startsAtTiming || 'At',
-    startsAtEvent: initialData.startsAtEvent || 'Check-in',
-    shouldEndByValue: initialData.shouldEndByValue || 0,
-    shouldEndByUnit: initialData.shouldEndByUnit || 'Hours',
-    shouldEndByTiming: initialData.shouldEndByTiming || 'At',
-    shouldEndByEvent: initialData.shouldEndByEvent || 'Check-out',
-    description: initialData.description || '',
-    checklistTemplate: initialData.checklistTemplate || 'Checklist template',
-    attachments: initialData.attachments || [],
-    addAutomaticallyNewListings: initialData.addAutomaticallyNewListings || false,
-    active: initialData.active || false,
-    assignee: initialData.assignee || 'Assignee user',
-    supervisor: initialData.supervisor || 'Supervisor user',
-    group: initialData.group || 'User group',
-    category: initialData.category || '',
-    channel: initialData.channel || 'Channel',
-    cost: initialData.cost || '',
-    costCurrency: initialData.costCurrency || 'Cost currency',
-    costDescription: initialData.costDescription || '',
-    autoGenerateExpense: initialData.autoGenerateExpense || false,
-    createTasksForExistingReservations: initialData.createTasksForExistingReservations || true,
-    selectedListings: initialData.selectedListings || ([] as string[]),
+    selectedListings: [] as string[],
   });
 
   const [listingSearch, setListingSearch] = useState('');
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
+  const [users, setUsers] = useState<any[]>([]);
+  const [loadingUsers, setLoadingUsers] = useState(false);
+  const [checklistTemplates, setChecklistTemplates] = useState<any[]>([]);
+  const [loadingTemplates, setLoadingTemplates] = useState(false);
+
+  // Fetch users from backend
+  useEffect(() => {
+    const fetchUsers = async () => {
+      setLoadingUsers(true);
+      try {
+        const token = localStorage.getItem('authToken');
+        if (!token) {
+          setLoadingUsers(false);
+          return;
+        }
+
+        const response = await fetch(`${API_URL}/api/users?status=active`, {
+          method: 'GET',
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+
+        if (response.ok) {
+          const data = await response.json();
+          if (data.success && data.data) {
+            setUsers(data.data);
+          }
+        }
+      } catch (error) {
+        console.error('Error fetching users:', error);
+      } finally {
+        setLoadingUsers(false);
+      }
+    };
+
+    fetchUsers();
+  }, []);
+
+  // Fetch checklist templates from backend
+  useEffect(() => {
+    const fetchTemplates = async () => {
+      setLoadingTemplates(true);
+      try {
+        const token = localStorage.getItem('authToken');
+        if (!token) {
+          setLoadingTemplates(false);
+          return;
+        }
+
+        const response = await fetch(`${API_URL}/api/checklist-templates?limit=1000`, {
+          method: 'GET',
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+
+        if (response.ok) {
+          const data = await response.json();
+          if (data.success && data.data) {
+            setChecklistTemplates(data.data);
+          }
+        }
+      } catch (error) {
+        console.error('Error fetching checklist templates:', error);
+      } finally {
+        setLoadingTemplates(false);
+      }
+    };
+
+    fetchTemplates();
+  }, []);
 
   const handleInputChange = (field: string, value: any) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
@@ -141,77 +238,81 @@ export function AutoTaskFormPage() {
     }));
   };
 
-  const handleSaveAutoTask = () => {
-    console.log('Saving auto-task:', formData);
+  const handleSaveAutoTask = async () => {
+    try {
+      const token = localStorage.getItem('authToken');
+      if (!token) {
+        alert('Not authenticated');
+        return;
+      }
 
-    // Get existing auto-tasks from localStorage or use mock data
-    const tasksData = JSON.parse(localStorage.getItem('autoTasks') || '[]');
-
-    if (isDuplicate) {
-      // Create a new auto-task with the duplicated data
-      const newAutoTask = {
-        id: Date.now(), // Generate new ID
+      // Prepare auto-task data
+      const autoTaskData: any = {
         name: formData.title,
+        description: formData.description || '',
         startingEvent: formData.event,
-        dueBefore: `${formData.shouldEndByValue} ${formData.shouldEndByUnit.toLowerCase()}`,
-        linkedChannel: formData.channel,
-        linkedListing:
-          formData.selectedListings.length > 0
-            ? mockListings.find((l) => l.id === formData.selectedListings[0])?.name ||
-              'Multiple Listings'
-            : 'No Listing',
+        startsAtValue: formData.startsAtValue || 0,
+        startsAtUnit: formData.startsAtUnit || 'Hours',
+        startsAtTiming: formData.startsAtTiming || 'At',
+        startsAtEvent: formData.startsAtEvent || formData.event,
+        shouldEndByValue: formData.shouldEndByValue || 0,
+        shouldEndByUnit: formData.shouldEndByUnit || 'Hours',
+        shouldEndByTiming: formData.shouldEndByTiming || 'At',
+        shouldEndByEvent: formData.shouldEndByEvent || 'Check-out',
         status: formData.active ? 'Active' : 'Inactive',
-        description: formData.description,
+        linkedChannel: formData.channel || '',
+        linkedListings: formData.selectedListings || [],
+        assignee: formData.assignee || null,
+        supervisor: formData.supervisor || null,
+        group: formData.group || '',
+        category: formData.category || '',
+        cost: formData.cost ? parseFloat(formData.cost) : null,
+        costCurrency: formData.costCurrency || 'USD',
+        costDescription: formData.costDescription || '',
+        autoGenerateExpense: formData.autoGenerateExpense || false,
+        addAutomaticallyNewListings: formData.addAutomaticallyNewListings || false,
+        createTasksForExistingReservations: formData.createTasksForExistingReservations !== false,
+        checklistTemplateId: formData.checklistTemplate || null,
       };
 
-      const updatedAutoTasks = [...tasksData, newAutoTask];
-      localStorage.setItem('autoTasks', JSON.stringify(updatedAutoTasks));
-      console.log('Created duplicate auto-task:', newAutoTask);
-    } else if (isEdit && id) {
+      let response;
+      if (isEdit && id) {
       // Update existing auto-task
-      const updatedAutoTasks = tasksData.map((task: any) =>
-        task.id === parseInt(id)
-          ? {
-              ...task,
-              name: formData.title,
-              startingEvent: formData.event,
-              dueBefore: `${formData.shouldEndByValue} ${formData.shouldEndByUnit.toLowerCase()}`,
-              linkedChannel: formData.channel,
-              linkedListing:
-                formData.selectedListings.length > 0
-                  ? mockListings.find((l) => l.id === formData.selectedListings[0])?.name ||
-                    'Multiple Listings'
-                  : 'No Listing',
-              status: formData.active ? 'Active' : 'Inactive',
-              description: formData.description,
-            }
-          : task
-      );
-      localStorage.setItem('autoTasks', JSON.stringify(updatedAutoTasks));
-      console.log('Updated auto-task:', formData);
+        response = await fetch(`${API_URL}/api/auto-tasks/${id}`, {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify(autoTaskData),
+        });
+      } else {
+        // Create new auto-task (including duplicate)
+        response = await fetch(`${API_URL}/api/auto-tasks`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify(autoTaskData),
+        });
+      }
+
+      if (response.ok) {
+        const data = await response.json();
+        if (data.success) {
+          navigate('/tasks/manage-auto-tasks');
+        } else {
+          alert(data.message || 'Failed to save auto-task');
+        }
     } else {
-      // Create new auto-task
-      const newAutoTask = {
-        id: Date.now(), // Generate new ID
-        name: formData.title,
-        startingEvent: formData.event,
-        dueBefore: `${formData.shouldEndByValue} ${formData.shouldEndByUnit.toLowerCase()}`,
-        linkedChannel: formData.channel,
-        linkedListing:
-          formData.selectedListings.length > 0
-            ? mockListings.find((l) => l.id === formData.selectedListings[0])?.name ||
-              'Multiple Listings'
-            : 'No Listing',
-        status: formData.active ? 'Active' : 'Inactive',
-        description: formData.description,
-      };
-
-      const updatedAutoTasks = [...tasksData, newAutoTask];
-      localStorage.setItem('autoTasks', JSON.stringify(updatedAutoTasks));
-      console.log('Created new auto-task:', newAutoTask);
+        const errorData = await response.json().catch(() => ({ message: 'Failed to save auto-task' }));
+        alert(errorData.message || 'Failed to save auto-task');
+      }
+    } catch (error) {
+      console.error('Error saving auto-task:', error);
+      alert('Failed to save auto-task. Please try again.');
     }
-
-    navigate('/tasks/manage-auto-tasks');
   };
 
   const filteredListings = mockListings.filter((listing) =>
@@ -429,11 +530,20 @@ export function AutoTaskFormPage() {
                 value={formData.checklistTemplate}
                 label="Checklist template"
                 onChange={(e) => handleInputChange('checklistTemplate', e.target.value)}
+                disabled={loadingTemplates}
               >
-                <MenuItem value="Checklist template">Checklist template</MenuItem>
-                <MenuItem value="Cleaning Checklist">Cleaning Checklist</MenuItem>
-                <MenuItem value="Maintenance Checklist">Maintenance Checklist</MenuItem>
-                <MenuItem value="Inspection Checklist">Inspection Checklist</MenuItem>
+                <MenuItem value="">
+                  <em>None</em>
+                </MenuItem>
+                {loadingTemplates ? (
+                  <MenuItem disabled>Loading templates...</MenuItem>
+                ) : (
+                  checklistTemplates.map((template) => (
+                    <MenuItem key={template._id || template.id} value={template._id || template.id}>
+                      {template.name}
+                    </MenuItem>
+                  ))
+                )}
               </Select>
             </FormControl>
           </Box>
@@ -564,11 +674,20 @@ export function AutoTaskFormPage() {
                 value={formData.assignee}
                 label="Assignee"
                 onChange={(e) => handleInputChange('assignee', e.target.value)}
+                disabled={loadingUsers}
               >
-                <MenuItem value="Assignee user">Assignee user</MenuItem>
-                <MenuItem value="John Doe">John Doe</MenuItem>
-                <MenuItem value="Mike Johnson">Mike Johnson</MenuItem>
-                <MenuItem value="Tom Brown">Tom Brown</MenuItem>
+                <MenuItem value="">
+                  <em>None</em>
+                </MenuItem>
+                {loadingUsers ? (
+                  <MenuItem disabled>Loading users...</MenuItem>
+                ) : (
+                  users.map((user) => (
+                    <MenuItem key={user.id} value={user.id}>
+                      {user.name} ({user.email}) - {user.role}
+                    </MenuItem>
+                  ))
+                )}
               </Select>
             </FormControl>
             <FormControl fullWidth sx={{ mb: 2 }}>
@@ -577,10 +696,22 @@ export function AutoTaskFormPage() {
                 value={formData.supervisor}
                 label="Supervisor"
                 onChange={(e) => handleInputChange('supervisor', e.target.value)}
+                disabled={loadingUsers}
               >
-                <MenuItem value="Supervisor user">Supervisor user</MenuItem>
-                <MenuItem value="Jane Smith">Jane Smith</MenuItem>
-                <MenuItem value="Sarah Wilson">Sarah Wilson</MenuItem>
+                <MenuItem value="">
+                  <em>None</em>
+                </MenuItem>
+                {loadingUsers ? (
+                  <MenuItem disabled>Loading users...</MenuItem>
+                ) : (
+                  users
+                    .filter((user) => ['super-admin', 'manager', 'supervisor'].includes(user.role))
+                    .map((user) => (
+                      <MenuItem key={user.id} value={user.id}>
+                        {user.name} ({user.email}) - {user.role}
+                      </MenuItem>
+                    ))
+                )}
               </Select>
             </FormControl>
             <FormControl fullWidth>

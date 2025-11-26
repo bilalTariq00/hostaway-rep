@@ -1,98 +1,36 @@
+/* eslint-disable perfectionist/sort-imports */
+import { Plus, X } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import { useParams, useLocation } from 'react-router-dom';
 
 import Box from '@mui/material/Box';
-import Grid from '@mui/material/Grid';
 import Card from '@mui/material/Card';
+import Grid from '@mui/material/Grid';
 import Button from '@mui/material/Button';
-import Select from '@mui/material/Select';
 import Dialog from '@mui/material/Dialog';
 import Rating from '@mui/material/Rating';
-import MenuItem from '@mui/material/MenuItem';
+import Select from '@mui/material/Select';
 import Checkbox from '@mui/material/Checkbox';
+import MenuItem from '@mui/material/MenuItem';
 import TextField from '@mui/material/TextField';
-import Typography from '@mui/material/Typography';
 import IconButton from '@mui/material/IconButton';
 import InputLabel from '@mui/material/InputLabel';
-import FormControl from '@mui/material/FormControl';
-import DialogTitle from '@mui/material/DialogTitle';
+import Typography from '@mui/material/Typography';
 import CardContent from '@mui/material/CardContent';
-import DialogContent from '@mui/material/DialogContent';
+import DialogTitle from '@mui/material/DialogTitle';
+import FormControl from '@mui/material/FormControl';
 import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
 import FormControlLabel from '@mui/material/FormControlLabel';
+import Switch from '@mui/material/Switch';
+/* eslint-enable perfectionist/sort-imports */
 
 import { useRouter } from 'src/routes/hooks';
 
+import { API_URL } from 'src/config/environment';
 import { DashboardContent } from 'src/layouts/dashboard';
 
 import { Iconify } from 'src/components/iconify';
-
-// Mock data for tasks
-const mockTasks = [
-  {
-    id: 1,
-    title: 'Property Inspection',
-    description: 'Conduct thorough inspection of the property',
-    startDate: '2024-01-15',
-    startTime: '09:00',
-    endDate: '2024-01-15',
-    endTime: '17:00',
-    category: 'Inspection',
-    listing: 'Beach Villa',
-    channel: 'Airbnb',
-    reservation: 'RES-001',
-    status: 'To Do',
-    assignee: 'John Doe',
-    supervisor: 'Jane Smith',
-    group: 'Maintenance Team',
-    cost: '150',
-    costCurrency: 'USD',
-    costDescription: 'Inspection fee',
-    autoGenerateExpense: true,
-    checklist: [
-      'Check all lights and switches',
-      'Test air conditioning',
-      'Inspect bathroom fixtures',
-      'Check kitchen appliances',
-    ],
-    attachments: [],
-    customFields: [],
-    feedbackScore: 4,
-    resolutionNote: 'Task completed successfully',
-    feedbackNote: 'Good work done',
-  },
-  {
-    id: 2,
-    title: 'Guest Welcome',
-    description: 'Prepare welcome package for new guests',
-    startDate: '2024-01-20',
-    startTime: '14:00',
-    endDate: '2024-01-20',
-    endTime: '16:00',
-    category: 'Guest Service',
-    listing: 'Mountain Cabin',
-    channel: 'Booking.com',
-    reservation: 'RES-002',
-    status: 'In Progress',
-    assignee: 'Mike Johnson',
-    supervisor: 'Sarah Wilson',
-    group: 'Guest Services',
-    cost: '75',
-    costCurrency: 'USD',
-    costDescription: 'Welcome package materials',
-    autoGenerateExpense: false,
-    checklist: [
-      'Prepare welcome package',
-      'Set up guest information folder',
-      'Check cleanliness standards',
-    ],
-    attachments: [],
-    customFields: [],
-    feedbackScore: 5,
-    resolutionNote: 'Excellent guest service',
-    feedbackNote: 'Guests were very happy',
-  },
-];
 
 export function TaskFormPage() {
   const router = useRouter();
@@ -114,6 +52,7 @@ export function TaskFormPage() {
     channel: '',
     reservation: '',
     status: 'To Do',
+    priority: 'Medium',
     assignee: '',
     supervisor: '',
     group: '',
@@ -122,97 +61,173 @@ export function TaskFormPage() {
     costDescription: '',
     autoGenerateExpense: false,
     checklist: [] as string[],
-    attachments: [] as string[],
-    customFields: [] as string[],
+    attachments: [] as any[],
+    customFields: [] as Array<{ name: string; value: any; type: 'text' | 'number' | 'date' | 'boolean' }>,
     feedbackScore: 0,
     resolutionNote: '',
     feedbackNote: '',
   });
 
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [uploading, setUploading] = useState(false);
+  const [users, setUsers] = useState<any[]>([]);
+  const [loadingUsers, setLoadingUsers] = useState(false);
+
+  // Fetch users from backend
+  useEffect(() => {
+    const fetchUsers = async () => {
+      setLoadingUsers(true);
+      try {
+        const token = localStorage.getItem('authToken');
+        if (!token) {
+          setLoadingUsers(false);
+          return;
+        }
+
+        const response = await fetch(`${API_URL}/api/users?status=active`, {
+          method: 'GET',
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+
+        if (response.ok) {
+          const data = await response.json();
+          if (data.success && data.data) {
+            setUsers(data.data);
+            console.log(`✅ Loaded ${data.data.length} users from database`);
+          } else {
+            console.error('Failed to load users:', data.message);
+          }
+        } else {
+          const errorData = await response.json().catch(() => ({ message: 'Unknown error' }));
+          console.error('Error fetching users:', response.status, errorData.message);
+          if (response.status === 404) {
+            console.error('⚠️ Users API endpoint not found. Please restart the server.');
+          }
+        }
+      } catch (error) {
+        console.error('Error fetching users:', error);
+      } finally {
+        setLoadingUsers(false);
+      }
+    };
+
+    fetchUsers();
+  }, []);
 
   // Load existing task data for edit/duplicate/view modes
   useEffect(() => {
-    const loadTasks = () => {
-      const savedTasks = localStorage.getItem('tasks');
-      const savedArchivedTasks = localStorage.getItem('archivedTasks');
+    const fetchTask = async () => {
+      if (!id || (!isEdit && !isView && !isDuplicate)) return;
 
-      let allTasks: any[] = [];
+      try {
+        const token = localStorage.getItem('authToken');
+        if (!token) return;
 
-      if (savedTasks) {
-        allTasks = [...allTasks, ...JSON.parse(savedTasks)];
+        const response = await fetch(`${API_URL}/api/tasks/${id}`, {
+          method: 'GET',
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+
+        if (response.ok) {
+          const data = await response.json();
+          if (data.success && data.data) {
+            const task = data.data;
+            
+            // Convert checklist objects to strings if needed
+            const checklistItems = task.checklist
+              ? task.checklist.map((item: any) => (typeof item === 'string' ? item : item.item || ''))
+              : [];
+
+            if (isEdit || isView) {
+              setFormData({
+                title: task.title || '',
+                description: task.description || '',
+                startDate: task.startDate ? new Date(task.startDate).toISOString().split('T')[0] : '',
+                startTime: task.startTime || '',
+                endDate: task.endDate ? new Date(task.endDate).toISOString().split('T')[0] : '',
+                endTime: task.endTime || '',
+                category: task.category || '',
+                listing: task.listing || '',
+                channel: task.channel || '',
+                reservation: task.reservation || '',
+                status: task.status || 'To Do',
+                priority: task.priority || 'Medium',
+                assignee: task.assignee?._id?.toString() || task.assignee?.toString() || '',
+                supervisor: task.supervisor?._id?.toString() || task.supervisor?.toString() || '',
+                group: task.group || '',
+                cost: task.cost?.toString() || '',
+                costCurrency: task.costCurrency || 'USD',
+                costDescription: task.costDescription || '',
+                autoGenerateExpense: task.autoGenerateExpense || false,
+                checklist: checklistItems,
+                attachments: task.attachments || [],
+                customFields: Array.isArray(task.customFields) 
+                  ? task.customFields.map((cf: any) => {
+                      let value = cf.value ?? '';
+                      // Format date values for date input
+                      if (cf.type === 'date' && value) {
+                        if (value instanceof Date) {
+                          value = value.toISOString().split('T')[0];
+                        } else if (typeof value === 'string') {
+                          try {
+                            value = new Date(value).toISOString().split('T')[0];
+                          } catch (e) {
+                            value = '';
+                          }
+                        }
+                      }
+                      return {
+                        name: cf.name || '',
+                        value,
+                        type: cf.type || 'text',
+                      };
+                    })
+                  : [],
+                feedbackScore: task.feedbackScore || 0,
+                resolutionNote: task.resolutionNote || '',
+                feedbackNote: task.feedbackNote || '',
+              });
+            } else if (isDuplicate) {
+              setFormData({
+                title: `${task.title || ''} (Copy)`,
+                description: task.description || '',
+                startDate: task.startDate ? new Date(task.startDate).toISOString().split('T')[0] : '',
+                startTime: task.startTime || '',
+                endDate: task.endDate ? new Date(task.endDate).toISOString().split('T')[0] : '',
+                endTime: task.endTime || '',
+                category: task.category || '',
+                listing: task.listing || '',
+                channel: task.channel || '',
+                reservation: task.reservation || '',
+                status: 'To Do',
+                priority: task.priority || 'Medium',
+                assignee: task.assignee?._id?.toString() || task.assignee?.toString() || '',
+                supervisor: task.supervisor?._id?.toString() || task.supervisor?.toString() || '',
+                group: task.group || '',
+                cost: task.cost?.toString() || '',
+                costCurrency: task.costCurrency || 'USD',
+                costDescription: task.costDescription || '',
+                autoGenerateExpense: task.autoGenerateExpense || false,
+                checklist: checklistItems,
+                attachments: task.attachments || [],
+                customFields: task.customFields || [],
+                feedbackScore: 0,
+                resolutionNote: '',
+                feedbackNote: '',
+              });
+            }
+          }
+        }
+      } catch (error) {
+        console.error('Error fetching task:', error);
       }
-
-      if (savedArchivedTasks) {
-        allTasks = [...allTasks, ...JSON.parse(savedArchivedTasks)];
-      }
-
-      // If no saved tasks, use mock data
-      if (allTasks.length === 0) {
-        allTasks = mockTasks;
-      }
-
-      return allTasks;
     };
 
-    const existingTasks = loadTasks();
-    const foundTask = existingTasks.find((task: any) => task.id === parseInt(id || '0'));
-
-    if ((isEdit || isView) && foundTask) {
-      setFormData({
-        title: foundTask.title || '',
-        description: foundTask.description || '',
-        startDate: foundTask.startDate || '',
-        startTime: foundTask.startTime || '',
-        endDate: foundTask.endDate || '',
-        endTime: foundTask.endTime || '',
-        category: foundTask.category || '',
-        listing: foundTask.listing || '',
-        channel: foundTask.channel || '',
-        reservation: foundTask.reservation || '',
-        status: foundTask.status || 'To Do',
-        assignee: foundTask.assignee || '',
-        supervisor: foundTask.supervisor || '',
-        group: foundTask.group || '',
-        cost: foundTask.cost || '',
-        costCurrency: foundTask.costCurrency || 'USD',
-        costDescription: foundTask.costDescription || '',
-        autoGenerateExpense: foundTask.autoGenerateExpense || false,
-        checklist: foundTask.checklist || [],
-        attachments: foundTask.attachments || [],
-        customFields: foundTask.customFields || [],
-        feedbackScore: foundTask.feedbackScore || 0,
-        resolutionNote: foundTask.resolutionNote || '',
-        feedbackNote: foundTask.feedbackNote || '',
-      });
-    } else if (isDuplicate && foundTask) {
-      setFormData({
-        title: `${foundTask.title} (Copy)`,
-        description: foundTask.description || '',
-        startDate: foundTask.startDate || '',
-        startTime: foundTask.startTime || '',
-        endDate: foundTask.endDate || '',
-        endTime: foundTask.endTime || '',
-        category: foundTask.category || '',
-        listing: foundTask.listing || '',
-        channel: foundTask.channel || '',
-        reservation: foundTask.reservation || '',
-        status: 'To Do',
-        assignee: foundTask.assignee || '',
-        supervisor: foundTask.supervisor || '',
-        group: foundTask.group || '',
-        cost: foundTask.cost || '',
-        costCurrency: foundTask.costCurrency || 'USD',
-        costDescription: foundTask.costDescription || '',
-        autoGenerateExpense: foundTask.autoGenerateExpense || false,
-        checklist: foundTask.checklist || [],
-        attachments: foundTask.attachments || [],
-        customFields: foundTask.customFields || [],
-        feedbackScore: 0,
-        resolutionNote: '',
-        feedbackNote: '',
-      });
-    }
+    fetchTask();
   }, [id, isEdit, isDuplicate, isView]);
 
   const handleInputChange = (field: string, value: any) => {
@@ -251,95 +266,233 @@ export function TaskFormPage() {
     }
   };
 
-  const handleSaveTask = () => {
-    if (isView) return;
-
-    const loadTasks = () => {
-      const savedTasks = localStorage.getItem('tasks');
-      const savedArchivedTasks = localStorage.getItem('archivedTasks');
-
-      let allTasks: any[] = [];
-
-      if (savedTasks) {
-        allTasks = [...allTasks, ...JSON.parse(savedTasks)];
-      }
-
-      if (savedArchivedTasks) {
-        allTasks = [...allTasks, ...JSON.parse(savedArchivedTasks)];
-      }
-
-      // If no saved tasks, use mock data
-      if (allTasks.length === 0) {
-        allTasks = mockTasks;
-      }
-
-      return allTasks;
-    };
-
-    const tasksData = loadTasks();
-
-    if (isDuplicate) {
-      const newTask = {
-        id: Date.now(),
-        ...formData,
-        checklist: formData.checklist.filter((item) => item.trim() !== ''),
-      };
-      const updatedTasks = [...tasksData, newTask];
-      localStorage.setItem('tasks', JSON.stringify(updatedTasks));
-    } else if (isEdit && id) {
-      const updatedTasks = tasksData.map((task: any) =>
-        task.id === parseInt(id)
-          ? {
-              ...task,
-              ...formData,
-              checklist: formData.checklist.filter((item) => item.trim() !== ''),
-            }
-          : task
-      );
-      localStorage.setItem('tasks', JSON.stringify(updatedTasks));
-    } else {
-      const newTask = {
-        id: Date.now(),
-        ...formData,
-        checklist: formData.checklist.filter((item) => item.trim() !== ''),
-      };
-      const updatedTasks = [...tasksData, newTask];
-      localStorage.setItem('tasks', JSON.stringify(updatedTasks));
+  const handleAddCustomField = () => {
+    if (!isView) {
+      setFormData((prev) => ({
+        ...prev,
+        customFields: [...prev.customFields, { name: '', value: '', type: 'text' as const }],
+      }));
     }
-
-    router.push('/tasks/archive');
   };
 
-  const handleDeleteTask = () => {
-    if (id) {
-      const loadTasks = () => {
-        const savedTasks = localStorage.getItem('tasks');
-        const savedArchivedTasks = localStorage.getItem('archivedTasks');
+  const handleRemoveCustomField = (index: number) => {
+    if (!isView) {
+      setFormData((prev) => ({
+        ...prev,
+        customFields: prev.customFields.filter((_, i) => i !== index),
+      }));
+    }
+  };
 
-        let allTasks: any[] = [];
-
-        if (savedTasks) {
-          allTasks = [...allTasks, ...JSON.parse(savedTasks)];
+  const handleCustomFieldChange = (index: number, field: 'name' | 'value' | 'type', newValue: any) => {
+    if (!isView) {
+      setFormData((prev) => {
+        const updated = [...prev.customFields];
+        updated[index] = { ...updated[index], [field]: newValue };
+        // Reset value when type changes
+        if (field === 'type') {
+          updated[index].value = newValue === 'boolean' ? false : newValue === 'number' ? 0 : '';
         }
+        return { ...prev, customFields: updated };
+      });
+    }
+  };
 
-        if (savedArchivedTasks) {
-          allTasks = [...allTasks, ...JSON.parse(savedArchivedTasks)];
-        }
+  const handleFileUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    if (!event.target.files || event.target.files.length === 0) return;
 
-        // If no saved tasks, use mock data
-        if (allTasks.length === 0) {
-          allTasks = mockTasks;
-        }
+    const file = event.target.files[0];
+    setUploading(true);
 
-        return allTasks;
+    try {
+      const token = localStorage.getItem('authToken');
+      
+      if (!token || token.startsWith('mock-token-')) {
+        alert('Please login with a real account to upload files. Use one of the seeded users:\n- superadmin@hostaway.com / superadmin123\n- manager@hostaway.com / manager123\n- associate@hostaway.com / associate123\n- team@hostaway.com / team123');
+        setUploading(false);
+        event.target.value = '';
+        return;
+      }
+
+      const uploadFormData = new FormData();
+      uploadFormData.append('file', file);
+
+      const response = await fetch(`${API_URL}/api/uploads`, {
+        method: 'POST',
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+        body: uploadFormData,
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({ message: 'Upload failed' }));
+        throw new Error(errorData.message || `Upload failed: ${response.status}`);
+      }
+
+      const result = await response.json();
+
+      if (result.success) {
+        setFormData((prev) => ({
+          ...prev,
+          attachments: [...prev.attachments, result.data],
+        }));
+      } else {
+        alert(result.message || 'File upload failed');
+      }
+    } catch (error: any) {
+      console.error('File upload error:', error);
+      alert(error.message || 'File upload failed. Please try again.');
+    } finally {
+      setUploading(false);
+      // Reset file input
+      event.target.value = '';
+    }
+  };
+
+  const handleRemoveAttachment = (index: number) => {
+    if (!isView) {
+      setFormData((prev) => ({
+        ...prev,
+        attachments: prev.attachments.filter((_, i) => i !== index),
+      }));
+    }
+  };
+
+  const formatFileSize = (bytes: number) => {
+    if (bytes === 0) return '0 Bytes';
+    const k = 1024;
+    const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+    const i = Math.floor(Math.log(bytes) / Math.log(k));
+    return Math.round(bytes / Math.pow(k, i) * 100) / 100 + ' ' + sizes[i];
+  };
+
+  const handleSaveTask = async () => {
+    if (isView) return;
+
+    try {
+      const token = localStorage.getItem('authToken');
+      if (!token) {
+        alert('Not authenticated');
+        return;
+      }
+
+      // Prepare task data
+      const taskData: any = {
+        title: formData.title,
+        description: formData.description,
+        status: formData.status,
+        priority: formData.priority || 'Medium',
+        assignee: formData.assignee || null,
+        supervisor: formData.supervisor || null,
+        group: formData.group || '',
+        listing: formData.listing || '',
+        channel: formData.channel || '',
+        reservation: formData.reservation || '',
+        category: formData.category || '',
+        startDate: formData.startDate || null,
+        startTime: formData.startTime || '',
+        endDate: formData.endDate || null,
+        endTime: formData.endTime || '',
+        dueDate: formData.endDate || formData.startDate || null,
+        cost: formData.cost ? parseFloat(formData.cost) : 0,
+        costCurrency: formData.costCurrency || 'USD',
+        costDescription: formData.costDescription || '',
+        autoGenerateExpense: formData.autoGenerateExpense || false,
+        checklist: formData.checklist
+          .filter((item) => item.trim() !== '')
+          .map((item) => ({ item, completed: false })),
+        attachments: formData.attachments || [],
+        customFields: formData.customFields
+          .filter((field) => field.name.trim() !== '')
+          .map((field) => ({
+            name: field.name.trim(),
+            value: field.type === 'number' ? (field.value ? parseFloat(field.value) : 0) : 
+                   field.type === 'boolean' ? Boolean(field.value) :
+                   field.type === 'date' ? (field.value ? new Date(field.value) : null) :
+                   field.value,
+            type: field.type,
+          })),
+        feedbackScore: formData.feedbackScore || 0,
+        resolutionNote: formData.resolutionNote || '',
+        feedbackNote: formData.feedbackNote || '',
       };
 
-      const tasksData = loadTasks();
-      const updatedTasks = tasksData.filter((task: any) => task.id !== parseInt(id));
-      localStorage.setItem('tasks', JSON.stringify(updatedTasks));
+      let response;
+      if (isEdit && id) {
+        // Update existing task
+        response = await fetch(`${API_URL}/api/tasks/${id}`, {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify(taskData),
+        });
+      } else {
+        // Create new task (including duplicate)
+        response = await fetch(`${API_URL}/api/tasks`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify(taskData),
+        });
+      }
+
+      if (response.ok) {
+        const data = await response.json();
+        if (data.success) {
+          router.push('/tasks/manage-tasks');
+        } else {
+          alert(data.message || 'Failed to save task');
+        }
+      } else {
+        const errorData = await response.json().catch(() => ({ message: 'Failed to save task' }));
+        alert(errorData.message || 'Failed to save task');
+      }
+    } catch (error) {
+      console.error('Error saving task:', error);
+      alert('Failed to save task. Please try again.');
     }
-    setDeleteDialogOpen(false);
-    router.push('/tasks/archive');
+  };
+
+  const handleDeleteTask = async () => {
+    if (!id) {
+      setDeleteDialogOpen(false);
+      return;
+    }
+
+    try {
+      const token = localStorage.getItem('authToken');
+      if (!token) {
+        alert('Authentication token not found. Please log in.');
+        setDeleteDialogOpen(false);
+        return;
+      }
+
+      const response = await fetch(`${API_URL}/api/tasks/${id}`, {
+        method: 'DELETE',
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      if (response.ok) {
+        alert('Task deleted successfully.');
+        router.push('/tasks/archive');
+      } else {
+        const errorData = await response.json().catch(() => ({ message: 'Unknown error' }));
+        console.error('Error deleting task:', response.status, errorData.message);
+        alert(errorData.message || 'Failed to delete task.');
+      }
+    } catch (error) {
+      console.error('Error deleting task:', error);
+      alert('Failed to delete task. Please try again.');
+    } finally {
+      setDeleteDialogOpen(false);
+    }
   };
 
   const getPageTitle = () => {
@@ -638,28 +791,218 @@ export function TaskFormPage() {
                   Attachments
                 </Typography>
                 {!isReadOnly && (
-                  <Button variant="text" color="primary">
-                    ADD ATTACHMENT
-                  </Button>
+                  <label>
+                    <input
+                      type="file"
+                      style={{ display: 'none' }}
+                      onChange={handleFileUpload}
+                      disabled={uploading}
+                      accept="image/*,application/pdf,.doc,.docx,.xls,.xlsx,.txt,.csv,.zip"
+                    />
+                    <Button
+                      variant="text"
+                      color="primary"
+                      component="span"
+                      disabled={uploading}
+                      startIcon={<Iconify icon={uploading ? ('eva:loader-fill' as any) : ('eva:attach-fill' as any)} />}
+                    >
+                      {uploading ? 'Uploading...' : 'ADD ATTACHMENT'}
+                    </Button>
+                  </label>
                 )}
               </Box>
-              <Typography variant="body2" color="text.secondary">
-                No attachments added yet.
-              </Typography>
+              {formData.attachments.length === 0 ? (
+                <Typography variant="body2" color="text.secondary">
+                  No attachments added yet.
+                </Typography>
+              ) : (
+                <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
+                  {formData.attachments.map((attachment, index) => (
+                    <Box
+                      key={index}
+                      sx={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'space-between',
+                        p: 1.5,
+                        border: 1,
+                        borderColor: 'divider',
+                        borderRadius: 1,
+                        bgcolor: 'background.paper',
+                      }}
+                    >
+                      <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, flex: 1 }}>
+                        <Iconify
+                          icon={
+                            attachment.type?.startsWith('image/')
+                              ? ('eva:image-fill' as any)
+                              : attachment.type === 'application/pdf'
+                                ? ('eva:file-text-fill' as any)
+                                : ('eva:file-fill' as any)
+                          }
+                          width={24}
+                        />
+                        <Box sx={{ flex: 1, minWidth: 0 }}>
+                          <Typography
+                            variant="body2"
+                            sx={{
+                              fontWeight: 500,
+                              overflow: 'hidden',
+                              textOverflow: 'ellipsis',
+                              whiteSpace: 'nowrap',
+                            }}
+                          >
+                            {attachment.name}
+                          </Typography>
+                          <Typography variant="caption" color="text.secondary">
+                            {formatFileSize(attachment.size || 0)}
+                          </Typography>
+                        </Box>
+                      </Box>
+                      <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
+                        {attachment.url && (
+                          <IconButton
+                            size="small"
+                            onClick={() => window.open(`${API_URL}${attachment.url}`, '_blank')}
+                            title="View file"
+                          >
+                            <Iconify icon={'eva:eye-fill' as any} width={18} />
+                          </IconButton>
+                        )}
+                        {!isReadOnly && (
+                          <IconButton
+                            size="small"
+                            onClick={() => handleRemoveAttachment(index)}
+                            color="error"
+                            title="Remove file"
+                          >
+                            <Iconify icon={'eva:trash-2-fill' as any} width={18} />
+                          </IconButton>
+                        )}
+                      </Box>
+                    </Box>
+                  ))}
+                </Box>
+              )}
             </CardContent>
           </Card>
 
           {/* Custom Fields */}
-          <Card sx={{ mb: 3 }}>
+          {/* <Card sx={{ mb: 3 }}>
             <CardContent>
-              <Typography variant="h6" sx={{ mb: 2, fontWeight: 600 }}>
-                Custom fields
-              </Typography>
-              <Typography variant="body2" color="text.secondary">
-                No custom fields added.
-              </Typography>
+              <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 2 }}>
+                <Typography variant="h6" sx={{ fontWeight: 600 }}>
+                  Custom fields
+                </Typography>
+                {!isReadOnly && (
+                  <Button variant="text" color="primary" onClick={handleAddCustomField} startIcon={<Plus size={16} />}>
+                    Add field
+                  </Button>
+                )}
+              </Box>
+
+              {formData.customFields.length === 0 ? (
+                <Typography variant="body2" color="text.secondary">
+                  No custom fields added.
+                </Typography>
+              ) : (
+                <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+                  {formData.customFields.map((field, index) => (
+                    <Box
+                      key={index}
+                      sx={{
+                        display: 'flex',
+                        gap: 2,
+                        alignItems: 'flex-start',
+                        p: 2,
+                        border: 1,
+                        borderColor: 'divider',
+                        borderRadius: 1,
+                      }}
+                    >
+                      <TextField
+                        fullWidth
+                        label="Field name"
+                        value={field.name}
+                        onChange={(e) => handleCustomFieldChange(index, 'name', e.target.value)}
+                        disabled={isReadOnly}
+                        size="small"
+                      />
+                      <FormControl size="small" sx={{ minWidth: 120 }}>
+                        <InputLabel>Type</InputLabel>
+                        <Select
+                          value={field.type}
+                          label="Type"
+                          onChange={(e) => handleCustomFieldChange(index, 'type', e.target.value)}
+                          disabled={isReadOnly}
+                        >
+                          <MenuItem value="text">Text</MenuItem>
+                          <MenuItem value="number">Number</MenuItem>
+                          <MenuItem value="date">Date</MenuItem>
+                          <MenuItem value="boolean">Boolean</MenuItem>
+                        </Select>
+                      </FormControl>
+                      {field.type === 'text' && (
+                        <TextField
+                          fullWidth
+                          label="Value"
+                          value={field.value}
+                          onChange={(e) => handleCustomFieldChange(index, 'value', e.target.value)}
+                          disabled={isReadOnly}
+                          size="small"
+                        />
+                      )}
+                      {field.type === 'number' && (
+                        <TextField
+                          fullWidth
+                          label="Value"
+                          type="number"
+                          value={field.value}
+                          onChange={(e) => handleCustomFieldChange(index, 'value', parseFloat(e.target.value) || 0)}
+                          disabled={isReadOnly}
+                          size="small"
+                        />
+                      )}
+                      {field.type === 'date' && (
+                        <TextField
+                          fullWidth
+                          label="Value"
+                          type="date"
+                          value={field.value ? (typeof field.value === 'string' ? field.value : new Date(field.value).toISOString().split('T')[0]) : ''}
+                          onChange={(e) => handleCustomFieldChange(index, 'value', e.target.value)}
+                          disabled={isReadOnly}
+                          size="small"
+                          InputLabelProps={{ shrink: true }}
+                        />
+                      )}
+                      {field.type === 'boolean' && (
+                        <FormControlLabel
+                          control={
+                            <Switch
+                              checked={Boolean(field.value)}
+                              onChange={(e) => handleCustomFieldChange(index, 'value', e.target.checked)}
+                              disabled={isReadOnly}
+                            />
+                          }
+                          label="Value"
+                        />
+                      )}
+                      {!isReadOnly && (
+                        <IconButton
+                          size="small"
+                          onClick={() => handleRemoveCustomField(index)}
+                          color="error"
+                          sx={{ mt: 0.5 }}
+                        >
+                          <X size={16} />
+                        </IconButton>
+                      )}
+                    </Box>
+                  ))}
+                </Box>
+              )}
             </CardContent>
-          </Card>
+          </Card> */}
         </Grid>
 
         {/* Right Column */}
@@ -700,11 +1043,20 @@ export function TaskFormPage() {
                     value={formData.assignee}
                     label="Assignee"
                     onChange={(e) => handleInputChange('assignee', e.target.value)}
-                    disabled={isReadOnly}
+                    disabled={isReadOnly || loadingUsers}
                   >
-                    <MenuItem value="John Doe">John Doe</MenuItem>
-                    <MenuItem value="Mike Johnson">Mike Johnson</MenuItem>
-                    <MenuItem value="Tom Brown">Tom Brown</MenuItem>
+                    <MenuItem value="">
+                      <em>None</em>
+                    </MenuItem>
+                    {loadingUsers ? (
+                      <MenuItem disabled>Loading users...</MenuItem>
+                    ) : (
+                      users.map((user) => (
+                        <MenuItem key={user.id} value={user.id}>
+                          {user.name} ({user.email}) - {user.role}
+                        </MenuItem>
+                      ))
+                    )}
                   </Select>
                 </FormControl>
                 <FormControl fullWidth>
@@ -713,11 +1065,22 @@ export function TaskFormPage() {
                     value={formData.supervisor}
                     label="Supervisor"
                     onChange={(e) => handleInputChange('supervisor', e.target.value)}
-                    disabled={isReadOnly}
+                    disabled={isReadOnly || loadingUsers}
                   >
-                    <MenuItem value="Jane Smith">Jane Smith</MenuItem>
-                    <MenuItem value="Sarah Wilson">Sarah Wilson</MenuItem>
-                    <MenuItem value="David Lee">David Lee</MenuItem>
+                    <MenuItem value="">
+                      <em>None</em>
+                    </MenuItem>
+                    {loadingUsers ? (
+                      <MenuItem disabled>Loading users...</MenuItem>
+                    ) : (
+                      users
+                        .filter((user) => ['super-admin', 'manager', 'supervisor'].includes(user.role))
+                        .map((user) => (
+                          <MenuItem key={user.id} value={user.id}>
+                            {user.name} ({user.email}) - {user.role}
+                          </MenuItem>
+                        ))
+                    )}
                   </Select>
                 </FormControl>
                 <FormControl fullWidth>

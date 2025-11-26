@@ -2,18 +2,38 @@ import express from 'express';
 import { createServer } from 'http';
 import { Server } from 'socket.io';
 import cors from 'cors';
+import { fileURLToPath } from 'url';
+import { dirname, join } from 'path';
+import connectDB from './config/database.js';
+import authRoutes from './routes/auth.js';
+import taskRoutes from './routes/tasks.js';
+import autoTaskRoutes from './routes/autoTasks.js';
+import checklistTemplateRoutes from './routes/checklistTemplates.js';
+import uploadRoutes from './routes/uploads.js';
+import userRoutes from './routes/users.js';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
 
 const app = express();
 const server = createServer(app);
+
+// Connect to MongoDB
+connectDB();
+
+// Middleware
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
 // Enable CORS for all origins
 app.use(cors({
   origin: [
     "http://localhost:3039",
+    "http://localhost:5173", // Vite dev server
     "https://material-kit-react-main.vercel.app", // Your Vercel URL (update after deployment)
     /\.vercel\.app$/ // Allow all Vercel preview deployments
   ],
-  methods: ["GET", "POST"],
+  methods: ["GET", "POST", "PUT", "DELETE", "PATCH"],
   credentials: true
 }));
 
@@ -335,6 +355,34 @@ app.get('/api/response-stats/:conversationId', (req, res) => {
     timestamp: new Date().toISOString()
   });
 });
+
+// Auth routes
+app.use('/api/auth', authRoutes);
+
+// Task routes
+app.use('/api/tasks', taskRoutes);
+app.use('/api/auto-tasks', autoTaskRoutes);
+app.use('/api/checklist-templates', checklistTemplateRoutes);
+
+// User routes
+app.use('/api/users', userRoutes);
+console.log('✅ User routes registered at /api/users');
+console.log('   Available endpoints:');
+console.log('   - GET /api/users (get all users)');
+console.log('   - GET /api/users/:id (get user by ID)');
+console.log('   - GET /api/users/by-role/:role (get users by role)');
+
+// File upload routes
+app.use('/api/uploads', uploadRoutes);
+console.log('✅ Upload routes registered at /api/uploads');
+console.log('   Available endpoints:');
+console.log('   - POST /api/uploads (upload single file)');
+console.log('   - POST /api/uploads/multiple (upload multiple files)');
+console.log('   - DELETE /api/uploads/:filename (delete file)');
+console.log('   - GET /api/uploads/test (test endpoint)');
+
+// Serve uploaded files
+app.use('/uploads', express.static(join(__dirname, 'uploads')));
 
 // Health check endpoint for Railway
 app.get('/health', (req, res) => {

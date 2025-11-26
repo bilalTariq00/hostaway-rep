@@ -43,16 +43,63 @@ export function AuthProvider({ children }: AuthProviderProps) {
   const [user, setUser] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
-  // Check for existing session on mount
+  // Check for existing session on mount - verify with backend
   useEffect(() => {
-    const checkAuth = () => {
+    const checkAuth = async () => {
       try {
-        const storedUser = localStorage.getItem('user');
-        if (storedUser) {
-          setUser(JSON.parse(storedUser));
+        const token = localStorage.getItem('authToken');
+        if (!token) {
+          setIsLoading(false);
+          return;
+        }
+
+        // Verify token with backend
+        const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001';
+        try {
+          const response = await fetch(`${API_URL}/api/auth/me`, {
+            method: 'GET',
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          });
+
+          if (response.ok) {
+            const data = await response.json();
+            if (data.success && data.user) {
+              // Format user data to match User interface
+              const userData: User = {
+                id: data.user.id,
+                email: data.user.email,
+                name: data.user.name,
+                role: data.user.role,
+                avatar: data.user.avatar,
+                status: data.user.status,
+                assignedClients: data.user.assignedClients || [],
+                assignedProperties: data.user.assignedProperties || [],
+                assignedUsers: data.user.assignedUsers || [],
+                assignedManager: data.user.assignedManager,
+                assignedSupervisor: data.user.assignedSupervisor,
+              };
+              localStorage.setItem('user', JSON.stringify(userData));
+              setUser(userData);
+            } else {
+              // Invalid token, clear it
+              localStorage.removeItem('authToken');
+              localStorage.removeItem('user');
+            }
+          } else {
+            // Token invalid or expired
+            localStorage.removeItem('authToken');
+            localStorage.removeItem('user');
+          }
+        } catch (error) {
+          console.error('Error verifying token:', error);
+          localStorage.removeItem('authToken');
+          localStorage.removeItem('user');
         }
       } catch (error) {
-        console.error('Error parsing stored user:', error);
+        console.error('Error checking auth:', error);
+        localStorage.removeItem('authToken');
         localStorage.removeItem('user');
       } finally {
         setIsLoading(false);
@@ -66,87 +113,43 @@ export function AuthProvider({ children }: AuthProviderProps) {
     setIsLoading(true);
 
     try {
-      // Simulate API call
-      await new Promise((resolve) => setTimeout(resolve, 1000));
+      // Login via API - ONLY users in database can login
+      const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001';
+      const response = await fetch(`${API_URL}/api/auth/login`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email, password }),
+      });
 
-      let userData: User | null = null;
+      const data = await response.json();
 
-      // Super Admin (can see all pages)
-      if (email === 'admin@hostaway.com' && password === 'admin123') {
-        userData = {
-          id: '1',
-          email: 'admin@hostaway.com',
-          name: 'Super Admin',
-          role: 'super-admin',
-          avatar: undefined,
+      if (response.ok && data.success && data.token && data.user) {
+        // Save token and user data from backend
+        // Backend returns user with 'id' field (MongoDB _id converted to string)
+        const userData: User = {
+          id: data.user.id,
+          email: data.user.email,
+          name: data.user.name,
+          role: data.user.role,
+          avatar: data.user.avatar,
+          status: data.user.status,
+          assignedClients: data.user.assignedClients || [],
+          assignedProperties: data.user.assignedProperties || [],
+          assignedUsers: data.user.assignedUsers || [],
+          assignedManager: data.user.assignedManager,
+          assignedSupervisor: data.user.assignedSupervisor,
         };
-      }
-      // Team member (team dashboard)
-      else if (email === 'team@hostaway.com' && password === 'team123') {
-        userData = {
-          id: '2',
-          email: 'team@hostaway.com',
-          name: 'Team Member',
-          role: 'team',
-          avatar: undefined,
-        };
-      }
-      // Manager (can see manager dashboard + main dashboard)
-      else if (email === 'manager@hostaway.com' && password === 'manager123') {
-        userData = {
-          id: '3',
-          email: 'manager@hostaway.com',
-          name: 'Manager User',
-          role: 'manager',
-          avatar: undefined,
-          assignedUsers: ['4', '5'], // Can manage associates
-        };
-      }
-      // Supervisor (can see supervisor dashboard + main dashboard)
-      else if (email === 'supervisor@hostaway.com' && password === 'supervisor123') {
-        userData = {
-          id: '4',
-          email: 'supervisor@hostaway.com',
-          name: 'Supervisor User',
-          role: 'supervisor',
-          avatar: undefined,
-          assignedUsers: ['5'], // Can manage associates
-          assignedManager: '3', // Reports to manager
-        };
-      }
-      // Associate (can see associate dashboard + main dashboard)
-      else if (email === 'associate@hostaway.com' && password === 'associate123') {
-        userData = {
-          id: '5',
-          email: 'associate@hostaway.com',
-          name: 'Associate User',
-          role: 'associate',
-          avatar: undefined,
-          assignedManager: '3', // Reports to manager
-          assignedSupervisor: '4', // Reports to supervisor
-          assignedClients: ['client1', 'client2'],
-          assignedProperties: ['property1', 'property2'],
-        };
-      }
-      // Check created users
-      else {
-        const createdUsers = JSON.parse(localStorage.getItem('createdUsers') || '[]');
-        const foundUser = createdUsers.find((createdUser: User) => createdUser.email === email);
-
-        if (foundUser) {
-          // For demo purposes, we'll accept any password for created users
-          // In a real app, you'd verify the password hash
-          userData = foundUser;
-        }
-      }
-
-      if (userData) {
-        setUser(userData);
+        localStorage.setItem('authToken', data.token);
         localStorage.setItem('user', JSON.stringify(userData));
+        setUser(userData);
         return true;
+      } else {
+        // Login failed - show error message
+        console.error('Login failed:', data.message || 'Invalid credentials');
+        return false;
       }
-
-      return false;
     } catch (error) {
       console.error('Login error:', error);
       return false;
@@ -166,21 +169,30 @@ export function AuthProvider({ children }: AuthProviderProps) {
     setIsLoading(true);
 
     try {
-      // Simulate API call
-      await new Promise((resolve) => setTimeout(resolve, 1000));
+      const token = localStorage.getItem('authToken');
+      if (!token) {
+        throw new Error('Not authenticated');
+      }
 
-      // Generate a unique ID
-      const newUser: User = {
-        ...userData,
-        id: Date.now().toString(),
-      };
+      const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001';
+      const response = await fetch(`${API_URL}/api/auth/register`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify(userData),
+      });
 
-      // Store the new user in localStorage (in a real app, this would be sent to the server)
-      const existingUsers = JSON.parse(localStorage.getItem('createdUsers') || '[]');
-      existingUsers.push(newUser);
-      localStorage.setItem('createdUsers', JSON.stringify(existingUsers));
+      const data = await response.json();
 
-      return true;
+      if (response.ok && data.success) {
+        // User created successfully in database
+        return true;
+      } else {
+        console.error('Create user failed:', data.message);
+        return false;
+      }
     } catch (error) {
       console.error('Create user error:', error);
       return false;
@@ -193,20 +205,45 @@ export function AuthProvider({ children }: AuthProviderProps) {
     setIsLoading(true);
 
     try {
-      // Simulate API call
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-
-      // Update user in localStorage (in a real app, this would be sent to the server)
-      const existingUsers = JSON.parse(localStorage.getItem('createdUsers') || '[]');
-      const userIndex = existingUsers.findIndex((existingUser: User) => existingUser.id === userId);
-
-      if (userIndex !== -1) {
-        existingUsers[userIndex] = { ...existingUsers[userIndex], ...userData };
-        localStorage.setItem('createdUsers', JSON.stringify(existingUsers));
-        return true;
+      const token = localStorage.getItem('authToken');
+      if (!token) {
+        throw new Error('Not authenticated');
       }
 
-      return false;
+      const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001';
+      const response = await fetch(`${API_URL}/api/auth/update-profile`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify(userData),
+      });
+
+      const data = await response.json();
+
+      if (response.ok && data.success && data.user) {
+        // Format and update local user data with backend response
+        const updatedUserData: User = {
+          id: data.user.id,
+          email: data.user.email,
+          name: data.user.name,
+          role: data.user.role,
+          avatar: data.user.avatar,
+          status: data.user.status,
+          assignedClients: data.user.assignedClients || [],
+          assignedProperties: data.user.assignedProperties || [],
+          assignedUsers: data.user.assignedUsers || [],
+          assignedManager: data.user.assignedManager,
+          assignedSupervisor: data.user.assignedSupervisor,
+        };
+        localStorage.setItem('user', JSON.stringify(updatedUserData));
+        setUser(updatedUserData);
+        return true;
+      } else {
+        console.error('Update user failed:', data.message);
+        return false;
+      }
     } catch (error) {
       console.error('Update user error:', error);
       return false;

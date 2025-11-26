@@ -31,52 +31,10 @@ import FormControlLabel from '@mui/material/FormControlLabel';
 
 import { useRouter } from 'src/routes/hooks';
 
+import { API_URL } from 'src/config/environment';
 import { DashboardContent } from 'src/layouts/dashboard';
 
 import { Iconify } from 'src/components/iconify';
-
-// Mock data for archived tasks
-const mockArchivedTasks = [
-  {
-    id: 1,
-    title: 'Old Property Inspection',
-    description: 'Conduct inspection of old property',
-    status: 'Archived',
-    priority: 'Low',
-    assignee: 'John Doe',
-    supervisor: 'Jane Smith',
-    dueDate: '2023-12-15',
-    channel: 'Airbnb',
-    listing: 'Old Villa',
-    archivedDate: '2024-01-01',
-  },
-  {
-    id: 2,
-    title: 'Legacy Guest Check-in',
-    description: 'Prepare welcome package for old system',
-    status: 'Archived',
-    priority: 'Medium',
-    assignee: 'Mike Johnson',
-    supervisor: 'Sarah Wilson',
-    dueDate: '2023-11-20',
-    channel: 'Booking.com',
-    listing: 'Old Apartment',
-    archivedDate: '2023-12-01',
-  },
-  {
-    id: 3,
-    title: 'Deprecated Maintenance',
-    description: 'Fix old air conditioning system',
-    status: 'Archived',
-    priority: 'High',
-    assignee: 'Tom Brown',
-    supervisor: 'Jane Smith',
-    dueDate: '2023-10-30',
-    channel: 'Direct',
-    listing: 'Old Property',
-    archivedDate: '2023-11-15',
-  },
-];
 
 export function ArchiveView() {
   const router = useRouter();
@@ -92,6 +50,40 @@ export function ArchiveView() {
   const [selectedAssignee, setSelectedAssignee] = useState('');
   const [archivedTasks, setArchivedTasks] = useState<any[]>([]);
   const [settingsAnchor, setSettingsAnchor] = useState<null | HTMLElement>(null);
+  const [usersMap, setUsersMap] = useState<Record<string, any>>({});
+
+  // Fetch users from backend
+  useEffect(() => {
+    const fetchUsers = async () => {
+      try {
+        const token = localStorage.getItem('authToken');
+        if (!token) return;
+
+        const response = await fetch(`${API_URL}/api/users?status=active`, {
+          method: 'GET',
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+
+        if (response.ok) {
+          const data = await response.json();
+          if (data.success && data.data) {
+            // Create a map for quick lookup: userId -> user object
+            const map: Record<string, any> = {};
+            data.data.forEach((user: any) => {
+              map[user.id] = user;
+            });
+            setUsersMap(map);
+          }
+        }
+      } catch (error) {
+        console.error('Error fetching users:', error);
+      }
+    };
+
+    fetchUsers();
+  }, []);
 
   // Column visibility state
   const [visibleColumns, setVisibleColumns] = useState({
@@ -109,44 +101,36 @@ export function ArchiveView() {
     channel: true,
     reservation: true,
     cost: true,
+    customFields: true,
     archivedDate: true,
   });
 
-  // Load tasks from localStorage (both archived and regular tasks)
-  const loadTasks = () => {
-    const savedTasks = localStorage.getItem('tasks');
-    const savedArchivedTasks = localStorage.getItem('archivedTasks');
-
-    let allTasks: any[] = [];
-
-    if (savedTasks) {
-      allTasks = [...allTasks, ...JSON.parse(savedTasks)];
-    }
-
-    if (savedArchivedTasks) {
-      allTasks = [...allTasks, ...JSON.parse(savedArchivedTasks)];
-    }
-
-    // If no saved tasks, use mock data
-    if (allTasks.length === 0) {
-      allTasks = mockArchivedTasks;
-    }
-
-    return allTasks;
-  };
-
+  // Fetch archived tasks from backend
   useEffect(() => {
-    setArchivedTasks(loadTasks());
-  }, []);
+    const fetchArchivedTasks = async () => {
+      try {
+        const token = localStorage.getItem('authToken');
+        if (!token) return;
 
-  // Refresh data when component becomes visible (e.g., returning from form)
-  useEffect(() => {
-    const handleFocus = () => {
-      setArchivedTasks(loadTasks());
+        const response = await fetch(`${API_URL}/api/tasks?isArchived=true&limit=1000`, {
+          method: 'GET',
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+
+        if (response.ok) {
+          const data = await response.json();
+          if (data.success && data.data) {
+            setArchivedTasks(data.data);
+          }
+        }
+      } catch (error) {
+        console.error('Error fetching archived tasks:', error);
+      }
     };
 
-    window.addEventListener('focus', handleFocus);
-    return () => window.removeEventListener('focus', handleFocus);
+    fetchArchivedTasks();
   }, []);
 
   const handleTabChange = (event: React.SyntheticEvent, newValue: number) => {
@@ -172,7 +156,7 @@ export function ArchiveView() {
 
   const handleViewTask = () => {
     if (selectedTask) {
-      router.push(`/tasks/${selectedTask.id}/view`);
+      router.push(`/tasks/${selectedTask._id || selectedTask.id}/view`);
     }
     handleActionMenuClose();
   };
@@ -191,7 +175,7 @@ export function ArchiveView() {
 
   const handleDuplicateConfirm = () => {
     if (selectedTask) {
-      router.push(`/tasks/${selectedTask.id}/duplicate`);
+      router.push(`/tasks/${selectedTask._id || selectedTask.id}/duplicate`);
     }
     setDuplicateDialogOpen(false);
     setSelectedTask(null);
@@ -202,75 +186,102 @@ export function ArchiveView() {
     setSelectedTask(null);
   };
 
-  const handleRestoreTask = () => {
-    if (selectedTask) {
-      const tasksData = loadTasks();
-      const updatedTasks = tasksData.filter((task: any) => task.id !== selectedTask.id);
-      localStorage.setItem('archivedTasks', JSON.stringify(updatedTasks));
-      setArchivedTasks(updatedTasks);
+  const handleRestoreTask = async () => {
+    if (!selectedTask) return;
+
+    try {
+      const token = localStorage.getItem('authToken');
+      if (!token) {
+        alert('Not authenticated');
+        return;
+      }
+
+      const response = await fetch(`${API_URL}/api/tasks/${selectedTask._id || selectedTask.id}/restore`, {
+        method: 'POST',
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      if (response.ok) {
+        // Refresh archived tasks
+        const fetchResponse = await fetch(`${API_URL}/api/tasks?isArchived=true&limit=1000`, {
+          method: 'GET',
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        if (fetchResponse.ok) {
+          const data = await fetchResponse.json();
+          if (data.success && data.data) {
+            setArchivedTasks(data.data);
+          }
+        }
+      } else {
+        const data = await response.json();
+        alert(data.message || 'Failed to restore task');
+      }
+    } catch (error) {
+      console.error('Error restoring task:', error);
+      alert('Failed to restore task');
     }
     handleActionMenuClose();
   };
 
   const handleDeleteTask = () => {
-    console.log('Delete task clicked for:', selectedTask?.id, selectedTask?.title);
     setDeleteDialogOpen(true);
     handleActionMenuClose();
   };
 
-  const handleDeleteConfirm = () => {
-    if (selectedTask) {
-      console.log('Deleting task:', selectedTask.id, selectedTask.title);
+  const handleDeleteConfirm = async () => {
+    if (!selectedTask) return;
 
-      // Remove from both storage locations
-      const savedTasks = localStorage.getItem('tasks');
-      const savedArchivedTasks = localStorage.getItem('archivedTasks');
-
-      let updatedTasks = [];
-      let updatedArchived = [];
-
-      if (savedTasks) {
-        try {
-          const tasksData = JSON.parse(savedTasks);
-          updatedTasks = tasksData.filter((task: any) => {
-            // Handle both string and number IDs
-            const taskId = typeof task.id === 'string' ? parseInt(task.id) : task.id;
-            const selectedId =
-              typeof selectedTask.id === 'string' ? parseInt(selectedTask.id) : selectedTask.id;
-            return taskId !== selectedId;
-          });
-          localStorage.setItem('tasks', JSON.stringify(updatedTasks));
-          console.log('Updated tasks:', updatedTasks.length);
-        } catch (error) {
-          console.error('Error parsing tasks data:', error);
-        }
-      }
-
-      if (savedArchivedTasks) {
-        try {
-          const archivedData = JSON.parse(savedArchivedTasks);
-          updatedArchived = archivedData.filter((task: any) => {
-            // Handle both string and number IDs
-            const taskId = typeof task.id === 'string' ? parseInt(task.id) : task.id;
-            const selectedId =
-              typeof selectedTask.id === 'string' ? parseInt(selectedTask.id) : selectedTask.id;
-            return taskId !== selectedId;
-          });
-          localStorage.setItem('archivedTasks', JSON.stringify(updatedArchived));
-          console.log('Updated archived:', updatedArchived.length);
-        } catch (error) {
-          console.error('Error parsing archived data:', error);
-        }
-      }
-
-      // Combine remaining tasks and update state directly
-      const remainingTasks = [...updatedTasks, ...updatedArchived];
-      console.log('Remaining tasks after delete:', remainingTasks.length);
-      setArchivedTasks(remainingTasks);
+    if (!confirm('Are you sure you want to permanently delete this task?')) {
+      setDeleteDialogOpen(false);
+      return;
     }
+
+    try {
+      const token = localStorage.getItem('authToken');
+      if (!token) {
+        alert('Not authenticated');
+        return;
+      }
+
+      const response = await fetch(`${API_URL}/api/tasks/${selectedTask._id || selectedTask.id}`, {
+        method: 'DELETE',
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      if (response.ok) {
+        // Refresh archived tasks
+        const fetchResponse = await fetch(`${API_URL}/api/tasks?isArchived=true&limit=1000`, {
+          method: 'GET',
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        if (fetchResponse.ok) {
+          const data = await fetchResponse.json();
+          if (data.success && data.data) {
+            setArchivedTasks(data.data);
+          }
+        }
+      } else {
+        const data = await response.json();
+        alert(data.message || 'Failed to delete task');
+      }
+    } catch (error) {
+      console.error('Error deleting task:', error);
+      alert('Failed to delete task');
+    }
+    
     setDeleteDialogOpen(false);
     setSelectedTask(null);
   };
+
 
   const handleSettingsOpen = (event: React.MouseEvent<HTMLElement>) => {
     setSettingsAnchor(event.currentTarget);
@@ -437,6 +448,7 @@ export function ArchiveView() {
                 {visibleColumns.channel && <TableCell>Channel</TableCell>}
                 {visibleColumns.reservation && <TableCell>Reservation</TableCell>}
                 {visibleColumns.cost && <TableCell>Cost</TableCell>}
+                {visibleColumns.customFields && <TableCell>Custom Fields</TableCell>}
                 {visibleColumns.archivedDate && <TableCell>Archived Date</TableCell>}
                 <TableCell align="center">Actions</TableCell>
               </TableRow>
@@ -480,12 +492,34 @@ export function ArchiveView() {
                   )}
                   {visibleColumns.assignee && (
                     <TableCell>
-                      <Typography variant="body2">{task.assignee || '-'}</Typography>
+                      <Typography variant="body2">
+                        {(() => {
+                          // Handle populated user object or ID string
+                          const assigneeId = typeof task.assignee === 'object' && task.assignee?._id
+                            ? task.assignee._id.toString()
+                            : task.assignee?.toString() || '';
+                          const assigneeName = typeof task.assignee === 'object' && task.assignee?.name
+                            ? task.assignee.name
+                            : (assigneeId && usersMap[assigneeId] ? usersMap[assigneeId].name : null);
+                          return assigneeName || assigneeId || '-';
+                        })()}
+                      </Typography>
                     </TableCell>
                   )}
                   {visibleColumns.supervisor && (
                     <TableCell>
-                      <Typography variant="body2">{task.supervisor || '-'}</Typography>
+                      <Typography variant="body2">
+                        {(() => {
+                          // Handle populated user object or ID string
+                          const supervisorId = typeof task.supervisor === 'object' && task.supervisor?._id
+                            ? task.supervisor._id.toString()
+                            : task.supervisor?.toString() || '';
+                          const supervisorName = typeof task.supervisor === 'object' && task.supervisor?.name
+                            ? task.supervisor.name
+                            : (supervisorId && usersMap[supervisorId] ? usersMap[supervisorId].name : null);
+                          return supervisorName || supervisorId || '-';
+                        })()}
+                      </Typography>
                     </TableCell>
                   )}
                   {visibleColumns.group && (
@@ -526,6 +560,31 @@ export function ArchiveView() {
                   {visibleColumns.cost && (
                     <TableCell>
                       <Typography variant="body2">{task.cost ? `$${task.cost}` : '-'}</Typography>
+                    </TableCell>
+                  )}
+                  {visibleColumns.customFields && (
+                    <TableCell>
+                      <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
+                        {task.customFields && Array.isArray(task.customFields) && task.customFields.length > 0 ? (
+                          task.customFields.map((field: any, idx: number) => (
+                            <Chip
+                              key={idx}
+                              label={`${field.name}: ${field.type === 'boolean' 
+                                ? (field.value ? 'Yes' : 'No') 
+                                : field.type === 'date' 
+                                  ? (field.value ? new Date(field.value).toLocaleDateString() : '-')
+                                  : String(field.value || '-')}`}
+                              size="small"
+                              variant="outlined"
+                              sx={{ fontSize: '0.7rem', height: 24 }}
+                            />
+                          ))
+                        ) : (
+                          <Typography variant="caption" color="text.secondary">
+                            -
+                          </Typography>
+                        )}
+                      </Box>
                     </TableCell>
                   )}
                   {visibleColumns.archivedDate && (
@@ -724,6 +783,7 @@ export function ArchiveView() {
                   channel: true,
                   reservation: true,
                   cost: true,
+                  customFields: true,
                   archivedDate: true,
                 });
               }}
@@ -748,6 +808,7 @@ export function ArchiveView() {
                   channel: true,
                   reservation: false,
                   cost: false,
+                  customFields: true,
                   archivedDate: false,
                 });
               }}
