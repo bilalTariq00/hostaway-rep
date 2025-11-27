@@ -11,6 +11,7 @@ import autoTaskRoutes from './routes/autoTasks.js';
 import checklistTemplateRoutes from './routes/checklistTemplates.js';
 import uploadRoutes from './routes/uploads.js';
 import userRoutes from './routes/users.js';
+import listingRoutes from './routes/listings.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -420,6 +421,19 @@ console.log('   Available endpoints:');
 console.log('   - GET /api/users (get all users)');
 console.log('   - GET /api/users/:id (get user by ID)');
 console.log('   - GET /api/users/by-role/:role (get users by role)');
+
+// Listing routes
+app.use('/api/listings', listingRoutes);
+console.log('✅ Listing routes registered at /api/listings');
+console.log('   Available endpoints:');
+console.log('   - GET /api/listings (get all listings)');
+console.log('   - GET /api/listings/:id (get listing by ID)');
+console.log('   - GET /api/listings/listing-id/:listingId (get by listingId)');
+console.log('   - POST /api/listings (create listing - super-admin/manager)');
+console.log('   - PUT /api/listings/:id (update listing - super-admin/manager)');
+console.log('   - DELETE /api/listings/:id (delete listing - super-admin/manager)');
+console.log('   - POST /api/listings/:id/archive (archive listing)');
+console.log('   - POST /api/listings/:id/restore (restore listing)');
 
 // File upload routes
 app.use('/api/uploads', uploadRoutes);
