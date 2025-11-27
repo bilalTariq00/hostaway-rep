@@ -38,8 +38,8 @@ const corsOptions = {
     const allowedOrigins = [
       "http://localhost:3039",
       "http://localhost:5173", // Vite dev server
-      "https://material-kit-react-main.vercel.app", // Your Vercel URL (update after deployment)
-      /\.vercel\.app$/ // Allow all Vercel preview deployments
+      /\.vercel\.app$/, // Allow all Vercel deployments (production, preview, etc.)
+      /\.onrender\.com$/ // Allow Render deployments for testing
     ];
     
     // Check if origin matches any allowed pattern
@@ -90,8 +90,8 @@ const io = new Server(server, {
   cors: {
     origin: [
       "http://localhost:3039",
-      "https://material-kit-react-main.vercel.app", // Your Vercel URL (update after deployment)
-      /\.vercel\.app$/ // Allow all Vercel preview deployments
+      /\.vercel\.app$/, // Allow all Vercel deployments (production, preview, etc.)
+      /\.onrender\.com$/ // Allow Render deployments for testing
     ],
     methods: ["GET", "POST"],
     credentials: true

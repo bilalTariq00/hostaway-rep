@@ -15,8 +15,8 @@ const config = {
     apiUrl: 'http://localhost:3001'
   },
   production: {
-    socketUrl: import.meta.env.VITE_SOCKET_URL || 'https://server-production-f979.up.railway.app',
-    apiUrl: import.meta.env.VITE_API_URL || 'https://server-production-f979.up.railway.app'
+    socketUrl: import.meta.env.VITE_SOCKET_URL || 'https://hostaway-rep.onrender.com',
+    apiUrl: import.meta.env.VITE_API_URL || 'https://hostaway-rep.onrender.com'
   }
 } as const;
 
