@@ -8,8 +8,8 @@
   "scripts": {
     "dev": "concurrently \"npm run server\" \"npm run client\"",
     "dev:client": "vite",
-    "dev:server": "node server.js",
-    "server": "node server.js",
+    "dev:server": "cd backend && npm run dev",
+    "server": "cd backend && npm start",
     "client": "vite",
     "start": "vite preview",
     "build": "tsc && vite build",
@@ -27,8 +27,8 @@
     "tsc:dev": "yarn dev & yarn tsc:watch",
     "tsc:watch": "tsc --noEmit --watch",
     "tsc:print": "npx tsc --showConfig",
-    "seed:users": "node scripts/seedUsers.js",
-    "reset:users": "node scripts/resetUsers.js"
+    "seed:users": "cd backend && npm run seed:users",
+    "reset:users": "cd backend && npm run reset:users"
   },
   "engines": {
     "node": ">=20"

@@ -114,8 +114,12 @@ export function AuthProvider({ children }: AuthProviderProps) {
     setIsLoading(true);
 
     try {
+      const loginUrl = `${API_URL}/api/auth/login`;
+      console.log(`🔐 Attempting login to: ${loginUrl}`);
+      console.log(`📧 Email: ${email}`);
+
       // Login via API - ONLY users in database can login
-      const response = await fetch(`${API_URL}/api/auth/login`, {
+      const response = await fetch(loginUrl, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -123,7 +127,20 @@ export function AuthProvider({ children }: AuthProviderProps) {
         body: JSON.stringify({ email, password }),
       });
 
+      console.log(`📡 Login response status: ${response.status} ${response.statusText}`);
+      console.log(`📡 Response headers:`, Object.fromEntries(response.headers.entries()));
+
+      // Check if response is JSON
+      const contentType = response.headers.get('content-type');
+      if (!contentType || !contentType.includes('application/json')) {
+        const text = await response.text();
+        console.error('❌ Non-JSON response:', text);
+        console.error(`❌ Expected JSON but got: ${contentType}`);
+        return false;
+      }
+
       const data = await response.json();
+      console.log(`📦 Login response data:`, data);
 
       if (response.ok && data.success && data.token && data.user) {
         // Save token and user data from backend
@@ -144,14 +161,22 @@ export function AuthProvider({ children }: AuthProviderProps) {
         localStorage.setItem('authToken', data.token);
         localStorage.setItem('user', JSON.stringify(userData));
         setUser(userData);
+        console.log('✅ Login successful!');
         return true;
       } else {
         // Login failed - show error message
-        console.error('Login failed:', data.message || 'Invalid credentials');
+        console.error('❌ Login failed:', data.message || 'Invalid credentials');
+        console.error('❌ Response data:', data);
         return false;
       }
     } catch (error) {
-      console.error('Login error:', error);
+      console.error('❌ Login network error:', error);
+      if (error instanceof TypeError) {
+        console.error('❌ Network error - possible causes:');
+        console.error('   - CORS issue');
+        console.error('   - Server not reachable');
+        console.error('   - Wrong API URL:', API_URL);
+      }
       return false;
     } finally {
       setIsLoading(false);

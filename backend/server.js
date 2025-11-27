@@ -26,10 +26,14 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 // Enable CORS for all origins
+// IMPORTANT: For development, we allow all origins. For production, restrict this.
 const corsOptions = {
   origin: function (origin, callback) {
     // Allow requests with no origin (like mobile apps or curl requests)
-    if (!origin) return callback(null, true);
+    if (!origin) {
+      console.log('✅ CORS: Allowing request with no origin');
+      return callback(null, true);
+    }
     
     const allowedOrigins = [
       "http://localhost:3039",
@@ -49,9 +53,10 @@ const corsOptions = {
     });
     
     if (isAllowed) {
+      console.log(`✅ CORS: Allowing origin: ${origin}`);
       callback(null, true);
     } else {
-      console.log(`⚠️  CORS blocked origin: ${origin}`);
+      console.log(`⚠️  CORS: Unknown origin: ${origin} - ALLOWING for now (restrict in production)`);
       // Temporarily allow all origins for debugging - restrict in production
       callback(null, true);
     }
